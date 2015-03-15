@@ -24,3 +24,14 @@ misrepresented as being the original software.
 
 3. This notice may not be removed or altered from any source
 distribution.
+
+#### Licenses for the Libraries
+lib/ directory has libraries written below. You also have to agree to each license agreement of the libraries.
+- boost
+- TinyXml
+- zlib
+- XML::TreePP
+- Text::CSV
+- Tar32
+
+XML::TreePP, Text::CSV and Tar32 are used only when you build Onikiri and are not included in a built binary. 
