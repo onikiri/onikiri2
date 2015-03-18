@@ -43,7 +43,9 @@
 #include <stdarg.h>
 
 #ifdef COMPILER_IS_MSVC
-	#define va_copy(x, y) ((x) = (y))
+	#if _MSC_VER < 1800 
+		#define va_copy(x, y) ((x) = (y))
+	#endif
 #elif defined COMPILER_IS_GCC  
 	#include <sys/types.h>
 #else
