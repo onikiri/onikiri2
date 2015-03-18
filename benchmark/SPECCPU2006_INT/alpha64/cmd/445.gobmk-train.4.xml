@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/445.gobmk/train/'
+        Command='./bin/445.gobmk.alpha64'
+        CommandArguments='--quiet --mode gtp'
+        STDIN='blunder.tst'
+      />
+    </Processes>
+  </Emulator>
+</Session>

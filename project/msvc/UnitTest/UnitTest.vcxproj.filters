@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{33d06c4b-2f08-4359-8e88-a6ee728769f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\SysDeps">
+      <UniqueIdentifier>{8463758d-693c-4675-9fe2-f1f9500f6125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\UnitTests">
+      <UniqueIdentifier>{4adc2eaf-2678-4c5d-8ea3-ea7be828f33d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\SysDeps\UnitTest.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\UnitTests\shttl.cpp">
+      <Filter>src\UnitTests</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

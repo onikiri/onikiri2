@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/482.sphinx3/ref/'
+        Command='./bin/482.sphinx3.alpha64'
+        CommandArguments='ctlfile . args.an4'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

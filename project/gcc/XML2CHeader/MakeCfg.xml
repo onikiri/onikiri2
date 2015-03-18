@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MakeConfiguration 
+	SourceFile="../../msvc/XML2CHeader/XML2CHeader.vcxproj"
+	SourceConfiguration="Release|x64"
+	UsePrecompiledHeader="1"
+>
+	<Platforms>
+		<Platform 
+			Name="cygwin"
+			HostString="CYGWIN" 
+			CXX="g++" 
+			CXXFlags="-O2"
+			LDFlags=""
+			CleanTargets=""
+			WorkingDirectory="WorkCygwin"
+			OutputFile="XML2CHeader"
+		>
+		</Platform>
+		
+		<Platform 
+			Name="linux" 
+			HostString="Linux"
+			CXX="g++" 
+	 		CXXFlags="-O2"
+			LDFlags="" 
+			CleanTargets=""
+			WorkingDirectory="WorkLinux" 
+			OutputFile="XML2CHeader"
+		>
+		</Platform>
+		
+	</Platforms>
+</MakeConfiguration>

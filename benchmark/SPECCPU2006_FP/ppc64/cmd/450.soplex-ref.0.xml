@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/450.soplex/ref/'
+        Command='./bin/450.soplex.ppc64'
+        CommandArguments='-s1 -e -m45000 pds-50.mps'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

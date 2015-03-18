@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/176.gcc/ref/'
+        Command='./bin/176.gcc.alpha64'
+        CommandArguments='scilab.i -o scilab.s'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

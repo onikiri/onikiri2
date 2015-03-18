@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/186.crafty/train/'
+        Command='./bin/186.crafty.alpha64'
+        CommandArguments=''
+        STDIN='crafty.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

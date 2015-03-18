@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/187.facerec/train/'
+        Command='./bin/187.facerec.alpha64'
+        CommandArguments=''
+        STDIN='train.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/471.omnetpp/train/'
+        Command='./bin/471.omnetpp.ppc64'
+        CommandArguments='omnetpp.ini'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

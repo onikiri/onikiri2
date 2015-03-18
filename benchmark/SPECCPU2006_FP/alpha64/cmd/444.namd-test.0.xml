@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/444.namd/test/'
+        Command='./bin/444.namd.alpha64'
+        CommandArguments='--input namd.input --iterations 1 --output namd.out '
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

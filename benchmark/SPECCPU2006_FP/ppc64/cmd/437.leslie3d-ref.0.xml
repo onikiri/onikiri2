@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/437.leslie3d/ref/'
+        Command='./bin/437.leslie3d.ppc64'
+        CommandArguments=''
+        STDIN='leslie3d.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

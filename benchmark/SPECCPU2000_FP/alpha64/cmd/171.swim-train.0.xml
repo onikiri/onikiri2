@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/171.swim/train/'
+        Command='./bin/171.swim.alpha64'
+        CommandArguments=''
+        STDIN='swim.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

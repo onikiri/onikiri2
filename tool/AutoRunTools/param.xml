@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Session>
+  <Environment>
+    <OutputXML FileName="" />
+  </Environment>
+  <Simulator>
+    <System SimulationInsns="100M" SkipInsns="1G" />
+  </Simulator>
+</Session>

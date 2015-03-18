@@ -1,0 +1,886 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="FastDebug|x64">
+      <Configuration>FastDebug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Retail|x64">
+      <Configuration>Retail</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F1F9397A-EBD4-406C-B588-6CA9B9146554}</ProjectGuid>
+    <RootNamespace>onikiri2</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">false</LinkIncremental>
+    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'" />
+    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Retail|x64'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PreBuildEvent>
+      <Command>$(ProjectDir)\ExtractBoost.bat $(SolutionDir)\..\..\lib\boost\</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_53_0;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;NOMINMAX;ONIKIRI_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)\Lib\zlib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>
+      </Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+    <PreBuildEvent>
+      <Command>$(ProjectDir)\ExtractBoost.bat $(SolutionDir)\..\..\lib\boost\</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_53_0;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_ITERATOR_DEBUG_LEVEL=0;NOMINMAX;ONIKIRI_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)\Lib\zlib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>
+      </Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEvent>
+      <Command>$(ProjectDir)\ExtractBoost.bat $(SolutionDir)\..\..\lib\boost\</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_53_0;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;NOMINMAX;ONIKIRI_DEBUG;SHTTL_DISABLE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)\Lib\zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>
+      </Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+    <PreBuildEvent>
+      <Command>$(ProjectDir)\ExtractBoost.bat $(SolutionDir)\..\..\lib\boost\</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_53_0;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;NOMINMAX;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;SHTTL_DISABLE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)\Lib\zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>
+      </Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\Emu\Utility\Math.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\LoaderIF.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\HeapAllocator.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\MemorySystem.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\MemoryUtility.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\VirtualMemory.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\ProcessState.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConvIF.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\VirtualSystem.h" />
+    <ClInclude Include="..\..\..\src\Env\Param\ParamXMLPrinter.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\table.h" />
+    <ClInclude Include="..\..\..\src\Samples\SampleBPred.h" />
+    <ClInclude Include="..\..\..\src\Samples\SampleHookModule.h" />
+    <ClInclude Include="..\..\..\src\Samples\SampleNullModule.h" />
+    <ClInclude Include="..\..\..\src\Samples\SamplePrefetcher.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dumper\CountDumper.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dumper\Dumper.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dumper\DumpFileName.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dumper\DumpState.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dumper\TraceDumper.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dumper\VisualizationDumper.h" />
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecUnitReserver.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Checkpoint\Checkpoint.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Checkpoint\CheckpointedDataBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Debug.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\PriorityEventList.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Hook\HookDecl.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\SimPC.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheAccessRequestQueue.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheExtraStateTable.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheMissedAccessList.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheSystem.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheTypes.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\MemoryAccessEndEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\MemOrderManager\MemOrderOperations.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Prefetcher\PrefetcherBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Prefetcher\PrefetcherIF.h" />
+    <ClInclude Include="..\..\..\src\Interface\MemAccess.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\OpClassStatistics.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\OpStatus.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\IcountFetchThreadSteerer.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\FetchThreadSteererIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\RoundRobinFetchThreadSteerer.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Retirer\RetireEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\DetectLatPredMissEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\DumpCommittableEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\DumpSchedulingEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\ExecuteEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\FinishEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\AgeIssueSelector.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\InorderIssueSelector.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\IssueSelector.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\IssueSelectorIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\RescheduleEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\WakeUpEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\WriteBackEvent.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\MemDepPred.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\PerfectMemDepPred.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\LatPred\LatPredResult.h" />
+    <ClInclude Include="..\..\..\src\Sim\Recoverer\Exception.h" />
+    <ClInclude Include="..\..\..\src\Sim\Recoverer\Recoverer.h" />
+    <ClInclude Include="..\..\..\src\Sim\ResourcePriority.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\ArchitectureState.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationDebugSystem\DebugStub\DebugStub.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationDebugSystem\EmulationDebugOp.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationDebugSystem\EmulationDebugSystem.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Prefetcher\StreamPrefetcher.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Prefetcher\StridePrefetcher.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\OpContainer\OpBuffer.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\PipelineLatch.h" />
+    <ClInclude Include="..\..\..\src\Sim\ResourceMap.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\ForwardEmulator.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\TimeWheel\ClockedResourceBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\TimeWheel\ClockedResourceIF.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\Boost\asio.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\Boost\Boost.h" />
+    <ClInclude Include="..\..\..\src\Types.h" />
+    <ClInclude Include="..\..\..\src\User\UserDefaultParam.h" />
+    <ClInclude Include="..\..\..\src\User\UserInit.h" />
+    <ClInclude Include="..\..\..\src\Utility\Collection\fixed_size_buffer.h" />
+    <ClInclude Include="..\..\..\src\Version.h" />
+    <ClInclude Include="..\..\..\src\Sim\ISAInfo.h" />
+    <ClInclude Include="..\..\..\src\Sim\Core\Core.h" />
+    <ClInclude Include="..\..\..\src\Sim\Core\DataPredTypes.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Pipeline.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\PipelineNodeBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\PipelineNodeIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueState.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\Scheduler.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Fetcher\Fetcher.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Retirer\Retirer.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Dispatcher\Dispatcher.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Dispatcher\Steerer\OpCodeSteerer.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Dispatcher\Steerer\SteererIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Renamer\Renamer.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\Op.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\OpInitArgs.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\OpContainer\OpExtraStateTable.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\OpContainer\OpList.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\OpObserver\OpObserver.h" />
+    <ClInclude Include="..\..\..\src\Sim\Op\OpArray\OpArray.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dependency\Dependency.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dependency\PhyReg\PhyReg.h" />
+    <ClInclude Include="..\..\..\src\Sim\Dependency\MemDependency\MemDependency.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\ExtraOpDecoder.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\GlobalClock.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\SystemBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\SystemManager.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\SimulationSystem\EmulatorWrapper.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\SimulationSystem\SimulationSystem.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationSystem\EmulationOp.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationSystem\EmulationSystem.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\InorderSystem\InorderSystem.h" />
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationTraceSystem\EmulationTraceSystem.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\TimeWheel\TimeWheel.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\TimeWheel\TimeWheelBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\EventBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\EventDelegate.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\EventList\EventList.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\EventList\EventWheel.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Checkpoint\CheckpointedData.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Checkpoint\CheckpointMaster.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\BPred.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\BranchType.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\BTB.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\DirPredIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\GlobalHistory.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\GShare.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\PHT.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\RAS.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\DepPredIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\ConservativeMemDepPred.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\MemDepPredIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\OptimisticMemDepPred.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\StoreSet.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RegDepPredBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RegDepPredIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RMT.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\LatPred\LatPred.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\HitMissPred\CounterBasedHitMissPred.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\HitMissPred\HitMissPredIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\Predictor\HitMissPred\StaticHitMissPred.h" />
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecUnit.h" />
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecUnitBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecUnitIF.h" />
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\MemExecUnit.h" />
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\PipelinedExecUnit.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Hook\Hook.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Hook\HookUtil.h" />
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecLatencyInfo.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\AddrHasher.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\Cache.h" />
+    <ClInclude Include="..\..\..\src\Sim\Memory\MemOrderManager\MemOrderManager.h" />
+    <ClInclude Include="..\..\..\src\Sim\Register\RegisterFile.h" />
+    <ClInclude Include="..\..\..\src\Sim\Register\RegisterFreeList.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\ResourceArray.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\ResourceBase.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\ResourceNode.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\Builder\ResourceBuilder.h" />
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\Builder\ResourceFactory.h" />
+    <ClInclude Include="..\..\..\src\Sim\InorderList\InorderList.h" />
+    <ClInclude Include="..\..\..\src\Sim\Thread\Thread.h" />
+    <ClInclude Include="..\..\..\src\Emu\EmulatorFactory.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\Alpha64Converter.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\Alpha64Decoder.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\Alpha64Info.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\Alpha64OpInfo.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxEmulator.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxLoader.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxSyscallConv.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxSyscallID.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxTraits.h" />
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaOperation.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\CommonConverter.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\CommonEmulator.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\CommonOpInfo.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\DecoderUtility.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\ExtraOpInfoWrapper.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\GenericOperation.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\OpEmulationState.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\SkipOp.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64Converter.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64Decoder.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64Info.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxEmulator.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxLoader.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxSyscallConv.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxSyscallID.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxTraits.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64Operation.h" />
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64OpInfo.h" />
+    <ClInclude Include="..\..\..\src\interface\Addr.h" />
+    <ClInclude Include="..\..\..\src\interface\EmulatorIF.h" />
+    <ClInclude Include="..\..\..\src\Interface\ExtraOpDecoderIF.h" />
+    <ClInclude Include="..\..\..\src\Interface\ISAInfo.h" />
+    <ClInclude Include="..\..\..\src\interface\MemIF.h" />
+    <ClInclude Include="..\..\..\src\interface\OpClass.h" />
+    <ClInclude Include="..\..\..\src\Interface\OpClassCode.h" />
+    <ClInclude Include="..\..\..\src\interface\OpInfo.h" />
+    <ClInclude Include="..\..\..\src\interface\OpStateIF.h" />
+    <ClInclude Include="..\..\..\src\Interface\ResourceIF.h" />
+    <ClInclude Include="..\..\..\src\Interface\SystemIF.h" />
+    <ClInclude Include="..\..\..\src\Utility\IntrusivePtrObjectPool.h" />
+    <ClInclude Include="..\..\..\src\Utility\RuntimeError.h" />
+    <ClInclude Include="..\..\..\src\Utility\SharedPtrObjectPool.h" />
+    <ClInclude Include="..\..\..\src\Utility\String.h" />
+    <ClInclude Include="..\..\..\src\Utility\Collection\pool\pool_allocator.h" />
+    <ClInclude Include="..\..\..\src\Utility\Collection\pool\pool_list.h" />
+    <ClInclude Include="..\..\..\src\Utility\Collection\pool\pool_unordered_map.h" />
+    <ClInclude Include="..\..\..\src\Utility\Collection\pool\pool_vector.h" />
+    <ClInclude Include="..\..\..\src\Env\Env.h" />
+    <ClInclude Include="..\..\..\src\Env\Param\ParamDB.h" />
+    <ClInclude Include="..\..\..\src\Env\Param\ParamExchange.h" />
+    <ClInclude Include="..\..\..\src\Env\Param\ParamPredResult.h" />
+    <ClInclude Include="..\..\..\src\Env\Param\ParamXMLPath.h" />
+    <ClInclude Include="..\..\..\src\Env\Param\ParamXMLPathReductionMap.h" />
+    <ClInclude Include="..\..\..\src\Env\Param\ParamXMLTree.h" />
+    <ClInclude Include="..\..\..\src\pch\pch.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\Debug.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\Endian.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\fenv.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\host_type.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\Inline.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\posix.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\stdarg.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\Warning.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\STL\list.h" />
+    <ClInclude Include="..\..\..\src\SysDeps\stl\unordered_map.h" />
+    <ClInclude Include="..\..\..\src\User\UserPCH.h" />
+    <ClInclude Include="..\..\..\src\User\UserResourceMap.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\array2d.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\bit.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\bitset.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\counter.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\counter_array.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\double_hasher.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\hasher.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\integer.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\lru.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\nlu.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\null_struct.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\replacement.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\setassoc_table.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\shttl_integrity_test.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\shttl_types.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\simple_hasher.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\static_off_hasher.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\std_hasher.h" />
+    <ClInclude Include="..\..\..\src\Lib\shttl\xbitset.h" />
+    <ClInclude Include="..\..\..\lib\tinyxml\tinystr.h" />
+    <ClInclude Include="..\..\..\lib\tinyxml\tinyxml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\codecvt_error_category.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\operations.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\path.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\path_traits.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\portability.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\unique_path.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\utf8_codecvt_facet.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\windows_file_codecvt.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\HeapAllocator.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\MemorySystem.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\MemoryUtility.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\VirtualMemory.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\ProcessState.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualSystem.cpp" />
+    <ClCompile Include="..\..\..\src\Interface\Addr.cpp" />
+    <ClCompile Include="..\..\..\src\Interface\MemAccess.cpp" />
+    <ClCompile Include="..\..\..\src\Main.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Dumper\CountDumper.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Dumper\Dumper.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Dumper\TraceDumper.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Dumper\VisualizationDumper.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecUnitReserver.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\ISAInfo.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Core\Core.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Core\DataPredTypes.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\CacheAccessRequestQueue.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\CacheMissedAccessList.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\CacheSystem.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\MemoryAccessEndEvent.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\MemOrderManager\MemOrderOperations.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\Prefetcher\PrefetcherBase.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\Prefetcher\StreamPrefetcher.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\Prefetcher\StridePrefetcher.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Op\OpClassStatistics.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Op\OpContainer\OpBuffer.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Op\OpStatus.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\IcountFetchThreadSteerer.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\RoundRobinFetchThreadSteerer.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Pipeline.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\PipelineLatch.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Retirer\RetireEvent.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\DetectLatPredMissEvent.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\ExecuteEvent.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\FinishEvent.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueEvent.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\AgeIssueSelector.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\InorderIssueSelector.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\IssueSelector.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\RescheduleEvent.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\Scheduler.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Fetcher\Fetcher.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Retirer\Retirer.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Dispatcher\Dispatcher.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Dispatcher\Steerer\OpCodeSteerer.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Renamer\Renamer.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Op\Op.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Op\OpContainer\OpList.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Op\OpObserver\OpObserver.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Op\OpArray\OpArray.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Dependency\Dependency.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\WriteBackEvent.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\MemDepPred.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\PerfectMemDepPred.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Recoverer\Recoverer.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationDebugSystem\DebugStub\DebugStub.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationDebugSystem\EmulationDebugOp.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationDebugSystem\EmulationDebugSystem.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\ExtraOpDecoder.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\ForwardEmulator.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\GlobalClock.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\SystemBase.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\SystemManager.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\SimulationSystem\SimulationSystem.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationSystem\EmulationOp.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationSystem\EmulationSystem.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\InorderSystem\InorderSystem.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationTraceSystem\EmulationTraceSystem.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\TimeWheel\ClockedResourceBase.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\TimeWheel\TimeWheel.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\TimeWheel\TimeWheelBase.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Checkpoint\CheckpointMaster.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\BPred.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\BranchType.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\BTB.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\GlobalHistory.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\GShare.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\PHT.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\RAS.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\ConservativeMemDepPred.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\OptimisticMemDepPred.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\StoreSet.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RegDepPredBase.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RMT.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\LatPred\LatPred.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Predictor\HitMissPred\CounterBasedHitMissPred.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecUnit.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecUnitBase.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\MemExecUnit.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\PipelinedExecUnit.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecLatencyInfo.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\Cache.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Memory\MemOrderManager\MemOrderManager.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Register\RegisterFile.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Register\RegisterFreeList.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\ResourceArray.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\ResourceBase.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\ResourceNode.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\Builder\ResourceBuilder.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\Builder\ResourceFactory.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\InorderList\InorderList.cpp" />
+    <ClCompile Include="..\..\..\src\Sim\Thread\Thread.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\EmulatorFactory.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\Alpha64Converter.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\Alpha64Decoder.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\Alpha64Info.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxLoader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxSyscallConv.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\GenericOperation.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\SkipOp.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64Converter.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64Decoder.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64Info.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxLoader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxSyscallConv.cpp" />
+    <ClCompile Include="..\..\..\src\Interface\OpClassCode.cpp" />
+    <ClCompile Include="..\..\..\src\Utility\RuntimeError.cpp" />
+    <ClCompile Include="..\..\..\src\Utility\String.cpp" />
+    <ClCompile Include="..\..\..\src\Env\Env.cpp" />
+    <ClCompile Include="..\..\..\src\Env\Param\ParamDB.cpp" />
+    <ClCompile Include="..\..\..\src\Env\Param\ParamExchange.cpp" />
+    <ClCompile Include="..\..\..\src\Env\Param\ParamPredResult.cpp" />
+    <ClCompile Include="..\..\..\src\Env\Param\ParamXMLPath.cpp" />
+    <ClCompile Include="..\..\..\src\Env\Param\ParamXMLTree.cpp" />
+    <ClCompile Include="..\..\..\src\pch\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SysDeps\posix.cpp" />
+    <ClCompile Include="..\..\..\lib\tinyxml\tinystr.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+      </PrecompiledHeaderFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxml.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+      </PrecompiledHeaderFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlerror.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+      </PrecompiledHeaderFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlparser.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">
+      </PrecompiledHeaderFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\iostreams\src\mapped_file.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\iostreams\src\zlib.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\system\src\error_code.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">Use</PrecompiledHeader>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Use</PrecompiledHeader>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{81c9b27e-763f-47f8-8a87-c90491858226}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\src\DefaultParam.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\XML2CHeader\XML2CHeader.exe $(ProjectDir)..\..\..\src\DefaultParam.xml $(ProjectDir)..\..\..\src\DefaultParam.h g_defaultParam</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\..\..\src\DefaultParam.h</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\..\..\src\DefaultParam.h</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">$(ProjectDir)..\..\..\src\DefaultParam.h</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">$(ProjectDir)..\..\..\src\DefaultParam.h</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\XML2CHeader\XML2CHeader.exe $(ProjectDir)..\..\..\src\DefaultParam.xml $(ProjectDir)..\..\..\src\DefaultParam.h g_defaultParam</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">$(SolutionDir)\XML2CHeader\XML2CHeader.exe $(ProjectDir)..\..\..\src\DefaultParam.xml $(ProjectDir)..\..\..\src\DefaultParam.h g_defaultParam</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Converting DefaultParam.xml to DefaultParam.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">Converting DefaultParam.xml to DefaultParam.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Converting DefaultParam.xml to DefaultParam.h</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">$(SolutionDir)\XML2CHeader\XML2CHeader.exe $(ProjectDir)..\..\..\src\DefaultParam.xml $(ProjectDir)..\..\..\src\DefaultParam.h g_defaultParam</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Converting DefaultParam.xml to DefaultParam.h</Message>
+      <SubType>Designer</SubType>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

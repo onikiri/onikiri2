@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/400.perlbench/ref/'
+        Command='./bin/400.perlbench.alpha64'
+        CommandArguments='-I./lib diffmail.pl 4 800 10 17 19 300'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

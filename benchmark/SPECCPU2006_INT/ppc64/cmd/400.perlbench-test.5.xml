@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/400.perlbench/test/'
+        Command='./bin/400.perlbench.ppc64'
+        CommandArguments='-I. -I./lib ref.pl'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

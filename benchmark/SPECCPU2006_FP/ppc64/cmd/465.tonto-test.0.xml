@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/465.tonto/test/'
+        Command='./bin/465.tonto.ppc64'
+        CommandArguments=''
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

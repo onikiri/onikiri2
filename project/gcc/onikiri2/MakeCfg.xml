@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MakeConfiguration 
+  SourceFile="../../msvc/onikiri2/onikiri2.vcxproj"
+  SourceConfiguration="Release|x64"
+  UsePrecompiledHeader="1"
+>
+  <Platforms>
+    
+    <Platform 
+      Name="linux" 
+      HostString="Linux"
+      CXX="g++" 
+      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG"
+      LDFlags="-static" 
+      CleanTargets="*.o *.d *.gch"
+      WorkingDirectory="WorkLinux" 
+      OutputFile="a.out"
+    >
+      <IncludeDirectories>
+        <Directory Path="../../../src"/>
+        <Directory Path="../../../src/pch"/>
+        <Directory Path="../../../lib"/>
+        <Directory Path="../../../lib/boost/boost_1_53_0"/>
+        <Directory Path="../../../lib/zlib"/>
+      </IncludeDirectories>
+      <LibraryDirectories>
+        <Directory Path="../zlib"/>
+      </LibraryDirectories>
+      <Libraries>
+        <Library Name="z"/>
+      </Libraries>
+      
+      <!--
+        You can add custom build steps to each platform
+        by using a <CustomBuildConfigurations> section.
+
+        <CustomBuildConfigurations>
+          <CustomBuild
+            OutputFile="<output>"
+            InputFile="<input>"
+            Command="<test>"
+          />
+        </CustomBuildConfigurations>
+      -->
+
+    </Platform>
+    
+    <Platform 
+      Name="cygwin"
+      HostString="CYGWIN" 
+      CXX="g++" 
+      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG -D__USE_W32_SOCKETS -Wno-error=unknown-pragmas"
+      LDFlags="-static"
+      CleanTargets="*.o *.d *.gch"
+      WorkingDirectory="WorkCygwin"
+      OutputFile="a.out"
+    >
+      <IncludeDirectories>
+        <Directory Path="../../../src"/>
+        <Directory Path="../../../src/pch"/>
+        <Directory Path="../../../lib"/>
+        <Directory Path="../../../lib/boost/boost_1_53_0"/>
+        <Directory Path="../../../lib/zlib"/>
+      </IncludeDirectories>
+      <LibraryDirectories>
+        <Directory Path="../zlib"/>
+      </LibraryDirectories>
+      <Libraries>
+        <Library Name="z"/>
+        <Library Name="wsock32"/>
+        <Library Name="ws2_32"/>
+      </Libraries>
+    </Platform>
+
+  </Platforms>
+</MakeConfiguration>

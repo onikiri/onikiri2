@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/253.perlbmk/ref/'
+        Command='./bin/253.perlbmk.alpha64'
+        CommandArguments='-I./lib diffmail.pl 2 550 15 24 23 100'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

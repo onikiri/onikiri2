@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/471.omnetpp/test/'
+        Command='./bin/471.omnetpp.alpha64'
+        CommandArguments='omnetpp.ini'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

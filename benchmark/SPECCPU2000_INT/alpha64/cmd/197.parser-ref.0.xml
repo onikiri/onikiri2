@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/197.parser/ref/'
+        Command='./bin/197.parser.alpha64'
+        CommandArguments='2.1.dict -batch'
+        STDIN='ref.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

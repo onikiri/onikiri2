@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/168.wupwise/ref/'
+        Command='./bin/168.wupwise.alpha64'
+        CommandArguments=''
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/444.namd/train/'
+        Command='./bin/444.namd.ppc64'
+        CommandArguments='--input namd.input --iterations 1 --output namd.out '
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

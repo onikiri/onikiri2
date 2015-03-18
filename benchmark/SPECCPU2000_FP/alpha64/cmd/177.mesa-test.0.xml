@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/177.mesa/test/'
+        Command='./bin/177.mesa.alpha64'
+        CommandArguments='-frames 10 -meshfile mesa.in -ppmfile mesa.ppm'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

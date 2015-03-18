@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/470.lbm/train/'
+        Command='./bin/470.lbm.ppc64'
+        CommandArguments='300 reference.dat 0 1 100_100_130_cf_b.of'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+	<Emulator
+		TargetArchitecture='AlphaLinux'
+	/>
+  <Environment>
+    <TargetBasePath
+			Path = ''
+			UseXMLFilePath = '1'
+			UseSimulatorExecFilePath = '0'
+		/>
+  </Environment>
+</Session>

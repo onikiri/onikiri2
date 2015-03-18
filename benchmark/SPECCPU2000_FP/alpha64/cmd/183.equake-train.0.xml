@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/183.equake/train/'
+        Command='./bin/183.equake.alpha64'
+        CommandArguments=''
+        STDIN='inp.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

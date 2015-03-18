@@ -1,0 +1,20 @@
+#
+# Extracting boost archive
+#
+
+BOOST_BASE_NAME = boost_1_53_0
+BOOST_BASE_DIR  = ../../../lib/boost
+
+BOOST_TARGET_DIR = $(BOOST_BASE_DIR)/$(BOOST_BASE_NAME)
+BOOST_ARCHIVE    = $(BOOST_BASE_NAME).tar.gz
+BOOST_MARKER_FILE_ARCHIVE_IS_EXTRACTED = $(BOOST_BASE_DIR)/$(BOOST_BASE_NAME)_is_extracted
+
+
+all : $(BOOST_MARKER_FILE_ARCHIVE_IS_EXTRACTED)
+
+
+$(BOOST_MARKER_FILE_ARCHIVE_IS_EXTRACTED) : $(BOOST_BASE_DIR)/$(BOOST_ARCHIVE)
+	@echo Extracting a boost archive file. This may take several minutes ...
+	(cd $(BOOST_BASE_DIR);tar -zxf $(BOOST_ARCHIVE))
+	touch $(BOOST_MARKER_FILE_ARCHIVE_IS_EXTRACTED)
+	

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/464.h264ref/test/'
+        Command='./bin/464.h264ref.ppc64'
+        CommandArguments='-d foreman_test_encoder_baseline.cfg'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

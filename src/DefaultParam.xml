@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This file defines followings:
+  - default parameters
+  - default network structures between resources
+  This XML file is converted to DefaultParam.h by XML2CHeader 
+  in compile time. When you edit this file, the conversion
+  is done automatically.
+-->
+
+
+<Session
+  Name = "Default"
+>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture="AlphaLinux"
+    EnableResultCRC32Calculation="0"
+  >
+    <Converter
+      EnableSplitLoadStore="0"
+    />
+
+    <Processes>
+      <Process
+        PDB_Array="1"
+        TargetWorkPath="./"
+        TargetBasePath="./"
+        Command=""
+        CommandArguments=""
+        STDIN=""
+        STDINFileOpenMode="Text"
+        STDOUT=""
+        STDERR=""
+        StackMegaBytes="16"
+      />
+    </Processes>
+
+    <System>
+
+      <!--
+        UnixTime: 1254142809 = 2009/09/28 22:00:09
+        EmulationMode : [Host, Fixed, InstructionBased]
+      -->
+      <Time
+        UnixTime="1254142809"
+        EmulationMode="InstructionBased"
+      />
+
+    </System>
+  </Emulator>
+
+
+  <!-- Simulator parameters-->
+  <Simulator Configuration="DefaultConfiguration">
+
+    <Configurations>
+
+      <DefaultConfiguration>
+
+        <Constant
+          ThreadCount   ="1"
+          CoreCount     ="1"
+          MemoryCount   ="1"
+        />
+
+        <!-- Physical resource structure -->
+        <Structure>
+
+          <Copy Count="ThreadCount">
+
+            <CheckpointMaster Name = "checkpointMaster" Count="ThreadCount">
+            </CheckpointMaster>
+
+            <GlobalClock Name = "globalClock" Count="1">
+            </GlobalClock>
+
+            <ForwardEmulator Name ="forwardEmulator" Count="1">
+              <Thread       Name = "thread" />
+              <EmulatorIF Name = "emulator" />
+            </ForwardEmulator>
+
+            <Core Name = "core" Count = "CoreCount">
+              <GlobalClock  Name = "globalClock" />
+              <Thread       Name = "thread" />
+              <ExecLatencyInfo  Name = "execLatencyInfo" />
+              <RegisterFile     Name = "registerFile" />
+              <Fetcher    Name = "fetcher" />
+              <Renamer    Name = "renamer" />
+              <Dispatcher Name = "dispatcher" />
+              <Scheduler  Name = "intScheduler"   To="scheduler"/>
+              <Scheduler  Name = "floatScheduler" To="scheduler"/>
+              <Scheduler  Name = "memScheduler"   To="scheduler"/>
+              <Scheduler  Name = "addrScheduler"  To="scheduler"/>
+              <Retirer    Name = "retirer" />
+              <LatPred    Name = "latPred" />
+              <CacheSystem Name = "cacheSystem" />
+              <EmulatorIF Name = "emulator" />
+              <BPred      Name = "bPred" />
+            </Core>
+
+            <Thread Name="thread" Count="ThreadCount">
+              <EmulatorIF       Name = "emulator" />
+              <CheckpointMaster Name = "checkpointMaster" />
+              <Connection       Name = "memOrderManager"  />
+              <RMT              Name = "rmt"        To = "regDepPred" />
+              <MemDepPred       Name = "memDepPred" />
+              <Core             Name = "core" />
+              <InorderList      Name = "inorderList" />
+              <Recoverer        Name = "recoverer" />
+            </Thread>
+
+            <InorderList Name="inorderList" Count="ThreadCount">
+              <CheckpointMaster Name = "checkpointMaster" />
+              <Core             Name = "core" />
+              <Thread           Name = "thread" />
+            </InorderList>
+
+            <Recoverer Name="recoverer" Count="ThreadCount">
+              <Core             Name = "core" />
+              <Thread           Name = "thread" />
+              <InorderList      Name = "inorderList" />
+              <CheckpointMaster Name = "checkpointMaster" />
+            </Recoverer>
+            
+            <MemOrderManager Name = "memOrderManager" Count="ThreadCount">
+              <Core        Name = "core" />
+              <CacheSystem Name = "cacheSystem" />
+              <EmulatorIF  Name = "emulator" />
+            </MemOrderManager>
+
+            <CounterBasedHitMissPred Name="counterBasedHitMissPred" Count="CoreCount"/>
+            <OptimisticHitMissPred   Name="optimisticHitMissPred"   Count="CoreCount"/>
+            <PessimisticHitMissPred  Name="pessimisticHitMissPred"  Count="CoreCount"/>
+
+            <LatPred Name = "latPred" Count="CoreCount">
+              <Connection
+                  Name = "optimisticHitMissPred"
+                  To   = "hitMissPred"
+              />
+              <Core             Name = "core" />
+              <ExecLatencyInfo  Name = "execLatencyInfo"/>
+            </LatPred>
+
+            <RegisterFile Name="registerFile" Count="CoreCount">
+              <Core        Name = "core" />
+              <EmulatorIF  Name = "emulator" />
+            </RegisterFile>
+
+            <RegisterFreeList Name="registerFreeList" Count="CoreCount">
+              <RegisterFile     Name = "registerFile" />
+              <EmulatorIF       Name = "emulator" />
+              <Core             Name = "core" />
+            </RegisterFreeList>
+
+            <!-- Execution Unit -->
+            <ExecLatencyInfo Name = "execLatencyInfo" Count="CoreCount"/>
+
+            <PipelinedExecUnit Name = "exIntBC"   Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </PipelinedExecUnit>
+            <PipelinedExecUnit Name = "exIntALU"  Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </PipelinedExecUnit>
+            <PipelinedExecUnit Name = "exIntMUL"  Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </PipelinedExecUnit>
+            <PipelinedExecUnit Name = "exAddr"    Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </PipelinedExecUnit>
+            <PipelinedExecUnit Name = "exFloatBC" Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </PipelinedExecUnit>
+            <PipelinedExecUnit Name = "exFPAdd"   Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </PipelinedExecUnit>
+            <PipelinedExecUnit Name = "exFPMul"   Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </PipelinedExecUnit>
+
+            <ExecUnit Name = "exFPDIV" Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </ExecUnit>
+            <ExecUnit Name = "exFPELEM" Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </ExecUnit>
+            <ExecUnit Name = "exIntDIV" Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </ExecUnit>
+            <ExecUnit Name = "exSYS"    Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </ExecUnit>
+
+            <PipelinedExecUnit Name = "exIFCONV"    Count="CoreCount">
+              <Core Name = "core" />
+              <ExecLatencyInfo Name = "execLatencyInfo"/>
+            </PipelinedExecUnit>
+            <MemExecUnit Name = "exMEM" Count="CoreCount">
+              <Core   Name = "core" />
+              <ExecLatencyInfo  Name = "execLatencyInfo" />
+              <Connection       Name = "memOrderManager" />
+              <CacheSystem      Name = "cacheSystem"/>
+            </MemExecUnit>
+
+            <!-- Cache, Memory and Prefetcher -->
+            
+            <!-- 
+              All resources access caches through CacheSystem.
+            -->
+            <CacheSystem Name = "cacheSystem" Count="CoreCount">
+              <Thread       Name = "thread" />
+              <Cache        Name = "cacheL1D" To = "firstLevelDataCache"/>
+              <Cache        Name = "cacheL1I" To = "firstLevelInsnCache"/>
+            </CacheSystem>
+
+            <Cache Name = "cacheL1D" Count="CoreCount">
+              <Core         Name = "core" />
+              <Thread       Name = "thread" />
+              <Cache        Name = "cacheL2" To = "cache"/>
+            </Cache>
+
+            <Cache Name = "cacheL1I" Count="CoreCount">
+              <Core         Name = "core" />
+              <Thread       Name = "thread" />
+              <Cache        Name = "cacheL2" To = "cache"/>
+            </Cache>
+
+            <Cache Name = "cacheL2"  Count="CoreCount">
+              <Core         Name = "core" />
+              <Thread       Name = "thread" />
+              <Cache        Name = "mainMemory" To = "cache"/>
+              <Connection   Name = "streamPrefetcherL2" To = "prefetcher"/>
+            </Cache>
+
+            <Cache Name = "mainMemory" Count="MemoryCount">
+              <Core         Name = "core" />
+              <Thread       Name = "thread" />
+            </Cache>
+
+            <StreamPrefetcher Name = "streamPrefetcherL2" Count="CoreCount">
+              <Connection   Name = "cacheL2" To = "target"/>
+            </StreamPrefetcher>
+
+            <StridePrefetcher Name = "stridePrefetcherL2" Count="CoreCount">
+              <Connection   Name = "cacheL2" To = "target"/>
+            </StridePrefetcher>
+
+            <!-- Fetch -->
+            <Fetcher Name= "fetcher" Count="CoreCount">
+              <Core         Name = "core"  />
+              <Thread       Name = "thread"  />
+              <BPred        Name = "bPred" />
+              <CacheSystem  Name = "cacheSystem"/>
+              <EmulatorIF   Name = "emulator" />
+              <GlobalClock  Name = "globalClock" />
+              <ForwardEmulator  Name ="forwardEmulator" />
+              <Connection Name = "icountFetchThreadSteerer" To = "fetchThreadSteerer" />
+            </Fetcher>
+
+            <BPred Name = "bPred" Count="CoreCount">
+              <Core Name = "core" />
+              <BTB  Name = "btb"  Count="CoreCount"/>
+              <RAS  Name = "ras"  Count="ThreadCount">
+                <CheckpointMaster Name= "checkpointMaster" />
+              </RAS>
+              <Connection Name="gshare" To="dirPred"/>
+              <ForwardEmulator  Name ="forwardEmulator" />
+            </BPred>
+
+            <GShare Name="gshare" Count="CoreCount">
+              <Core           Name = "core" />
+              <PHT            Name = "pht" Count="CoreCount"/>
+              <GlobalHistory  Name = "globalHistory" Count="ThreadCount">
+                <CheckpointMaster Name= "checkpointMaster" />
+              </GlobalHistory>
+            </GShare>
+
+            <RoundRobinFetchThreadSteerer Name = "roundRobinFetchThreadSteerer" Count = "CoreCount">
+              <Connection   Name = "thread" />
+            </RoundRobinFetchThreadSteerer>
+
+            <IcountFetchThreadSteerer Name = "icountFetchThreadSteerer" Count = "CoreCount">
+              <Connection   Name = "thread" />
+            </IcountFetchThreadSteerer>
+
+            <!-- Rename -->
+            <Renamer Name = "renamer" Count="CoreCount">
+              <Core     Name = "core"  />
+              <Thread   Name = "thread"  />
+              <Fetcher  Name= "fetcher" To = "upperPipelineNode" />
+              <RMT      Name= "rmt"     To = "regDepPred" />
+              <MemDepPred Name= "memDepPred"/>
+              <CheckpointMaster Name = "checkpointMaster" />
+              <Connection  Name = "memOrderManager"  />
+              <OpCodeDispatchSteerer  Name= 'opCodeDispatchSteerer'   To = 'steerer' />
+              <LatPred    Name = 'latPred' />
+            </Renamer>
+
+            <!-- Memory dependency predictors -->
+            <OptimisticMemDepPred
+              Name = "optimisticMemDepPred" Count="ThreadCount"
+            >
+              <Core Name = "core" />
+            </OptimisticMemDepPred>
+
+            <ConservativeMemDepPred
+              Name="conservativeMemDepPred" Count="ThreadCount"
+            >
+              <CheckpointMaster Name= "checkpointMaster" />
+              <Core Name = "core" />
+            </ConservativeMemDepPred>
+
+            <StoreSet Name = "storeSetMemDepPred" Count="ThreadCount">
+              <Core Name = "core" />
+            </StoreSet>
+
+            <PerfectMemDepPred Name = "perfectMemDepPred" Count="ThreadCount">
+              <ForwardEmulator Name = "forwardEmulator" />
+              <InorderList     Name = "inorderList" />
+            </PerfectMemDepPred>
+
+            <MemDepPred Name = "memDepPred" Count="ThreadCount">
+              <!--
+                If you want to change a memory dependency predictor, change this connection.
+                Other resources, Renamer and Thread, see this MemDepPred and method calls are
+                redirected to a connected predictor.
+              -->
+              <Connection Name="storeSetMemDepPred" To="memDepPred"/>
+            </MemDepPred>
+            
+            <!-- Register dependency predictor(s) -->            
+            <RMT Name="rmt" Count="ThreadCount">
+              <Core             Name = "core" />
+              <RegisterFile     Name = "registerFile" />
+              <RegisterFreeList Name = "registerFreeList" />
+              <EmulatorIF       Name = "emulator" />
+              <CheckpointMaster Name = "checkpointMaster" />
+            </RMT>
+
+            <!-- Dispatch -->
+            <Dispatcher Name = "dispatcher" Count="CoreCount">
+              <Core    Name = "core"    />
+              <Thread  Name = "thread"  />
+              <Renamer Name = "renamer" To = "upperPipelineNode" />
+            </Dispatcher>
+
+            <OpCodeDispatchSteerer Name = "opCodeDispatchSteerer" Count="CoreCount">
+              <Core Name= "core" />
+            </OpCodeDispatchSteerer>
+
+            <!-- Schedule -->
+            <Scheduler Name= "intScheduler" Count="CoreCount">
+              <Core         Name = "core"  />
+              <Thread       Name = "thread"  />
+              <IssueSelector Name = "issueSelector" To = "selector" />
+              <Connection   Name = "exIntBC"    To = "execUnits" />
+              <Connection   Name = "exIntALU"   To = "execUnits" />
+              <Connection   Name = "exIntMUL"   To = "execUnits" />
+              <Connection   Name = "exIntDIV"   To = "execUnits" />
+              <Connection   Name = "exSYS"      To = "execUnits" />
+            </Scheduler>
+
+            <Scheduler Name= "floatScheduler" Count="CoreCount">
+              <Core         Name = "core"  />
+              <Thread       Name = "thread"  />
+              <IssueSelector Name = "issueSelector" To = "selector" />
+              <Connection   Name = "exFloatBC"  To = "execUnits" />
+              <Connection   Name = "exFPAdd"    To = "execUnits" />
+              <Connection   Name = "exFPMul"    To = "execUnits" />
+              <Connection   Name = "exFPDIV"    To = "execUnits" />
+              <Connection   Name = "exFPELEM"   To = "execUnits" />
+            </Scheduler>
+
+            <Scheduler Name= "memScheduler" Count="CoreCount">
+              <Core         Name = "core"  />
+              <Thread       Name = "thread"  />
+              <IssueSelector Name = "issueSelector" To = "selector" />
+              <Connection   Name = "exIFCONV" To = "execUnits" />
+              <Connection   Name = "exMEM"    To = "execUnits" />
+            </Scheduler>
+
+            <Scheduler Name= "addrScheduler" Count = "CoreCount">
+              <Core         Name = "core"  />
+              <Thread       Name = "thread"  />
+              <IssueSelector Name = "issueSelector" To = "selector" />
+              <Connection   Name = "exAddr"     To = "execUnits"/>
+            </Scheduler>
+
+            <IssueSelector Name = "issueSelector" Count = "CoreCount">
+              <!--
+                If you want to change an issue selector, change this connection.
+                Schedulers see this IssueSelector and method calls are
+                redirected to a connected selector.
+              -->
+              <Connection   Name = "ageIssueSelector" To = "selector"/>
+            </IssueSelector>
+
+            <AgeIssueSelector Name = "ageIssueSelector" Count = "CoreCount">
+            </AgeIssueSelector>
+
+            <InorderIssueSelector Name = "inorderIssueSelector" Count = "CoreCount">
+            </InorderIssueSelector>
+
+            <!-- Retire -->
+            <Retirer Name = "retirer" Count="CoreCount">
+              <Core     Name = "core"  />
+              <Thread   Name = "thread"  />
+              <EmulatorIF   Name = "emulator" />
+              <ForwardEmulator  Name ="forwardEmulator" />
+            </Retirer>
+          </Copy>
+        </Structure>
+        <!-- End physical resource structure -->
+
+
+
+        <!-- Parameter -->
+        <Parameter>
+          <!-- ForwardEmulator -->
+          <ForwardEmulator 
+            Name ="forwardEmulator"
+            Enable="1"
+          >
+          </ForwardEmulator>
+
+          <!-- Checkpoint -->
+          <CheckpointMaster
+            Name = "checkpointMaster"
+            Capacity = "128"
+          />
+
+          <!-- Global clock -->
+          <GlobalClock  Name = "globalClock" />
+
+          <!-- Core
+            Recovery policy :
+            [
+              "Refetch",
+              "ReissueAll",
+              "ReissueSelective",
+              "RedispatchAll",
+            ]
+
+            Recovery from :
+            [
+              "Producer",
+              "NextOfProducer",
+              "Consumer",
+            ]
+
+            * Specify a pipeline model of a load instrction.
+            LoadPipelineModel :
+            [
+              SingleIssue,    : Add ports to a RF for writing back from higher level caches.
+              MultiIssue      : Do not add ports to a RF and issue load instructions
+                                more than once.
+            ]
+            
+            * A removing policy of a scheduler after instruction issue.
+              SchedulerRemovePolicy : [ Remove, Retain, RemoveAfterFinish ]
+            
+            * A checkpointing policy.
+              CheckpointingPolicy : [Auto, All]
+            
+            MIPS R10000 corresponds to: 
+              @SchedulerRemovePolicy = Remove
+              LatPredRecovery/@Policy       = Refetch
+              AddrMatchPredRecovery/@Policy = Refetch
+              ValuePredRecovery/@Policy     = Refetch
+              PartialLoadRecovery/@Policy   = Refetch
+
+            Alpha 21264 corresponds to: 
+              @SchedulerRemovePolicy = RemoveAfterFinish
+              LatPredRecovery/@Policy       = ReissueNotFinished
+              AddrMatchPredRecovery/@Policy = Refetch
+              ValuePredRecovery/@Policy     = Refetch
+              PartialLoadRecovery/@Policy   = Refetch
+              
+          -->
+          <Core
+            Name = "core"
+            LoadPipelineModel = "SingleIssue"
+            SchedulerRemovePolicy = "RemoveAfterFinish"
+            CheckpointingPolicy = "Auto"
+            OpArrayCapacity = "160"
+          >
+            <LatPredRecovery
+              Type    = "Latency"
+              Policy  = "ReissueNotFinished"
+              From    = "NextOfProducer"
+            />
+            <AddrMatchPredRecovery
+              Type    = "AddressMatch"
+              Policy  = "Refetch"
+              From    = "NextOfProducer"
+            />
+            <ValuePredRecovery
+              Type    = "Value"
+              Policy  = "Refetch"
+              From    = "NextOfProducer"
+            />
+            <PartialLoadRecovery
+              Type    = "PartialLoad"
+              Policy  = "Refetch"
+              From    = "Consumer"
+            />
+
+          </Core>
+
+          <!-- Thread -->
+          <Thread
+            Name = "thread"
+          />
+
+          <!-- 
+            InorderList is equivalent to an ROB/Active List.
+          -->
+          <InorderList
+            Name = "inorderList"
+            Capacity = "128"
+            RemoveOpsOnCommit = "0"
+          />
+          
+          <!-- Recoverer -->
+          <Recoverer
+            Name = "recoverer"
+				    BranchPredRecoveryLatency = "0"
+				    ExceptionRecoverylatency = "0"
+          />
+          
+          <!-- ExecUnit -->
+          <ExecUnit           Name = "exIntDIV"   Port = "1"  Code = "iDIV" />
+          <ExecUnit           Name = "exSYS"      Port = "1"  Code = "syscall,syscall_branch" />
+          <PipelinedExecUnit  Name = "exIntBC"    Port = "2"  Code = "CALL,CALL_JUMP,RET,RETC,iBC,iBU,iJUMP" />
+          <PipelinedExecUnit  Name = "exIntALU"   Port = "2"  Code = "iIMM,iMOV,iALU,iSFT,iBYTE" />
+          <PipelinedExecUnit  Name = "exIntMUL"   Port = "1"  Code = "iMUL" />
+          <PipelinedExecUnit  Name = "exAddr"     Port = "2"  Code = "ADDR" />
+          <PipelinedExecUnit  Name = "exFloatBC"  Port = "1"  Code = "fBC" />
+          <PipelinedExecUnit  Name = "exFPAdd"    Port = "1"  Code = "fMOV,fNEG,fADD,fCONV" />
+          <PipelinedExecUnit  Name = "exFPMul"    Port = "1"  Code = "fMUL" />
+          <ExecUnit           Name = "exFPDIV"    Port = "1"  Code = "fDIV" />
+          <ExecUnit           Name = "exFPELEM"   Port = "1"  Code = "fELEM" />
+          <PipelinedExecUnit  Name = "exIFCONV"   Port = "1"  Code = "ifCONV" />
+          <MemExecUnit        Name = "exMEM"      Port = "2"  Code = "iLD,iST,fLD,fST"
+            FloatConversionLatency = "1" 
+          />
+
+          <!-- 
+            MemOrderManager 
+            The capacity of MemOrderManager corresponds to the capacity of LSQ.
+            "UnifiedCapacity" is discarded if "Unified" mode is disabled(0).
+          -->
+          <MemOrderManager
+            Name = "memOrderManager"
+            Unified ="0"
+            UnifiedCapacity = "64"
+            LoadCapacity = "48"
+            StoreCapacity = "48"
+            IdealPatialLoad = "0"
+            RemoveOpsOnCommit = "0"
+          />
+
+          <!-- MemDepPred -->
+          <OptimisticMemDepPred
+            Name = "optimisticMemDepPred" />
+          <ConservativeMemDepPred
+            Name = "conservativeMemDepPred" />
+          <StoreSet
+            Name = "storeSetMemDepPred"
+            StoreIDTableEntryBits = "12"
+            StoreIDTableWays = "1"
+            ProducerTableEntryBits = "9"
+            ProducerTableWays = "1"
+          />
+          <PerfectMemDepPred Name="perfectMemDepPred" />
+          <MemDepPred Name="memDepPred" />
+
+          <!-- RegDepPred -->
+          <RMT Name = "rmt" />
+
+          <!-- Fetcher -->
+          <Fetcher
+            Name = "fetcher"
+            FetchWidth = "4"
+            FetchLatency = "3"
+            IdealMode = "0"
+            CheckLatencyMismatch = "1"
+          />
+
+          <RoundRobinFetchThreadSteerer
+            Name = "roundRobinFetchThreadSteerer"
+          />
+          
+          <IcountFetchThreadSteerer
+            Name = "icountFetchThreadSteerer"
+          />
+          
+          <!-- Renamer -->
+          <Renamer
+            Name = "renamer"
+            RenameLatency = "2"
+          />
+
+          <!-- Dispatcher -->
+          <Dispatcher
+            Name = "dispatcher"
+            DispatchLatency = "2"
+          />
+
+          <!-- OpCodeSteerer -->
+          <OpCodeSteerer
+            Name = "opCodeDispatchSteerer"
+          />
+
+          <!-- Scheduler
+            "IssueLatency" means "issue + register read" latency.
+            SelectPolicy : [ Age, Inorder ]
+            RemovePolicy : [ Core, Remove, Retain, RemoveAfterFinish ]
+          -->
+          <Scheduler
+            Name = "intScheduler"
+            Index = "0"
+            IssueWidth = "2"
+            IssueLatency = "4"
+            WritebackLatency ="2"
+            RemovePolicy = "Core"
+            CommunicationLatency = "0,0,0,0"
+            WindowCapacity = "32"
+          />
+          <Scheduler
+            Name = "floatScheduler"
+            Index = "1"
+            IssueWidth = "2"
+            IssueLatency = "4"
+            WritebackLatency ="2"
+            RemovePolicy = "Core"
+            CommunicationLatency = "0,0,0,0"
+            WindowCapacity = "16"
+          />
+          <Scheduler
+            Name = "memScheduler"
+            Index = "2"
+            IssueWidth = "2"
+            IssueLatency = "4"
+            WritebackLatency ="2"
+            RemovePolicy = "Core"
+            CommunicationLatency = "0,0,0,0"
+            WindowCapacity = "16"
+          />
+          <Scheduler
+            Name = "addrScheduler"
+            Index = "3"
+            IssueWidth = "2"
+            IssueLatency = "4"
+            WritebackLatency ="2"
+            RemovePolicy = "Core"
+            CommunicationLatency = "0,0,0,0"
+            WindowCapacity = "16"
+          />
+
+          <!-- Issue selctors -->
+          <IssueSelector Name = "issueSelector">
+          </IssueSelector>
+
+          <AgeIssueSelector Name = "ageIssueSelector">
+          </AgeIssueSelector>
+
+          <InorderIssueSelector Name = "inorderIssueSelector">
+          </InorderIssueSelector>
+
+          
+          <!-- Retirer -->
+          <Retirer
+            Name = "retirer"
+            CommitWidth = "4"
+            CommitLatency ="2"
+            FixCommitLatency = "1"
+            CommittableStatus = "WRITTENBACK"
+            RetireWidth = "4"
+            NoRetireLimit = "1024"
+          />
+
+
+          <!-- BPred -->
+          <BPred 
+            Name="bPred"
+            Perfect="0"
+          />
+          <!-- BTB -->
+          <BTB
+            Name = "btb"
+            EntryBits = "11"
+            Ways = "4"
+          />
+          <!-- GShare -->
+          <GShare
+            Name = "gshare"
+            GlobalHistoryBits = "10"
+            AddressXORConvolute = "0"
+          />
+          <!-- PHT -->
+          <PHT
+            Name = "pht"
+            EntryBits   = "15"
+            CounterBits = "2"
+          />
+          <!-- RAS -->
+          <RAS
+            Name = "ras"
+            StackSize = "8"
+            EnableBackup = "1"
+          />
+          <!-- GlobalHistory -->
+          <GlobalHistory
+            Name = "globalHistory" />
+
+          <!-- LatencyPredictor -->
+          <LatPred
+            Name = "latPred"
+          />
+          <CounterBasedHitMissPred
+            Name = "counterBasedHitMissPred"
+            CounterBits = "4"
+            EntryBits   = "10"
+            AddressXORConvolute = "0"
+          />
+          <OptimisticHitMissPred
+            Name = "optimisticHitMissPred"
+          />
+          <PessimisticHitMissPred
+            Name = "pessimisticHitMissPred"
+          />
+
+          <!-- RegisterFile -->
+          <RegisterFile
+            Name = "registerFile"
+            Capacity = "128,128,64,8"
+          />
+
+          <RegisterFreeList
+            Name = "registerFreeList"
+          />
+
+          <!-- Cache & Memory
+
+            @ExclusiveAccessCycles:
+
+              @ExclusiveAccessCycles determines cache/memory band width.
+              Each access exclusively uses a port of a cache/memory during @ExclusiveAccessCycles.
+              "0" means that the cache/memory has an infinite band width.
+              @MaxThroughputBytesPerCycle, which shows max band width of a
+              cahce/memory, is determined by the follows:
+                @MaxThroughputBytesPerCycle =
+                  (line size) / @ExclusiveAccessCycles * @NumPorts
+
+          -->
+          <CacheSystem
+            Name = "cacheSystem"
+          />
+          <Cache
+            Name = "cacheL1D"
+            Latency = "3"
+            Perfect = "0"
+            IndexBitSize = "7"
+            OffsetBitSize = "6"
+            NumWays = "4"
+            NumPorts = "0"
+            RequestQueueSize ="0"
+            MissedAccessListSize = "0"
+            ExclusiveAccessCycles = "0"
+            WritePolicy = "WriteThrough"
+          >
+          </Cache>
+          <Cache
+            Name = "cacheL1I"
+            Latency = "3"
+            Perfect = "0"
+            IndexBitSize = "7"
+            OffsetBitSize = "6"
+            NumWays = "4"
+            NumPorts = "0"
+            RequestQueueSize = "0"
+            MissedAccessListSize = "64"
+            ExclusiveAccessCycles = "0"
+            WritePolicy = "WriteThrough"
+          >
+          </Cache>
+          <Cache
+            Name = "cacheL2"
+            Latency = "15"
+            Perfect = "0"
+            IndexBitSize = "13"
+            OffsetBitSize = "6"
+            NumWays = "8"
+            NumPorts = "0"
+            RequestQueueSize = "0"
+            MissedAccessListSize = "128"
+            ExclusiveAccessCycles = "0"
+            WritePolicy = "WriteBack"
+          >
+          </Cache>
+
+          <!-- Main Memory
+            When @ExclusiveAccessCycles is 4 cycles, band width is :
+            @MaXThroughputBytesPerCycle(64B-Line/4cycles=16B) * 1 port * 3GHz = 48GB/sec
+          -->
+          <Cache
+            Name = "mainMemory"
+            Latency = "200"
+            Perfect = "1"
+            IndexBitSize = "1"
+            OffsetBitSize = "6"
+            NumWays = "1"
+            NumPorts = "0"
+            RequestQueueSize = "0"
+            MissedAccessListSize = "0"
+            ExclusiveAccessCycles = "4"
+            WritePolicy = "WriteBack"
+          >
+          </Cache>
+
+          <!-- Stream prefetcher 
+            Distance/Degree are defined in the following paper:
+            "Feedback Directed Prefetching: Improving the Performance and 
+            Bandwidth-Efficiency of Hardware Prefetchers", 
+            Santhosh Srinathyz et al., HPCA(2007)
+            
+            Distance/TrainingWindowSize are specified by the number of lines.
+          -->
+          <StreamPrefetcher
+            Name = "streamPrefetcherL2"
+            EnablePrefetch = "1"
+            Distance = "8"
+            Degree   = "2"
+            StreamTableSize = "16"
+            TrainingWindowSize="16"
+            TrainingThreashold="2"
+            OffsetBitSize = "6"
+          />
+
+          <!-- Stride prefetcher -->
+          <StridePrefetcher
+            Name = "stridePrefetcherL2"
+            EnablePrefetch = "1"
+            Distance = "8"
+            Degree   = "1"
+            StreamTableSize = "16"
+            OffsetBitSize = "6"
+          />
+
+          <!--Execution latency-->
+          <ExecLatencyInfo Name="execLatencyInfo">
+            <Latency Code="CALL" Latency="1" />
+            <Latency Code="CALL_JUMP" Latency="1" />
+            <Latency Code="RET" Latency="1" />
+            <Latency Code="RETC" Latency="1" />
+            <Latency Code="iBC" Latency="1" />
+            <Latency Code="iBU" Latency="1" />
+            <Latency Code="iJUMP" Latency="1" />
+            <Latency Code="iLD" Latency="3" />
+            <Latency Code="iST" Latency="3" />
+            <Latency Code="iIMM" Latency="1" />
+            <Latency Code="iMOV" Latency="1" />
+            <Latency Code="iALU" Latency="1" />
+            <Latency Code="iSFT" Latency="1" />
+            <Latency Code="iMUL" Latency="7" />
+            <Latency Code="iDIV" Latency="14" />
+            <Latency Code="iBYTE" Latency="1" />
+            <Latency Code="fBC"   Latency="2" />
+            <Latency Code="fLD"   Latency="4" />
+            <Latency Code="fST"   Latency="4" />
+            <Latency Code="fMOV" Latency="4" />
+            <Latency Code="fNEG" Latency="4" />
+            <Latency Code="fADD" Latency="4" />
+            <Latency Code="fMUL" Latency="4" />
+            <Latency Code="fDIV" Latency="15" />
+            <Latency Code="fCONV" Latency="4" />
+            <Latency Code="fELEM" Latency="30" />
+            <Latency Code="ifCONV"  Latency="3" />
+            <Latency Code="syscall" Latency="1" />
+            <Latency Code="syscall_branch" Latency="1" />
+            <Latency Code="ADDR" Latency="1" />
+          </ExecLatencyInfo>
+
+        </Parameter>
+      </DefaultConfiguration>
+    </Configurations>
+
+
+    <System
+      Mode = "Simulation"
+      SimulationCycles = "0"
+      SimulationInsns = "0"
+      SkipInsns = "0"
+    >
+      <Inorder
+        EnableBPred  = "1"
+        EnableHMPred = "1"
+        EnableCache  = "1"
+      >
+      </Inorder>
+      <Debug
+        DebugPort  = "5555"
+      />
+    </System>
+    <TimeWheelBase
+      Size = "1024"
+    />
+  </Simulator>
+
+
+  <!-- Environment parameters-->
+  <Environment>
+    <HostWorkPath
+      Path = ""
+      UseXMLFilePath = "0"
+      UseSimulatorExecFilePath = "0"
+    />
+    <Dumper
+      DumpEachThread = "0"
+      DumpEachCore = "1"
+    >
+      <TraceDumper
+        FileName = "dump.txt"
+        EnableDump = "0"
+        DefaultDetail = "5"
+        DetailRegValue = "0"
+        EnableGzip = "0"
+        GzipLevel = "2"
+        SkipInsns = "0"
+        Flush = "0"
+      />
+      <VisualizationDumper
+        FileName = "vis.log"
+        EnableDump = "0"
+        EnableGzip = "0"
+        GzipLevel = "2"
+        SkipInsns = "0"
+      />
+      <CountDumper
+        FileName = "count.csv"
+        EnableDump = "0"
+        EnableGzip = "0"
+        GzipLevel  = "2"
+        InsnCountInterval  = "1000"
+      />
+    </Dumper>
+    <OutputXML
+      FileName = ""
+      Level = "Detail"
+      Filter = ""
+    />
+    <Print
+      FileName = ""
+      SuppressInternalMessage = "0"
+      SuppressWarningMessage = "0"
+    />
+  </Environment>
+
+  <!-- Simulation result placeholder -->
+  <Result
+    PDB_RequireDefaultParam="0"
+    PDB_ReadOnly="0"
+  >
+  </Result>
+
+</Session>
+

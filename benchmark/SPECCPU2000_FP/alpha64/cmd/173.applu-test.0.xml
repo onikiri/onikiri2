@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/173.applu/test/'
+        Command='./bin/173.applu.alpha64'
+        CommandArguments=''
+        STDIN='applu.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/254.gap/test/'
+        Command='./bin/254.gap.alpha64'
+        CommandArguments='-l ./ -q -m 64M'
+        STDIN='test.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

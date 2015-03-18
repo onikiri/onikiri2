@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/300.twolf/train/'
+        Command='./bin/300.twolf.alpha64'
+        CommandArguments='train'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

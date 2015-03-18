@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/252.eon/ref/'
+        Command='./bin/252.eon.alpha64'
+        CommandArguments='chair.control.cook chair.camera chair.surfaces chair.cook.ppm ppm pixels_out.cook'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

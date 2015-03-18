@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/437.leslie3d/test/'
+        Command='./bin/437.leslie3d.alpha64'
+        CommandArguments=''
+        STDIN='leslie3d.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

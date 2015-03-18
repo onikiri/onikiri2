@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/416.gamess/ref/'
+        Command='./bin/416.gamess.alpha64'
+        CommandArguments=''
+        STDIN='h2ocu2+.gradient.config'
+      />
+    </Processes>
+  </Emulator>
+</Session>

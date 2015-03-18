@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/164.gzip/train/'
+        Command='./bin/164.gzip.alpha64'
+        CommandArguments='input.combined 32'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

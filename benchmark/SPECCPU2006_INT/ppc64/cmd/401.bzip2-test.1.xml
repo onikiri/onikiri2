@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/401.bzip2/test/'
+        Command='./bin/401.bzip2.ppc64'
+        CommandArguments='dryer.jpg 2'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

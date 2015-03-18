@@ -1,0 +1,1460 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{a85a9b69-82b3-4344-a413-6e4513ad83ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim">
+      <UniqueIdentifier>{25d44e28-6a63-4527-a112-b55df75ca4be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Core">
+      <UniqueIdentifier>{cfe122c0-b967-401d-8f49-dffa800f6f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline">
+      <UniqueIdentifier>{e7fd0f05-9d19-4936-ab11-15e6f55e6df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline\Scheduler">
+      <UniqueIdentifier>{84f94228-d1b6-4df7-8709-3c47f7687962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline\Fetcher">
+      <UniqueIdentifier>{1489ced8-4fb8-4c72-a6f1-0b8e50d34954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline\Retirer">
+      <UniqueIdentifier>{a7560fba-1b1b-406b-9673-688f134039f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline\Dispatcher">
+      <UniqueIdentifier>{e1204844-4178-48d8-8894-74c1fba14662}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline\Dispatcher\Steerer">
+      <UniqueIdentifier>{8c5f5ef0-8123-4378-8f0a-f43aa020deab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline\Renamer">
+      <UniqueIdentifier>{4806f43a-419b-4d04-ac47-8308beb8b68d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Op">
+      <UniqueIdentifier>{fef90816-acb8-40d4-b041-4dbd07534120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Op\OpContainer">
+      <UniqueIdentifier>{762e38e7-b859-403e-8f86-8521922eab11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Op\OpObserver">
+      <UniqueIdentifier>{c253c780-d635-4e72-bf4b-f954ee961de5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Op\OpArray">
+      <UniqueIdentifier>{81bda35e-11c1-4937-a331-8c939058a1cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Dependency">
+      <UniqueIdentifier>{45e16fd5-4678-4ffd-b651-d456a5fb3c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Dependency\PhyReg">
+      <UniqueIdentifier>{49eae3cd-a6d2-460e-905e-6670644ebb3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Dependency\MemDependency">
+      <UniqueIdentifier>{2a090d8a-a13e-41f6-9ed9-4ce9c241b0a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\System">
+      <UniqueIdentifier>{8437a9d7-8544-4b5a-91ef-b02811c270b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\System\SimulationSystem">
+      <UniqueIdentifier>{d2285276-70c4-44b9-9aab-d3c902d3f62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\System\EmulationSystem">
+      <UniqueIdentifier>{16373bf9-dc99-4053-b60d-a808ebff2366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\System\InorderSystem">
+      <UniqueIdentifier>{0675e16b-3457-4d8f-8627-680d4c1755c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\System\EmulationTraceSystem">
+      <UniqueIdentifier>{9947d718-92df-48d6-89f9-31127bf1cc0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Predictor">
+      <UniqueIdentifier>{828a0469-21d5-4c32-a82c-c59e1e1fce1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Predictor\BPred">
+      <UniqueIdentifier>{f3f7da75-2d3c-4241-9526-423d92331952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Predictor\DepPred">
+      <UniqueIdentifier>{501e2add-8749-422f-a255-67c73bbec726}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Predictor\DepPred\MemDepPred">
+      <UniqueIdentifier>{605fd3a2-7280-4fec-9d2e-3b06dc09a942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Predictor\DepPred\RegDepPred">
+      <UniqueIdentifier>{1ab0474b-392b-4d90-b384-78feaa7bbb00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Predictor\LatPred">
+      <UniqueIdentifier>{56dfadd4-4133-46f7-9957-c0583004e4bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Predictor\HitMissPred">
+      <UniqueIdentifier>{44ce7c83-c3b9-4f7f-ad2a-85f79f13114d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\ExecUnit">
+      <UniqueIdentifier>{d6a895d5-a1e2-49d3-8d07-e66172f22897}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Memory">
+      <UniqueIdentifier>{8c2ff86c-e7dd-442b-8556-0029945ba141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Memory\Cache">
+      <UniqueIdentifier>{49e7e45b-f57f-40dd-97f6-a4a4d85fcb53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Memory\MemOrderManager">
+      <UniqueIdentifier>{253dcae8-2a73-4925-9ad6-27d9823e90c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Register">
+      <UniqueIdentifier>{d37b1362-f8d8-4cd4-bec8-46d2fc9256a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\InorderList">
+      <UniqueIdentifier>{f5b6c4bc-886a-4153-b166-1393fc628775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Thread">
+      <UniqueIdentifier>{884997c9-8daa-4baa-b507-fd73e0bb6978}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu">
+      <UniqueIdentifier>{62575a77-439b-48d8-a6a0-02732cea5889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu\AlphaLinux">
+      <UniqueIdentifier>{73280f75-5bf4-4b0a-810e-098aa28dcca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu\Utility">
+      <UniqueIdentifier>{a2cfa249-3928-464e-8953-2eb409f1f3fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu\PPC64Linux">
+      <UniqueIdentifier>{176e044e-1e2f-485e-a273-b23777fd732b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Interface">
+      <UniqueIdentifier>{8d1ee849-be5e-4974-b51b-c411f8aca2f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utility">
+      <UniqueIdentifier>{013c0903-b2a1-4bfe-855e-c8e305ebd241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utility\Collection">
+      <UniqueIdentifier>{bae79212-3809-43d8-b990-cdfe837e47ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utility\Collection\pool">
+      <UniqueIdentifier>{02f26960-ccc9-4b5c-8eba-e35350151691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Env">
+      <UniqueIdentifier>{01a4a4bd-cd61-43a3-84ea-a17ddb2fa429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Env\Param">
+      <UniqueIdentifier>{e7ea5175-47e8-49f1-aa50-97721c3bc732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\pch">
+      <UniqueIdentifier>{630c5f29-f1f3-410e-bffd-512bc7e3ea95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\SysDeps">
+      <UniqueIdentifier>{f15ec6af-5d7a-4644-a616-4e7cd894023d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\SysDeps\STL">
+      <UniqueIdentifier>{5144c3b1-eaad-4f34-8b50-630fd78670e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\SysDeps\Boost">
+      <UniqueIdentifier>{c6e64c6f-f0cd-49ae-9163-68188ed6f773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\User">
+      <UniqueIdentifier>{c6b690e5-5db4-43f8-9b8d-bd5cfab554e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lib">
+      <UniqueIdentifier>{b4cc4073-2ad9-47e3-af96-459129d3f4aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lib\shttl">
+      <UniqueIdentifier>{673a8e2a-07ee-4829-a5e6-52e25c95d894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lib\tinyxml">
+      <UniqueIdentifier>{a95b757c-2090-4445-9bc8-834ab2ccb81a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lib\boost">
+      <UniqueIdentifier>{3650cc7b-5e73-4b03-b7bb-c6d91d27100e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lib\boost\filesystem">
+      <UniqueIdentifier>{3ceae75f-9160-4a73-b8d0-d689c9ac6ae9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lib\boost\iostreams">
+      <UniqueIdentifier>{67f1e167-2b29-49c2-8705-fc6d0dbb07c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Lib\boost\system">
+      <UniqueIdentifier>{999827ac-4d21-4272-8978-a18bcdebee59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu\Utility\System">
+      <UniqueIdentifier>{4648c2a9-dcf9-4ebb-875a-71d0b95b2722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu\Utility\System\Memory">
+      <UniqueIdentifier>{b49a6aee-f8c4-4201-8815-4f1fb97c6cd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu\Utility\System\Loader">
+      <UniqueIdentifier>{52446413-d216-43d3-ba2a-c34d99cd7c0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu\Utility\System\Syscall">
+      <UniqueIdentifier>{db705f7e-8247-49fe-a39e-2fe2237dae6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\System\EmulationDebugSystem">
+      <UniqueIdentifier>{5e606f3f-7cd3-42a7-9b40-eb3877edddd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\System\EmulationDebugSystem\DebugStub">
+      <UniqueIdentifier>{ba7181bc-6ef9-43cc-908c-fe5dbcce1187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Memory\Prefetcher">
+      <UniqueIdentifier>{c1868abb-d5f2-4234-af5a-7b8e34be5607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Dumper">
+      <UniqueIdentifier>{263a52dd-97d6-4e18-a310-440efec01d35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Samples">
+      <UniqueIdentifier>{af50a7a1-d2a3-45c8-a400-6624c2b128d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Foundation">
+      <UniqueIdentifier>{19dae03d-beb6-431f-937e-72aecd21ccce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Foundation\Event">
+      <UniqueIdentifier>{1f743a44-0e8c-46e5-b371-64a403f27e81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Foundation\Event\EventList">
+      <UniqueIdentifier>{63d02ee0-6138-4fc5-90a2-b28583926848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Foundation\Hook">
+      <UniqueIdentifier>{9797df35-9dff-455f-9e89-87a6d6d9a150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Foundation\Checkpoint">
+      <UniqueIdentifier>{c85c82ab-4500-4615-b7cc-ae763eb806b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Foundation\Resource">
+      <UniqueIdentifier>{70a74bba-3ce3-4b93-b148-2bfb5b9d5016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Foundation\Resource\Builder">
+      <UniqueIdentifier>{f4c9509a-c2ae-43b1-a6f4-203ac552c993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Foundation\TimeWheel">
+      <UniqueIdentifier>{cb266c76-ad50-47b4-9faf-6e7a5ff92f8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Recoverer">
+      <UniqueIdentifier>{c8ff9920-10a8-4cbf-a253-89e346caf152}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline\Scheduler\IssueSelector">
+      <UniqueIdentifier>{b0bf203f-f522-41d9-963b-abe404c29e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sim\Pipeline\Fetcher\Steerer">
+      <UniqueIdentifier>{dd1f4d90-3080-472c-b287-3bb69333f69e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\Types.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Version.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ISAInfo.h">
+      <Filter>src\Sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Core\Core.h">
+      <Filter>src\Sim\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Core\DataPredTypes.h">
+      <Filter>src\Sim\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Pipeline.h">
+      <Filter>src\Sim\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\PipelineNodeBase.h">
+      <Filter>src\Sim\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\PipelineNodeIF.h">
+      <Filter>src\Sim\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueState.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\Scheduler.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Fetcher\Fetcher.h">
+      <Filter>src\Sim\Pipeline\Fetcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Retirer\Retirer.h">
+      <Filter>src\Sim\Pipeline\Retirer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Dispatcher\Dispatcher.h">
+      <Filter>src\Sim\Pipeline\Dispatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Dispatcher\Steerer\OpCodeSteerer.h">
+      <Filter>src\Sim\Pipeline\Dispatcher\Steerer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Dispatcher\Steerer\SteererIF.h">
+      <Filter>src\Sim\Pipeline\Dispatcher\Steerer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Renamer\Renamer.h">
+      <Filter>src\Sim\Pipeline\Renamer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\Op.h">
+      <Filter>src\Sim\Op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\OpInitArgs.h">
+      <Filter>src\Sim\Op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\OpContainer\OpExtraStateTable.h">
+      <Filter>src\Sim\Op\OpContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\OpContainer\OpList.h">
+      <Filter>src\Sim\Op\OpContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\OpObserver\OpObserver.h">
+      <Filter>src\Sim\Op\OpObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\OpArray\OpArray.h">
+      <Filter>src\Sim\Op\OpArray</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dependency\Dependency.h">
+      <Filter>src\Sim\Dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dependency\PhyReg\PhyReg.h">
+      <Filter>src\Sim\Dependency\PhyReg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dependency\MemDependency\MemDependency.h">
+      <Filter>src\Sim\Dependency\MemDependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\ExtraOpDecoder.h">
+      <Filter>src\Sim\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\GlobalClock.h">
+      <Filter>src\Sim\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\SystemBase.h">
+      <Filter>src\Sim\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\SystemManager.h">
+      <Filter>src\Sim\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\SimulationSystem\EmulatorWrapper.h">
+      <Filter>src\Sim\System\SimulationSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\SimulationSystem\SimulationSystem.h">
+      <Filter>src\Sim\System\SimulationSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationSystem\EmulationOp.h">
+      <Filter>src\Sim\System\EmulationSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationSystem\EmulationSystem.h">
+      <Filter>src\Sim\System\EmulationSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\InorderSystem\InorderSystem.h">
+      <Filter>src\Sim\System\InorderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationTraceSystem\EmulationTraceSystem.h">
+      <Filter>src\Sim\System\EmulationTraceSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\TimeWheel\TimeWheel.h">
+      <Filter>src\Sim\Foundation\TimeWheel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\TimeWheel\TimeWheelBase.h">
+      <Filter>src\Sim\Foundation\TimeWheel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\EventBase.h">
+      <Filter>src\Sim\Foundation\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\EventDelegate.h">
+      <Filter>src\Sim\Foundation\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\EventList\EventList.h">
+      <Filter>src\Sim\Foundation\Event\EventList</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\EventList\EventWheel.h">
+      <Filter>src\Sim\Foundation\Event\EventList</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Checkpoint\CheckpointedData.h">
+      <Filter>src\Sim\Foundation\Checkpoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Checkpoint\CheckpointMaster.h">
+      <Filter>src\Sim\Foundation\Checkpoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\BPred.h">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\BranchType.h">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\BTB.h">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\DirPredIF.h">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\GlobalHistory.h">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\GShare.h">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\PHT.h">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\BPred\RAS.h">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\DepPredIF.h">
+      <Filter>src\Sim\Predictor\DepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\ConservativeMemDepPred.h">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\MemDepPredIF.h">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\OptimisticMemDepPred.h">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\StoreSet.h">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RegDepPredBase.h">
+      <Filter>src\Sim\Predictor\DepPred\RegDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RegDepPredIF.h">
+      <Filter>src\Sim\Predictor\DepPred\RegDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RMT.h">
+      <Filter>src\Sim\Predictor\DepPred\RegDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\LatPred\LatPred.h">
+      <Filter>src\Sim\Predictor\LatPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\HitMissPred\CounterBasedHitMissPred.h">
+      <Filter>src\Sim\Predictor\HitMissPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\HitMissPred\HitMissPredIF.h">
+      <Filter>src\Sim\Predictor\HitMissPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\HitMissPred\StaticHitMissPred.h">
+      <Filter>src\Sim\Predictor\HitMissPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecUnit.h">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecUnitBase.h">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecUnitIF.h">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\MemExecUnit.h">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\PipelinedExecUnit.h">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Hook\Hook.h">
+      <Filter>src\Sim\Foundation\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Hook\HookUtil.h">
+      <Filter>src\Sim\Foundation\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\AddrHasher.h">
+      <Filter>src\Sim\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\Cache.h">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\MemOrderManager\MemOrderManager.h">
+      <Filter>src\Sim\Memory\MemOrderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Register\RegisterFile.h">
+      <Filter>src\Sim\Register</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Register\RegisterFreeList.h">
+      <Filter>src\Sim\Register</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\ResourceArray.h">
+      <Filter>src\Sim\Foundation\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\ResourceBase.h">
+      <Filter>src\Sim\Foundation\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\ResourceNode.h">
+      <Filter>src\Sim\Foundation\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\Builder\ResourceBuilder.h">
+      <Filter>src\Sim\Foundation\Resource\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Resource\Builder\ResourceFactory.h">
+      <Filter>src\Sim\Foundation\Resource\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\InorderList\InorderList.h">
+      <Filter>src\Sim\InorderList</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Thread\Thread.h">
+      <Filter>src\Sim\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\EmulatorFactory.h">
+      <Filter>src\Emu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\Alpha64Converter.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\Alpha64Decoder.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\Alpha64Info.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\Alpha64OpInfo.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxEmulator.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxLoader.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxSyscallConv.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxSyscallID.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxTraits.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\AlphaLinux\AlphaOperation.h">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\CommonConverter.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\CommonEmulator.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\CommonOpInfo.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\DecoderUtility.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\ExtraOpInfoWrapper.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\GenericOperation.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\OpEmulationState.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\SkipOp.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64Converter.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64Decoder.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64Info.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxEmulator.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxLoader.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxSyscallConv.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxSyscallID.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxTraits.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64Operation.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\PPC64Linux\PPC64OpInfo.h">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\interface\Addr.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\interface\EmulatorIF.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Interface\ExtraOpDecoderIF.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Interface\ISAInfo.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\interface\MemIF.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\interface\OpClass.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Interface\OpClassCode.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\interface\OpInfo.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\interface\OpStateIF.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Interface\ResourceIF.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Interface\SystemIF.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\IntrusivePtrObjectPool.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\RuntimeError.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\SharedPtrObjectPool.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\String.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\Collection\pool\pool_allocator.h">
+      <Filter>src\Utility\Collection\pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\Collection\pool\pool_list.h">
+      <Filter>src\Utility\Collection\pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\Collection\pool\pool_unordered_map.h">
+      <Filter>src\Utility\Collection\pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\Collection\pool\pool_vector.h">
+      <Filter>src\Utility\Collection\pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Env\Env.h">
+      <Filter>src\Env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Env\Param\ParamDB.h">
+      <Filter>src\Env\Param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Env\Param\ParamExchange.h">
+      <Filter>src\Env\Param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Env\Param\ParamPredResult.h">
+      <Filter>src\Env\Param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Env\Param\ParamXMLPath.h">
+      <Filter>src\Env\Param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Env\Param\ParamXMLPathReductionMap.h">
+      <Filter>src\Env\Param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Env\Param\ParamXMLTree.h">
+      <Filter>src\Env\Param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\pch\pch.h">
+      <Filter>src\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\Debug.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\Endian.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\fenv.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\host_type.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\Inline.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\posix.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\stdarg.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\Warning.h">
+      <Filter>src\SysDeps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\STL\list.h">
+      <Filter>src\SysDeps\STL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\stl\unordered_map.h">
+      <Filter>src\SysDeps\STL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\User\UserPCH.h">
+      <Filter>src\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\User\UserResourceMap.h">
+      <Filter>src\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\array2d.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\bit.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\bitset.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\counter.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\counter_array.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\double_hasher.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\hasher.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\integer.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\lru.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\nlu.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\null_struct.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\replacement.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\setassoc_table.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\shttl_integrity_test.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\shttl_types.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\simple_hasher.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\static_off_hasher.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\std_hasher.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\xbitset.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib\tinyxml\tinystr.h">
+      <Filter>src\Lib\tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib\tinyxml\tinyxml.h">
+      <Filter>src\Lib\tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\User\UserDefaultParam.h">
+      <Filter>src\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Env\Param\ParamXMLPrinter.h">
+      <Filter>src\Env\Param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\Boost\Boost.h">
+      <Filter>src\SysDeps\Boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\ProcessState.h">
+      <Filter>src\Emu\Utility\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\VirtualSystem.h">
+      <Filter>src\Emu\Utility\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.h">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.h">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConvIF.h">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\LoaderIF.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\HeapAllocator.h">
+      <Filter>src\Emu\Utility\System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\MemorySystem.h">
+      <Filter>src\Emu\Utility\System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\MemoryUtility.h">
+      <Filter>src\Emu\Utility\System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\VirtualMemory.h">
+      <Filter>src\Emu\Utility\System\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Prefetcher\PrefetcherIF.h">
+      <Filter>src\Sim\Memory\Prefetcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Interface\MemAccess.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationDebugSystem\EmulationDebugSystem.h">
+      <Filter>src\Sim\System\EmulationDebugSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationDebugSystem\DebugStub\DebugStub.h">
+      <Filter>src\Sim\System\EmulationDebugSystem\DebugStub</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Prefetcher\StreamPrefetcher.h">
+      <Filter>src\Sim\Memory\Prefetcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Prefetcher\PrefetcherBase.h">
+      <Filter>src\Sim\Memory\Prefetcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ResourceMap.h">
+      <Filter>src\Sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lib\shttl\table.h">
+      <Filter>src\Lib\shttl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheExtraStateTable.h">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Prefetcher\StridePrefetcher.h">
+      <Filter>src\Sim\Memory\Prefetcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\OpContainer\OpBuffer.h">
+      <Filter>src\Sim\Op\OpContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\TimeWheel\ClockedResourceIF.h">
+      <Filter>src\Sim\Foundation\TimeWheel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\TimeWheel\ClockedResourceBase.h">
+      <Filter>src\Sim\Foundation\TimeWheel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\PipelineLatch.h">
+      <Filter>src\Sim\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\EmulationDebugSystem\EmulationDebugOp.h">
+      <Filter>src\Sim\System\EmulationDebugSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Hook\HookDecl.h">
+      <Filter>src\Sim\Foundation\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dumper\CountDumper.h">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dumper\Dumper.h">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dumper\DumpFileName.h">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dumper\DumpState.h">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dumper\TraceDumper.h">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Dumper\VisualizationDumper.h">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\ForwardEmulator.h">
+      <Filter>src\Sim\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\System\ArchitectureState.h">
+      <Filter>src\Sim\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\MemOrderManager\MemOrderOperations.h">
+      <Filter>src\Sim\Memory\MemOrderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SysDeps\Boost\asio.h">
+      <Filter>src\SysDeps\Boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\OpStatus.h">
+      <Filter>src\Sim\Op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\DetectLatPredMissEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\ExecuteEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\FinishEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\RescheduleEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\WakeUpEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\MemoryAccessEndEvent.h">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheTypes.h">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\LatPred\LatPredResult.h">
+      <Filter>src\Sim\Predictor\LatPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Samples\SamplePrefetcher.h">
+      <Filter>src\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Samples\SampleBPred.h">
+      <Filter>src\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\User\UserInit.h">
+      <Filter>src\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Samples\SampleNullModule.h">
+      <Filter>src\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Samples\SampleHookModule.h">
+      <Filter>src\Samples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\WriteBackEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheAccessRequestQueue.h">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheMissedAccessList.h">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Memory\Cache\CacheSystem.h">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\Math.h">
+      <Filter>src\Emu\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Retirer\RetireEvent.h">
+      <Filter>src\Sim\Pipeline\Retirer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Event\PriorityEventList.h">
+      <Filter>src\Sim\Foundation\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utility\Collection\fixed_size_buffer.h">
+      <Filter>src\Utility\Collection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecLatencyInfo.h">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Recoverer\Recoverer.h">
+      <Filter>src\Sim\Recoverer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ResourcePriority.h">
+      <Filter>src\Sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\DumpCommittableEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\DumpSchedulingEvent.h">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\ExecUnit\ExecUnitReserver.h">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\MemDepPred.h">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\PerfectMemDepPred.h">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Checkpoint\Checkpoint.h">
+      <Filter>src\Sim\Foundation\Checkpoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Checkpoint\CheckpointedDataBase.h">
+      <Filter>src\Sim\Foundation\Checkpoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\SimPC.h">
+      <Filter>src\Sim\Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Foundation\Debug.h">
+      <Filter>src\Sim\Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\AgeIssueSelector.h">
+      <Filter>src\Sim\Pipeline\Scheduler\IssueSelector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\InorderIssueSelector.h">
+      <Filter>src\Sim\Pipeline\Scheduler\IssueSelector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\IssueSelectorIF.h">
+      <Filter>src\Sim\Pipeline\Scheduler\IssueSelector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\IssueSelector.h">
+      <Filter>src\Sim\Pipeline\Scheduler\IssueSelector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Recoverer\Exception.h">
+      <Filter>src\Sim\Recoverer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\FetchThreadSteererIF.h">
+      <Filter>src\Sim\Pipeline\Fetcher\Steerer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\RoundRobinFetchThreadSteerer.h">
+      <Filter>src\Sim\Pipeline\Fetcher\Steerer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\IcountFetchThreadSteerer.h">
+      <Filter>src\Sim\Pipeline\Fetcher\Steerer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sim\Op\OpClassStatistics.h">
+      <Filter>src\Sim\Op</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\Main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\ISAInfo.cpp">
+      <Filter>src\Sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Core\Core.cpp">
+      <Filter>src\Sim\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Core\DataPredTypes.cpp">
+      <Filter>src\Sim\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Pipeline.cpp">
+      <Filter>src\Sim\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\Scheduler.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Fetcher\Fetcher.cpp">
+      <Filter>src\Sim\Pipeline\Fetcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Retirer\Retirer.cpp">
+      <Filter>src\Sim\Pipeline\Retirer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Dispatcher\Dispatcher.cpp">
+      <Filter>src\Sim\Pipeline\Dispatcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Dispatcher\Steerer\OpCodeSteerer.cpp">
+      <Filter>src\Sim\Pipeline\Dispatcher\Steerer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Renamer\Renamer.cpp">
+      <Filter>src\Sim\Pipeline\Renamer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Op\Op.cpp">
+      <Filter>src\Sim\Op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Op\OpContainer\OpList.cpp">
+      <Filter>src\Sim\Op\OpContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Op\OpObserver\OpObserver.cpp">
+      <Filter>src\Sim\Op\OpObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Op\OpArray\OpArray.cpp">
+      <Filter>src\Sim\Op\OpArray</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Dependency\Dependency.cpp">
+      <Filter>src\Sim\Dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\ExtraOpDecoder.cpp">
+      <Filter>src\Sim\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\GlobalClock.cpp">
+      <Filter>src\Sim\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\SystemBase.cpp">
+      <Filter>src\Sim\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\SystemManager.cpp">
+      <Filter>src\Sim\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\SimulationSystem\SimulationSystem.cpp">
+      <Filter>src\Sim\System\SimulationSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationSystem\EmulationOp.cpp">
+      <Filter>src\Sim\System\EmulationSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationSystem\EmulationSystem.cpp">
+      <Filter>src\Sim\System\EmulationSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\InorderSystem\InorderSystem.cpp">
+      <Filter>src\Sim\System\InorderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationTraceSystem\EmulationTraceSystem.cpp">
+      <Filter>src\Sim\System\EmulationTraceSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\TimeWheel\TimeWheel.cpp">
+      <Filter>src\Sim\Foundation\TimeWheel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\TimeWheel\TimeWheelBase.cpp">
+      <Filter>src\Sim\Foundation\TimeWheel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Checkpoint\CheckpointMaster.cpp">
+      <Filter>src\Sim\Foundation\Checkpoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\BPred.cpp">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\BranchType.cpp">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\BTB.cpp">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\GlobalHistory.cpp">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\GShare.cpp">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\PHT.cpp">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\BPred\RAS.cpp">
+      <Filter>src\Sim\Predictor\BPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\ConservativeMemDepPred.cpp">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\OptimisticMemDepPred.cpp">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\StoreSet.cpp">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RegDepPredBase.cpp">
+      <Filter>src\Sim\Predictor\DepPred\RegDepPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\RegDepPred\RMT.cpp">
+      <Filter>src\Sim\Predictor\DepPred\RegDepPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\LatPred\LatPred.cpp">
+      <Filter>src\Sim\Predictor\LatPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\HitMissPred\CounterBasedHitMissPred.cpp">
+      <Filter>src\Sim\Predictor\HitMissPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecUnit.cpp">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecUnitBase.cpp">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\MemExecUnit.cpp">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\PipelinedExecUnit.cpp">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\Cache.cpp">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\MemOrderManager\MemOrderManager.cpp">
+      <Filter>src\Sim\Memory\MemOrderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Register\RegisterFile.cpp">
+      <Filter>src\Sim\Register</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Register\RegisterFreeList.cpp">
+      <Filter>src\Sim\Register</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\ResourceArray.cpp">
+      <Filter>src\Sim\Foundation\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\ResourceBase.cpp">
+      <Filter>src\Sim\Foundation\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\ResourceNode.cpp">
+      <Filter>src\Sim\Foundation\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\Builder\ResourceBuilder.cpp">
+      <Filter>src\Sim\Foundation\Resource\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\Resource\Builder\ResourceFactory.cpp">
+      <Filter>src\Sim\Foundation\Resource\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\InorderList\InorderList.cpp">
+      <Filter>src\Sim\InorderList</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Thread\Thread.cpp">
+      <Filter>src\Sim\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\EmulatorFactory.cpp">
+      <Filter>src\Emu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\Alpha64Converter.cpp">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\Alpha64Decoder.cpp">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\Alpha64Info.cpp">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxLoader.cpp">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\AlphaLinux\AlphaLinuxSyscallConv.cpp">
+      <Filter>src\Emu\AlphaLinux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\GenericOperation.cpp">
+      <Filter>src\Emu\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\SkipOp.cpp">
+      <Filter>src\Emu\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64Converter.cpp">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64Decoder.cpp">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64Info.cpp">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxLoader.cpp">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\PPC64Linux\PPC64LinuxSyscallConv.cpp">
+      <Filter>src\Emu\PPC64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Interface\OpClassCode.cpp">
+      <Filter>src\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Utility\RuntimeError.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Utility\String.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Env\Env.cpp">
+      <Filter>src\Env</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Env\Param\ParamDB.cpp">
+      <Filter>src\Env\Param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Env\Param\ParamExchange.cpp">
+      <Filter>src\Env\Param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Env\Param\ParamPredResult.cpp">
+      <Filter>src\Env\Param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Env\Param\ParamXMLPath.cpp">
+      <Filter>src\Env\Param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Env\Param\ParamXMLTree.cpp">
+      <Filter>src\Env\Param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\pch\pch.cpp">
+      <Filter>src\pch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SysDeps\posix.cpp">
+      <Filter>src\SysDeps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinystr.cpp">
+      <Filter>src\Lib\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxml.cpp">
+      <Filter>src\Lib\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlerror.cpp">
+      <Filter>src\Lib\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlparser.cpp">
+      <Filter>src\Lib\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\system\src\error_code.cpp">
+      <Filter>src\Lib\boost\system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\iostreams\src\mapped_file.cpp">
+      <Filter>src\Lib\boost\iostreams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\iostreams\src\zlib.cpp">
+      <Filter>src\Lib\boost\iostreams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\ProcessState.cpp">
+      <Filter>src\Emu\Utility\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualSystem.cpp">
+      <Filter>src\Emu\Utility\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.cpp">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.cpp">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\HeapAllocator.cpp">
+      <Filter>src\Emu\Utility\System\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\MemorySystem.cpp">
+      <Filter>src\Emu\Utility\System\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\MemoryUtility.cpp">
+      <Filter>src\Emu\Utility\System\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\VirtualMemory.cpp">
+      <Filter>src\Emu\Utility\System\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\Prefetcher\StreamPrefetcher.cpp">
+      <Filter>src\Sim\Memory\Prefetcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Interface\MemAccess.cpp">
+      <Filter>src\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationDebugSystem\EmulationDebugSystem.cpp">
+      <Filter>src\Sim\System\EmulationDebugSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationDebugSystem\DebugStub\DebugStub.cpp">
+      <Filter>src\Sim\System\EmulationDebugSystem\DebugStub</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\Prefetcher\PrefetcherBase.cpp">
+      <Filter>src\Sim\Memory\Prefetcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Interface\Addr.cpp">
+      <Filter>src\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\Prefetcher\StridePrefetcher.cpp">
+      <Filter>src\Sim\Memory\Prefetcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Op\OpContainer\OpBuffer.cpp">
+      <Filter>src\Sim\Op\OpContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Foundation\TimeWheel\ClockedResourceBase.cpp">
+      <Filter>src\Sim\Foundation\TimeWheel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\PipelineLatch.cpp">
+      <Filter>src\Sim\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\EmulationDebugSystem\EmulationDebugOp.cpp">
+      <Filter>src\Sim\System\EmulationDebugSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Dumper\CountDumper.cpp">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Dumper\Dumper.cpp">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Dumper\TraceDumper.cpp">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Dumper\VisualizationDumper.cpp">
+      <Filter>src\Sim\Dumper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\System\ForwardEmulator.cpp">
+      <Filter>src\Sim\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\MemOrderManager\MemOrderOperations.cpp">
+      <Filter>src\Sim\Memory\MemOrderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Op\OpStatus.cpp">
+      <Filter>src\Sim\Op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\DetectLatPredMissEvent.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\ExecuteEvent.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\FinishEvent.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueEvent.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\RescheduleEvent.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\MemoryAccessEndEvent.cpp">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\WriteBackEvent.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\CacheAccessRequestQueue.cpp">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\CacheMissedAccessList.cpp">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Memory\Cache\CacheSystem.cpp">
+      <Filter>src\Sim\Memory\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Retirer\RetireEvent.cpp">
+      <Filter>src\Sim\Pipeline\Retirer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecLatencyInfo.cpp">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Recoverer\Recoverer.cpp">
+      <Filter>src\Sim\Recoverer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\codecvt_error_category.cpp">
+      <Filter>src\Lib\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\operations.cpp">
+      <Filter>src\Lib\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\path.cpp">
+      <Filter>src\Lib\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\path_traits.cpp">
+      <Filter>src\Lib\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\portability.cpp">
+      <Filter>src\Lib\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\unique_path.cpp">
+      <Filter>src\Lib\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\utf8_codecvt_facet.cpp">
+      <Filter>src\Lib\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\windows_file_codecvt.cpp">
+      <Filter>src\Lib\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecUnitReserver.cpp">
+      <Filter>src\Sim\ExecUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\MemDepPred.cpp">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Predictor\DepPred\MemDepPred\PerfectMemDepPred.cpp">
+      <Filter>src\Sim\Predictor\DepPred\MemDepPred</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\AgeIssueSelector.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler\IssueSelector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\InorderIssueSelector.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler\IssueSelector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Scheduler\IssueSelector\IssueSelector.cpp">
+      <Filter>src\Sim\Pipeline\Scheduler\IssueSelector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\RoundRobinFetchThreadSteerer.cpp">
+      <Filter>src\Sim\Pipeline\Fetcher\Steerer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Pipeline\Fetcher\Steerer\IcountFetchThreadSteerer.cpp">
+      <Filter>src\Sim\Pipeline\Fetcher\Steerer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sim\Op\OpClassStatistics.cpp">
+      <Filter>src\Sim\Op</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\src\DefaultParam.xml">
+      <Filter>src</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

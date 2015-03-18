@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/473.astar/train/'
+        Command='./bin/473.astar.ppc64'
+        CommandArguments='rivers1.cfg'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/481.wrf/train/'
+        Command='./bin/481.wrf.ppc64'
+        CommandArguments=''
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

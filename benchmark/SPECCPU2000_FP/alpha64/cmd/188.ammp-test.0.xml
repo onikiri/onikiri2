@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/188.ammp/test/'
+        Command='./bin/188.ammp.alpha64'
+        CommandArguments=''
+        STDIN='ammp.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

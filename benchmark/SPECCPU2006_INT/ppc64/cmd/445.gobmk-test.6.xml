@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/445.gobmk/test/'
+        Command='./bin/445.gobmk.ppc64'
+        CommandArguments='--quiet --mode gtp'
+        STDIN='dniwog.tst'
+      />
+    </Processes>
+  </Emulator>
+</Session>

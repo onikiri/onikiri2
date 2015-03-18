@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/436.cactusADM/train/'
+        Command='./bin/436.cactusADM.alpha64'
+        CommandArguments='benchADM.par'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

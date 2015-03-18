@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/403.gcc/test/'
+        Command='./bin/403.gcc.ppc64'
+        CommandArguments='cccp.i -o cccp.s'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

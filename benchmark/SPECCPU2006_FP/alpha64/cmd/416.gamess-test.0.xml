@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='AlphaLinux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/416.gamess/test/'
+        Command='./bin/416.gamess.alpha64'
+        CommandArguments=''
+        STDIN='exam29.config'
+      />
+    </Processes>
+  </Emulator>
+</Session>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='PPC64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/462.libquantum/train/'
+        Command='./bin/462.libquantum.ppc64'
+        CommandArguments='143 25'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>
