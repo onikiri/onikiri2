@@ -2,8 +2,13 @@ lib/boost/boost*
 
 project/gcc/onikiri2/WorkLinux
 project/gcc/onikiri2/WorkCygwin
+project/gcc/onikiri2/Makefile
+
 project/gcc/XML2CHeader/WorkLinux
 project/gcc/XML2CHeader/WorkCygwin
+project/gcc/XML2CHeader/Makefile
+project/gcc/XML2CHeader/XML2CHeader*
+
 project/gcc/zlib
 
 tool/AutoRunTools/result*
