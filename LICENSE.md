@@ -1,10 +1,10 @@
-Copyright (c) 2005-2008 Kenichi Watanabe.  
-Copyright (c) 2005-2008 Yasuhiro Watari.  
-Copyright (c) 2005-2008 Hironori Ichibayashi.  
-Copyright (c) 2008-2009 Kazuo Horio.  
-Copyright (c) 2009-2015 Naruki Kurata.  
-Copyright (c) 2005-2015 Ryota Shioya.  
-Copyright (c) 2005-2015 Masahiro Goshima.
+* Copyright (c) 2005-2008 Kenichi Watanabe.  
+* Copyright (c) 2005-2008 Yasuhiro Watari.  
+* Copyright (c) 2005-2008 Hironori Ichibayashi.  
+* Copyright (c) 2008-2009 Kazuo Horio.  
+* Copyright (c) 2009-2015 Naruki Kurata.  
+* Copyright (c) 2005-2015 Ryota Shioya.  
+* Copyright (c) 2005-2015 Masahiro Goshima.
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -26,12 +26,14 @@ misrepresented as being the original software.
 distribution.
 
 #### Licenses for the Libraries
-lib/ directory has libraries written below. You also have to agree to each license agreement of the libraries.
-- boost
-- TinyXml
-- zlib
-- XML::TreePP
-- Text::CSV
-- Tar32
+
+lib/directory has libraries written below. You also have to agree to each license agreement of the libraries.
+
+* boost
+* TinyXml
+* zlib
+* XML::TreePP
+* Text::CSV
+* Tar32
 
 XML::TreePP, Text::CSV and Tar32 are used only when you build Onikiri and are not included in a built binary. 
