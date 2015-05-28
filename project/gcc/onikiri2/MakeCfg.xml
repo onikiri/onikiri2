@@ -10,7 +10,7 @@
       Name="linux" 
       HostString="Linux"
       CXX="g++" 
-      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG"
+      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG -Wno-unused-local-typedefs"
       LDFlags="-static" 
       CleanTargets="*.o *.d *.gch"
       WorkingDirectory="WorkLinux" 
