@@ -26,6 +26,7 @@ src/DefaultParam.h
 *.opensdf
 *.ilk
 *.pdb
+*.suo
 
 project/msvc/Lib/*
 project/msvc/ipch
