@@ -49,7 +49,7 @@
 	#define ONIKIRI_DEBUG_LINE     __LINE__
 	#define ONIKIRI_DEBUG_FUNCTION __FUNCSIG__
 
-#elif defined COMPILER_IS_GCC  
+#elif defined (COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
 
 	#define ONIKIRI_DEBUG_FILE     __FILE__
 	#define ONIKIRI_DEBUG_LINE     __LINE__
@@ -71,7 +71,7 @@
 
 #define ONIKIRI_BREAK() __debugbreak()
 
-#elif defined COMPILER_IS_GCC  
+#elif defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
 
 #define ONIKIRI_BREAK() __builtin_trap()
 

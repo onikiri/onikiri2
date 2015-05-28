@@ -48,27 +48,34 @@
 #define NO_ZLIB 0
 
 #ifndef ONIKIRI_DEBUG
-#define BOOST_DISABLE_ASSERTS
+#   define BOOST_DISABLE_ASSERTS
 #endif
 
 
 #ifdef COMPILER_IS_MSVC
 
-    #pragma warning(push)
+#   pragma warning(push)
 
-    // Some boost files cause warnings 4244/4245/4267/4819 in MSVC 2013.
-    #pragma warning(disable:4244)
-    #pragma warning(disable:4245)
-    #pragma warning(disable:4819)
-    #pragma warning(disable:4267)
+// Some boost files cause warnings 4244/4245/4267/4819 in MSVC 2013.
+#   pragma warning(disable:4244)
+#   pragma warning(disable:4245)
+#   pragma warning(disable:4819)
+#   pragma warning(disable:4267)
 
 #elif defined COMPILER_IS_GCC
 
-    // push & pop is available since gcc 4.6
-    #pragma GCC diagnostic push
+// push & pop is available since gcc 4.6
+#   pragma GCC diagnostic push
     
-    #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
-    #pragma GCC diagnostic ignored "-Wunused-variable"
+#   pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+#   pragma GCC diagnostic ignored "-Wunused-variable"
+
+#elif defined COMPILER_IS_CLANG
+
+// push & pop is available since gcc 4.6
+#   pragma GCC diagnostic push
+
+#   pragma GCC diagnostic ignored "-Woverloaded-virtual"
 
 #endif
 
@@ -116,13 +123,11 @@
 
 
 #ifdef COMPILER_IS_MSVC
-
-    #pragma warning(pop)
-
+#   pragma warning(pop)
 #elif defined COMPILER_IS_GCC
-
-    #pragma GCC diagnostic pop
-
+#   pragma GCC diagnostic pop
+#elif defined COMPILER_IS_CLANG
+#   pragma GCC diagnostic pop
 #else
 
 

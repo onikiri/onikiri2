@@ -60,7 +60,7 @@ namespace Onikiri {
 #define CONVERTENDIAN32_DEFINED
 #define CONVERTENDIAN64_DEFINED
 
-#elif defined(COMPILER_IS_GCC) // #if defined(COMPILER_IS_MSVC)
+#elif defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
 #if defined(HOST_IS_X86_64) || defined(HOST_IS_X86)
 	inline u16 ConvertEndian(u16 value)
 	{

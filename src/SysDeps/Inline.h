@@ -43,7 +43,7 @@
 	#define INLINE   __forceinline
 	#define NOINLINE __declspec(noinline)  
 
-#elif defined COMPILER_IS_GCC  
+#elif defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
 
 	#define INLINE 	 inline __attribute__((always_inline))
 	#define NOINLINE __attribute__((noinline)) 

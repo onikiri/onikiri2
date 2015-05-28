@@ -58,7 +58,7 @@ inline int fesetround(int rounding_mode)
 }
 
 
-#elif defined( COMPILER_IS_GCC )
+#elif defined( COMPILER_IS_GCC ) || defined(COMPILER_IS_CLANG)
 #	ifndef _GNU_SOURCE
 #		define _GNU_SOURCE
 #	endif

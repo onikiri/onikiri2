@@ -52,9 +52,11 @@
 
 #if defined( _MSC_VER )
 #	define COMPILER_IS_MSVC
-#	if _MSC_VER < 1600 
-#		error "Visual C++ 2010 or later is required"
+#	if _MSC_VER < 1800 
+#		error "Visual C++ 2013 or later is required"
 #   endif
+#elif defined( __clang__ )
+#	define COMPILER_IS_CLANG
 #elif defined( __GNUC__ )
 #	define COMPILER_IS_GCC
 #else
@@ -68,7 +70,7 @@
 #	else
 #		define HOST_IS_X86
 #	endif
-#elif defined(COMPILER_IS_GCC)
+#elif defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
 #	if defined(__x86_64__)
 #		define HOST_IS_LITTLE_ENDIAN
 #		define HOST_IS_X86_64

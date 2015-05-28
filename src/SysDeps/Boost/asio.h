@@ -43,28 +43,21 @@
 
     // Missing braces in boost/asio/ip/impl/address_v6.ipp and
     // boost/asio/ip/detail/impl/endpoint.ipp.
-    #pragma GCC diagnostic ignored "-Wmissing-braces"
+#   pragma GCC diagnostic ignored "-Wmissing-braces"
 
     // Strict-aliasing rules are broken in
     // boost/asio/detail/impl/win_iocp_handle_service.ipp
-    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#   pragma GCC diagnostic ignored "-Wstrict-aliasing"
 
-    #include <boost/asio.hpp>
+#   include <boost/asio.hpp>
 
     // alternative to push/pop
-    #pragma GCC diagnostic error "-Wmissing-braces"
-    #pragma GCC diagnostic error "-Wstrict-aliasing"
+#   pragma GCC diagnostic error "-Wmissing-braces"
+#   pragma GCC diagnostic error "-Wstrict-aliasing"
 
     // #pragma GCC diagnostic pop
 #else
-    #if (_MSC_VER == 1700)
-        #pragma warning(push)
-        #pragma warning( disable: 4250 ) // 2‚ÂˆÈã‚Ìƒƒ“ƒo[‚ª“¯‚¶–¼‘O‚ğ‚Á‚Ä‚¢‚Ü‚·
-        #include <boost/asio.hpp>
-        #pragma warning(pop)
-    #else
-        #include <boost/asio.hpp>
-    #endif
+#   include <boost/asio.hpp>
 #endif
 
 

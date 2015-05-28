@@ -87,7 +87,7 @@ namespace Onikiri
 	#define DEBUG_WHERE_ARGS() \
 		ONIKIRI_DEBUG_FILE , ONIKIRI_DEBUG_LINE, ONIKIRI_DEBUG_FUNCTION, ONIKIRI_DEBUG_NAME
 
-	#if defined(COMPILER_IS_GCC)
+    #if defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
 		// Runtime exception
 		#define THROW_RUNTIME_ERROR(...) \
 			RuntimeErrorFunction(	RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), ## __VA_ARGS__ )
@@ -107,7 +107,7 @@ namespace Onikiri
 
 	// Assert
 	#ifdef ONIKIRI_DEBUG
-		#if defined(COMPILER_IS_GCC)
+    #if defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
 			// Assert
 			#define ASSERT(cond, ...) \
 				if(!(cond)){AssertFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), #cond ), false, ## __VA_ARGS__);}
