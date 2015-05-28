@@ -36,7 +36,7 @@
   		以下の指定例では，1,000 命令のエミュレーションを行った後，
   		1,000,000 命令のサイクルア・キュレートなシミュレーションを行います．
 		-->
-    <System SimulationInsns='1M' SkipInsns='1000' />
+    <System SimulationInsns='100k' SkipInsns='1000' />
   </Simulator>
   
 	<!-- 環境設定 -->
@@ -54,7 +54,7 @@
 			<!-- ビジュアライザ 用のダンプ -->
 			<VisualizationDumper
 				FileName='vis.txt'
-				EnableDump='0'
+				EnableDump='1'
 				EnableGzip='1'
 				GzipLevel ='2'
 				SkipInsns ='0'
