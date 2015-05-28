@@ -35,8 +35,8 @@
 // Definition of the version number of Onikiri.
 // Format: a.bbbb
 // a:    Major version number.
-// bbbb: svn revision. 
-#define ONIKIRI_VERSION 0x25320
+// bbbb: Minor revision. 
+#define ONIKIRI_VERSION 0x29000
 #define ONIKIRI_VERSION_DECIMAL_POINT 16
 
 // Kanata file version
