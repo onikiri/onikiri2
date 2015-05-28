@@ -1,15 +1,5 @@
 lib/boost/boost*
 
-project/gcc/onikiri2/WorkLinux
-project/gcc/onikiri2/WorkCygwin
-project/gcc/onikiri2/Makefile
-
-project/gcc/XML2CHeader/WorkLinux
-project/gcc/XML2CHeader/WorkCygwin
-project/gcc/XML2CHeader/Makefile
-project/gcc/XML2CHeader/XML2CHeader*
-
-project/gcc/zlib
 
 tool/AutoRunTools/result*
 tool/User/McPAT/Script/work*
@@ -21,7 +11,21 @@ tool/User/Work/mcpat.result*
 src/DefaultParam.h
 
 
-# Visual Studio related files
+# gcc-related files
+project/gcc/onikiri2/WorkLinux
+project/gcc/onikiri2/WorkCygwin
+project/gcc/onikiri2/Makefile
+project/gcc/onikiri2/a.out
+
+project/gcc/XML2CHeader/WorkLinux
+project/gcc/XML2CHeader/WorkCygwin
+project/gcc/XML2CHeader/Makefile
+project/gcc/XML2CHeader/XML2CHeader*
+
+project/gcc/zlib
+
+
+# VS-related files
 *.sdf
 *.opensdf
 *.ilk
