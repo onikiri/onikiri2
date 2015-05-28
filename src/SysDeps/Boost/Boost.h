@@ -39,41 +39,100 @@
 
 #include "SysDeps/host_type.h"
 
+#define BOOST_NO_MT
+#define BOOST_DISABLE_THREADS
+#define BOOST_SP_USE_QUICK_ALLOCATOR
+#define BOOST_SP_DISABLE_THREADS
+#define BOOST_ALL_NO_LIB
+#define BOOST_SYSTEM_NO_LIB
+#define NO_ZLIB 0
+
+#ifndef ONIKIRI_DEBUG
+#define BOOST_DISABLE_ASSERTS
+#endif
+
+
 #ifdef COMPILER_IS_MSVC
 
-	// The following files cause several warnings, and 
-	// these warnings are suppressed by configuration switches of 
-	// the .cpp files in the MSVC project file.
-	//
-	// - iostreams/mapped_file.cpp
-	// - iostreams/zlib.cpp 
-	// - system/error_code.cpp
-	// - filesystem/path.cpp
-	// - filesystem/path_traits.cpp
-	// - filesystem/portability.cpp
-	// - filesystem/utf8_codecvt_facet.cpp
-	// - filesystem/windows_file_codecvt.cpp
+    #pragma warning(push)
+
+    // Some boost files cause warnings 4244/4245/4819 in MSVC 2013.
+    #pragma warning(disable:4244)
+    #pragma warning(disable:4245)
+    #pragma warning(disable:4819)
+
+#elif defined COMPILER_IS_GCC
+
+    // push & pop is available since gcc 4.6
+    #pragma GCC diagnostic push
+
+    // Missing braces in boost/asio/ip/impl/address_v6.ipp and
+    // boost/asio/ip/detail/impl/endpoint.ipp.
+    #pragma GCC diagnostic ignored "-Wmissing-braces"
+
+    // Strict-aliasing rules are broken in
+    // boost/asio/detail/impl/win_iocp_handle_service.ipp
+    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 
 
-	#pragma warning(push)
-	
-	// crc.hpp/gzip.hpp cause warnings 4245/4244 in MSVC.
-	#pragma warning(disable:4244)
-	#pragma warning(disable:4245)
-	#include <boost/crc.hpp>
-	#include <boost/iostreams/filter/gzip.hpp>
+#endif
 
-	// The following files cause warnings 4819 in MSVC.
-	#pragma warning(disable:4819)
-	#include <boost/array.hpp>
-	#include <boost/scoped_array.hpp>
-	#include <boost/lexical_cast.hpp>
 
-	#pragma warning(pop)
+
+// This file is included at this point after enabling boost switches,
+// because 'unordered_map' is implemented with boost currently.
+#include "SysDeps/STL/unordered_map.h"
+
+#include <boost/detail/quick_allocator.hpp>
+#include <boost/pool/pool.hpp>
+#include <boost/pool/object_pool.hpp>
+#include <boost/pool/singleton_pool.hpp>
+#include <boost/pool/pool_alloc.hpp>
+
+#include <boost/iterator/iterator_facade.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/intrusive_ptr.hpp>
+#include <boost/dynamic_bitset.hpp>
+#include <boost/tokenizer.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/array.hpp>
+#include <boost/scoped_array.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
+#include <boost/crc.hpp>
+
+#include <boost/filesystem.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/device/file.hpp>
+
+#include <boost/crc.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/array.hpp>
+#include <boost/scoped_array.hpp>
+#include <boost/lexical_cast.hpp>
+
+
+// #include <boost/compressed_pair.hpp>
+// #include <boost/crc.hpp>
+// #include <boost/any.hpp>
+// #include <boost/multi_array.hpp>
+// #include <boost/pool/detail/mutex.hpp>
+
+
+#ifdef COMPILER_IS_MSVC
+
+    #pragma warning(pop)
+
+#elif defined COMPILER_IS_GCC
+
+    #pragma GCC diagnostic pop
 
 #else
 
+
+
 #endif
+
 
 #endif
 

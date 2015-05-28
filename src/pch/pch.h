@@ -101,53 +101,9 @@
 
 //
 // --- Boost ---
+// All boost related files must be included in "SysDeps/Boost/Boost.h".
 //
-#define BOOST_NO_MT
-#define BOOST_DISABLE_THREADS
-#define BOOST_SP_USE_QUICK_ALLOCATOR
-#define BOOST_SP_DISABLE_THREADS
-#define BOOST_ALL_NO_LIB
-#define BOOST_SYSTEM_NO_LIB
-#define NO_ZLIB 0
-
-#ifndef ONIKIRI_DEBUG
-#define BOOST_DISABLE_ASSERTS
-#endif
-
 #include "SysDeps/Boost/Boost.h"
-
-// This file is included at this point after enabling boost switches,
-// because 'unordered_map' is implemented with boost currently.
-#include "SysDeps/STL/unordered_map.h"
-
-#include <boost/detail/quick_allocator.hpp>
-#include <boost/pool/pool.hpp>
-#include <boost/pool/object_pool.hpp>
-#include <boost/pool/singleton_pool.hpp>
-#include <boost/pool/pool_alloc.hpp>
-
-#include <boost/iterator/iterator_facade.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/dynamic_bitset.hpp>
-#include <boost/tokenizer.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/array.hpp>
-#include <boost/scoped_array.hpp>
-#include <boost/math/special_functions/fpclassify.hpp>
-#include <boost/crc.hpp>
-
-#include <boost/filesystem.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
-#include <boost/iostreams/device/file.hpp>
-
-
-// #include <boost/compressed_pair.hpp>
-// #include <boost/crc.hpp>
-// #include <boost/any.hpp>
-// #include <boost/multi_array.hpp>
-// #include <boost/pool/detail/mutex.hpp>
 
 
 
