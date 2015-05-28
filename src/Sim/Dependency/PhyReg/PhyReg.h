@@ -37,48 +37,48 @@
 namespace Onikiri 
 {
 
-	//
-	// 物理レジスタのクラス
-	// 
+    //
+    // 物理レジスタのクラス
+    // 
 
-	class PhyReg : public Dependency 
-	{
-	public:
-		PhyReg( int numScheduler, int phyRegNo ) :
-			Dependency(numScheduler),
-			m_val(0),
-			m_phyRegNo(phyRegNo)
-		{
-		}
+    class PhyReg : public Dependency 
+    {
+    public:
+        PhyReg( int numScheduler, int phyRegNo ) :
+            Dependency(numScheduler),
+            m_val(0),
+            m_phyRegNo(phyRegNo)
+        {
+        }
 
-		~PhyReg()
-		{
-		}
+        ~PhyReg()
+        {
+        }
 
-		const u64 GetVal() const
-		{
-			return m_val;
-		}
+        const u64 GetVal() const
+        {
+            return m_val;
+        }
 
-		void SetVal(const u64& val)
-		{
-			m_val = val;
-		}
+        void SetVal(const u64& val)
+        {
+            m_val = val;
+        }
 
-		const int GetPhyRegNo() const
-		{
-			return m_phyRegNo;
-		}
+        const int GetPhyRegNo() const
+        {
+            return m_phyRegNo;
+        }
 
-	private:
-		
-		// 値
-		u64 m_val;
+    private:
+        
+        // 値
+        u64 m_val;
 
-		// 物理レジスタ番号
-		int m_phyRegNo;
-		
-	};
+        // 物理レジスタ番号
+        int m_phyRegNo;
+        
+    };
 
 };
 

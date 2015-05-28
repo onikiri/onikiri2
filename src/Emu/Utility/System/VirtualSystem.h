@@ -35,171 +35,171 @@
 #include "SysDeps/posix.h"
 
 namespace Onikiri {
-	namespace EmulatorUtility {
-		typedef POSIX::posix_struct_stat HostStat;
+    namespace EmulatorUtility {
+        typedef POSIX::posix_struct_stat HostStat;
 
-		// targetとhost間のFD変換を行うクラス
-		class FDConv
-		{
-		public:
-			static const int InvalidFD = -1;
+        // targetとhost間のFD変換を行うクラス
+        class FDConv
+        {
+        public:
+            static const int InvalidFD = -1;
 
-			FDConv();
-			~FDConv();
+            FDConv();
+            ~FDConv();
 
-			// targetのFDとhostのFDの変換を行う
-			int TargetToHost(int targetFD) const;
-			int HostToTarget(int hostFD) const;
+            // targetのFDとhostのFDの変換を行う
+            int TargetToHost(int targetFD) const;
+            int HostToTarget(int hostFD) const;
 
-			// FDの対応を追加
-			bool AddMap(int targetFD, int hostFD);
+            // FDの対応を追加
+            bool AddMap(int targetFD, int hostFD);
 
-			// FDの対応を削除
-			bool RemoveMap(int targetFD);
+            // FDの対応を削除
+            bool RemoveMap(int targetFD);
 
-			// 空いている target のFDを返す
-			int GetFirstFreeFD();
-		private:
-			void ExtendFDMap();
-			void ExtendFDMap(size_t size);
+            // 空いている target のFDを返す
+            int GetFirstFreeFD();
+        private:
+            void ExtendFDMap();
+            void ExtendFDMap(size_t size);
 
-			// targetのfdをhostのfdに変換する表．hostのfdが割り当てられていなければInvalidFDが入っている
-			std::vector<int> m_FDTargetToHostTable;
-		};
-		
-		// プロセスが open 中のファイルを unlink したときの挙動を
-		// Unix に合わせるためのクラス
-		// 詳細は VirtualSystem::Unlink に記述
-		class DelayUnlinker
-		{
-		public:
-			DelayUnlinker();
-			~DelayUnlinker();
+            // targetのfdをhostのfdに変換する表．hostのfdが割り当てられていなければInvalidFDが入っている
+            std::vector<int> m_FDTargetToHostTable;
+        };
+        
+        // プロセスが open 中のファイルを unlink したときの挙動を
+        // Unix に合わせるためのクラス
+        // 詳細は VirtualSystem::Unlink に記述
+        class DelayUnlinker
+        {
+        public:
+            DelayUnlinker();
+            ~DelayUnlinker();
 
-			// TargetFD<>path の対応を追加
-			bool AddMap(int targetFD, std::string path);
-			// TargetFD<>path の対応を削除
-			bool RemoveMap(int targetFD);
-			// TargetFD<>path の対応するパスを取得
-			std::string GetMapPath(int targetFD);
-			// 削除候補の path を追加
-			bool AddUnlinkPath(std::string path);
-			// 削除候補の path を Unlink するかどうか
-			bool IfUnlinkable(int targetFD);
-			// 削除候補の path を削除
-			bool RemoveUnlinkPath(std::string path);
-		private:
-			std::map<int, std::string> m_targetFDToPathTable;
-			std::list<std::string> m_delayUnlinkPathList;
-		};
+            // TargetFD<>path の対応を追加
+            bool AddMap(int targetFD, std::string path);
+            // TargetFD<>path の対応を削除
+            bool RemoveMap(int targetFD);
+            // TargetFD<>path の対応するパスを取得
+            std::string GetMapPath(int targetFD);
+            // 削除候補の path を追加
+            bool AddUnlinkPath(std::string path);
+            // 削除候補の path を Unlink するかどうか
+            bool IfUnlinkable(int targetFD);
+            // 削除候補の path を削除
+            bool RemoveUnlinkPath(std::string path);
+        private:
+            std::map<int, std::string> m_targetFDToPathTable;
+            std::list<std::string> m_delayUnlinkPathList;
+        };
 
-		// targetのための仮想システム（ファイル等）を提供
-		//  - targetのプロセス内のfdとホストのfdの変換を行う
-		//  - target毎にworking directoryを持つ
-		//  - 時刻の取得
-		class VirtualSystem	: public ParamExchange
-		{
-		public:
+        // targetのための仮想システム（ファイル等）を提供
+        //  - targetのプロセス内のfdとホストのfdの変換を行う
+        //  - target毎にworking directoryを持つ
+        //  - 時刻の取得
+        class VirtualSystem : public ParamExchange
+        {
+        public:
 
-			VirtualSystem();
-			~VirtualSystem();
+            VirtualSystem();
+            ~VirtualSystem();
 
-			// VirtualSystemでOpenしていないファイルを明示的にFDの変換表に追加する(stdin, stdout, stderr等)
-			bool AddFDMap(int targetFD, int hostFD, bool autoclose = false);
-			// ターゲットの作業ディレクトリを設定する
-			void SetInitialWorkingDir(const boost::filesystem::path& dir);
+            // VirtualSystemでOpenしていないファイルを明示的にFDの変換表に追加する(stdin, stdout, stderr等)
+            bool AddFDMap(int targetFD, int hostFD, bool autoclose = false);
+            // ターゲットの作業ディレクトリを設定する
+            void SetInitialWorkingDir(const boost::filesystem::path& dir);
 
-			// システムコール群
-			int GetErrno();
+            // システムコール群
+            int GetErrno();
 
-			int GetPID();
-			int GetUID();
-			int GetEUID();
-			int GetGID();
-			int GetEGID();
+            int GetPID();
+            int GetUID();
+            int GetEUID();
+            int GetGID();
+            int GetEGID();
 
-			char* GetCWD(char* buf, int maxlen);
-			int ChDir(const char* path);
+            char* GetCWD(char* buf, int maxlen);
+            int ChDir(const char* path);
 
-			// ファイルを開く．開いたファイルは自動でFDの変換表に追加される
-			int Open(const char* filename,int oflag);
+            // ファイルを開く．開いたファイルは自動でFDの変換表に追加される
+            int Open(const char* filename,int oflag);
 
-			int Read(int targetFD, void *buffer, unsigned int count);
-			int Write(int targetFD, void* buffer, unsigned int count);
-			int Close(int targetFD);
+            int Read(int targetFD, void *buffer, unsigned int count);
+            int Write(int targetFD, void* buffer, unsigned int count);
+            int Close(int targetFD);
 
-			int Stat(const char* path, HostStat* s);
-			int FStat(int fd, HostStat* s);
-			int LStat(const char* path, HostStat* s);
+            int Stat(const char* path, HostStat* s);
+            int FStat(int fd, HostStat* s);
+            int LStat(const char* path, HostStat* s);
 
-			s64 LSeek(int fd, s64 offset, int whence);
-			int Dup(int fd);
+            s64 LSeek(int fd, s64 offset, int whence);
+            int Dup(int fd);
 
-			int Access(const char* path, int mode);
-			int Unlink(const char* path);
-			int Rename(const char* oldpath, const char* newpath);
+            int Access(const char* path, int mode);
+            int Unlink(const char* path);
+            int Rename(const char* oldpath, const char* newpath);
 
-			int Truncate(const char* path, s64 length);
-			int FTruncate(int fd, s64 length);
+            int Truncate(const char* path, s64 length);
+            int FTruncate(int fd, s64 length);
 
-			int MkDir(const char* path, int mode);
+            int MkDir(const char* path, int mode);
 
-			// targetのFDとhostのFDの変換を行う
-			int FDTargetToHost(int targetFD) const
-			{
-				return m_fdConv.TargetToHost(targetFD);
-			}
-			int FDHostToTarget(int hostFD) const
-			{
-				return m_fdConv.HostToTarget(hostFD);
-			}
+            // targetのFDとhostのFDの変換を行う
+            int FDTargetToHost(int targetFD) const
+            {
+                return m_fdConv.TargetToHost(targetFD);
+            }
+            int FDHostToTarget(int hostFD) const
+            {
+                return m_fdConv.HostToTarget(hostFD);
+            }
 
-			// 時刻の取得
-			s64 GetTime();
-			s64 GetClock();
-			void AddInsnTick()
-			{
-				m_executedInsnTick++;
-			}
-			s64 GetInsnTick()
-			{
-				return m_executedInsnTick;
-			}
+            // 時刻の取得
+            s64 GetTime();
+            s64 GetClock();
+            void AddInsnTick()
+            {
+                m_executedInsnTick++;
+            }
+            s64 GetInsnTick()
+            {
+                return m_executedInsnTick;
+            }
 
-			DelayUnlinker* GetDelayUnlinker(){
-				return &m_delayUnlinker;
-			};
+            DelayUnlinker* GetDelayUnlinker(){
+                return &m_delayUnlinker;
+            };
 
-			BEGIN_PARAM_MAP("/Session/Emulator/System/Time/")
-				PARAM_ENTRY( "@UnixTime",    m_unixTime )
-				PARAM_ENTRY( "@EmulationMode", m_timeEmulationModeStr )
-			END_PARAM_MAP()
-		private:
-			boost::filesystem::path GetHostPath(const char* targetPath);
-			void AddAutoCloseFD(int fd);
-			void RemoveAutoCloseFD(int fd);
+            BEGIN_PARAM_MAP("/Session/Emulator/System/Time/")
+                PARAM_ENTRY( "@UnixTime",    m_unixTime )
+                PARAM_ENTRY( "@EmulationMode", m_timeEmulationModeStr )
+            END_PARAM_MAP()
+        private:
+            boost::filesystem::path GetHostPath(const char* targetPath);
+            void AddAutoCloseFD(int fd);
+            void RemoveAutoCloseFD(int fd);
 
-			FDConv m_fdConv;
-			// デストラクト時に自動でcloseするfd
-			std::vector<int> m_autoCloseFD;
-			DelayUnlinker m_delayUnlinker;
+            FDConv m_fdConv;
+            // デストラクト時に自動でcloseするfd
+            std::vector<int> m_autoCloseFD;
+            DelayUnlinker m_delayUnlinker;
 
-			boost::filesystem::path m_cwd;
+            boost::filesystem::path m_cwd;
 
-			// 時刻
-			int EmulationModeStrToInt( const std::string& );
-			u64 m_unixTime;
-			u64 m_executedInsnTick;
-			std::string m_timeEmulationModeStr;
-			int m_timeEmulationMode;
-			enum {
-				TIME_HOST,
-				TIME_FIXED,
-				TIME_INSTRUCTION,
-			};
-		};
+            // 時刻
+            int EmulationModeStrToInt( const std::string& );
+            u64 m_unixTime;
+            u64 m_executedInsnTick;
+            std::string m_timeEmulationModeStr;
+            int m_timeEmulationMode;
+            enum {
+                TIME_HOST,
+                TIME_FIXED,
+                TIME_INSTRUCTION,
+            };
+        };
 
-	} // namespace EmulatorUtility
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif

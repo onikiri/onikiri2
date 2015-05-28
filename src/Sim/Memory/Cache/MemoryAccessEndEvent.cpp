@@ -37,37 +37,37 @@
 using namespace Onikiri;
 
 CacheAccessEndEvent::CacheAccessEndEvent( 
-	const CacheAccess& access, 
-	AccessQueueIterator target, 
-	CacheAccessRequestQueue* accessReqQueue 
+    const CacheAccess& access, 
+    AccessQueueIterator target, 
+    CacheAccessRequestQueue* accessReqQueue 
 ) :
-	m_access		( access ),
-	m_target		( target ),
-	m_accessReqQueue( accessReqQueue )
+    m_access        ( access ),
+    m_target        ( target ),
+    m_accessReqQueue( accessReqQueue )
 {
 }
 
 // m_addrのPendingAccessが終了したのでPendingAccessから除外する
 void CacheAccessEndEvent::Update()
 {
-	m_accessReqQueue->Pop( m_access, m_target );
+    m_accessReqQueue->Pop( m_access, m_target );
 }
 
 
 
 MissedAccessRearchEvent::MissedAccessRearchEvent( 
-	const CacheAccess& access,
-	CacheMissedAccessList::AccessListIterator target, 
-	CacheMissedAccessList* accessList 
+    const CacheAccess& access,
+    CacheMissedAccessList::AccessListIterator target, 
+    CacheMissedAccessList* accessList 
 ) :
-	m_access		( access ),
-	m_target		( target ),
-	m_pendingAccess	( accessList )
+    m_access        ( access ),
+    m_target        ( target ),
+    m_pendingAccess ( accessList )
 {
 }
 
 // m_addrのPendingAccessが終了したのでPendingAccessから除外する
 void MissedAccessRearchEvent::Update()
 {
-	m_pendingAccess->Remove( m_access, m_target );
+    m_pendingAccess->Remove( m_access, m_target );
 }

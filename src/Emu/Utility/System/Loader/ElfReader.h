@@ -39,82 +39,82 @@
 #include "Emu/Utility/System/Loader/ELF64.h"
 
 namespace Onikiri {
-	namespace EmulatorUtility {
+    namespace EmulatorUtility {
 
-		// Elf64 reader
-		class ElfReader
-		{
-		public:
-			typedef ELF64_HEADER  Elf_Ehdr;
-			typedef ELF64_SECTION Elf_Shdr;
-			typedef ELF64_PROGRAM Elf_Phdr;
-			typedef u64 Elf_Addr;
-			typedef u32 Elf_Word;
-			typedef u64 Elf_Off;
+        // Elf64 reader
+        class ElfReader
+        {
+        public:
+            typedef ELF64_HEADER  Elf_Ehdr;
+            typedef ELF64_SECTION Elf_Shdr;
+            typedef ELF64_PROGRAM Elf_Phdr;
+            typedef u64 Elf_Addr;
+            typedef u32 Elf_Word;
+            typedef u64 Elf_Off;
 
-			typedef std::streamsize streamsize;
+            typedef std::streamsize streamsize;
 
-			explicit ElfReader();
-			~ElfReader();
+            explicit ElfReader();
+            ~ElfReader();
 
-			// ELFファイルを開き，ヘッダ情報を読み込む
-			// 読み込みに失敗すれば runtime_error を投げる
-			void Open(const char *name);
-			void Close();
+            // ELFファイルを開き，ヘッダ情報を読み込む
+            // 読み込みに失敗すれば runtime_error を投げる
+            void Open(const char *name);
+            void Close();
 
-			int GetClass() const;
-			int GetDataEncoding() const;
-			int GetVersion() const;
-			u16 GetMachine() const;
-			bool IsBigEndian() const;
+            int GetClass() const;
+            int GetDataEncoding() const;
+            int GetVersion() const;
+            u16 GetMachine() const;
+            bool IsBigEndian() const;
 
-			int GetSectionHeaderCount() const;
-			int GetProgramHeaderCount() const;
+            int GetSectionHeaderCount() const;
+            int GetProgramHeaderCount() const;
 
-			Elf_Addr GetEntryPoint() const;
-			const Elf_Shdr &GetSectionHeader(int index) const;
-			const Elf_Phdr &GetProgramHeader(int index) const;
+            Elf_Addr GetEntryPoint() const;
+            const Elf_Shdr &GetSectionHeader(int index) const;
+            const Elf_Phdr &GetProgramHeader(int index) const;
 
-			// name を持つセクションのindexを得る
-			// 見つからなければ-1
-			int FindSection(const char *name) const;
-			// セクションindexのセクション名を得る
-			const char *GetSectionName(int index) const;
+            // name を持つセクションのindexを得る
+            // 見つからなければ-1
+            int FindSection(const char *name) const;
+            // セクションindexのセクション名を得る
+            const char *GetSectionName(int index) const;
 
-			// セクションindexの内容をbufに読み込む (失敗時 runtime_error を投げる)
-			void ReadSectionBody(int index, char *buf, size_t buf_size) const;
-			// offset から buf_size だけ読み込む (失敗時 runtime_error を投げる)
-			void ReadRange(size_t offset, char *buf, size_t buf_size) const;
+            // セクションindexの内容をbufに読み込む (失敗時 runtime_error を投げる)
+            void ReadSectionBody(int index, char *buf, size_t buf_size) const;
+            // offset から buf_size だけ読み込む (失敗時 runtime_error を投げる)
+            void ReadRange(size_t offset, char *buf, size_t buf_size) const;
 
-			// ELFファイルのサイズを得る
-			streamsize GetImageSize() const;
-			// ELFファイルを全て読み込む (失敗時 runtime_error を投げる)
-			void ReadImage(char *buf, size_t buf_size) const;
+            // ELFファイルのサイズを得る
+            streamsize GetImageSize() const;
+            // ELFファイルを全て読み込む (失敗時 runtime_error を投げる)
+            void ReadImage(char *buf, size_t buf_size) const;
 
-			Elf_Off GetSectionHeaderOffset() const;
-			Elf_Off GetProgramHeaderOffset() const;
+            Elf_Off GetSectionHeaderOffset() const;
+            Elf_Off GetProgramHeaderOffset() const;
 
-		private:
-			// ELFヘッダを読み込む．machine: 期待されるmachine (失敗時 runtime_error を投げる)
-			void ReadELFHeader();
-			// セクションヘッダを読み込む (失敗時 runtime_error を投げる)
-			void ReadSectionHeaders();
-			// プログラムヘッダを読み込む (失敗時 runtime_error を投げる)
-			void ReadProgramHeaders();
-			// セクションネームテーブル (Elf_Ehdr.e_shstrndxの示すセクション) の内容を読み込む (失敗時 runtime_error を投げる)
-			void ReadSectionNameTable();
+        private:
+            // ELFヘッダを読み込む．machine: 期待されるmachine (失敗時 runtime_error を投げる)
+            void ReadELFHeader();
+            // セクションヘッダを読み込む (失敗時 runtime_error を投げる)
+            void ReadSectionHeaders();
+            // プログラムヘッダを読み込む (失敗時 runtime_error を投げる)
+            void ReadProgramHeaders();
+            // セクションネームテーブル (Elf_Ehdr.e_shstrndxの示すセクション) の内容を読み込む (失敗時 runtime_error を投げる)
+            void ReadSectionNameTable();
 
-			bool m_bigEndian;
+            bool m_bigEndian;
 
-			mutable std::ifstream m_file;
+            mutable std::ifstream m_file;
 
-			Elf_Ehdr	m_elfHeader;
-			std::vector<Elf_Shdr> m_elfSectionHeaders;
-			std::vector<Elf_Phdr> m_elfProgramHeaders;
-			char *m_sectionNameTable;
-		};
+            Elf_Ehdr    m_elfHeader;
+            std::vector<Elf_Shdr> m_elfSectionHeaders;
+            std::vector<Elf_Phdr> m_elfProgramHeaders;
+            char *m_sectionNameTable;
+        };
 
-	} // namespace EmulatorUtility
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif // #ifndef ELFREAD_H_INCLUDED

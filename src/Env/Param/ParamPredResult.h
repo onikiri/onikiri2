@@ -40,53 +40,53 @@
 #include "Env/Env.h"
 
 /*
-	ParamPredResult m_predResult;
-	BEGIN_PARAM_MAP( GetResultPath() )
-		RESULT_PRED_ENTRY( "PredictorName", m_predResult )
-	END_PARAM_MAP()
+    ParamPredResult m_predResult;
+    BEGIN_PARAM_MAP( GetResultPath() )
+        RESULT_PRED_ENTRY( "PredictorName", m_predResult )
+    END_PARAM_MAP()
 
 */
 
 namespace Onikiri
 {
-	#define RESULT_PRED_ENTRY(relativePath, result) \
-		{ \
-			result.SetName(relativePath); \
-			CHAIN_PARAM_MAP(relativePath, result); \
-		} \
+    #define RESULT_PRED_ENTRY(relativePath, result) \
+        { \
+            result.SetName(relativePath); \
+            CHAIN_PARAM_MAP(relativePath, result); \
+        } \
 
-	class ParamPredResult : public ParamExchangeChild
-	{
-		s64 m_hitCount;
-		s64 m_missCount;
-		String m_name;
-	public:
-		BEGIN_PARAM_MAP("")
-			RESULT_ENTRY("@Hit",		m_hitCount )
-			RESULT_ENTRY("@Miss",		m_missCount )
-			RESULT_ENTRY("@Total",  	GetTotalCount() )
-			RESULT_ENTRY("@HitRate",	GetHitRate() )
-		END_PARAM_MAP()
+    class ParamPredResult : public ParamExchangeChild
+    {
+        s64 m_hitCount;
+        s64 m_missCount;
+        String m_name;
+    public:
+        BEGIN_PARAM_MAP("")
+            RESULT_ENTRY("@Hit",        m_hitCount )
+            RESULT_ENTRY("@Miss",       m_missCount )
+            RESULT_ENTRY("@Total",      GetTotalCount() )
+            RESULT_ENTRY("@HitRate",    GetHitRate() )
+        END_PARAM_MAP()
 
-		ParamPredResult();
-		~ParamPredResult();
-		void Hit  ( s64 add = 1 );
-		void Miss ( s64 add = 1  );
-		void Add  ( bool hit, s64 add = 1 );
-		void Reset();
+        ParamPredResult();
+        ~ParamPredResult();
+        void Hit  ( s64 add = 1 );
+        void Miss ( s64 add = 1  );
+        void Add  ( bool hit, s64 add = 1 );
+        void Reset();
 
-		s64 GetHitCount() const;
-		s64 GetMissCount() const;
-		void SetHitCount( s64 hitCount );
-		void SetMissCount( s64 missCount );
+        s64 GetHitCount() const;
+        s64 GetMissCount() const;
+        void SetHitCount( s64 hitCount );
+        void SetMissCount( s64 missCount );
 
-		u64 GetTotalCount() const;
-		double GetHitRate() const;
+        u64 GetTotalCount() const;
+        double GetHitRate() const;
 
-		void SetName( const char* name );
-		const char* GetName();
-	};
-}	// namespace Onikiri
+        void SetName( const char* name );
+        const char* GetName();
+    };
+}   // namespace Onikiri
 
 #endif
 

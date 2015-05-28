@@ -41,20 +41,20 @@ using namespace Onikiri;
 
 void PipelinedExecUnit::Execute( OpIterator op )
 {
-	ExecUnitBase::Execute( op );
-	RegisterEvents( op, m_execLatencyInfo->GetLatency( op ) );
+    ExecUnitBase::Execute( op );
+    RegisterEvents( op, m_execLatencyInfo->GetLatency( op ) );
 }
 
 // Called in Evaluate phase.
 bool PipelinedExecUnit::CanReserve( OpIterator op, int time )
 {
-	return m_reserver.CanReserve( 1, time, 1 );
+    return m_reserver.CanReserve( 1, time, 1 );
 }
-		
+        
 // Called in Evaluate phase.
 void PipelinedExecUnit::Reserve( OpIterator op, int time )
 {
-	m_numUsed++;
-	m_reserver.Reserve( 1, time, 1 );
+    m_numUsed++;
+    m_reserver.Reserve( 1, time, 1 );
 }
 

@@ -39,32 +39,32 @@
 
 namespace Onikiri
 {
-	class Scheduler;
+    class Scheduler;
 
-	// A proxy class for issue selectors.
-	class IssueSelector : 
-		public IssueSelectorIF,
-		public PhysicalResourceNode
-	{
-	public:
-		IssueSelector();
-		virtual ~IssueSelector();
+    // A proxy class for issue selectors.
+    class IssueSelector : 
+        public IssueSelectorIF,
+        public PhysicalResourceNode
+    {
+    public:
+        IssueSelector();
+        virtual ~IssueSelector();
 
-		virtual void Initialize( InitPhase );
-		virtual void Finalize();
+        virtual void Initialize( InitPhase );
+        virtual void Finalize();
 
-		virtual void EvaluateSelect( Scheduler* scheduler );
+        virtual void EvaluateSelect( Scheduler* scheduler );
 
-		BEGIN_PARAM_MAP( "" )
-		END_PARAM_MAP()
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( IssueSelectorIF, "selector", m_selector )
-		END_RESOURCE_MAP()
-	protected:
-		IssueSelectorIF* m_selector;
-	};
+        BEGIN_PARAM_MAP( "" )
+        END_PARAM_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( IssueSelectorIF, "selector", m_selector )
+        END_RESOURCE_MAP()
+    protected:
+        IssueSelectorIF* m_selector;
+    };
 }
 
-#endif	// SIM_PIPELINE_SCHEDULER_SELECTOR_AGE_ISSUE_SELECTOR_H
+#endif  // SIM_PIPELINE_SCHEDULER_SELECTOR_AGE_ISSUE_SELECTOR_H
 
 

@@ -41,83 +41,83 @@ using namespace EmulatorUtility;
 u64 Onikiri::EmulatorUtility::TargetStrlen(MemorySystem* mem, u64 targetAddr)
 {
 #if 0
-	
-	BlockArray blocks;
-	// とりあえずMapUnitSize バイトの範囲でstrlenを行う．普通はこれで足りる．
-	SplitAtMapUnitBoundary(targetAddr, m_addrConv.GetMapUnitSize(), back_inserter(blocks) );
+    
+    BlockArray blocks;
+    // とりあえずMapUnitSize バイトの範囲でstrlenを行う．普通はこれで足りる．
+    SplitAtMapUnitBoundary(targetAddr, m_addrConv.GetMapUnitSize(), back_inserter(blocks) );
 
-	u64 result = 0;
-	for (BlockArray::iterator e = blocks.begin(); e != blocks.end(); ++e) {
-		char* p = static_cast<char*>(m_addrConv.TargetToHost(e->addr));
-		for (int i = 0; i < (int)e->size; i ++, p ++) {
-			if (*p == '\0')
-				return result;
-			else
-				result ++;
-		}
-	}
+    u64 result = 0;
+    for (BlockArray::iterator e = blocks.begin(); e != blocks.end(); ++e) {
+        char* p = static_cast<char*>(m_addrConv.TargetToHost(e->addr));
+        for (int i = 0; i < (int)e->size; i ++, p ++) {
+            if (*p == '\0')
+                return result;
+            else
+                result ++;
+        }
+    }
 
-	// なんとMapUnitSizeバイトよりも長い文字列だったので，次のMapUnitSizeバイトに対してもstrlenを行う
-	return result + TargetStrlen(targetAddr+m_addrConv.GetMapUnitSize());;
+    // なんとMapUnitSizeバイトよりも長い文字列だったので，次のMapUnitSizeバイトに対してもstrlenを行う
+    return result + TargetStrlen(targetAddr+m_addrConv.GetMapUnitSize());;
 #else
-	u64 length = 0;
-	while(true){
-		EmuMemAccess access( targetAddr + length, 1, false );
-		mem->ReadMemory( &access );
-		if( access.value == '\0' ){
-			break;
-		}
-		length++;
-	};
+    u64 length = 0;
+    while(true){
+        EmuMemAccess access( targetAddr + length, 1, false );
+        mem->ReadMemory( &access );
+        if( access.value == '\0' ){
+            break;
+        }
+        length++;
+    };
 
-	return length;
+    return length;
 #endif
 }
 
 // Get c string data from the targetAddr.
 std::string Onikiri::EmulatorUtility::StrCpyToHost(MemorySystem* mem, u64 targetAddr) 
 {
-	std::string strData;
-	u64 strAddr = targetAddr;
-	while(true){
-		EmuMemAccess access( strAddr, 1, false );
-		mem->ReadMemory( &access );
-		if( access.value == '\0' ){
-			break;
-		}
-		strData += (char)access.value;
-		strAddr++;
-	};
+    std::string strData;
+    u64 strAddr = targetAddr;
+    while(true){
+        EmuMemAccess access( strAddr, 1, false );
+        mem->ReadMemory( &access );
+        if( access.value == '\0' ){
+            break;
+        }
+        strData += (char)access.value;
+        strAddr++;
+    };
 
-	return strData;
+    return strData;
 }
 
 
 
 // TargetBuffer
 TargetBuffer::TargetBuffer(MemorySystem* memory, u64 targetAddr, size_t bufSize, bool readOnly)
-	: m_memory(memory), m_targetAddr(targetAddr), m_bufSize(bufSize), m_readOnly(readOnly)
+    : m_memory(memory), m_targetAddr(targetAddr), m_bufSize(bufSize), m_readOnly(readOnly)
 {
-	// hostの連続領域にコピー
-	m_buf = new u8[bufSize];
-	m_memory->MemCopyToHost(m_buf, m_targetAddr, m_bufSize);
+    // hostの連続領域にコピー
+    m_buf = new u8[bufSize];
+    m_memory->MemCopyToHost(m_buf, m_targetAddr, m_bufSize);
 }
 
 TargetBuffer::~TargetBuffer()
 {
-	// 書き戻す
-	if (!m_readOnly)
-		m_memory->MemCopyToTarget(m_targetAddr, m_buf, m_bufSize);
-	delete[] m_buf;
+    // 書き戻す
+    if (!m_readOnly)
+        m_memory->MemCopyToTarget(m_targetAddr, m_buf, m_bufSize);
+    delete[] m_buf;
 }
 
 void* TargetBuffer::Get()
 {
-	return m_buf;
+    return m_buf;
 }
 
 const void* TargetBuffer::Get() const
 {
-	return m_buf;
+    return m_buf;
 }
 

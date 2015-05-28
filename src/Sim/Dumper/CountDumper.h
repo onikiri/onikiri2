@@ -39,43 +39,43 @@
 
 namespace Onikiri 
 {
-	class CountDumper : public ParamExchange
-	{
-		bool m_enabled;
-		bool m_gzipEnabled;
-		int  m_gzipLevel;
-		String m_fileName; 
-		boost::iostreams::filtering_ostream m_stream;
-		s64 m_interval;
+    class CountDumper : public ParamExchange
+    {
+        bool m_enabled;
+        bool m_gzipEnabled;
+        int  m_gzipLevel;
+        String m_fileName; 
+        boost::iostreams::filtering_ostream m_stream;
+        s64 m_interval;
 
-		s64 m_nextUpdateInsnCount;
-		s64 m_curInsnCount;
-		s64 m_curCycleCount;
-		s64 m_insnIntervalOrigin;
-		s64 m_cycleIntervalOrigin;
+        s64 m_nextUpdateInsnCount;
+        s64 m_curInsnCount;
+        s64 m_curCycleCount;
+        s64 m_insnIntervalOrigin;
+        s64 m_cycleIntervalOrigin;
 
-		void Update();
-	public:
-		// parameter mapping
-		BEGIN_PARAM_MAP("/Session/")
-			BEGIN_PARAM_PATH("Environment/")
-				PARAM_ENTRY("Dumper/CountDumper/@FileName",			m_fileName    ) 
-				PARAM_ENTRY("Dumper/CountDumper/@EnableDump",		m_enabled     )
-				PARAM_ENTRY("Dumper/CountDumper/@EnableGzip",		m_gzipEnabled )
-				PARAM_ENTRY("Dumper/CountDumper/@GzipLevel",		m_gzipLevel   )
-				PARAM_ENTRY("Dumper/CountDumper/@InsnCountInterval",	m_interval    )
-			END_PARAM_PATH()
-		END_PARAM_MAP()
+        void Update();
+    public:
+        // parameter mapping
+        BEGIN_PARAM_MAP("/Session/")
+            BEGIN_PARAM_PATH("Environment/")
+                PARAM_ENTRY("Dumper/CountDumper/@FileName",         m_fileName    ) 
+                PARAM_ENTRY("Dumper/CountDumper/@EnableDump",       m_enabled     )
+                PARAM_ENTRY("Dumper/CountDumper/@EnableGzip",       m_gzipEnabled )
+                PARAM_ENTRY("Dumper/CountDumper/@GzipLevel",        m_gzipLevel   )
+                PARAM_ENTRY("Dumper/CountDumper/@InsnCountInterval",    m_interval    )
+            END_PARAM_PATH()
+        END_PARAM_MAP()
 
-		CountDumper();
-		~CountDumper();
-		void Initialize( const String& suffix );
-		void Finalize();
+        CountDumper();
+        ~CountDumper();
+        void Initialize( const String& suffix );
+        void Finalize();
 
-		void SetCurrentInsnCount( s64 count);
-		void SetCurrentCycle(s64 count);
-		bool Enabled();
-	};
+        void SetCurrentInsnCount( s64 count);
+        void SetCurrentCycle(s64 count);
+        bool Enabled();
+    };
 
 }; // namespace Onikiri
 

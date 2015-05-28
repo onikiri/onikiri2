@@ -38,45 +38,45 @@
 
 namespace Onikiri 
 {
-	
-	class EmulationOp : public OpStateIF 
-	{
-	public:
-		EmulationOp( MemIF* mainMem = NULL );
-		EmulationOp( const EmulationOp& op );
-		virtual ~EmulationOp();
-		
-		void SetPC( const PC& pc );
-		void SetOpInfo( OpInfo* opInfo );
-		void SetSrc( const int index, const u64 value );
-		const OpInfo* GetOpInfo() const;
-		void SetMem( MemIF* mem );
+    
+    class EmulationOp : public OpStateIF 
+    {
+    public:
+        EmulationOp( MemIF* mainMem = NULL );
+        EmulationOp( const EmulationOp& op );
+        virtual ~EmulationOp();
+        
+        void SetPC( const PC& pc );
+        void SetOpInfo( OpInfo* opInfo );
+        void SetSrc( const int index, const u64 value );
+        const OpInfo* GetOpInfo() const;
+        void SetMem( MemIF* mem );
 
-		// OpStateIF
-		virtual PC GetPC() const;
-		virtual const u64 GetSrc( const int index ) const;
-		virtual void SetDst( const int index, const u64 value );
-		virtual const u64 GetDst( const int index ) const;
-		virtual void SetTakenPC( const PC takenPC );
-		virtual PC GetTakenPC() const;
-		virtual void SetTaken( const bool taken );
-		virtual bool GetTaken() const;
+        // OpStateIF
+        virtual PC GetPC() const;
+        virtual const u64 GetSrc( const int index ) const;
+        virtual void SetDst( const int index, const u64 value );
+        virtual const u64 GetDst( const int index ) const;
+        virtual void SetTakenPC( const PC takenPC );
+        virtual PC GetTakenPC() const;
+        virtual void SetTaken( const bool taken );
+        virtual bool GetTaken() const;
 
-		// MemIF
-		virtual void Read(  MemAccess* access );
-		virtual void Write( MemAccess* access );
+        // MemIF
+        virtual void Read(  MemAccess* access );
+        virtual void Write( MemAccess* access );
 
-	private:
-		PC m_pc;
-		OpInfo* m_opInfo;
-		PC m_takenPC;
-		bool m_taken;
+    private:
+        PC m_pc;
+        OpInfo* m_opInfo;
+        PC m_takenPC;
+        bool m_taken;
 
-		MemIF* m_mem;
+        MemIF* m_mem;
 
-		boost::array< u64,SimISAInfo::MAX_DST_REG_COUNT > m_dstReg;
-		boost::array< u64,SimISAInfo::MAX_SRC_REG_COUNT > m_srcReg;
-	};
+        boost::array< u64,SimISAInfo::MAX_DST_REG_COUNT > m_dstReg;
+        boost::array< u64,SimISAInfo::MAX_SRC_REG_COUNT > m_srcReg;
+    };
 
 } // namespace Onikiri
 

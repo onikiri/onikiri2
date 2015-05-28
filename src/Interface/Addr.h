@@ -38,47 +38,47 @@
 
 namespace Onikiri 
 {
-	static const u64 ADDR_INVALID = ~((u64)0);
+    static const u64 ADDR_INVALID = ~((u64)0);
 
-	struct Addr : public LogicalData
-	{
-		u64 address;
+    struct Addr : public LogicalData
+    {
+        u64 address;
 
-		Addr() : address( ADDR_INVALID ) 
-		{
-		}
+        Addr() : address( ADDR_INVALID ) 
+        {
+        }
 
-		Addr( int pid, int tid, u64 address ) : 
-			LogicalData( pid, tid ),
-			address( address )
-		{
-		}
+        Addr( int pid, int tid, u64 address ) : 
+            LogicalData( pid, tid ),
+            address( address )
+        {
+        }
 
-		// Addr
-		bool operator==(const Addr& rhv) const
-		{
-			// Should not compare tid
-			return pid == rhv.pid && address == rhv.address;
-		}
+        // Addr
+        bool operator==(const Addr& rhv) const
+        {
+            // Should not compare tid
+            return pid == rhv.pid && address == rhv.address;
+        }
 
-		bool operator!=(const Addr& rhv) const
-		{
-			return !(*this == rhv);
-		}
+        bool operator!=(const Addr& rhv) const
+        {
+            return !(*this == rhv);
+        }
 
-		bool operator<(const Addr& rhv) const
-		{
-			// Should not compare TIDs
-			if( pid == rhv.pid )
-				return address < rhv.address;
-			return pid < rhv.pid;
-		}
+        bool operator<(const Addr& rhv) const
+        {
+            // Should not compare TIDs
+            if( pid == rhv.pid )
+                return address < rhv.address;
+            return pid < rhv.pid;
+        }
 
-		// For debug
-		const std::string ToString() const;
-	};
-	
-	typedef Addr PC;
+        // For debug
+        const std::string ToString() const;
+    };
+    
+    typedef Addr PC;
 
 }; // namespace Onikiri
 

@@ -38,151 +38,151 @@
 using namespace std;
 
 namespace Onikiri {
-	template <typename T>
-	class StridePred
-	{
-	protected:
-		// テーブルのエントリ
-		struct Stream
-		{
-			T next;				// 予測値
-			T diff;				// 差分
-			unsigned int conf;	// 確信度
-			unsigned int time;	// 更新されてからの時間
-		};
+    template <typename T>
+    class StridePred
+    {
+    protected:
+        // テーブルのエントリ
+        struct Stream
+        {
+            T next;             // 予測値
+            T diff;             // 差分
+            unsigned int conf;  // 確信度
+            unsigned int time;  // 更新されてからの時間
+        };
 
-		// テーブルから予測とするエントリを選択する
-		class SelectStream
-		{
-		public:
-			bool operator()(Stream left,Stream right) const
-			{
-				if(left.conf == right.conf)
-					return left.time < right.time;
-				else
-					return left.conf > right.conf;
-			}
-		};
-		// テーブルから削除するエントリを選択する
-		class SelectDeleteEntry
-		{
-		public:
-			bool operator()(Stream left,Stream right) const
-			{
-				if(left.time == right.time)
-					return left.conf < right.conf;
-				else
-					return left.time > right.time;
-			}
-		};
+        // テーブルから予測とするエントリを選択する
+        class SelectStream
+        {
+        public:
+            bool operator()(Stream left,Stream right) const
+            {
+                if(left.conf == right.conf)
+                    return left.time < right.time;
+                else
+                    return left.conf > right.conf;
+            }
+        };
+        // テーブルから削除するエントリを選択する
+        class SelectDeleteEntry
+        {
+        public:
+            bool operator()(Stream left,Stream right) const
+            {
+                if(left.time == right.time)
+                    return left.conf < right.conf;
+                else
+                    return left.time > right.time;
+            }
+        };
 
-		unsigned int m_historySize;
-		list<T> m_historyTable;
-		unsigned int m_streamSize;
-		vector<Stream> m_streamTable;
+        unsigned int m_historySize;
+        list<T> m_historyTable;
+        unsigned int m_streamSize;
+        vector<Stream> m_streamTable;
 
-		void Analyze(T t)
-		{
-			vector<Stream>::iterator sitr = m_streamTable.begin();
-			while(sitr != m_streamTable.end())
-			{
-				(*sitr).time++;
-				if((*sitr).next == t)
-				{
-					(*sitr).next += (*sitr).diff;
-					(*sitr).conf++;
-					(*sitr).time = 0;
-				}
-				sitr++;
-			}
-			list<T>::iterator titr = m_historyTable.begin();
-			sort(m_streamTable.begin(),m_streamTable.end(),SelectDeleteEntry());
-			while(titr != m_historyTable.end())
-			{
-				Stream s;
-				s.time = 0;
-				s.conf = 1;
-				s.diff = t - (*titr);
-				s.next = t + s.diff;
-				if(CheckDuplication(s))
-				{
-					if(m_streamTable.size() == m_streamSize)
-						m_streamTable.erase(m_streamTable.begin());
-					m_streamTable.push_back(s);
-				}
-				titr++;
-			}
-		}
+        void Analyze(T t)
+        {
+            vector<Stream>::iterator sitr = m_streamTable.begin();
+            while(sitr != m_streamTable.end())
+            {
+                (*sitr).time++;
+                if((*sitr).next == t)
+                {
+                    (*sitr).next += (*sitr).diff;
+                    (*sitr).conf++;
+                    (*sitr).time = 0;
+                }
+                sitr++;
+            }
+            list<T>::iterator titr = m_historyTable.begin();
+            sort(m_streamTable.begin(),m_streamTable.end(),SelectDeleteEntry());
+            while(titr != m_historyTable.end())
+            {
+                Stream s;
+                s.time = 0;
+                s.conf = 1;
+                s.diff = t - (*titr);
+                s.next = t + s.diff;
+                if(CheckDuplication(s))
+                {
+                    if(m_streamTable.size() == m_streamSize)
+                        m_streamTable.erase(m_streamTable.begin());
+                    m_streamTable.push_back(s);
+                }
+                titr++;
+            }
+        }
 
-		bool CheckDuplication(Stream s)
-		{
-			vector<Stream>::iterator itr = m_streamTable.begin();
-			while(itr != m_streamTable.end())
-			{
-				if(s.next == (*itr).next && s.diff == (*itr).diff)
-					return false;
-				itr++;
-			}
-			return true;
-		}
-	public:
-		StridePred(int historySize, int streamSize)
-		{
-			Initialize(historySize,streamSize);
-		}
-		~StridePred(){}
+        bool CheckDuplication(Stream s)
+        {
+            vector<Stream>::iterator itr = m_streamTable.begin();
+            while(itr != m_streamTable.end())
+            {
+                if(s.next == (*itr).next && s.diff == (*itr).diff)
+                    return false;
+                itr++;
+            }
+            return true;
+        }
+    public:
+        StridePred(int historySize, int streamSize)
+        {
+            Initialize(historySize,streamSize);
+        }
+        ~StridePred(){}
 
-		void Initialize(int historySize, int streamSize)
-		{
-			m_historySize = historySize;
-			m_streamSize = streamSize;
-			m_historyTable.clear();
-			m_streamTable.clear();
-		}
+        void Initialize(int historySize, int streamSize)
+        {
+            m_historySize = historySize;
+            m_streamSize = streamSize;
+            m_historyTable.clear();
+            m_streamTable.clear();
+        }
 
-		void Update(T t)
-		{
-			Analyze(t);
-			m_historyTable.push_back(t);
-			if(m_historySize < m_historyTable.size())
-				m_historyTable.pop_front();
-		}
+        void Update(T t)
+        {
+            Analyze(t);
+            m_historyTable.push_back(t);
+            if(m_historySize < m_historyTable.size())
+                m_historyTable.pop_front();
+        }
 
-		void Predict(T* pt, int num)
-		{
-			sort(m_streamTable.begin(),m_streamTable.end(),SelectStream());
-			vector<Stream>::iterator itr = m_streamTable.begin();
-			for(int i = 0;i < num && itr != m_streamTable.end();i++,itr++)
-			{
-				pt[i] = (*itr).next;
-			}
-		}
+        void Predict(T* pt, int num)
+        {
+            sort(m_streamTable.begin(),m_streamTable.end(),SelectStream());
+            vector<Stream>::iterator itr = m_streamTable.begin();
+            for(int i = 0;i < num && itr != m_streamTable.end();i++,itr++)
+            {
+                pt[i] = (*itr).next;
+            }
+        }
 
-		//for debug
-		void Update(T* pt, int num)
-		{
-			for(int i = 0;i < num;i++)
-				Update(pt[i]);
-		}
+        //for debug
+        void Update(T* pt, int num)
+        {
+            for(int i = 0;i < num;i++)
+                Update(pt[i]);
+        }
 
-		void PrintStream()
-		{
-			sort(m_streamTable.begin(),m_streamTable.end(),SelectStream());
-			vector<Stream>::iterator itr = m_streamTable.begin();
-			while(itr != m_streamTable.end())
-				PrintStream(*(itr++));
-		}
-		void PrintStream(Stream s)
-		{
-			cout << "next:" << s.next << " diff" << s.diff << " conf:" << s.conf << " time:" << s.time << "\n";
-			for(int i = s.conf + 1;i > 0;i--)
-			{
-				cout << s.next - i*s.diff << " ";
-			}
-			
-			cout << "\n";
-		}
-	};
+        void PrintStream()
+        {
+            sort(m_streamTable.begin(),m_streamTable.end(),SelectStream());
+            vector<Stream>::iterator itr = m_streamTable.begin();
+            while(itr != m_streamTable.end())
+                PrintStream(*(itr++));
+        }
+        void PrintStream(Stream s)
+        {
+            cout << "next:" << s.next << " diff" << s.diff << " conf:" << s.conf << " time:" << s.time << "\n";
+            for(int i = s.conf + 1;i > 0;i--)
+            {
+                cout << s.next - i*s.diff << " ";
+            }
+            
+            cout << "\n";
+        }
+    };
 }; // namespace Onikiri
 
 #endif // __STRIDEPREDICTOR_H__

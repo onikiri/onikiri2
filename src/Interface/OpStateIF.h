@@ -37,34 +37,34 @@
 
 namespace Onikiri
 {
-	// Op の dynamic な状態を知るためのクラス
-	class OpStateIF : public MemIF
-	{
-	public:
-		// 今まで： 直接このクラスのメンバ変数を見てた
-		// 鬼斬２： 関数でシミュレータ側の情報を読む (高速化のことは考えない)
+    // Op の dynamic な状態を知るためのクラス
+    class OpStateIF : public MemIF
+    {
+    public:
+        // 今まで： 直接このクラスのメンバ変数を見てた
+        // 鬼斬２： 関数でシミュレータ側の情報を読む (高速化のことは考えない)
 
-		virtual ~OpStateIF(){};
+        virtual ~OpStateIF(){};
 
-		// PC
-		virtual PC GetPC() const = 0;
+        // PC
+        virtual PC GetPC() const = 0;
 
-		// エミュレータがソースレジスタの値を知るための関数 
-		virtual const u64 GetSrc(const int index) const = 0;
+        // エミュレータがソースレジスタの値を知るための関数 
+        virtual const u64 GetSrc(const int index) const = 0;
 
-		// エミュレータが実行の結果を教える 
-		virtual void SetDst(const int index, const u64 value) = 0;
-		virtual const u64 GetDst(const int index) const       = 0;
+        // エミュレータが実行の結果を教える 
+        virtual void SetDst(const int index, const u64 value) = 0;
+        virtual const u64 GetDst(const int index) const       = 0;
 
-		// エミュレータが実行の結果得られるnext_PCを教える 
-		virtual void SetTakenPC(const PC takenPC) = 0;
-		virtual PC GetTakenPC() const = 0;
+        // エミュレータが実行の結果得られるnext_PCを教える 
+        virtual void SetTakenPC(const PC takenPC) = 0;
+        virtual PC GetTakenPC() const = 0;
 
-		// エミュレータがtaken/not takenを教える 
-		virtual void SetTaken(const bool taken) = 0;
-		virtual bool GetTaken() const = 0;
-		
-	};
+        // エミュレータがtaken/not takenを教える 
+        virtual void SetTaken(const bool taken) = 0;
+        virtual bool GetTaken() const = 0;
+        
+    };
 
 
 }; // namespace Onikiri

@@ -37,50 +37,50 @@
 namespace Onikiri
 {
 
-	template <typename ValueType, typename ContainerType = std::vector<ValueType> >
-	class OpExtraStateTable 
-	{
-	public:
-		typedef typename ContainerType::reference ReferenceType;
-		typedef typename ContainerType::const_reference ConstReferenceType;
-	protected:
-		ContainerType m_table;
-		
-	public:
-		OpExtraStateTable()
-			: m_table()
-		{
-		}
+    template <typename ValueType, typename ContainerType = std::vector<ValueType> >
+    class OpExtraStateTable 
+    {
+    public:
+        typedef typename ContainerType::reference ReferenceType;
+        typedef typename ContainerType::const_reference ConstReferenceType;
+    protected:
+        ContainerType m_table;
+        
+    public:
+        OpExtraStateTable()
+            : m_table()
+        {
+        }
 
-		OpExtraStateTable( OpArray& opArray, const ValueType& defaultValue = ValueType() )
-			: m_table()
-		{
-			Resize(opArray, defaultValue);
-		}
-		
-		virtual ~OpExtraStateTable(){}
+        OpExtraStateTable( OpArray& opArray, const ValueType& defaultValue = ValueType() )
+            : m_table()
+        {
+            Resize(opArray, defaultValue);
+        }
+        
+        virtual ~OpExtraStateTable(){}
 
-		void Resize( OpArray& opArray, const ValueType& defaultValue = ValueType() )
-		{
-			Resize( opArray.GetCapacity(), defaultValue );
-		}
+        void Resize( OpArray& opArray, const ValueType& defaultValue = ValueType() )
+        {
+            Resize( opArray.GetCapacity(), defaultValue );
+        }
 
-		void Resize( int capacity, const ValueType& defaultValue = ValueType() )
-		{
-			m_table.resize( capacity, defaultValue );
-		}
+        void Resize( int capacity, const ValueType& defaultValue = ValueType() )
+        {
+            m_table.resize( capacity, defaultValue );
+        }
 
-		ReferenceType operator[]( const OpIterator& opIterator )
-		{
-			return m_table[ opIterator.GetID() ];
-		}
+        ReferenceType operator[]( const OpIterator& opIterator )
+        {
+            return m_table[ opIterator.GetID() ];
+        }
 
-		ConstReferenceType operator[]( const OpIterator& opIterator ) const 
-		{
-			return m_table[ opIterator.GetID() ];
-		}
-	};
-	
+        ConstReferenceType operator[]( const OpIterator& opIterator ) const 
+        {
+            return m_table[ opIterator.GetID() ];
+        }
+    };
+    
 };
 
 #endif // __OPEXTRASTATETABLE_H__

@@ -37,85 +37,85 @@
 namespace Onikiri
 {
 
-	//
-	// A mechanism adding extra information to cache lines.
-	// Information corresponding to a line that is pointed by setassoc_table::iterator
-	// is get from / set to this table.
-	// Cache/PrefetcherBase classes use this table and they are examples of usage.
-	//
+    //
+    // A mechanism adding extra information to cache lines.
+    // Information corresponding to a line that is pointed by setassoc_table::iterator
+    // is get from / set to this table.
+    // Cache/PrefetcherBase classes use this table and they are examples of usage.
+    //
 
-	class Cache;
+    class Cache;
 
-	template < typename ValueType, typename ContainerType = std::vector<ValueType> >
-	class CacheExtraStateTable
-	{
+    template < typename ValueType, typename ContainerType = std::vector<ValueType> >
+    class CacheExtraStateTable
+    {
 
-	public:
-		typedef typename ContainerType::reference ReferenceType;
-		typedef typename ContainerType::const_reference ConstReferenceType;
-		typedef typename CacheTable::iterator iterator;
-		typedef typename CacheTable::const_iterator const_iterator;
+    public:
+        typedef typename ContainerType::reference ReferenceType;
+        typedef typename ContainerType::const_reference ConstReferenceType;
+        typedef typename CacheTable::iterator iterator;
+        typedef typename CacheTable::const_iterator const_iterator;
 
-	protected:
-		ContainerType m_table;
-		size_t m_indexCount;
-		size_t m_wayCount;
+    protected:
+        ContainerType m_table;
+        size_t m_indexCount;
+        size_t m_wayCount;
 
-		template < typename T >
-		size_t GetTableIndex( const T& i ) const
-		{
-			ASSERT(
-				m_wayCount > 0 && m_indexCount > 0, 
-				"CacheExtraStateTable is not initialized." 
-			);
-			ASSERT( 
-				i.way() < m_wayCount && i.index() < m_indexCount,
-				"The iterator points out of range."
-			);
-			return i.way() + i.index() * m_wayCount;
-		}
+        template < typename T >
+        size_t GetTableIndex( const T& i ) const
+        {
+            ASSERT(
+                m_wayCount > 0 && m_indexCount > 0, 
+                "CacheExtraStateTable is not initialized." 
+            );
+            ASSERT( 
+                i.way() < m_wayCount && i.index() < m_indexCount,
+                "The iterator points out of range."
+            );
+            return i.way() + i.index() * m_wayCount;
+        }
 
-	public:
-		void Resize( Cache* cache, const ValueType& initValue = ValueType() )
-		{
-			m_indexCount = cache->GetIndexCount();
-			m_wayCount   = cache->GetWayCount();
-			m_table.resize( m_indexCount * m_wayCount, initValue );
-		}
+    public:
+        void Resize( Cache* cache, const ValueType& initValue = ValueType() )
+        {
+            m_indexCount = cache->GetIndexCount();
+            m_wayCount   = cache->GetWayCount();
+            m_table.resize( m_indexCount * m_wayCount, initValue );
+        }
 
-		CacheExtraStateTable( Cache* cache )
-		{
-			Resize( cache );
-		}
+        CacheExtraStateTable( Cache* cache )
+        {
+            Resize( cache );
+        }
 
-		CacheExtraStateTable() :
-			m_indexCount(0),
-			m_wayCount(0)
-		{
-		}
+        CacheExtraStateTable() :
+            m_indexCount(0),
+            m_wayCount(0)
+        {
+        }
 
 
-		ReferenceType operator[]( const iterator& i )
-		{
-			return m_table[ GetTableIndex(i) ];
-		}
+        ReferenceType operator[]( const iterator& i )
+        {
+            return m_table[ GetTableIndex(i) ];
+        }
 
-		ConstReferenceType operator[]( const iterator& i ) const 
-		{
-			return m_table[ GetTableIndex(i) ];
-		}
+        ConstReferenceType operator[]( const iterator& i ) const 
+        {
+            return m_table[ GetTableIndex(i) ];
+        }
 
-		ReferenceType operator[]( const const_iterator& i )
-		{
-			return m_table[ GetTableIndex(i) ];
-		}
+        ReferenceType operator[]( const const_iterator& i )
+        {
+            return m_table[ GetTableIndex(i) ];
+        }
 
-		ConstReferenceType operator[]( const const_iterator& i ) const 
-		{
-			return m_table[ GetTableIndex(i) ];
-		}
+        ConstReferenceType operator[]( const const_iterator& i ) const 
+        {
+            return m_table[ GetTableIndex(i) ];
+        }
 
-	};
+    };
 
 }; // namespace Onikiri
 

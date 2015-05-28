@@ -39,72 +39,72 @@ using namespace AlphaLinux;
 
 ISA_TYPE Alpha64Info::GetISAType()
 {
-	return ISA_ALPHA;
+    return ISA_ALPHA;
 }
 
 int Alpha64Info::GetRegisterSegmentID(int regNum)
 {
-	const int segmentRange[] = {
-		 0, 	// Int
-		32, 	// FP
-		64, 	// Address
-		65, 	// FPCR
-		66		// Н≈Се+1
-	};
-	const int nElems = sizeof(segmentRange)/sizeof(segmentRange[0]);
+    const int segmentRange[] = {
+         0,     // Int
+        32,     // FP
+        64,     // Address
+        65,     // FPCR
+        66      // Н≈Се+1
+    };
+    const int nElems = sizeof(segmentRange)/sizeof(segmentRange[0]);
 
-	ASSERT(0 <= regNum && regNum < RegisterCount, "regNum out of bound");
-	ASSERT(segmentRange[nElems-1] == RegisterCount);
+    ASSERT(0 <= regNum && regNum < RegisterCount, "regNum out of bound");
+    ASSERT(segmentRange[nElems-1] == RegisterCount);
 
-	return static_cast<int>( upper_bound(segmentRange, segmentRange+nElems, regNum) - segmentRange ) - 1;
+    return static_cast<int>( upper_bound(segmentRange, segmentRange+nElems, regNum) - segmentRange ) - 1;
 }
 
 int Alpha64Info::GetRegisterSegmentCount()
 {
-	return 4; // INT/FP/Address(for micro op)/FPCR
+    return 4; // INT/FP/Address(for micro op)/FPCR
 }
 
 int Alpha64Info::GetInstructionWordBitSize()
 {
-	return InstructionWordBitSize;
+    return InstructionWordBitSize;
 }
 
 int Alpha64Info::GetRegisterWordBitSize()
 {
-	return 64;
+    return 64;
 }
 
 int Alpha64Info::GetRegisterCount()
 {
-	return RegisterCount;
+    return RegisterCount;
 }
 
 int Alpha64Info::GetAddressSpaceBitSize()
 {
-	return 64;
+    return 64;
 }
 
 int Alpha64Info::GetMaxSrcRegCount()
 {
-	return MaxSrcRegCount;
+    return MaxSrcRegCount;
 }
 
 int Alpha64Info::GetMaxDstRegCount()
 {
-	return MaxDstRegCount;
+    return MaxDstRegCount;
 }
 
 int Alpha64Info::GetMaxOpInfoCountPerPC()
 {
-	return Alpha64ConverterTraits::MaxOpInfoDefs;
+    return Alpha64ConverterTraits::MaxOpInfoDefs;
 }
 
 int Alpha64Info::GetMaxMemoryAccessByteSize()
 {
-	return MAX_MEMORY_ACCESS_WIDTH;
+    return MAX_MEMORY_ACCESS_WIDTH;
 }
 
 bool Alpha64Info::IsLittleEndian()
 {
-	return true;
+    return true;
 }

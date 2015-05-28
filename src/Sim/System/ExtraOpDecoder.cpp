@@ -39,8 +39,8 @@
 
 namespace Onikiri
 {
-	HookPoint<ExtraOpDecoder, ExtraOpDecodeArgs>
-		ExtraOpDecoder::s_extraOpDecodeHook;
+    HookPoint<ExtraOpDecoder, ExtraOpDecodeArgs>
+        ExtraOpDecoder::s_extraOpDecodeHook;
 };
 
 using namespace Onikiri;
@@ -51,18 +51,18 @@ ExtraOpDecoder::ExtraOpDecoder()
 
 bool ExtraOpDecoder::Decode( u32 codeWord, std::pair<ExtraOpInfoIF**, int>* decodedOps )
 {
-	ExtraOpDecodeArgs args;
-	args.codeWord   = codeWord;
-	args.decodedOps = decodedOps;
-	args.decoded    = false;
+    ExtraOpDecodeArgs args;
+    args.codeWord   = codeWord;
+    args.decodedOps = decodedOps;
+    args.decoded    = false;
 
-	s_extraOpDecodeHook.Trigger( this, &args, HookType::HOOK_BEFORE );
-	if( !s_extraOpDecodeHook.HasAround() ){
-		s_extraOpDecodeHook.Trigger( this, &args, HookType::HOOK_AFTER );
-	} else {
-		s_extraOpDecodeHook.Trigger( this, &args, HookType::HOOK_AROUND );
-	}
+    s_extraOpDecodeHook.Trigger( this, &args, HookType::HOOK_BEFORE );
+    if( !s_extraOpDecodeHook.HasAround() ){
+        s_extraOpDecodeHook.Trigger( this, &args, HookType::HOOK_AFTER );
+    } else {
+        s_extraOpDecodeHook.Trigger( this, &args, HookType::HOOK_AROUND );
+    }
 
-	return args.decoded;
+    return args.decoded;
 }
 

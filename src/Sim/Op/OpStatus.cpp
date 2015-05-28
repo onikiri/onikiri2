@@ -37,30 +37,30 @@ using namespace Onikiri;
 
 const char* OpStatus::ToString()
 {
-	// デバッグ情報の出力などに用いています
-	// Op::Statusと同じ順番に列挙してください
-	static const char* STATUS_STR[ OpStatus::OS_MAX ] =
-	{
-		"INVALID",
-		"FLUSHED",
-		"FETCH",
-		"RENAME",
-		"DISPATCHING",
-		"DISPATCHED",
-		"ISSUING",
-		"EXECUTING",
-		"FINISHED",
-		"WRITINGBACK",
-		"WRITTENBACK",
-		"COMPLETED",
-		"NOP",
-		"COMITTING",
-		"COMITTED",
-		"RETIRED"
-	};
+    // デバッグ情報の出力などに用いています
+    // Op::Statusと同じ順番に列挙してください
+    static const char* STATUS_STR[ OpStatus::OS_MAX ] =
+    {
+        "INVALID",
+        "FLUSHED",
+        "FETCH",
+        "RENAME",
+        "DISPATCHING",
+        "DISPATCHED",
+        "ISSUING",
+        "EXECUTING",
+        "FINISHED",
+        "WRITINGBACK",
+        "WRITTENBACK",
+        "COMPLETED",
+        "NOP",
+        "COMITTING",
+        "COMITTED",
+        "RETIRED"
+    };
 
-	ASSERT( m_status < OpStatus::OS_MAX );
-	return STATUS_STR[ m_status ];
+    ASSERT( m_status < OpStatus::OS_MAX );
+    return STATUS_STR[ m_status ];
 }
 
 

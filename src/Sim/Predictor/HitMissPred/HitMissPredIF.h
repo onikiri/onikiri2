@@ -37,14 +37,14 @@
 
 namespace Onikiri
 {
-	class HitMissPredIF
-	{
-	public:
-		virtual ~HitMissPredIF(){};
-		virtual bool Predict( OpIterator op ) = 0;
-		virtual void Finished ( OpIterator op, bool hit ) = 0;
-		virtual void Commit ( OpIterator op, bool hit ) = 0;
-	};
+    class HitMissPredIF
+    {
+    public:
+        virtual ~HitMissPredIF(){};
+        virtual bool Predict( OpIterator op ) = 0;
+        virtual void Finished ( OpIterator op, bool hit ) = 0;
+        virtual void Commit ( OpIterator op, bool hit ) = 0;
+    };
 } // namespace Onikiri
-	
+    
 #endif // SIM_HIT_MISS_PRED_HIT_MISS_PRED_H

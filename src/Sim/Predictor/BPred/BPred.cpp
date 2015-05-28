@@ -55,7 +55,7 @@
 
 namespace Onikiri 
 {
-	HookPoint<BPred> BPred::s_branchPredictionMissHook;
+    HookPoint<BPred> BPred::s_branchPredictionMissHook;
 };
 
 
@@ -65,61 +65,61 @@ using namespace std;
 
 BPred::Statistics::Statistics()
 {
-	numHit	= 0;
-	numMiss	= 0;
+    numHit  = 0;
+    numMiss = 0;
 }
 
 void BPred::Statistics::SetName( const String& name )
 {
-	this->name = name;
+    this->name = name;
 }
 
 
 BPred::BPred()
 {
-	m_dirPred = 0;
-	m_btb = 0;
-	m_core = 0;
-	m_fwdEmulator = 0;
-	m_mode = SM_SIMULATION;
-	m_perfect = false;
+    m_dirPred = 0;
+    m_btb = 0;
+    m_core = 0;
+    m_fwdEmulator = 0;
+    m_mode = SM_SIMULATION;
+    m_perfect = false;
 
-	BranchTypeUtility util;
-	m_statistics.resize( util.GetTypeCount() );
-	for( size_t i = 0; i < util.GetTypeCount(); i++){
-		m_statistics[i].SetName( util.GetTypeName(i) );
-	}
-	m_totalStatistics.SetName( "All" );
+    BranchTypeUtility util;
+    m_statistics.resize( util.GetTypeCount() );
+    for( size_t i = 0; i < util.GetTypeCount(); i++){
+        m_statistics[i].SetName( util.GetTypeName(i) );
+    }
+    m_totalStatistics.SetName( "All" );
 }
 
 BPred::~BPred()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 // 初期化
 void BPred::Initialize( InitPhase phase )
 {
-	if( phase == INIT_PRE_CONNECTION ){
-		LoadParam();
-	}
-	else if( phase == INIT_POST_CONNECTION ){
+    if( phase == INIT_PRE_CONNECTION ){
+        LoadParam();
+    }
+    else if( phase == INIT_POST_CONNECTION ){
 
-		// メンバ変数が正しくセットされているかチェック
-		CheckNodeInitialized( "dirPred", m_dirPred );
-		CheckNodeInitialized( "btb",  m_btb );
-		CheckNodeInitialized( "ras",  m_ras );
-		CheckNodeInitialized( "core", m_core );
-		CheckNodeInitialized( "forwardEmulator", m_fwdEmulator );
+        // メンバ変数が正しくセットされているかチェック
+        CheckNodeInitialized( "dirPred", m_dirPred );
+        CheckNodeInitialized( "btb",  m_btb );
+        CheckNodeInitialized( "ras",  m_ras );
+        CheckNodeInitialized( "core", m_core );
+        CheckNodeInitialized( "forwardEmulator", m_fwdEmulator );
 
-		if( !m_fwdEmulator->IsEnabled() ){
-			THROW_RUNTIME_ERROR(
-				"A perfect memory dependency predictor requires that a forawrd emulator is enabled." 
-			);
-		}
+        if( !m_fwdEmulator->IsEnabled() ){
+            THROW_RUNTIME_ERROR(
+                "A perfect memory dependency predictor requires that a forawrd emulator is enabled." 
+            );
+        }
 
-		m_btbPredTable.Resize( *m_core->GetOpArray() );
-	}
+        m_btbPredTable.Resize( *m_core->GetOpArray() );
+    }
 }
 
 // <TODO> 本当は，フェッチグループに対して次のフェッチグループを予測する
@@ -127,162 +127,162 @@ void BPred::Initialize( InitPhase phase )
 // op に対して、次に fetch される命令の PC を予測
 PC BPred::Predict( OpIterator op, PC predIndexPC )
 {
-	if( m_perfect && m_mode == SM_SIMULATION ){
-		// Forward emulator can work in a simulation mode only.
-		const OpStateIF* result = m_fwdEmulator->GetExecutionResult( op );
-		if( !result ){
-			THROW_RUNTIME_ERROR( "Pre-executed result cannot be retrieved from a forward emulator." );
-		}
-		return
-			result->GetTaken() ? result->GetTakenPC() : NextPC( result->GetPC() );
-	}
+    if( m_perfect && m_mode == SM_SIMULATION ){
+        // Forward emulator can work in a simulation mode only.
+        const OpStateIF* result = m_fwdEmulator->GetExecutionResult( op );
+        if( !result ){
+            THROW_RUNTIME_ERROR( "Pre-executed result cannot be retrieved from a forward emulator." );
+        }
+        return
+            result->GetTaken() ? result->GetTakenPC() : NextPC( result->GetPC() );
+    }
 
 
-	SimPC pc = op->GetPC();
-	BTBPredict btbPred = m_btb->Predict(predIndexPC);
-	bool btbHit     = btbPred.hit;
+    SimPC pc = op->GetPC();
+    BTBPredict btbPred = m_btb->Predict(predIndexPC);
+    bool btbHit     = btbPred.hit;
 
-	m_btbPredTable[op] = btbPred;
+    m_btbPredTable[op] = btbPred;
 
-	// BTBにヒットしなかった場合，分岐予測は（更新も含めて）行わない
-	if(!btbHit)
-		return pc.Next();
+    // BTBにヒットしなかった場合，分岐予測は（更新も含めて）行わない
+    if(!btbHit)
+        return pc.Next();
 
 
-	PC branchTarget = btbPred.target;
+    PC branchTarget = btbPred.target;
 
-	// 条件分岐の場合
-	bool predTaken  = btbPred.dirPredict ? m_dirPred->Predict(op, predIndexPC) : true;
+    // 条件分岐の場合
+    bool predTaken  = btbPred.dirPredict ? m_dirPred->Predict(op, predIndexPC) : true;
 
-	switch(btbPred.type){
-	case BT_NON:
-		ASSERT(0, "BT_NON is invalid.");
-		return pc.Next();
+    switch(btbPred.type){
+    case BT_NON:
+        ASSERT(0, "BT_NON is invalid.");
+        return pc.Next();
 
-	case BT_CONDITIONAL:
-		// taken / not taken の予測に応じて、次のPCを返す
-		// not taken と予測した場合，次のopのPCを返す
-		return predTaken ? branchTarget : pc.Next();		
+    case BT_CONDITIONAL:
+        // taken / not taken の予測に応じて、次のPCを返す
+        // not taken と予測した場合，次のopのPCを返す
+        return predTaken ? branchTarget : pc.Next();        
 
-	case BT_UNCONDITIONAL:
-		// 無条件分岐なら BTB の予測を返す
-		return branchTarget;
+    case BT_UNCONDITIONAL:
+        // 無条件分岐なら BTB の予測を返す
+        return branchTarget;
 
-	case BT_CALL:
-		// call なら RAS に push して、BTB の予測を返す
-		// (インクリメントはPush内で行われる
-		m_ras[op->GetLocalTID()]->Push(pc);
-		return branchTarget;
+    case BT_CALL:
+        // call なら RAS に push して、BTB の予測を返す
+        // (インクリメントはPush内で行われる
+        m_ras[op->GetLocalTID()]->Push(pc);
+        return branchTarget;
 
-	case BT_RETURN:
-		// return なら RAS の予測を返す 
-		return m_ras[op->GetLocalTID()]->Pop();
+    case BT_RETURN:
+        // return なら RAS の予測を返す 
+        return m_ras[op->GetLocalTID()]->Pop();
 
-	case BT_CONDITIONAL_RETURN:
-		// 条件付リターンの場合はDirPredをひいてTakenならPop		
-		// not taken なら次のPCを返す
-		return predTaken ? m_ras[op->GetLocalTID()]->Pop() : pc.Next();
+    case BT_CONDITIONAL_RETURN:
+        // 条件付リターンの場合はDirPredをひいてTakenならPop        
+        // not taken なら次のPCを返す
+        return predTaken ? m_ras[op->GetLocalTID()]->Pop() : pc.Next();
 
-	case BT_END:
-		break;
-	}
+    case BT_END:
+        break;
+    }
 
-	// ここには未到達のはず
-	THROW_RUNTIME_ERROR("reached end of Bpred::Predict\n");
+    // ここには未到達のはず
+    THROW_RUNTIME_ERROR("reached end of Bpred::Predict\n");
 
-	return pc.Next();	// warning よけ
+    return pc.Next();   // warning よけ
 }
 
 // op の実行終了時に呼ばれる
 void BPred::Finished( OpIterator op )
 {
-	if( m_perfect ){
-		return;
-	}
+    if( m_perfect ){
+        return;
+    }
 
-	const OpClass& opClass = op->GetOpClass();
+    const OpClass& opClass = op->GetOpClass();
 
-	// 分岐でなければ何もしない
-	if( !opClass.IsBranch() ) {
-		return;
-	}
+    // 分岐でなければ何もしない
+    if( !opClass.IsBranch() ) {
+        return;
+    }
 
-	// Detect branch miss prediction and recovery if prediction is incorrect.
-	RecoveryFromBPredMiss( op );
+    // Detect branch miss prediction and recovery if prediction is incorrect.
+    RecoveryFromBPredMiss( op );
 
-	// 条件分岐なら方向予測器に実行完了を通知
-	// （予測時BTBヒットの場合のみ
-	if( opClass.IsConditionalBranch() && m_btbPredTable[op].hit ){
-		m_dirPred->Finished( op );
-	}
+    // 条件分岐なら方向予測器に実行完了を通知
+    // （予測時BTBヒットの場合のみ
+    if( opClass.IsConditionalBranch() && m_btbPredTable[op].hit ){
+        m_dirPred->Finished( op );
+    }
 }
 
 // op のリタイア時に呼ばれる
 void BPred::Commit( OpIterator op )
 {
-	if( m_perfect && m_mode != SM_SIMULATION ){
-		return;
-	}
+    if( m_perfect && m_mode != SM_SIMULATION ){
+        return;
+    }
 
-	const OpClass& opClass = op->GetOpClass();
-	if( !opClass.IsBranch() )
-		return;
+    const OpClass& opClass = op->GetOpClass();
+    if( !opClass.IsBranch() )
+        return;
 
-	bool conditional = opClass.IsConditionalBranch();
-	
-	if( !m_perfect ){
-		// BTB更新
-		const BTBPredict& predict = m_btbPredTable[op];
-		m_btb->Update( op, predict );
+    bool conditional = opClass.IsConditionalBranch();
+    
+    if( !m_perfect ){
+        // BTB更新
+        const BTBPredict& predict = m_btbPredTable[op];
+        m_btb->Update( op, predict );
 
-		// 条件分岐なら方向予測器にリタイアを通知
-		// （予測時BTBヒットの場合のみ
-		if( conditional && predict.hit ){
-			m_dirPred->Retired( op );
-		}
-	}
+        // 条件分岐なら方向予測器にリタイアを通知
+        // （予測時BTBヒットの場合のみ
+        if( conditional && predict.hit ){
+            m_dirPred->Retired( op );
+        }
+    }
 
-	// ヒット率
-	PC pcTaken  = op->GetTakenPC();
-	PC pcPred   = op->GetPredPC();
-	PC pcNext   = NextPC( op->GetPC() );
-	bool taken  = conditional ? op->GetTaken() : true;
-	PC pcResult = taken ? pcTaken : pcNext;
+    // ヒット率
+    PC pcTaken  = op->GetTakenPC();
+    PC pcPred   = op->GetPredPC();
+    PC pcNext   = NextPC( op->GetPC() );
+    bool taken  = conditional ? op->GetTaken() : true;
+    PC pcResult = taken ? pcTaken : pcNext;
 
-	BranchTypeUtility util;
-	BranchType type = util.OpClassToBranchType( opClass );
-	if( pcPred == pcResult ){
-		m_statistics[type].numHit++;
-		m_totalStatistics.numHit++;
-	}
-	else{
-		m_statistics[type].numMiss++;
-		m_totalStatistics.numMiss++;
-	}
+    BranchTypeUtility util;
+    BranchType type = util.OpClassToBranchType( opClass );
+    if( pcPred == pcResult ){
+        m_statistics[type].numHit++;
+        m_totalStatistics.numHit++;
+    }
+    else{
+        m_statistics[type].numMiss++;
+        m_totalStatistics.numMiss++;
+    }
 
 }
 
 // Detect branch miss prediction and recovery if prediction is incorrect.
 void BPred::RecoveryFromBPredMiss( OpIterator branch )
 {
-	// Recovery is not necessary when the simulator is in an in-order mode.
-	if( m_mode != PhysicalResourceNode::SM_SIMULATION ){
-		return;
-	}
+    // Recovery is not necessary when the simulator is in an in-order mode.
+    if( m_mode != PhysicalResourceNode::SM_SIMULATION ){
+        return;
+    }
 
-	// If a perfect mode is enabled, prediction results are always correct and 
-	// there is not nothing to do.
-	if( IsPerfect() ){
-		return;
-	}
+    // If a perfect mode is enabled, prediction results are always correct and 
+    // there is not nothing to do.
+    if( IsPerfect() ){
+        return;
+    }
 
-	if( branch->GetPredPC() != branch->GetNextPC() ) {
-		// A branch prediction result is incorrect and recovery from an incorrect path.
-		g_dumper.Dump( DS_BRANCH_PREDICTION_MISS, branch );
-		HOOK_SECTION_OP( s_branchPredictionMissHook, branch )
-		{
-			Recoverer* recoverer = branch->GetThread()->GetRecoverer();
-			recoverer->RecoverBPredMiss( branch );
-		}
-	}
+    if( branch->GetPredPC() != branch->GetNextPC() ) {
+        // A branch prediction result is incorrect and recovery from an incorrect path.
+        g_dumper.Dump( DS_BRANCH_PREDICTION_MISS, branch );
+        HOOK_SECTION_OP( s_branchPredictionMissHook, branch )
+        {
+            Recoverer* recoverer = branch->GetThread()->GetRecoverer();
+            recoverer->RecoverBPredMiss( branch );
+        }
+    }
 }

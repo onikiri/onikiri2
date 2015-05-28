@@ -35,43 +35,43 @@
 #include "Interface/ISAInfo.h"
 
 namespace Onikiri {
-	namespace AlphaLinux {
+    namespace AlphaLinux {
 
-		// AlphaLinuxÇÃISAèÓïÒ
-		class Alpha64Info : public ISAInfoIF
-		{
-		public:
-			static const int InstructionWordBitSize = 32;
-			static const int MaxSrcRegCount = 3;
-			static const int MaxDstRegCount = 2;
-			static const int MaxImmCount = 2;
-			// Int : 32
-			// FP  : 32
-			// ADDR : 1
-			// FPCR : 1	(FP control register)
-			static const int RegisterCount = 32+32+1+1;
+        // AlphaLinuxÇÃISAèÓïÒ
+        class Alpha64Info : public ISAInfoIF
+        {
+        public:
+            static const int InstructionWordBitSize = 32;
+            static const int MaxSrcRegCount = 3;
+            static const int MaxDstRegCount = 2;
+            static const int MaxImmCount = 2;
+            // Int : 32
+            // FP  : 32
+            // ADDR : 1
+            // FPCR : 1 (FP control register)
+            static const int RegisterCount = 32+32+1+1;
 
-			static const int REG_ADDRESS = 64;
-			static const int REG_FPCR    = 65;
+            static const int REG_ADDRESS = 64;
+            static const int REG_FPCR    = 65;
 
-			static const int MAX_MEMORY_ACCESS_WIDTH = 8;
+            static const int MAX_MEMORY_ACCESS_WIDTH = 8;
 
-			virtual ISA_TYPE GetISAType();
-			virtual int GetInstructionWordBitSize();
-			virtual int GetRegisterWordBitSize();
-			virtual int GetRegisterCount();
-			virtual int GetAddressSpaceBitSize();
-			virtual int GetMaxSrcRegCount();
-			virtual int GetMaxDstRegCount();
-			virtual int GetRegisterSegmentID(int regNum);
-			virtual int GetRegisterSegmentCount();
-			virtual int GetMaxOpInfoCountPerPC();
-			virtual int GetMaxMemoryAccessByteSize();
-			virtual bool IsLittleEndian();
-		};
+            virtual ISA_TYPE GetISAType();
+            virtual int GetInstructionWordBitSize();
+            virtual int GetRegisterWordBitSize();
+            virtual int GetRegisterCount();
+            virtual int GetAddressSpaceBitSize();
+            virtual int GetMaxSrcRegCount();
+            virtual int GetMaxDstRegCount();
+            virtual int GetRegisterSegmentID(int regNum);
+            virtual int GetRegisterSegmentCount();
+            virtual int GetMaxOpInfoCountPerPC();
+            virtual int GetMaxMemoryAccessByteSize();
+            virtual bool IsLittleEndian();
+        };
 
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

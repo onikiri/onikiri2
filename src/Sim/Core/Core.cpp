@@ -51,8 +51,8 @@
 
 namespace Onikiri
 {
-	HookPoint<Core, Core::CheckpointDecisionHookParam> Core::s_checkpointDecisionHook;
-};	// namespace Onikiri
+    HookPoint<Core, Core::CheckpointDecisionHookParam> Core::s_checkpointDecisionHook;
+};  // namespace Onikiri
 
 
 
@@ -60,128 +60,128 @@ using namespace std;
 using namespace Onikiri;
 
 Core::Core() :
-	m_opArrayCapacity(0),
-	m_timeWheelSize(0),
-	m_globalClock(0),
-	m_opArray(0),
-	m_registerFile(0),
-	m_fetcher(0),
-	m_renamer(0),
-	m_dispatcher(0),
-	m_scheduler(0),
-	m_retirer(0),
-	m_latPred(0),
-	m_cacheSystem(0),
-	m_emulator(0),
-	m_bPred(0),
-	m_execLatencyInfo(0),
-	m_loadPipeLineModel(LPM_MULTI_ISSUE),
-	m_schedulerRemovePolicy(RP_FOLLOW_CORE),
-	m_checkpointingPolicy(CP_AUTO)
+    m_opArrayCapacity(0),
+    m_timeWheelSize(0),
+    m_globalClock(0),
+    m_opArray(0),
+    m_registerFile(0),
+    m_fetcher(0),
+    m_renamer(0),
+    m_dispatcher(0),
+    m_scheduler(0),
+    m_retirer(0),
+    m_latPred(0),
+    m_cacheSystem(0),
+    m_emulator(0),
+    m_bPred(0),
+    m_execLatencyInfo(0),
+    m_loadPipeLineModel(LPM_MULTI_ISSUE),
+    m_schedulerRemovePolicy(RP_FOLLOW_CORE),
+    m_checkpointingPolicy(CP_AUTO)
 {
 
 }
 
 Core::~Core()
 {
-	if( m_opArray != 0 )          delete m_opArray;
-	ReleaseParam();
+    if( m_opArray != 0 )          delete m_opArray;
+    ReleaseParam();
 }
 
 void Core::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
 
-		m_opArray = new OpArray( m_opArrayCapacity );
+        m_opArray = new OpArray( m_opArrayCapacity );
 
-		m_latencyPredRecv.Validate();
-		m_addrMatchPredRecv.Validate();
-		m_valuePredRecv.Validate();
-		m_partialLoadRecovery.Validate();
+        m_latencyPredRecv.Validate();
+        m_addrMatchPredRecv.Validate();
+        m_valuePredRecv.Validate();
+        m_partialLoadRecovery.Validate();
 
 
-	}
-	else if(phase == INIT_POST_CONNECTION){
+    }
+    else if(phase == INIT_POST_CONNECTION){
 
-		CheckNodeInitialized( "registerFile", m_registerFile );
-		CheckNodeInitialized( "fetcher", m_fetcher );
-		CheckNodeInitialized( "renamer", m_renamer );
-		CheckNodeInitialized( "dispatcher", m_dispatcher );
-		CheckNodeInitialized( "retirer", m_retirer );
-		CheckNodeInitialized( "latPred", m_latPred );
-		CheckNodeInitialized( "execLatencyInfo", m_execLatencyInfo );
-		CheckNodeInitialized( "thread", m_thread );
-		CheckNodeInitialized( "cacheSystem", m_cacheSystem );
-		CheckNodeInitialized( "emulator", m_emulator );
+        CheckNodeInitialized( "registerFile", m_registerFile );
+        CheckNodeInitialized( "fetcher", m_fetcher );
+        CheckNodeInitialized( "renamer", m_renamer );
+        CheckNodeInitialized( "dispatcher", m_dispatcher );
+        CheckNodeInitialized( "retirer", m_retirer );
+        CheckNodeInitialized( "latPred", m_latPred );
+        CheckNodeInitialized( "execLatencyInfo", m_execLatencyInfo );
+        CheckNodeInitialized( "thread", m_thread );
+        CheckNodeInitialized( "cacheSystem", m_cacheSystem );
+        CheckNodeInitialized( "emulator", m_emulator );
 
-		for( int localTID = 0; localTID < GetThreadCount(); localTID++ ){
-			m_thread[localTID]->SetLocalThreadID( localTID );
-		}
+        for( int localTID = 0; localTID < GetThreadCount(); localTID++ ){
+            m_thread[localTID]->SetLocalThreadID( localTID );
+        }
 
-		// scheduler の index が重複していないかチェック
-		for(int i = 0; i < GetNumScheduler(); ++i) {
-			for(int k = i + 1; k < GetNumScheduler(); ++k) {
-				if( GetScheduler(i)->GetIndex() == GetScheduler(k)->GetIndex() ) {
-					THROW_RUNTIME_ERROR("same schduler index %d(%d, %d).",
-						GetScheduler(k)->GetIndex(), i, k);
-				}
-			}
-		}
+        // scheduler の index が重複していないかチェック
+        for(int i = 0; i < GetNumScheduler(); ++i) {
+            for(int k = i + 1; k < GetNumScheduler(); ++k) {
+                if( GetScheduler(i)->GetIndex() == GetScheduler(k)->GetIndex() ) {
+                    THROW_RUNTIME_ERROR("same schduler index %d(%d, %d).",
+                        GetScheduler(k)->GetIndex(), i, k);
+                }
+            }
+        }
 
-		// Check OpArray's capacity.
-		int totalInorderListCapacity = 0;
-		for( int i = 0; i < m_thread.GetSize(); ++i ){
-			totalInorderListCapacity +=
-				m_thread[i]->GetInorderList()->GetCapacity();
-		}
-		if( m_opArrayCapacity < totalInorderListCapacity ){
-			THROW_RUNTIME_ERROR( 
-				"The capacity(%d) of 'OpArray' is too small. Make 'Core/@OpArrayCapacity' more larger.",
-				m_opArrayCapacity 
-			);
-		}
-	}
+        // Check OpArray's capacity.
+        int totalInorderListCapacity = 0;
+        for( int i = 0; i < m_thread.GetSize(); ++i ){
+            totalInorderListCapacity +=
+                m_thread[i]->GetInorderList()->GetCapacity();
+        }
+        if( m_opArrayCapacity < totalInorderListCapacity ){
+            THROW_RUNTIME_ERROR( 
+                "The capacity(%d) of 'OpArray' is too small. Make 'Core/@OpArrayCapacity' more larger.",
+                m_opArrayCapacity 
+            );
+        }
+    }
 }
 
 // --- accessors
 int Core::GetCID()
 {
-	return GetRID();
+    return GetRID();
 }
 
 int Core::GetTID(const int index)
 {
-	return PhysicalResourceNode::GetTID( index );
+    return PhysicalResourceNode::GetTID( index );
 }
 
 void Core::AddScheduler( Scheduler* scheduler )
 {
-	m_scheduler.push_back( scheduler );
+    m_scheduler.push_back( scheduler );
 }
 
 Scheduler* Core::GetScheduler( int index )
 {
-	ASSERT(
-		index >= 0 && index < static_cast<int>(m_scheduler.size()),
-		"illegal index: %d", index 
-	);
-	return m_scheduler[index];
+    ASSERT(
+        index >= 0 && index < static_cast<int>(m_scheduler.size()),
+        "illegal index: %d", index 
+    );
+    return m_scheduler[index];
 }
 
 int Core::GetNumScheduler() const
 {
-	return static_cast<int>(m_scheduler.size());
+    return static_cast<int>(m_scheduler.size());
 }
 
 Thread* Core::GetThread(int tid)
 {
-	return m_thread[tid];     
+    return m_thread[tid];     
 }
 
 int Core::GetThreadCount()
 {
-	return m_thread.GetSize();
+    return m_thread.GetSize();
 }
 
 //
@@ -191,73 +191,73 @@ int Core::GetThreadCount()
 // アクセスオーダーバイオレーションからの再フェッチによるリカバリに必要
 bool Core::IsRequiredCheckpointBefore( const PC& pc, const OpInfo* const info)
 {
-	CheckpointDecisionHookParam param = { &pc, info, true/*before*/, false/*reqruired*/ } ;
+    CheckpointDecisionHookParam param = { &pc, info, true/*before*/, false/*reqruired*/ } ;
 
-	HOOK_SECTION_PARAM( s_checkpointDecisionHook, param ){
-		if( m_checkpointingPolicy == CP_ALL ){
-			param.requried = true;
-		}
-		else if ( m_checkpointingPolicy == CP_AUTO ){
-			const OpClass& opClass = param.info->GetOpClass();
-			param.requried = 
-				m_latencyPredRecv.IsRequiredBeforeCheckpoint	( opClass )	||
-				m_addrMatchPredRecv.IsRequiredBeforeCheckpoint	( opClass )	||
-				m_valuePredRecv.IsRequiredBeforeCheckpoint		( opClass )	||
-				m_partialLoadRecovery.IsRequiredBeforeCheckpoint( opClass );
-		}
-		else{
-			ASSERT( "Unknown check-pointing policy." );
-		}
-	}
+    HOOK_SECTION_PARAM( s_checkpointDecisionHook, param ){
+        if( m_checkpointingPolicy == CP_ALL ){
+            param.requried = true;
+        }
+        else if ( m_checkpointingPolicy == CP_AUTO ){
+            const OpClass& opClass = param.info->GetOpClass();
+            param.requried = 
+                m_latencyPredRecv.IsRequiredBeforeCheckpoint    ( opClass ) ||
+                m_addrMatchPredRecv.IsRequiredBeforeCheckpoint  ( opClass ) ||
+                m_valuePredRecv.IsRequiredBeforeCheckpoint      ( opClass ) ||
+                m_partialLoadRecovery.IsRequiredBeforeCheckpoint( opClass );
+        }
+        else{
+            ASSERT( "Unknown check-pointing policy." );
+        }
+    }
 
-	return param.requried;
+    return param.requried;
 }
 
-	// この命令がフェッチされた後のインオーダーなステートをチェックポインティングする必要がある
+    // この命令がフェッチされた後のインオーダーなステートをチェックポインティングする必要がある
 // 分岐予測ミスからのリカバリに必要
 bool Core::IsRequiredCheckpointAfter( const PC& pc, const OpInfo* const info)
 {
-	CheckpointDecisionHookParam param = { &pc, info, false/*before*/, false/*reqruired*/ } ;
-	HOOK_SECTION_PARAM( s_checkpointDecisionHook, param ){
-		if( m_checkpointingPolicy == CP_ALL ){
-			param.requried = true;
-		}
-		else if ( m_checkpointingPolicy == CP_AUTO ){
-			const OpClass& opClass = param.info->GetOpClass();
-			param.requried = 
-				opClass.IsBranch() ||
-				m_latencyPredRecv.IsRequiredAfterCheckpoint		( opClass )	||
-				m_addrMatchPredRecv.IsRequiredAfterCheckpoint	( opClass )	||
-				m_valuePredRecv.IsRequiredAfterCheckpoint		( opClass )	||
-				m_partialLoadRecovery.IsRequiredAfterCheckpoint	( opClass );
-		}
-		else{
-			ASSERT( "Unknown check-pointing policy." );
-		}
-	}
+    CheckpointDecisionHookParam param = { &pc, info, false/*before*/, false/*reqruired*/ } ;
+    HOOK_SECTION_PARAM( s_checkpointDecisionHook, param ){
+        if( m_checkpointingPolicy == CP_ALL ){
+            param.requried = true;
+        }
+        else if ( m_checkpointingPolicy == CP_AUTO ){
+            const OpClass& opClass = param.info->GetOpClass();
+            param.requried = 
+                opClass.IsBranch() ||
+                m_latencyPredRecv.IsRequiredAfterCheckpoint     ( opClass ) ||
+                m_addrMatchPredRecv.IsRequiredAfterCheckpoint   ( opClass ) ||
+                m_valuePredRecv.IsRequiredAfterCheckpoint       ( opClass ) ||
+                m_partialLoadRecovery.IsRequiredAfterCheckpoint ( opClass );
+        }
+        else{
+            ASSERT( "Unknown check-pointing policy." );
+        }
+    }
 
-	return param.requried;
+    return param.requried;
 }
 
 // Cycle handler
 void Core::Evaluate()
 {
-	ClockedResourceBase::Evaluate();
+    ClockedResourceBase::Evaluate();
 
-	// Front-end stall decision
-	Cache* lv1ICache = m_cacheSystem->GetFirstLevelInsnCache();
-	if( lv1ICache->IsStallRequired() ){
-		m_dispatcher->StallThisCycle();
-	}
-	// Back-end  stall decision
-	Cache* lv1DCache = m_cacheSystem->GetFirstLevelDataCache();
-	if( lv1DCache->IsStallRequired() ){
+    // Front-end stall decision
+    Cache* lv1ICache = m_cacheSystem->GetFirstLevelInsnCache();
+    if( lv1ICache->IsStallRequired() ){
+        m_dispatcher->StallThisCycle();
+    }
+    // Back-end  stall decision
+    Cache* lv1DCache = m_cacheSystem->GetFirstLevelDataCache();
+    if( lv1DCache->IsStallRequired() ){
 
-		m_retirer->StallThisCycle();
-		for( size_t i = 0; i < m_scheduler.size(); i++ ){
-			m_scheduler[i]->StallThisCycle();
-		}
-	}
+        m_retirer->StallThisCycle();
+        for( size_t i = 0; i < m_scheduler.size(); i++ ){
+            m_scheduler[i]->StallThisCycle();
+        }
+    }
 
 }
 

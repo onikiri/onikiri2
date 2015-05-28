@@ -36,92 +36,92 @@
 
 namespace Onikiri
 {
-	class Pipeline;
+    class Pipeline;
 
-	//
-	// A queue of cache access requests.
-	// This queue is for band width simulation of caches/memories.
-	//
-	class CacheAccessRequestQueue
-	{
+    //
+    // A queue of cache access requests.
+    // This queue is for band width simulation of caches/memories.
+    //
+    class CacheAccessRequestQueue
+    {
 
-	public:
-		typedef CacheAccess			 Access;
-		typedef CacheAccessResult	 Result;
-		typedef CacheAccessEventType EventType;
+    public:
+        typedef CacheAccess          Access;
+        typedef CacheAccessResult    Result;
+        typedef CacheAccessEventType EventType;
 
-		// An access state structure.
-		// See comments in the 'Push' method.
-		struct AccessState
-		{
-			Access access;
+        // An access state structure.
+        // See comments in the 'Push' method.
+        struct AccessState
+        {
+            Access access;
 
-			u64  id;					// serial ID of an access
-			s64  startTime;				// access start time
-			s64  endTime;				// access end time
-			s64  serializingStartTime;	// serializing start time
-			s64  serializingEndTime;	// serializing end time
+            u64  id;                    // serial ID of an access
+            s64  startTime;             // access start time
+            s64  endTime;               // access end time
+            s64  serializingStartTime;  // serializing start time
+            s64  serializingEndTime;    // serializing end time
 
-			// A notifiee when an access is finished.
-			CacheAccessNotifieeIF* notifiee;
-			CacheAccessNotificationParam notification;
-		};
+            // A notifiee when an access is finished.
+            CacheAccessNotifieeIF* notifiee;
+            CacheAccessNotificationParam notification;
+        };
 
-		typedef pool_list< AccessState > AccessQueue;
-		typedef AccessQueue::iterator    AccessQueueIterator;
+        typedef pool_list< AccessState > AccessQueue;
+        typedef AccessQueue::iterator    AccessQueueIterator;
 
-		CacheAccessRequestQueue( 
-			Pipeline* pipe,
-			int ports,
-			int serializedCycles
-		);
+        CacheAccessRequestQueue( 
+            Pipeline* pipe,
+            int ports,
+            int serializedCycles
+        );
 
-		virtual ~CacheAccessRequestQueue();
+        virtual ~CacheAccessRequestQueue();
 
-		// Returns the size of the access list.
-		size_t GetSize() const;
+        // Returns the size of the access list.
+        size_t GetSize() const;
 
-		// Push an access to a queue.
-		// This method returns the latency of an access.
-		// See more detailed comments in the method definition.
-		s64 Push( 
-			const Access& access, 
-			int m_minLatency,
-			CacheAccessNotifieeIF* notifiee,
-			const CacheAccessNotificationParam& notification
-		);
+        // Push an access to a queue.
+        // This method returns the latency of an access.
+        // See more detailed comments in the method definition.
+        s64 Push( 
+            const Access& access, 
+            int m_minLatency,
+            CacheAccessNotifieeIF* notifiee,
+            const CacheAccessNotificationParam& notification
+        );
 
-		void Pop( const CacheAccess& access, AccessQueueIterator target );
+        void Pop( const CacheAccess& access, AccessQueueIterator target );
 
-		void SetEnabled( bool enabled );
+        void SetEnabled( bool enabled );
 
-	protected:
-		
-		bool m_enabled;
-		u64 m_currentAccessID;
+    protected:
+        
+        bool m_enabled;
+        u64 m_currentAccessID;
 
-		// Access queue
-		AccessQueue m_queue;
+        // Access queue
+        AccessQueue m_queue;
 
-		// A pipeline for a connected cache/memory.
-		Pipeline* m_pipe;
+        // A pipeline for a connected cache/memory.
+        Pipeline* m_pipe;
 
-		// The number of ports of a cache.
-		int m_ports;
+        // The number of ports of a cache.
+        int m_ports;
 
-		// The number of cycles for each access that uses a cache port exclusively.
-		int m_serializedCycles;
-	
-		// Get a time when a new memory access can start.
-		s64 GetNextAccessStartableTime();
+        // The number of cycles for each access that uses a cache port exclusively.
+        int m_serializedCycles;
+    
+        // Get a time when a new memory access can start.
+        s64 GetNextAccessStartableTime();
 
-		// Add an access state to the list.
-		void PushAccess(
-			const CacheAccess& access, 
-			const AccessState& state, 
-			int latency 
-		);
-	};
+        // Add an access state to the list.
+        void PushAccess(
+            const CacheAccess& access, 
+            const AccessState& state, 
+            int latency 
+        );
+    };
 
 }; // namespace Onikiri
 

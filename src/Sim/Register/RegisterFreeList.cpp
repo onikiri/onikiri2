@@ -44,108 +44,108 @@ RegisterFreeList::RegisterFreeList()
 
 RegisterFreeList::~RegisterFreeList()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void RegisterFreeList::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
-	}
-	else if(phase == INIT_POST_CONNECTION){
-		// メンバ変数のチェック
-		if( m_registerFile.GetSize() == 0 ) {
-			THROW_RUNTIME_ERROR("registerFile not set.");
-		}
-		if( m_emulator.GetSize() == 0 ) {
-			THROW_RUNTIME_ERROR("emulator not set.");
-		}
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
+    }
+    else if(phase == INIT_POST_CONNECTION){
+        // メンバ変数のチェック
+        if( m_registerFile.GetSize() == 0 ) {
+            THROW_RUNTIME_ERROR("registerFile not set.");
+        }
+        if( m_emulator.GetSize() == 0 ) {
+            THROW_RUNTIME_ERROR("emulator not set.");
+        }
 
-		ISAInfoIF* isaInfo = m_emulator[0]->GetISAInfo();
+        ISAInfoIF* isaInfo = m_emulator[0]->GetISAInfo();
 
-		int numLogicalReg = isaInfo->GetRegisterCount();
-
-
-		// segment の番号をリスト化するためのset
-		set<int> segmentSet;
-		for (int i = 0; i < numLogicalReg; ++i) {
-			int segment = isaInfo->GetRegisterSegmentID(i);
-			segmentSet.insert(segment);
-		}
-
-		// freeList の初期化
-		m_freeList.resize(segmentSet.size());
-
-		// freeList はsegment ごとに構築
-		int phyRegNo = 0;
-		for(set<int>::iterator iter = segmentSet.begin();
-			iter != segmentSet.end();
-			++iter)
-		{
-			int segment = *iter;
-			int capacity = m_registerFile[0]->GetCapacity(segment);
-			// freeList に登録
-			for (int i = 0; i < capacity; i++) {
-				m_freeList[segment].push_back(phyRegNo);
-				++phyRegNo;
-			}
-		}
-
-		ASSERT(
-			phyRegNo == m_registerFile[0]->GetTotalCapacity(),
-			"phyreg count unmatch"
-		);
+        int numLogicalReg = isaInfo->GetRegisterCount();
 
 
-		// フリーリストの空きエントリをチェック
-		
-		vector<int> logicalRegNumList(segmentSet.size(), 0);
-		for (int i = 0; i < numLogicalReg; i++) {
-			int segment = isaInfo->GetRegisterSegmentID(i);
-			logicalRegNumList[segment]++;
-		}
+        // segment の番号をリスト化するためのset
+        set<int> segmentSet;
+        for (int i = 0; i < numLogicalReg; ++i) {
+            int segment = isaInfo->GetRegisterSegmentID(i);
+            segmentSet.insert(segment);
+        }
 
-		int threadCount = m_core[0]->GetThreadCount();
-		for( size_t i = 0; i < segmentSet.size(); i++ ){
-			int requiredRegCount = logicalRegNumList[i] * threadCount + 1;
-			if( GetFreeEntryCount((int)i) < requiredRegCount ){
-				THROW_RUNTIME_ERROR(
-					"The number of the physical register is too small.\n"
-					"segment: %d\n"
-					"phy reg num: %d\n"
-					"requried num: %d (log reg num:%d x thread num:%d + 1)\n",
-					i,
-					m_registerFile[0]->GetCapacity((int)i),
-					requiredRegCount,
-					logicalRegNumList[i],
-					threadCount
-				);
-			}
-		}
-	}
+        // freeList の初期化
+        m_freeList.resize(segmentSet.size());
+
+        // freeList はsegment ごとに構築
+        int phyRegNo = 0;
+        for(set<int>::iterator iter = segmentSet.begin();
+            iter != segmentSet.end();
+            ++iter)
+        {
+            int segment = *iter;
+            int capacity = m_registerFile[0]->GetCapacity(segment);
+            // freeList に登録
+            for (int i = 0; i < capacity; i++) {
+                m_freeList[segment].push_back(phyRegNo);
+                ++phyRegNo;
+            }
+        }
+
+        ASSERT(
+            phyRegNo == m_registerFile[0]->GetTotalCapacity(),
+            "phyreg count unmatch"
+        );
+
+
+        // フリーリストの空きエントリをチェック
+        
+        vector<int> logicalRegNumList(segmentSet.size(), 0);
+        for (int i = 0; i < numLogicalReg; i++) {
+            int segment = isaInfo->GetRegisterSegmentID(i);
+            logicalRegNumList[segment]++;
+        }
+
+        int threadCount = m_core[0]->GetThreadCount();
+        for( size_t i = 0; i < segmentSet.size(); i++ ){
+            int requiredRegCount = logicalRegNumList[i] * threadCount + 1;
+            if( GetFreeEntryCount((int)i) < requiredRegCount ){
+                THROW_RUNTIME_ERROR(
+                    "The number of the physical register is too small.\n"
+                    "segment: %d\n"
+                    "phy reg num: %d\n"
+                    "requried num: %d (log reg num:%d x thread num:%d + 1)\n",
+                    i,
+                    m_registerFile[0]->GetCapacity((int)i),
+                    requiredRegCount,
+                    logicalRegNumList[i],
+                    threadCount
+                );
+            }
+        }
+    }
 }
 
 void RegisterFreeList::Release(int segment, int phyRegNum)
 {
-	m_freeList[segment].push_back(phyRegNum);
+    m_freeList[segment].push_back(phyRegNum);
 }
 
 int RegisterFreeList::Allocate(int segment)
 {
-	ASSERT( m_freeList[segment].size() > 0, "cannot allocate register.");
+    ASSERT( m_freeList[segment].size() > 0, "cannot allocate register.");
 
-	int phyRegNo = m_freeList[segment].front();
-	m_freeList[segment].pop_front();
+    int phyRegNo = m_freeList[segment].front();
+    m_freeList[segment].pop_front();
 
-	return phyRegNo;
+    return phyRegNo;
 }
 
 int RegisterFreeList::GetSegmentCount()
 {
-	return (int)m_freeList.size();
+    return (int)m_freeList.size();
 }
 
 int RegisterFreeList::GetFreeEntryCount(int segment)
 {
-	return (int)m_freeList[segment].size();
+    return (int)m_freeList[segment].size();
 }

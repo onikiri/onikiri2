@@ -40,65 +40,65 @@ namespace shttl
 {
 
 
-	template<class T, ssize_t OFFSET = 0, class U = T >
-	class double_hasher :
-		public hasher< std::pair<T, U> >
-	{
-	public:
-		typedef static_off_hasher<T, OFFSET>   base_type;
-		typedef typename base_type::size_type  size_type;
+    template<class T, ssize_t OFFSET = 0, class U = T >
+    class double_hasher :
+        public hasher< std::pair<T, U> >
+    {
+    public:
+        typedef static_off_hasher<T, OFFSET>   base_type;
+        typedef typename base_type::size_type  size_type;
 
-	protected:
-		base_type m_bash_hasher;
+    protected:
+        base_type m_bash_hasher;
 
-	public:
+    public:
 
-		// Types
-		typedef double_hasher<T, OFFSET, U>	   this_type;
-		typedef std::pair<T, U>                value_type;
-
-
-		size_type size() const  { return m_bash_hasher.size(); }
+        // Types
+        typedef double_hasher<T, OFFSET, U>    this_type;
+        typedef std::pair<T, U>                value_type;
 
 
-		// Constructors
-		explicit double_hasher(const size_t i) :
-			m_bash_hasher(i)
-		{ 
-		}
+        size_type size() const  { return m_bash_hasher.size(); }
 
 
-		// Member Functions
-		size_type index(const value_type& p) const 
-		{
-			return ((p.first >> m_bash_hasher. off_bit()) ^ p.second) & m_bash_hasher.idx_mask();
-		}
+        // Constructors
+        explicit double_hasher(const size_t i) :
+            m_bash_hasher(i)
+        { 
+        }
 
-		bool match(const value_type& lhs, const value_type& rhs) const 
-		{
-			return ((m_bash_hasher.match(lhs.first, rhs.first)) &&
-				((lhs.second & m_bash_hasher.idx_mask()) == (rhs.second & m_bash_hasher.idx_mask())));
-		}
 
-		value_type tag(const value_type& t) const
-		{
-			return 
-				std::make_pair(
-					m_bash_hasher.tag(t.first),
-					t.second 
-				);
-		}
+        // Member Functions
+        size_type index(const value_type& p) const 
+        {
+            return ((p.first >> m_bash_hasher. off_bit()) ^ p.second) & m_bash_hasher.idx_mask();
+        }
 
-		value_type rebuild(const value_type& tag, size_type index) const 
-		{
-			return 
-				std::make_pair(
-					m_bash_hasher.rebuild(tag.first, index),
-					tag.second 
-				);
-		}
+        bool match(const value_type& lhs, const value_type& rhs) const 
+        {
+            return ((m_bash_hasher.match(lhs.first, rhs.first)) &&
+                ((lhs.second & m_bash_hasher.idx_mask()) == (rhs.second & m_bash_hasher.idx_mask())));
+        }
 
-	}; // class double_hasher
+        value_type tag(const value_type& t) const
+        {
+            return 
+                std::make_pair(
+                    m_bash_hasher.tag(t.first),
+                    t.second 
+                );
+        }
+
+        value_type rebuild(const value_type& tag, size_type index) const 
+        {
+            return 
+                std::make_pair(
+                    m_bash_hasher.rebuild(tag.first, index),
+                    tag.second 
+                );
+        }
+
+    }; // class double_hasher
 
 } // namespace shttl
 

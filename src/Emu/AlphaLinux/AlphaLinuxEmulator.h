@@ -36,11 +36,11 @@
 #include "Emu/AlphaLinux/AlphaLinuxTraits.h"
 
 namespace Onikiri {
-	namespace AlphaLinux {
+    namespace AlphaLinux {
 
-		typedef EmulatorUtility::CommonEmulator<AlphaLinuxTraits> AlphaLinuxEmulator;
+        typedef EmulatorUtility::CommonEmulator<AlphaLinuxTraits> AlphaLinuxEmulator;
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

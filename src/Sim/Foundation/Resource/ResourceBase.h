@@ -36,43 +36,43 @@
 
 namespace Onikiri 
 {
-	static const int RID_INVALID = -1;
+    static const int RID_INVALID = -1;
 
-	class PhysicalResourceBase : public PhysicalResourceIF
-	{
-	protected:
-		std::vector<int> m_tid;
-		int m_rid;
+    class PhysicalResourceBase : public PhysicalResourceIF
+    {
+    protected:
+        std::vector<int> m_tid;
+        int m_rid;
 
-	public:
-		PhysicalResourceBase();
-		~PhysicalResourceBase();
-		
-		virtual int  GetThreadCount();
-		virtual void SetThreadCount(const int count);
-		
-		virtual int  GetTID(const int index);
-		virtual void SetTID(const int index, const int tid);
+    public:
+        PhysicalResourceBase();
+        ~PhysicalResourceBase();
+        
+        virtual int  GetThreadCount();
+        virtual void SetThreadCount(const int count);
+        
+        virtual int  GetTID(const int index);
+        virtual void SetTID(const int index, const int tid);
 
-		virtual int  GetRID();
-		virtual void SetRID(const int rid);
-	};
+        virtual int  GetRID();
+        virtual void SetRID(const int rid);
+    };
 
-	class LogicalResourceBase : public LogicalResourceIF
-	{
-		int m_pid;
-		int m_tid;
+    class LogicalResourceBase : public LogicalResourceIF
+    {
+        int m_pid;
+        int m_tid;
 
-	public:
-		LogicalResourceBase();
-		~LogicalResourceBase();
+    public:
+        LogicalResourceBase();
+        ~LogicalResourceBase();
 
-		virtual int  GetPID() const;
-		virtual void SetPID(const int pid);
-		
-		virtual int  GetTID() const;
-		virtual void SetTID(const int tid);
-	};
+        virtual int  GetPID() const;
+        virtual void SetPID(const int pid);
+        
+        virtual int  GetTID() const;
+        virtual void SetTID(const int tid);
+    };
 
 
 }; // namespace Onikiri

@@ -38,44 +38,44 @@
 
 namespace Onikiri 
 {
-	class CheckpointMaster;
+    class CheckpointMaster;
 
-	// ÉÅÉÇÉäÇ…ä÷Ç∑ÇÈàÀë∂ä÷åWÇÃó\ë™äÌ
-	// ç≈å„Ç…fetchÇ≥ÇÍÇΩêÊçsÇÃstoreñΩóﬂÇ…àÀë∂Ç∑ÇÈÇ∆ó\ë™Ç∑ÇÈ
-	class ConservativeMemDepPred :
-		public MemDepPredIF,
-		public PhysicalResourceNode
-	{
-	private:
-		Core* m_core;
-		CheckpointMaster* m_checkpointMaster;
-		CheckpointedData< MemDependencyPtr > m_latestStoreDst;
-		CheckpointedData< MemDependencyPtr > m_latestMemDst;
+    // ÉÅÉÇÉäÇ…ä÷Ç∑ÇÈàÀë∂ä÷åWÇÃó\ë™äÌ
+    // ç≈å„Ç…fetchÇ≥ÇÍÇΩêÊçsÇÃstoreñΩóﬂÇ…àÀë∂Ç∑ÇÈÇ∆ó\ë™Ç∑ÇÈ
+    class ConservativeMemDepPred :
+        public MemDepPredIF,
+        public PhysicalResourceNode
+    {
+    private:
+        Core* m_core;
+        CheckpointMaster* m_checkpointMaster;
+        CheckpointedData< MemDependencyPtr > m_latestStoreDst;
+        CheckpointedData< MemDependencyPtr > m_latestMemDst;
 
-		SharedPtrObjectPool<MemDependency> m_memDepPool;
+        SharedPtrObjectPool<MemDependency> m_memDepPool;
 
-		virtual void Deallocate(OpIterator op);
+        virtual void Deallocate(OpIterator op);
 
-	public:
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( CheckpointMaster, "checkpointMaster", m_checkpointMaster )
-			RESOURCE_ENTRY( Core, "core", m_core )
-		END_RESOURCE_MAP()
+    public:
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( CheckpointMaster, "checkpointMaster", m_checkpointMaster )
+            RESOURCE_ENTRY( Core, "core", m_core )
+        END_RESOURCE_MAP()
 
-		ConservativeMemDepPred();
-		virtual ~ConservativeMemDepPred();
+        ConservativeMemDepPred();
+        virtual ~ConservativeMemDepPred();
 
-		virtual void Initialize(InitPhase phase);
+        virtual void Initialize(InitPhase phase);
 
-		virtual void Resolve(OpIterator op);
-		virtual void Allocate(OpIterator op);
-		virtual void Commit(OpIterator op);
-		virtual void Flush(OpIterator op);
+        virtual void Resolve(OpIterator op);
+        virtual void Allocate(OpIterator op);
+        virtual void Commit(OpIterator op);
+        virtual void Flush(OpIterator op);
 
-		virtual void OrderConflicted(OpIterator producer, OpIterator consumer);
+        virtual void OrderConflicted(OpIterator producer, OpIterator consumer);
 
-		virtual bool CanAllocate(OpIterator* infoArray, int numOp);
-	};
+        virtual bool CanAllocate(OpIterator* infoArray, int numOp);
+    };
 
 }; // namespace Onikiri
 

@@ -43,125 +43,125 @@
 namespace Onikiri 
 {
 
-	class Scheduler;
-	class DispatchSteererIF;
+    class Scheduler;
+    class DispatchSteererIF;
 
-	class Dispatcher:
-		public PipelineNodeBase
-	{
-		
-	public:
-		// An array of the numbers of dispatching ops.
-		// Each array element corresponds to each scheduler.
-		static const int MAX_SCHEDULER_NUM = 8;
-		typedef 
-			fixed_sized_buffer< int, MAX_SCHEDULER_NUM, Dispatcher >
-			DispatchingOpNums;
+    class Dispatcher:
+        public PipelineNodeBase
+    {
+        
+    public:
+        // An array of the numbers of dispatching ops.
+        // Each array element corresponds to each scheduler.
+        static const int MAX_SCHEDULER_NUM = 8;
+        typedef 
+            fixed_sized_buffer< int, MAX_SCHEDULER_NUM, Dispatcher >
+            DispatchingOpNums;
 
-		BEGIN_PARAM_MAP("")
+        BEGIN_PARAM_MAP("")
 
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY( "@DispatchLatency", m_dispatchLatency );
-			END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY( "@DispatchLatency", m_dispatchLatency );
+            END_PARAM_PATH()
 
-			BEGIN_PARAM_PATH( GetResultPath() )
-				BEGIN_PARAM_PATH( "NumStalledCycles/" )
-					RESULT_ENTRY( "@Total",			GetStalledCycles() )
-					RESULT_ENTRY( "@SchedulerFull",	m_stallCylcles )
-				END_PARAM_PATH()
-				RESULT_ENTRY( "@SchedulerName",	m_schedulerName )
-				RESULT_ENTRY( "@NumDispatchedOps",	m_numDispatchedOps )
-				
-				// CHAIN_PARAM_MAP can treat 'std::vector<SchedulerInfo>'
-				CHAIN_PARAM_MAP( "Scheduler", m_schedInfo )	
-				CHAIN_PARAM_MAP("OpStatistics", m_opClassStat)
-			END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+                BEGIN_PARAM_PATH( "NumStalledCycles/" )
+                    RESULT_ENTRY( "@Total",         GetStalledCycles() )
+                    RESULT_ENTRY( "@SchedulerFull", m_stallCylcles )
+                END_PARAM_PATH()
+                RESULT_ENTRY( "@SchedulerName", m_schedulerName )
+                RESULT_ENTRY( "@NumDispatchedOps",  m_numDispatchedOps )
+                
+                // CHAIN_PARAM_MAP can treat 'std::vector<SchedulerInfo>'
+                CHAIN_PARAM_MAP( "Scheduler", m_schedInfo ) 
+                CHAIN_PARAM_MAP("OpStatistics", m_opClassStat)
+            END_PARAM_PATH()
 
-		END_PARAM_MAP()
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core,   "core",   m_core )
-			RESOURCE_ENTRY( Thread, "thread", m_thread )
-			RESOURCE_SETTER_ENTRY(
-				PipelineNodeIF, "upperPipelineNode", SetUpperPipelineNode 
-			)
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core,   "core",   m_core )
+            RESOURCE_ENTRY( Thread, "thread", m_thread )
+            RESOURCE_SETTER_ENTRY(
+                PipelineNodeIF, "upperPipelineNode", SetUpperPipelineNode 
+            )
+        END_RESOURCE_MAP()
 
-		Dispatcher();
-		virtual ~Dispatcher();
+        Dispatcher();
+        virtual ~Dispatcher();
 
-		// PipelineNodeBase
-		virtual void Initialize( InitPhase phase );
-		virtual void Finalize();
+        // PipelineNodeBase
+        virtual void Initialize( InitPhase phase );
+        virtual void Finalize();
 
-		virtual void Evaluate();
-		virtual void Update();
-		virtual void ExitLowerPipeline( OpIterator op );
-		
-		virtual void Retire( OpIterator op );
-		virtual void Flush( OpIterator op );
+        virtual void Evaluate();
+        virtual void Update();
+        virtual void ExitLowerPipeline( OpIterator op );
+        
+        virtual void Retire( OpIterator op );
+        virtual void Flush( OpIterator op );
 
-		// Accessors
-		int GetDispatchLatency() const { return m_dispatchLatency; }
+        // Accessors
+        int GetDispatchLatency() const { return m_dispatchLatency; }
 
-		//
-		// --- Hook
-		//
+        //
+        // --- Hook
+        //
 
-		struct DispatchHookParam
-		{
-			// The number of dispatching ops;
-			const DispatchingOpNums* dispatchingOps;
-			
-			// It this flag is false, a corresponding op is not dispatched.
-			bool dispatch;
-		};
+        struct DispatchHookParam
+        {
+            // The number of dispatching ops;
+            const DispatchingOpNums* dispatchingOps;
+            
+            // It this flag is false, a corresponding op is not dispatched.
+            bool dispatch;
+        };
 
-		// Prototype: void OnDispatchEvaluate( OpIterator, DispatchHookParam );
-		// A hook point for evaluating a dispatched op.
-		// Ops passed to an attached method are not dispatched
-		// when a dispatcher is stalled.
-		static HookPoint<Dispatcher, DispatchHookParam> s_dispatchEvaluateHook;
+        // Prototype: void OnDispatchEvaluate( OpIterator, DispatchHookParam );
+        // A hook point for evaluating a dispatched op.
+        // Ops passed to an attached method are not dispatched
+        // when a dispatcher is stalled.
+        static HookPoint<Dispatcher, DispatchHookParam> s_dispatchEvaluateHook;
 
-		// Prototype: void OnDispatchUpdate( OpIterator );
-		// A hook point for updating an actually dispatched op.
-		static HookPoint<Dispatcher, DispatchHookParam> s_dispatchUpdateHook;
+        // Prototype: void OnDispatchUpdate( OpIterator );
+        // A hook point for updating an actually dispatched op.
+        static HookPoint<Dispatcher, DispatchHookParam> s_dispatchUpdateHook;
 
 
-	protected:
+    protected:
 
-		typedef PipelineNodeBase BaseType;
+        typedef PipelineNodeBase BaseType;
 
-		struct SchedulerInfo : public ParamExchangeChild
-		{
-			int index;
-			s64 saturateCount;
-			Scheduler* scheduler;
-			OpList dispatchingOps;
-			s64 numDispatchedOps;
+        struct SchedulerInfo : public ParamExchangeChild
+        {
+            int index;
+            s64 saturateCount;
+            Scheduler* scheduler;
+            OpList dispatchingOps;
+            s64 numDispatchedOps;
 
-			SchedulerInfo();
+            SchedulerInfo();
 
-			BEGIN_PARAM_MAP( "" )
-			END_PARAM_MAP()
-		};
+            BEGIN_PARAM_MAP( "" )
+            END_PARAM_MAP()
+        };
 
-		int m_numScheduler;
-		int m_dispatchLatency;
+        int m_numScheduler;
+        int m_dispatchLatency;
 
-		std::vector< SchedulerInfo > m_schedInfo;
-		std::vector< s64 > m_stallCylcles;
-		std::vector< s64 > m_numDispatchedOps;
-		std::vector< std::string > m_schedulerName;
+        std::vector< SchedulerInfo > m_schedInfo;
+        std::vector< s64 > m_stallCylcles;
+        std::vector< s64 > m_numDispatchedOps;
+        std::vector< std::string > m_schedulerName;
 
-		// Statistics of ops.
-		OpClassStatistics m_opClassStat;
+        // Statistics of ops.
+        OpClassStatistics m_opClassStat;
 
-		SchedulerInfo* GetSchedulerInfo( OpIterator op );
-		void Dispatch( OpIterator op );
-		void Delete( OpIterator op, bool flush );
-	};
-	
+        SchedulerInfo* GetSchedulerInfo( OpIterator op );
+        void Dispatch( OpIterator op );
+        void Delete( OpIterator op, bool flush );
+    };
+    
 }; // namespace Onikiri;
 
 #endif // SIM_PIPELINE_DISPATCHER_DISPATCHER_H

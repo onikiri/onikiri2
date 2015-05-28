@@ -33,21 +33,21 @@
 #define __EMULATORUTILITY_DECODERUTILITY_H__
 
 namespace Onikiri {
-	namespace EmulatorUtility {
+    namespace EmulatorUtility {
 
-		// begin ビット目 (LSB=0) からbeginビットを含めてlen bitだけ取り出す
-		// sextがtrueのとき符号拡張を行う
-		template <typename T>
-		T ExtractBits(T value, int begin, int len, bool sext = false)
-		{
-			T result = (value >> begin) & ~(~(T)0 << len);
-			// sign extend
-			if (sext && (result & ((T)1 << (len-1))))
-				result |= ~0 << len;
-			return result;
-		}
+        // begin ビット目 (LSB=0) からbeginビットを含めてlen bitだけ取り出す
+        // sextがtrueのとき符号拡張を行う
+        template <typename T>
+        T ExtractBits(T value, int begin, int len, bool sext = false)
+        {
+            T result = (value >> begin) & ~(~(T)0 << len);
+            // sign extend
+            if (sext && (result & ((T)1 << (len-1))))
+                result |= ~0 << len;
+            return result;
+        }
 
-	} // namespace PPC64Linux
+    } // namespace PPC64Linux
 } // namespace Onikiri
 
 #endif

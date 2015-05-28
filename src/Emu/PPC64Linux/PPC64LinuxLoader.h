@@ -36,25 +36,25 @@
 
 namespace Onikiri {
 
-	namespace PPC64Linux {
+    namespace PPC64Linux {
 
-		// PPC64Linux ELF 用のローダー
-		class PPC64LinuxLoader : public EmulatorUtility::Linux64Loader
-		{
-		public:
-			PPC64LinuxLoader();
-			virtual ~PPC64LinuxLoader();
+        // PPC64Linux ELF 用のローダー
+        class PPC64LinuxLoader : public EmulatorUtility::Linux64Loader
+        {
+        public:
+            PPC64LinuxLoader();
+            virtual ~PPC64LinuxLoader();
 
-			// LoaderIF の実装
-			virtual u64 GetInitialRegValue(int index) const;
-		protected:
-			virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
-			virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
-		private:
-			u64 m_startTocPointer;
-		};
+            // LoaderIF の実装
+            virtual u64 GetInitialRegValue(int index) const;
+        protected:
+            virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
+            virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
+        private:
+            u64 m_startTocPointer;
+        };
 
-	} // namespace PPC64Linux
+    } // namespace PPC64Linux
 } // namespace Onikiri
 
 #endif

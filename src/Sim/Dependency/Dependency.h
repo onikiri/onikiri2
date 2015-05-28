@@ -39,87 +39,87 @@
 
 namespace Onikiri {
 
-	/* 
-	依存関係を表現するための基底クラス
-	*/
-	class Dependency 
-	{
-	public:
-		typedef pool_list<OpIterator> ConsumerListType;
-		typedef 
-			ConsumerListType::iterator
-			ConsumerListIterator;
-		typedef 
-			ConsumerListType::const_iterator
-			ConsumerListConstIterator;
+    /* 
+    依存関係を表現するための基底クラス
+    */
+    class Dependency 
+    {
+    public:
+        typedef pool_list<OpIterator> ConsumerListType;
+        typedef 
+            ConsumerListType::iterator
+            ConsumerListIterator;
+        typedef 
+            ConsumerListType::const_iterator
+            ConsumerListConstIterator;
 
 
-		Dependency();
-		Dependency(int numScheduler);
-		virtual ~Dependency();
+        Dependency();
+        Dependency(int numScheduler);
+        virtual ~Dependency();
 
-		void AddConsumer( OpIterator op );
-		void RemoveConsumer( OpIterator op );
+        void AddConsumer( OpIterator op );
+        void RemoveConsumer( OpIterator op );
 
-		void Set();
-		void Reset();
+        void Set();
+        void Reset();
 
-		void Clear();
+        void Clear();
 
-		// accessors
-		const ConsumerListType& GetConsumers() const
-		{
-			return m_consumer;
-		}
+        // accessors
+        const ConsumerListType& GetConsumers() const
+        {
+            return m_consumer;
+        }
 
-		bool GetReadiness( const int index) const
-		{
-			return m_readiness.test( index );
-		}
+        bool GetReadiness( const int index) const
+        {
+            return m_readiness.test( index );
+        }
 
-		bool IsFullyReady() const
-		{
-			for( size_t i = 0; i < m_readiness.size(); ++i ){
-				if( !m_readiness.test(i) )
-					return false;
-			}
-			return true;
-		}
+        bool IsFullyReady() const
+        {
+            for( size_t i = 0; i < m_readiness.size(); ++i ){
+                if( !m_readiness.test(i) )
+                    return false;
+            }
+            return true;
+        }
 
-		void SetReadiness( const bool readiness, const int index )
-		{
-			m_readiness.set( index, readiness );
-		}
+        void SetReadiness( const bool readiness, const int index )
+        {
+            m_readiness.set( index, readiness );
+        }
 
-	protected:
+    protected:
 
-		// スケジューラごとに ready かどうかのフラグ
-		boost::dynamic_bitset<
-			u32, boost::fast_pool_allocator<u32> 
-		> m_readiness;	
+        // スケジューラごとに ready かどうかのフラグ
+        boost::dynamic_bitset<
+            u32, boost::fast_pool_allocator<u32> 
+        > m_readiness;  
 
-		// 依存先の命令
-		ConsumerListType	m_consumer;
-	};
+        // 依存先の命令
+        ConsumerListType    m_consumer;
+    };
 
-	enum DependencySetMaxSize { MAX_DEPENDENCY_SET_SIZE = 1024 };
-	class DependencySet :
-		public fixed_sized_buffer< Dependency*, MAX_DEPENDENCY_SET_SIZE, DependencySetMaxSize >
-		//public pool_vector< Dependency* >
-	{
-	public:
+    enum DependencySetMaxSize { MAX_DEPENDENCY_SET_SIZE = 1024 };
+    class DependencySet :
+        public fixed_sized_buffer< Dependency*, MAX_DEPENDENCY_SET_SIZE, DependencySetMaxSize >
+        //public pool_vector< Dependency* >
+    {
+    public:
 
-		// Returns whether 'dep' is included in this set or not.
-		bool IsIncluded( const Dependency* dep ) const
-		{
-			for( const_iterator i = begin(); i != end(); ++i ){
-				if( *i == dep ){
-					return true;
-				}
-			}
-			return false;
-		}
-	};
+        // Returns whether 'dep' is included in this set or not.
+        bool IsIncluded( const Dependency* dep ) const
+        {
+            for( const_iterator i = begin(); i != end(); ++i ){
+                if( *i == dep ){
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
 
 };
 

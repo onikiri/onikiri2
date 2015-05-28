@@ -39,38 +39,38 @@
 namespace Onikiri 
 {
 
-	// A structure for memory accesses interface
-	// between a emulation part and a simulation part.
-	struct MemAccess
-	{
+    // A structure for memory accesses interface
+    // between a emulation part and a simulation part.
+    struct MemAccess
+    {
 
-		// Codes of a memory access result.
-		// These codes need to be defined in a interface section.
-		// This is because a emulator notifies that memory accesses are 
-		// invalid to a simulator on speculative memory accesses.
-		enum Result
-		{
-			MAR_SUCCESS,
-			MAR_READ_INVALID_ADDRESS,
-			MAR_READ_NOT_READABLE,
-			MAR_READ_UNALIGNED_ADDRESS,
-			MAR_READ_INVALID_PARTIAL_READ,
-			MAR_WRITE_INVALID_ADDRESS,
-			MAR_WRITE_UNALIGNED_ADDRESS,
-			MAR_WRITE_NOT_WRITABLE
-		};
+        // Codes of a memory access result.
+        // These codes need to be defined in a interface section.
+        // This is because a emulator notifies that memory accesses are 
+        // invalid to a simulator on speculative memory accesses.
+        enum Result
+        {
+            MAR_SUCCESS,
+            MAR_READ_INVALID_ADDRESS,
+            MAR_READ_NOT_READABLE,
+            MAR_READ_UNALIGNED_ADDRESS,
+            MAR_READ_INVALID_PARTIAL_READ,
+            MAR_WRITE_INVALID_ADDRESS,
+            MAR_WRITE_UNALIGNED_ADDRESS,
+            MAR_WRITE_NOT_WRITABLE
+        };
 
-		Addr   address;
-		int    size;
-		bool   sign;
-		u64    value;
-		Result result;
+        Addr   address;
+        int    size;
+        bool   sign;
+        u64    value;
+        Result result;
 
-		MemAccess() : size(0), sign(false), value(0), result(MAR_SUCCESS)
-		{}
+        MemAccess() : size(0), sign(false), value(0), result(MAR_SUCCESS)
+        {}
 
-		const std::string ToString() const;
-	};
+        const std::string ToString() const;
+    };
 
 }; // namespace Onikiri
 

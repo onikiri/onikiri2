@@ -35,54 +35,54 @@
 
 namespace Onikiri
 {
-	// Handles are used for identifying each data.
-	// Ex. handle(0):PC, handle(1):RMT ... 
-	typedef size_t CheckpointedDataHandle;
+    // Handles are used for identifying each data.
+    // Ex. handle(0):PC, handle(1):RMT ... 
+    typedef size_t CheckpointedDataHandle;
 
-	class CheckpointMaster;
-	class Checkpoint;
+    class CheckpointMaster;
+    class Checkpoint;
 
-	// A base class of check pointed data.
-	// See comments in CheckpointedData.
-	class CheckpointedDataBase 
-	{
-	public:
-		struct BackupEntry
-		{
-			void* data;
-			bool  valid;
-			BackupEntry() :
-				data(NULL),
-				valid(false)
-			{
-			}
-		};
+    // A base class of check pointed data.
+    // See comments in CheckpointedData.
+    class CheckpointedDataBase 
+    {
+    public:
+        struct BackupEntry
+        {
+            void* data;
+            bool  valid;
+            BackupEntry() :
+                data(NULL),
+                valid(false)
+            {
+            }
+        };
 
-		typedef	pool_list< BackupEntry > BackupList;
-		typedef BackupList::iterator BackupIterator;
+        typedef pool_list< BackupEntry > BackupList;
+        typedef BackupList::iterator BackupIterator;
 
-		CheckpointedDataBase(){}
-		virtual ~CheckpointedDataBase(){}
+        CheckpointedDataBase(){}
+        virtual ~CheckpointedDataBase(){}
 
-		virtual void Allocate( Checkpoint* checkpoint ) = 0;
-		virtual void Backup( Checkpoint* checkpoint ) = 0;
-		virtual void Recover( Checkpoint* checkpoint ) = 0;
-		virtual void Erase( Checkpoint* checkpoint ) = 0;
+        virtual void Allocate( Checkpoint* checkpoint ) = 0;
+        virtual void Backup( Checkpoint* checkpoint ) = 0;
+        virtual void Recover( Checkpoint* checkpoint ) = 0;
+        virtual void Erase( Checkpoint* checkpoint ) = 0;
 
-		void SetHandle( CheckpointedDataHandle handle )
-		{
-			m_handle = handle;
-		}
+        void SetHandle( CheckpointedDataHandle handle )
+        {
+            m_handle = handle;
+        }
 
-		const CheckpointedDataHandle GetHandle() const
-		{
-			return m_handle;
-		}
+        const CheckpointedDataHandle GetHandle() const
+        {
+            return m_handle;
+        }
 
-	protected:
-		CheckpointedDataHandle m_handle;
+    protected:
+        CheckpointedDataHandle m_handle;
 
-	};
+    };
 }; // namespace Onikiri
 
 #endif // SIM_FOUNDATION_CHECK_POINT_CHECKPOINTED_DATA_BASE_H

@@ -35,54 +35,54 @@
 #include "Emu/Utility/System/Memory/MemorySystem.h"
 
 namespace Onikiri {
-	namespace EmulatorUtility {
+    namespace EmulatorUtility {
 
-		class EmuMemAccess : public MemAccess
-		{
-		public:
+        class EmuMemAccess : public MemAccess
+        {
+        public:
 
-			EmuMemAccess( u64 address, int size, bool sign = false )
-			{
-				this->address.address = address;
-				this->size = size;
-				this->sign = sign;
-			}
+            EmuMemAccess( u64 address, int size, bool sign = false )
+            {
+                this->address.address = address;
+                this->size = size;
+                this->sign = sign;
+            }
 
-			EmuMemAccess( u64 address, int size, u64 value )
-			{
-				this->address.address = address;
-				this->size  = size;
-				this->value = value;
-			}
+            EmuMemAccess( u64 address, int size, u64 value )
+            {
+                this->address.address = address;
+                this->size  = size;
+                this->value = value;
+            }
 
-		};
+        };
 
-		// target メモリ中のバッファを host の連続領域に一時的にコピーする．デストラクト時に書き戻す (readOnly のときは書き戻しを行わない)
-		// Getにより返されたバッファに書き込むことで，あたかも target のメモリに直接書いたように見える 
-		class TargetBuffer
-		{
-		public:
-			TargetBuffer(MemorySystem* memory, u64 targetAddr, size_t size, bool readOnly = false);
-			~TargetBuffer();
-			void* Get();
-			const void* Get() const;
-		private:
-			MemorySystem* m_memory;
-			u8* m_buf;
-			u64 m_targetAddr;
-			size_t m_bufSize;
-			bool m_readOnly;
-		};
+        // target メモリ中のバッファを host の連続領域に一時的にコピーする．デストラクト時に書き戻す (readOnly のときは書き戻しを行わない)
+        // Getにより返されたバッファに書き込むことで，あたかも target のメモリに直接書いたように見える 
+        class TargetBuffer
+        {
+        public:
+            TargetBuffer(MemorySystem* memory, u64 targetAddr, size_t size, bool readOnly = false);
+            ~TargetBuffer();
+            void* Get();
+            const void* Get() const;
+        private:
+            MemorySystem* m_memory;
+            u8* m_buf;
+            u64 m_targetAddr;
+            size_t m_bufSize;
+            bool m_readOnly;
+        };
 
-		// Utility
+        // Utility
 
-		// targetAddr にある文字列の長さを得る
-		u64 TargetStrlen(MemorySystem* mem, u64 targetAddr);
+        // targetAddr にある文字列の長さを得る
+        u64 TargetStrlen(MemorySystem* mem, u64 targetAddr);
 
-		// Get c string data from the targetAddr.
-		std::string StrCpyToHost(MemorySystem* mem, u64 targetAddr);
+        // Get c string data from the targetAddr.
+        std::string StrCpyToHost(MemorySystem* mem, u64 targetAddr);
 
-	} // namespace EmulatorUtility
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif

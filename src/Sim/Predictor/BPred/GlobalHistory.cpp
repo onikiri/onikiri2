@@ -36,33 +36,33 @@
 
 using namespace Onikiri;
 
-GlobalHistory::GlobalHistory()	:
-	m_checkpointMaster(0)
+GlobalHistory::GlobalHistory()  :
+    m_checkpointMaster(0)
 {
 }
 
 GlobalHistory::~GlobalHistory()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void GlobalHistory::Initialize(InitPhase phase)
 {
-	if(phase == INIT_POST_CONNECTION){
-		CheckNodeInitialized( "checkpointMaster", m_checkpointMaster );
+    if(phase == INIT_POST_CONNECTION){
+        CheckNodeInitialized( "checkpointMaster", m_checkpointMaster );
 
-		m_globalHistory.Initialize(
-			m_checkpointMaster,
-			CheckpointMaster::SLOT_FETCH
-		);
-		*m_globalHistory = 0;
-	}
+        m_globalHistory.Initialize(
+            m_checkpointMaster,
+            CheckpointMaster::SLOT_FETCH
+        );
+        *m_globalHistory = 0;
+    }
 }
 
 // dirpred ‚Ì—\‘ªŽž‚É—\‘ªŒ‹‰Ê‚ð bpred ‚©‚ç‹³‚¦‚Ä‚à‚ç‚¤
 void GlobalHistory::Predicted(bool taken)
 {
-	*m_globalHistory = ( (*m_globalHistory) << 1 ) | (taken ? 1 : 0);
+    *m_globalHistory = ( (*m_globalHistory) << 1 ) | (taken ? 1 : 0);
 }
 
 // •ªŠò‚ÌRetireŽž‚ÉTaken/NotTaken‚ð bpred ‚©‚ç‹³‚¦‚Ä‚à‚ç‚¤
@@ -75,11 +75,11 @@ void GlobalHistory::Retired(bool taken)
 // •ªŠò•ûŒü—\‘ªƒ~ƒXŽž‚É³‚µ‚¢—\‘ª‚ðŠwK‚·‚é‚Ì‚ÉŽg‚¤
 void GlobalHistory::SetLeastSignificantBit(bool taken)
 {
-	*m_globalHistory = shttl::deposit(*m_globalHistory, 0, 1, taken);
+    *m_globalHistory = shttl::deposit(*m_globalHistory, 0, 1, taken);
 }
 
 // GlobalHistory‚ð•Ô‚·
 u64 GlobalHistory::GetHistory()
 {
-	return *m_globalHistory;
+    return *m_globalHistory;
 }

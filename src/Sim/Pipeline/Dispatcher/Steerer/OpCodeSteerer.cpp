@@ -42,58 +42,58 @@ using namespace std;
 
 OpCodeDispatchSteerer::OpCodeDispatchSteerer()
 {
-	m_core = 0;
+    m_core = 0;
 }
 
 OpCodeDispatchSteerer::~OpCodeDispatchSteerer()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void OpCodeDispatchSteerer::Initialize(InitPhase phase)
 {
-	if (phase == INIT_PRE_CONNECTION){
-		LoadParam();
-		return;
-	}
-	if (phase == INIT_POST_CONNECTION){
+    if (phase == INIT_PRE_CONNECTION){
+        LoadParam();
+        return;
+    }
+    if (phase == INIT_POST_CONNECTION){
 
-		CheckNodeInitialized( "core", m_core );
+        CheckNodeInitialized( "core", m_core );
 
-		for(int i = 0; i < m_core->GetNumScheduler(); ++i) {
-			Scheduler* sched = m_core->GetScheduler(i);
-			const vector<ExecUnitIF*>& unitList = 
-				sched->GetExecUnitList();
+        for(int i = 0; i < m_core->GetNumScheduler(); ++i) {
+            Scheduler* sched = m_core->GetScheduler(i);
+            const vector<ExecUnitIF*>& unitList = 
+                sched->GetExecUnitList();
 
-			for( size_t i = 0; i < unitList.size(); i++){
-				int codeCount = unitList[i]->GetMappedCodeCount();
-				for(int j = 0; j < codeCount; j++){
-					int code = unitList[i]->GetMappedCode( j );
+            for( size_t i = 0; i < unitList.size(); i++){
+                int codeCount = unitList[i]->GetMappedCodeCount();
+                for(int j = 0; j < codeCount; j++){
+                    int code = unitList[i]->GetMappedCode( j );
 
-					// code が末尾のインデックスになるように拡張
-					if((int)m_schedulerMap.size() <= code)
-						m_schedulerMap.resize(code+1);
+                    // code が末尾のインデックスになるように拡張
+                    if((int)m_schedulerMap.size() <= code)
+                        m_schedulerMap.resize(code+1);
 
-						ASSERT( m_schedulerMap[code] == 0, "scheduler set twice(code:%d).", code);
+                        ASSERT( m_schedulerMap[code] == 0, "scheduler set twice(code:%d).", code);
 
-						// 該当する番号に代入
-						m_schedulerMap[code] = sched;
-				}
-			}
-		}
-	}
+                        // 該当する番号に代入
+                        m_schedulerMap[code] = sched;
+                }
+            }
+        }
+    }
 
 }
 
 
 Scheduler* OpCodeDispatchSteerer::Steer(OpIterator opIterator)
 {
-	int code = opIterator->GetOpClass().GetCode();
+    int code = opIterator->GetOpClass().GetCode();
 
-	ASSERT( code >= 0 && code < static_cast<int>(m_schedulerMap.size()),
-		"unknown opcode %d.", code);
-	ASSERT( m_schedulerMap[code] != 0,
-		"scheduler not set(opcode %d).", code);
+    ASSERT( code >= 0 && code < static_cast<int>(m_schedulerMap.size()),
+        "unknown opcode %d.", code);
+    ASSERT( m_schedulerMap[code] != 0,
+        "scheduler not set(opcode %d).", code);
 
-	return m_schedulerMap[code];
+    return m_schedulerMap[code];
 }

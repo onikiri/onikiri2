@@ -37,7 +37,7 @@
 using namespace Onikiri;
 
 IssueSelector::IssueSelector() : 
-	m_selector( NULL )
+    m_selector( NULL )
 {
 
 }
@@ -49,18 +49,18 @@ IssueSelector::~IssueSelector()
 
 void IssueSelector::Initialize( InitPhase phase )
 {
-	// Do not call Initialize() of m_selector.
+    // Do not call Initialize() of m_selector.
 }
 
 
 void IssueSelector::Finalize()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 
 void IssueSelector::EvaluateSelect( Scheduler* scheduler )
 {
-	ASSERT( m_selector != NULL );
-	m_selector->EvaluateSelect( scheduler );
+    ASSERT( m_selector != NULL );
+    m_selector->EvaluateSelect( scheduler );
 }

@@ -39,74 +39,74 @@ using namespace PPC64Linux;
 
 ISA_TYPE PPC64Info::GetISAType()
 {
-	return ISA_PPC64;
+    return ISA_PPC64;
 }
 
 int PPC64Info::GetRegisterSegmentID(int regNum)
 {
-	const int segmentRange[] = {
-		 0, 	// Int
-		32, 	// FP
-		64, 	// CR
-		72, 	// SPR
-		74,		// Flag
-		76,		// ADDR
-		77		// Н≈Се+1
-	};
-	const int nElems = sizeof(segmentRange)/sizeof(segmentRange[0]);
+    const int segmentRange[] = {
+         0,     // Int
+        32,     // FP
+        64,     // CR
+        72,     // SPR
+        74,     // Flag
+        76,     // ADDR
+        77      // Н≈Се+1
+    };
+    const int nElems = sizeof(segmentRange)/sizeof(segmentRange[0]);
 
-	ASSERT(0 <= regNum && regNum < RegisterCount, "regNum out of bound");
-	ASSERT(segmentRange[nElems-1] == RegisterCount);
+    ASSERT(0 <= regNum && regNum < RegisterCount, "regNum out of bound");
+    ASSERT(segmentRange[nElems-1] == RegisterCount);
 
-	return static_cast<int>( upper_bound(segmentRange, segmentRange+nElems, regNum) - segmentRange ) - 1;
+    return static_cast<int>( upper_bound(segmentRange, segmentRange+nElems, regNum) - segmentRange ) - 1;
 }
 
 int PPC64Info::GetRegisterSegmentCount()
 {
-	return 6;
+    return 6;
 }
 
 int PPC64Info::GetInstructionWordBitSize()
 {
-	return InstructionWordBitSize;
+    return InstructionWordBitSize;
 }
 
 int PPC64Info::GetRegisterWordBitSize()
 {
-	return 64;
+    return 64;
 }
 
 int PPC64Info::GetRegisterCount()
 {
-	return RegisterCount;
+    return RegisterCount;
 }
 
 int PPC64Info::GetAddressSpaceBitSize()
 {
-	return 64;
+    return 64;
 }
 
 int PPC64Info::GetMaxSrcRegCount()
 {
-	return MaxSrcRegCount;
+    return MaxSrcRegCount;
 }
 
 int PPC64Info::GetMaxDstRegCount()
 {
-	return MaxDstRegCount;
+    return MaxDstRegCount;
 }
 
 int PPC64Info::GetMaxOpInfoCountPerPC()
 {
-	return PPC64ConverterTraits::MaxOpInfoDefs;
+    return PPC64ConverterTraits::MaxOpInfoDefs;
 }
 
 int PPC64Info::GetMaxMemoryAccessByteSize()
 {
-	return MAX_MEMORY_ACCESS_WIDTH;
+    return MAX_MEMORY_ACCESS_WIDTH;
 }
 
 bool PPC64Info::IsLittleEndian()
 {
-	return false;
+    return false;
 }

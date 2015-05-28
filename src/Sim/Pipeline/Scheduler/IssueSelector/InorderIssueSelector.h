@@ -39,31 +39,31 @@
 
 namespace Onikiri
 {
-	class Scheduler;
+    class Scheduler;
 
-	class InorderIssueSelector : 
-		public IssueSelectorIF,
-		public PhysicalResourceNode
-	{
-	public:
-		typedef Scheduler::SchedulingOps SchedulingOps;
+    class InorderIssueSelector : 
+        public IssueSelectorIF,
+        public PhysicalResourceNode
+    {
+    public:
+        typedef Scheduler::SchedulingOps SchedulingOps;
 
-		InorderIssueSelector();
-		virtual ~InorderIssueSelector();
-		
-		virtual void Initialize( InitPhase );
-		virtual void Finalize();
+        InorderIssueSelector();
+        virtual ~InorderIssueSelector();
+        
+        virtual void Initialize( InitPhase );
+        virtual void Finalize();
 
-		virtual void EvaluateSelect( Scheduler* scheduler );
+        virtual void EvaluateSelect( Scheduler* scheduler );
 
-		BEGIN_PARAM_MAP( "" )
-		END_PARAM_MAP()
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
-		
-	};
+        BEGIN_PARAM_MAP( "" )
+        END_PARAM_MAP()
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
+        
+    };
 }
 
-#endif	// SIM_PIPELINE_SCHEDULER_SELECTOR_ISSUE_ISSUE_SELECTOR_H
+#endif  // SIM_PIPELINE_SCHEDULER_SELECTOR_ISSUE_ISSUE_SELECTOR_H
 
 

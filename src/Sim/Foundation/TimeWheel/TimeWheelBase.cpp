@@ -43,78 +43,78 @@ using namespace Onikiri;
 
 
 TimeWheelBase::TimeWheelBase() :
-	m_current(0),
-	m_size(0),
-	m_now(0)
+    m_current(0),
+    m_size(0),
+    m_now(0)
 {
-	LoadParam();
-	m_eventWheel.Resize( m_size );	
+    LoadParam();
+    m_eventWheel.Resize( m_size );  
 }
 
 TimeWheelBase::~TimeWheelBase()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void TimeWheelBase::AddEvent( const ListNode& evnt, int time )
 {
-	ASSERT(
-		( GetCurrentPhase() == PHASE_UPDATE || 
-		  GetCurrentPhase() == PHASE_END 
-		),
-		"AddEvent() can be called only in PHASE_PROCESS/END."
-	);
-	ASSERT( time >= 0, "time is negative." );
-	ASSERT( m_size > time, "event list is not enough." );
-	
-	if( /*m_processedThisCycle &&*/ time == 0 ){
-		evnt->TriggerUpdate();
-		return;
-	}
+    ASSERT(
+        ( GetCurrentPhase() == PHASE_UPDATE || 
+          GetCurrentPhase() == PHASE_END 
+        ),
+        "AddEvent() can be called only in PHASE_PROCESS/END."
+    );
+    ASSERT( time >= 0, "time is negative." );
+    ASSERT( m_size > time, "event list is not enough." );
+    
+    if( /*m_processedThisCycle &&*/ time == 0 ){
+        evnt->TriggerUpdate();
+        return;
+    }
 
-	//ASSERT( !(time == 0 && m_processedThisCycle == true) , "event added after process.");
+    //ASSERT( !(time == 0 && m_processedThisCycle == true) , "event added after process.");
 
-	int id = IndexAfterTime( time );
-	m_eventWheel.GetEventList( id )->AddEvent( evnt );
+    int id = IndexAfterTime( time );
+    m_eventWheel.GetEventList( id )->AddEvent( evnt );
 }
 
 
 // Proceed a time tick
 void TimeWheelBase::Tick()
 {
-	m_current++;
-	if(m_current >= m_size){
-		m_current -= m_size;
-	}
-	++m_now;
+    m_current++;
+    if(m_current >= m_size){
+        m_current -= m_size;
+    }
+    ++m_now;
 }
 
 
 // Get time tick count.
 s64 TimeWheelBase::GetNow() const
 {
-	ASSERT(
-		( GetCurrentPhase() == PHASE_UPDATE || 
-		  GetCurrentPhase() == PHASE_END 
-		),
-		"GetNow() can be called only in PHASE_PROCESS/END."
-	);
-	return m_now;
+    ASSERT(
+        ( GetCurrentPhase() == PHASE_UPDATE || 
+          GetCurrentPhase() == PHASE_END 
+        ),
+        "GetNow() can be called only in PHASE_PROCESS/END."
+    );
+    return m_now;
 }
 
 // Process events.
 void TimeWheelBase::End()
 {
-	if( !IsStalledThisCycle() ){
-		// Clear events
-		int current = m_current;
-		ListType* curEvent = m_eventWheel.PeekEventList(current);
-		if( curEvent ){
-			curEvent->Clear();
-			m_eventWheel.ReleaseEventList( curEvent, current );
-		}
-	}
+    if( !IsStalledThisCycle() ){
+        // Clear events
+        int current = m_current;
+        ListType* curEvent = m_eventWheel.PeekEventList(current);
+        if( curEvent ){
+            curEvent->Clear();
+            m_eventWheel.ReleaseEventList( curEvent, current );
+        }
+    }
 
-	ClockedResourceBase::End();
+    ClockedResourceBase::End();
 }
 

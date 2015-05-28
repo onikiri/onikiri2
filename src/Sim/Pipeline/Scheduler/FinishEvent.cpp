@@ -55,77 +55,77 @@ using namespace Onikiri;
 
 namespace Onikiri 
 {
-	HookPoint<OpFinishEvent,OpFinishEvent::FinishHookParam> OpFinishEvent::s_finishHook;
+    HookPoint<OpFinishEvent,OpFinishEvent::FinishHookParam> OpFinishEvent::s_finishHook;
 };
 
 
 OpFinishEvent::OpFinishEvent( OpIterator op ) :
-	m_op( op )
+    m_op( op )
 {
-	SetPriority( RP_EXECUTION_FINISH );
+    SetPriority( RP_EXECUTION_FINISH );
 }
 
 void OpFinishEvent::Update()
 {
-	OpIterator op = m_op;
-	ASSERT( 
-		op->GetStatus() == OpStatus::OS_EXECUTING,
-		"Op:%s",
-		op->ToString().c_str()
-	);
+    OpIterator op = m_op;
+    ASSERT( 
+        op->GetStatus() == OpStatus::OS_EXECUTING,
+        "Op:%s",
+        op->ToString().c_str()
+    );
 
-	FinishHookParam param;
-	param.flushed = false;
+    FinishHookParam param;
+    param.flushed = false;
 
-	HOOK_SECTION_OP_PARAM( s_finishHook, op, param )
-	{
-		Core* core = op->GetCore();
-		Thread* thread = op->GetThread();
-		Scheduler* scheduler = m_op->GetScheduler();
+    HOOK_SECTION_OP_PARAM( s_finishHook, op, param )
+    {
+        Core* core = op->GetCore();
+        Thread* thread = op->GetThread();
+        Scheduler* scheduler = m_op->GetScheduler();
 
-		//
-		// Notify the finish of execution to each module.
-		//
+        //
+        // Notify the finish of execution to each module.
+        //
 
-		// Write back results to physical registers and update status.
-		op->ExecutionEnd();	
+        // Write back results to physical registers and update status.
+        op->ExecutionEnd(); 
 
-		// Each 'Finished' method may flush an op itself, 
-		// so need to check whether an op is alive or not.
+        // Each 'Finished' method may flush an op itself, 
+        // so need to check whether an op is alive or not.
 
-		// Update a latency predictor.
-		if( op.IsAlive() ){
-			core->GetLatPred()->Finished( op );
-		}
+        // Update a latency predictor.
+        if( op.IsAlive() ){
+            core->GetLatPred()->Finished( op );
+        }
 
-		// To a fetcher.
-		// In Fetcher::Finished(), Check branch miss prediction and
-		// recover if it is necessary.
-		if( op.IsAlive() ){
-			core->GetFetcher()->Finished( op );
-		}
+        // To a fetcher.
+        // In Fetcher::Finished(), Check branch miss prediction and
+        // recover if it is necessary.
+        if( op.IsAlive() ){
+            core->GetFetcher()->Finished( op );
+        }
 
-		// To a memory order manager.
-		// In MemOrderManager::Finished(), check access order violation  
-		// and recover if violation occurs. 
-		if( op.IsAlive() ){
-			thread->GetMemOrderManager()->Finished( op );
-		}
+        // To a memory order manager.
+        // In MemOrderManager::Finished(), check access order violation  
+        // and recover if violation occurs. 
+        if( op.IsAlive() ){
+            thread->GetMemOrderManager()->Finished( op );
+        }
 
-		// To a scheduler.
-		if( op.IsAlive() ){
-			scheduler->Finished( op );
-		}
+        // To a scheduler.
+        if( op.IsAlive() ){
+            scheduler->Finished( op );
+        }
 
-		if( !op.IsAlive() ){
-			param.flushed = true;
-		}
+        if( !op.IsAlive() ){
+            param.flushed = true;
+        }
 
-		// Value prediction is not implemented yet.
-		//if( ValuePredictionMiss(m_op) ) {
-		//	return m_op->GetThread()->RecoverValPredMiss(m_op, DataPredType::VALUE);
-		//}
-	}
+        // Value prediction is not implemented yet.
+        //if( ValuePredictionMiss(m_op) ) {
+        //  return m_op->GetThread()->RecoverValPredMiss(m_op, DataPredType::VALUE);
+        //}
+    }
 
 }
 

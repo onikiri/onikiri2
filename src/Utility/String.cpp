@@ -43,51 +43,51 @@ String::String()
 }
 
 String::String(const t_string &str, size_type pos, size_type n) : 
-	t_string(str, pos, n)
+    t_string(str, pos, n)
 {
 };
 
 String::String(const char* str) : 
-	t_string(str)
+    t_string(str)
 {
 };
 
 String& String::format_arg(const char* fmt, va_list& arg)
 {
-	
-	for(int size = 128;;size *= 2){
-		char* buf = new char[size];
-		
-		va_list work_arg;
+    
+    for(int size = 128;;size *= 2){
+        char* buf = new char[size];
+        
+        va_list work_arg;
         va_copy(work_arg, arg);
 
-		int writeSize = ::vsnprintf(buf, size, fmt, work_arg);
-		bool success = (writeSize < size) && (writeSize != -1);
+        int writeSize = ::vsnprintf(buf, size, fmt, work_arg);
+        bool success = (writeSize < size) && (writeSize != -1);
 
         va_end(work_arg);
 
-		if(success)
-			this->assign(buf);
+        if(success)
+            this->assign(buf);
 
-		delete[] buf;
+        delete[] buf;
 
-		if(success)
-			break;
-	}
+        if(success)
+            break;
+    }
 
-	
-	return *this;
+    
+    return *this;
 }
 
 // 'printf' style format
 String& String::format(const char* fmt, ... )
 {
-	va_list arg;
-	va_start(arg, fmt);
-	format_arg(fmt, arg);
-	va_end(arg);
+    va_list arg;
+    va_start(arg, fmt);
+    format_arg(fmt, arg);
+    va_end(arg);
 
-	return *this;
+    return *this;
 }
 
 
@@ -96,17 +96,17 @@ String& String::format(const char* fmt, ... )
 // sepKeepStr : delimiter（分割後文字列にも残る）
 // ",/"なら，','と'/'をdelimiterとして文字列を分割
 std::vector<String> String::split(
-	const char* delimiter, 
-	const char* delimiterKeep) const
+    const char* delimiter, 
+    const char* delimiterKeep) const
 {
-	using namespace boost;
-	typedef tokenizer< char_separator<char> > tokenizer;
-	char_separator<char> sep( delimiter, delimiterKeep );
-	tokenizer tok(*this, sep);
+    using namespace boost;
+    typedef tokenizer< char_separator<char> > tokenizer;
+    char_separator<char> sep( delimiter, delimiterKeep );
+    tokenizer tok(*this, sep);
 
-	std::vector<String> ret;
-	for(tokenizer::iterator i = tok.begin(); i != tok.end(); ++i){
-		ret.push_back( *i );
-	}
-	return ret;
+    std::vector<String> ret;
+    for(tokenizer::iterator i = tok.begin(); i != tok.end(); ++i){
+        ret.push_back( *i );
+    }
+    return ret;
 }

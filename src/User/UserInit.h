@@ -43,31 +43,31 @@
 
 namespace Onikiri
 {
-	static void InitializeUserDefaultParameter(
-		std::vector<String>* defaultParams 
-	){
-		defaultParams->push_back( g_userDefaultParam );
+    static void InitializeUserDefaultParameter(
+        std::vector<String>* defaultParams 
+    ){
+        defaultParams->push_back( g_userDefaultParam );
 
 
-		// You can remove the following if you don't need the samples.
-		
-		
-#ifdef USE_SAMPLE_NULL	// for 'SampleAlwaysHitBrDirPredictor'
-		defaultParams->push_back( g_sampleNullParam );
+        // You can remove the following if you don't need the samples.
+        
+        
+#ifdef USE_SAMPLE_NULL  // for 'SampleAlwaysHitBrDirPredictor'
+        defaultParams->push_back( g_sampleNullParam );
 #endif
-		
-#ifdef USE_SAMPLE_HOOK_MODULE	// for 'SampleHookModule'
-		defaultParams->push_back( g_sampleHookModuleParam );
-#endif
-
-#ifdef USE_SAMPLE_BPRED	// for 'SampleAlwaysHitBrDirPredictor'
-		defaultParams->push_back( g_sampleBPredDefaultParam );
+        
+#ifdef USE_SAMPLE_HOOK_MODULE   // for 'SampleHookModule'
+        defaultParams->push_back( g_sampleHookModuleParam );
 #endif
 
-#ifdef USE_SAMPLE_PREFETCHER		// for 'SamplePrefetcher'
-		defaultParams->push_back( g_samplePrefetcherParam );
+#ifdef USE_SAMPLE_BPRED // for 'SampleAlwaysHitBrDirPredictor'
+        defaultParams->push_back( g_sampleBPredDefaultParam );
 #endif
-	}
+
+#ifdef USE_SAMPLE_PREFETCHER        // for 'SamplePrefetcher'
+        defaultParams->push_back( g_samplePrefetcherParam );
+#endif
+    }
 }
 
 #endif

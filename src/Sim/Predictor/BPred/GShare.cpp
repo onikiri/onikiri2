@@ -47,68 +47,68 @@ using namespace Onikiri;
 
 GShare::GShare()
 {
-	m_core = 0;
-	m_pht = 0;
+    m_core = 0;
+    m_pht = 0;
 
-	m_globalHistoryBits = 0;
-	m_pthIndexBits = 0;
+    m_globalHistoryBits = 0;
+    m_pthIndexBits = 0;
 
-	m_numPred	=	0;
-	m_numHit	=	0;
-	m_numMiss	=	0;
-	m_numRetire	=	0;
+    m_numPred   =   0;
+    m_numHit    =   0;
+    m_numMiss   =   0;
+    m_numRetire =   0;
 
 }
 
 GShare::~GShare()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void GShare::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam(); // m_jBitSize, m_kBitSizeの初期化
-	}
-	else if(phase == INIT_POST_CONNECTION){
-		// メンバ変数が正しく初期化されているかのチェック
-		CheckNodeInitialized( "core", m_core);
-		CheckNodeInitialized( "globalHistory", m_globalHistory);
-		CheckNodeInitialized( "pht", m_pht);
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam(); // m_jBitSize, m_kBitSizeの初期化
+    }
+    else if(phase == INIT_POST_CONNECTION){
+        // メンバ変数が正しく初期化されているかのチェック
+        CheckNodeInitialized( "core", m_core);
+        CheckNodeInitialized( "globalHistory", m_globalHistory);
+        CheckNodeInitialized( "pht", m_pht);
 
-		// table の初期化
-		m_predTable.Resize( *m_core->GetOpArray() );
-		
-		m_pthIndexBits = m_pht->GetIndexBitSize();
-		if(m_pthIndexBits < m_globalHistoryBits){
-			THROW_RUNTIME_ERROR("PHT size is less than global history size.");
-		}
-	}
+        // table の初期化
+        m_predTable.Resize( *m_core->GetOpArray() );
+        
+        m_pthIndexBits = m_pht->GetIndexBitSize();
+        if(m_pthIndexBits < m_globalHistoryBits){
+            THROW_RUNTIME_ERROR("PHT size is less than global history size.");
+        }
+    }
 }
 
 // 分岐の方向を予測
 bool GShare::Predict(OpIterator op, PC predIndexPC)
 {
-	ASSERT(
-		op->GetTID() == predIndexPC.tid,
-		"The tread ids of the op and current pc are different."
-	);
+    ASSERT(
+        op->GetTID() == predIndexPC.tid,
+        "The tread ids of the op and current pc are different."
+    );
 
-	++m_numPred;
-	int localTID = op->GetLocalTID();
-	int phtIndex = GetPHTIndex( localTID, predIndexPC );
-	bool taken   = m_pht->Predict(phtIndex);
-	m_globalHistory[localTID]->Predicted(taken);
+    ++m_numPred;
+    int localTID = op->GetLocalTID();
+    int phtIndex = GetPHTIndex( localTID, predIndexPC );
+    bool taken   = m_pht->Predict(phtIndex);
+    m_globalHistory[localTID]->Predicted(taken);
 
-	PredInfo& info = m_predTable[op];
+    PredInfo& info = m_predTable[op];
 
-	// 更新のために pht のindex を覚えておく
-	info.phtIndex  = phtIndex;
+    // 更新のために pht のindex を覚えておく
+    info.phtIndex  = phtIndex;
 
-	// Hit/Missの判定のために、予測した方向を覚えておく
-	info.direction = taken;
+    // Hit/Missの判定のために、予測した方向を覚えておく
+    info.direction = taken;
 
-	return taken;
+    return taken;
 }
 
 //
@@ -120,53 +120,53 @@ bool GShare::Predict(OpIterator op, PC predIndexPC)
 //
 void GShare::Finished(OpIterator op)
 {
-	PredInfo& info = m_predTable[op];
-	bool taken = op->GetTaken();
-	m_pht->Update(info.phtIndex, taken);
+    PredInfo& info = m_predTable[op];
+    bool taken = op->GetTaken();
+    m_pht->Update(info.phtIndex, taken);
 
-	// 予測Miss時に強制的にGlobalHistoryの最下位ビットを変更する
-	// GShare::Finishedが呼ばれるときにはすでにチェックポイントの巻き戻しが
-	// 終わっているので最下位ビットはミスした分岐に対応したビットになっている
-	if(info.direction != taken){
-		m_globalHistory[op->GetLocalTID()]->SetLeastSignificantBit(taken);
-	}
+    // 予測Miss時に強制的にGlobalHistoryの最下位ビットを変更する
+    // GShare::Finishedが呼ばれるときにはすでにチェックポイントの巻き戻しが
+    // 終わっているので最下位ビットはミスした分岐に対応したビットになっている
+    if(info.direction != taken){
+        m_globalHistory[op->GetLocalTID()]->SetLeastSignificantBit(taken);
+    }
 }
 
 // opのretire時の動作
 void GShare::Retired(OpIterator op)
 {
-	bool taken = op->GetTaken();
+    bool taken = op->GetTaken();
 
-	// CheckpointがGlobalHistoryをCommitするのでこの関数の中では何もupdateしない
-	m_globalHistory[op->GetLocalTID()]->Retired( taken ); 
+    // CheckpointがGlobalHistoryをCommitするのでこの関数の中では何もupdateしない
+    m_globalHistory[op->GetLocalTID()]->Retired( taken ); 
 
-	// 予測Hit/Missの判定
-	if(m_predTable[op].direction == taken){
-		++m_numHit;
-	} 
-	else{
-		++m_numMiss;
-	}
+    // 予測Hit/Missの判定
+    if(m_predTable[op].direction == taken){
+        ++m_numHit;
+    } 
+    else{
+        ++m_numMiss;
+    }
 
-	++m_numRetire;
+    ++m_numRetire;
 }
 
 // PCに対応するPHTのインデックスを返す
 int GShare::GetPHTIndex(int localThreadID, const PC& pc)
 {
-	// pc の下位ビットを切り捨て
-	u64 p = pc.address >> SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
+    // pc の下位ビットを切り捨て
+    u64 p = pc.address >> SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
 
-	// p から jBit + kBit 幅を切り出す
-	if(m_addrXORConvolute){
-		p = shttl::xor_convolute(p, m_pthIndexBits);
-	}
-	else{
-		p = p & shttl::mask(0, m_pthIndexBits);
-	}
+    // p から jBit + kBit 幅を切り出す
+    if(m_addrXORConvolute){
+        p = shttl::xor_convolute(p, m_pthIndexBits);
+    }
+    else{
+        p = p & shttl::mask(0, m_pthIndexBits);
+    }
 
-	int pos    = m_pthIndexBits - m_globalHistoryBits;
-	u64 mask   = shttl::mask(0, m_globalHistoryBits);
-	u64 global = (m_globalHistory[localThreadID]->GetHistory() & mask) << pos;
-	return (int)( p ^ global );
+    int pos    = m_pthIndexBits - m_globalHistoryBits;
+    u64 mask   = shttl::mask(0, m_globalHistoryBits);
+    u64 global = (m_globalHistory[localThreadID]->GetHistory() & mask) << pos;
+    return (int)( p ^ global );
 }

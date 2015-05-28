@@ -44,175 +44,175 @@
 
 namespace Onikiri
 {
-	class Cache;
+    class Cache;
 
-	class PrefetcherBase :
-		public PrefetcherIF, 
-		public CacheAccessNotifieeIF,
-		public PhysicalResourceNode
-	{
-	public:
+    class PrefetcherBase :
+        public PrefetcherIF, 
+        public CacheAccessNotifieeIF,
+        public PhysicalResourceNode
+    {
+    public:
 
-		PrefetcherBase();
-		virtual ~PrefetcherBase();
+        PrefetcherBase();
+        virtual ~PrefetcherBase();
 
-		// --- PrefetcherIF
+        // --- PrefetcherIF
 
-		// --- PhysicalResourceNode
-		virtual void Initialize( InitPhase phase );
+        // --- PhysicalResourceNode
+        virtual void Initialize( InitPhase phase );
 
-		BEGIN_PARAM_MAP("")
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY( "@EnablePrefetch",	 m_enabled );
-				PARAM_ENTRY( "@Name", m_name );
-				PARAM_ENTRY( "@OffsetBitSize",	 m_lineBitSize );
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( GetResultPath() )
-				PARAM_ENTRY( "@NumPrefetch",		m_numPrefetch );
-				PARAM_ENTRY( "@NumReadHitAccess",	m_numReadHitAccess );
-				PARAM_ENTRY( "@NumReadMissAccess",	m_numReadMissAccess );
-				PARAM_ENTRY( "@NumWriteHitAccess",	m_numWriteHitAccess );
-				PARAM_ENTRY( "@NumWriteMissAccess",	m_numWriteMissAccess );
-				PARAM_ENTRY( "@NumReplacedLine",	m_numReplacedLine );
-				PARAM_ENTRY( "@NumPrefetchedReplacedLine",	m_numPrefetchedReplacedLine );
-				PARAM_ENTRY( "@NumEffectivePrefetchedLine",	m_numEffectivePrefetchedReplacedLine );
-				RESULT_RATE_ENTRY( 
-					"@NumAccuracy",
-					m_numEffectivePrefetchedReplacedLine , 
-					m_numPrefetchedReplacedLine 
-				);
-			END_PARAM_PATH()
-		END_PARAM_MAP()
+        BEGIN_PARAM_MAP("")
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY( "@EnablePrefetch",  m_enabled );
+                PARAM_ENTRY( "@Name", m_name );
+                PARAM_ENTRY( "@OffsetBitSize",   m_lineBitSize );
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+                PARAM_ENTRY( "@NumPrefetch",        m_numPrefetch );
+                PARAM_ENTRY( "@NumReadHitAccess",   m_numReadHitAccess );
+                PARAM_ENTRY( "@NumReadMissAccess",  m_numReadMissAccess );
+                PARAM_ENTRY( "@NumWriteHitAccess",  m_numWriteHitAccess );
+                PARAM_ENTRY( "@NumWriteMissAccess", m_numWriteMissAccess );
+                PARAM_ENTRY( "@NumReplacedLine",    m_numReplacedLine );
+                PARAM_ENTRY( "@NumPrefetchedReplacedLine",  m_numPrefetchedReplacedLine );
+                PARAM_ENTRY( "@NumEffectivePrefetchedLine", m_numEffectivePrefetchedReplacedLine );
+                RESULT_RATE_ENTRY( 
+                    "@NumAccuracy",
+                    m_numEffectivePrefetchedReplacedLine , 
+                    m_numPrefetchedReplacedLine 
+                );
+            END_PARAM_PATH()
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Cache, "target",   m_prefetchTarget )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Cache, "target",   m_prefetchTarget )
+        END_RESOURCE_MAP()
 
-		virtual void ChangeSimulationMode( SimulationMode mode );
+        virtual void ChangeSimulationMode( SimulationMode mode );
 
-		//
-		// --- PrefetcherIF
-		//
+        //
+        // --- PrefetcherIF
+        //
 
-		// Cache read
-		virtual void OnCacheRead( Cache* cache, CacheHookParam* param );
+        // Cache read
+        virtual void OnCacheRead( Cache* cache, CacheHookParam* param );
 
-		// Cache write
-		virtual void OnCacheWrite( Cache* cache, CacheHookParam* param );
+        // Cache write
+        virtual void OnCacheWrite( Cache* cache, CacheHookParam* param );
 
-		// Invalidate line
-		virtual void OnCacheInvalidation( Cache* cache, CacheHookParam* param );
+        // Invalidate line
+        virtual void OnCacheInvalidation( Cache* cache, CacheHookParam* param );
 
-		// Write an access to the cache table.
-		virtual void OnCacheTableUpdate( Cache* cache, CacheHookParam* param );
+        // Write an access to the cache table.
+        virtual void OnCacheTableUpdate( Cache* cache, CacheHookParam* param );
 
-		//
-		//--- CacheAccessNotifieeIF
-		// 
+        //
+        //--- CacheAccessNotifieeIF
+        // 
 
-		// PendingAccess から各種アクセス終了の通知をうける
-		virtual void AccessFinished( 
-			const CacheAccess& access, 
-			const CacheAccessNotificationParam& param 
-		);
+        // PendingAccess から各種アクセス終了の通知をうける
+        virtual void AccessFinished( 
+            const CacheAccess& access, 
+            const CacheAccessNotificationParam& param 
+        );
 
-		//
-		// ---
-		//
+        //
+        // ---
+        //
 
-		// This method is called only when a cache access is not a prefetch access.
-		// Each prefetch algorithm is implemented in this method of a inherited class.
-		virtual void OnCacheAccess( 
-			Cache* cache, const CacheAccess& access, bool hit
-		) = 0;
+        // This method is called only when a cache access is not a prefetch access.
+        // Each prefetch algorithm is implemented in this method of a inherited class.
+        virtual void OnCacheAccess( 
+            Cache* cache, const CacheAccess& access, bool hit
+        ) = 0;
 
-	protected:
-		static const size_t MAX_INFLIGHT_PREFETCH_ACCESSES = 256;
-		
-		String m_name;
+    protected:
+        static const size_t MAX_INFLIGHT_PREFETCH_ACCESSES = 256;
+        
+        String m_name;
 
-		// A prefetch target cache.
-		// A cache line is prefetched from a next cache of this cache to this cache.
-		Cache* m_prefetchTarget;
+        // A prefetch target cache.
+        // A cache line is prefetched from a next cache of this cache to this cache.
+        Cache* m_prefetchTarget;
 
-		bool m_enabled;
+        bool m_enabled;
 
-		// Parameters of a cache line
-		int m_lineSize;
-		int m_lineBitSize;
+        // Parameters of a cache line
+        int m_lineSize;
+        int m_lineBitSize;
 
-		// Statistics
-		s64 m_numPrefetch;
+        // Statistics
+        s64 m_numPrefetch;
 
-		s64 m_numReadHitAccess;
-		s64 m_numReadMissAccess;
-		s64 m_numWriteHitAccess;
-		s64 m_numWriteMissAccess;
+        s64 m_numReadHitAccess;
+        s64 m_numReadMissAccess;
+        s64 m_numWriteHitAccess;
+        s64 m_numWriteMissAccess;
 
-		// The number of replaced lines
-		s64 m_numReplacedLine;			 
-		
-		// The number of replaced lines that are prefetched.
-		s64 m_numPrefetchedReplacedLine; 
-		
-		// The number of replaced lines that are prefetched 
-		// and are actually accessed.
-		s64 m_numEffectivePrefetchedReplacedLine;	
+        // The number of replaced lines
+        s64 m_numReplacedLine;           
+        
+        // The number of replaced lines that are prefetched.
+        s64 m_numPrefetchedReplacedLine; 
+        
+        // The number of replaced lines that are prefetched 
+        // and are actually accessed.
+        s64 m_numEffectivePrefetchedReplacedLine;   
 
-		// A current simulation mode
-		SimulationMode m_mode;
+        // A current simulation mode
+        SimulationMode m_mode;
 
-		// An access list of in-flight prefetch access.
-		struct PrefetchAccess : public CacheAccess
-		{
-			// The number of accesses that access this prefetching line.
-			int  accessdCount; 
-			bool invalidated;
+        // An access list of in-flight prefetch access.
+        struct PrefetchAccess : public CacheAccess
+        {
+            // The number of accesses that access this prefetching line.
+            int  accessdCount; 
+            bool invalidated;
 
-			PrefetchAccess( const CacheAccess& cacheAccess = CacheAccess() ) :
-				CacheAccess( cacheAccess ),
-				accessdCount( 0 ),
-				invalidated ( false )
-			{
-			}
-		};
-		typedef pool_list< PrefetchAccess > AccessList;
-		AccessList m_accessList;
-		AccessList::iterator FindPrefetching( const Addr& addr );
+            PrefetchAccess( const CacheAccess& cacheAccess = CacheAccess() ) :
+                CacheAccess( cacheAccess ),
+                accessdCount( 0 ),
+                invalidated ( false )
+            {
+            }
+        };
+        typedef pool_list< PrefetchAccess > AccessList;
+        AccessList m_accessList;
+        AccessList::iterator FindPrefetching( const Addr& addr );
 
-		// An extra state of an cache line
-		struct ExLineState
-		{
-			bool valid;
-			bool prefetched;
-			bool accessed;
-			ExLineState() :
-				valid     ( false ),
-				prefetched( false ),
-				accessed  ( false )
-			{
-			}
-		};
-		CacheExtraStateTable< ExLineState > m_exLineState;
+        // An extra state of an cache line
+        struct ExLineState
+        {
+            bool valid;
+            bool prefetched;
+            bool accessed;
+            ExLineState() :
+                valid     ( false ),
+                prefetched( false ),
+                accessed  ( false )
+            {
+            }
+        };
+        CacheExtraStateTable< ExLineState > m_exLineState;
 
-		// Update cache access statistics.
-		virtual void UpdateCacheAccessStat( const CacheAccess& access, bool hit );
+        // Update cache access statistics.
+        virtual void UpdateCacheAccessStat( const CacheAccess& access, bool hit );
 
-		// Increment the number of prefetch.
-		virtual void IncrementPrefetchNum();
+        // Increment the number of prefetch.
+        virtual void IncrementPrefetchNum();
 
-		// Masks offset bits of the cache line in the 'addr'.
-		u64 MaskLineOffset( u64 addr );
+        // Masks offset bits of the cache line in the 'addr'.
+        u64 MaskLineOffset( u64 addr );
 
-		// Returns whether an access is prefetch or not.
-		bool IsPrefetch( const CacheAccess& access );
+        // Returns whether an access is prefetch or not.
+        bool IsPrefetch( const CacheAccess& access );
 
-		// Invoke a prefetch access.
-		void Prefetch( const CacheAccess& access );
+        // Invoke a prefetch access.
+        void Prefetch( const CacheAccess& access );
 
-		// Returns whether this access is from this prefetcher or not.
-		bool IsAccessFromThisPrefetcher( CacheHookParam* param ) const;
-	};
+        // Returns whether this access is from this prefetcher or not.
+        bool IsAccessFromThisPrefetcher( CacheHookParam* param ) const;
+    };
 
 
 }; // namespace Onikiri

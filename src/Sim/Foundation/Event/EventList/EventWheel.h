@@ -42,257 +42,257 @@ namespace Onikiri
 {
 #if 1
 
-	// ナイーブな実装
-	// ListType の配列として動作
-	class EventWheel
-	{
+    // ナイーブな実装
+    // ListType の配列として動作
+    class EventWheel
+    {
 
-	protected:
-		typedef EventPtr  ListNode;
-		typedef EventList ListType;
+    protected:
+        typedef EventPtr  ListNode;
+        typedef EventList ListType;
 
-		// 各サイクル用のイベント
-		std::vector<ListType> m_event;
+        // 各サイクル用のイベント
+        std::vector<ListType> m_event;
 
-		// 確保するサイズ
-		int m_size;
+        // 確保するサイズ
+        int m_size;
 
-	public:
+    public:
 
-		EventWheel()
-		{
-			m_size = 0;
-		}
+        EventWheel()
+        {
+            m_size = 0;
+        }
 
-		void Resize( int size )
-		{
-			m_size = size;
-			m_event.resize( m_size, ListType() );
-		}
+        void Resize( int size )
+        {
+            m_size = size;
+            m_event.resize( m_size, ListType() );
+        }
 
-		INLINE ListType* PeekEventList( int index )
-		{
-			return &m_event[index];
-		}
+        INLINE ListType* PeekEventList( int index )
+        {
+            return &m_event[index];
+        }
 
-		INLINE ListType* GetEventList( int index )
-		{
-			return &m_event[index];
-		}
+        INLINE ListType* GetEventList( int index )
+        {
+            return &m_event[index];
+        }
 
-		INLINE void ReleaseEventList( ListType* list, int index )
-		{
-		}
+        INLINE void ReleaseEventList( ListType* list, int index )
+        {
+        }
 
-	};
-
-#elif 1
-
-	// フリーリストを用いてメモリ容量を削減
-	class EventWheel
-	{
-
-	protected:
-		typedef EventPtr  ListNode;
-		typedef EventList ListType;
-
-		// 各サイクル用のイベント
-		std::vector<ListType*> m_event;
-
-		// 確保するサイズ
-		int m_size;
-
-		// フリーリスト
-		class EventFreeList
-		{
-
-		public:
-			pool_vector<ListType*> m_eventFreeList;	// ポインタのフリーリスト（スタック）
-
-
-			EventFreeList()
-			{
-				m_clean = true;
-			}
-
-			~EventFreeList()
-			{
-				for( size_t i = 0; i < m_eventFreeList.size(); ++i ){
-					delete m_eventFreeList[i];
-				}
-				m_eventFreeList.clear();
-			}
-
-			EventFreeList( const EventFreeList& ref )
-			{
-				ASSERT( 0 );
-			}
-
-			EventFreeList& operator=( const EventFreeList &ref )
-			{
-				ASSERT( 0 );
-				return(*this);
-			}
-
-			INLINE ListType* Allocate()
-			{
-				m_clean = false;
-				if( m_eventFreeList.size() == 0 ){
-					return new ListType();
-				}
-
-				ListType* eventList = m_eventFreeList.back();
-				m_eventFreeList.pop_back();
-				return eventList;
-			}
-
-			INLINE void Free( ListType* eventList )
-			{
-				m_eventFreeList.push_back( eventList );
-			}
-
-		protected:
-			bool m_clean;
-		};
-
-		EventFreeList m_eventFreeList;
-		EventFreeList& FreeList()
-		{
-			return m_eventFreeList;
-		}
-		
-	public:
-
-		EventWheel( const EventWheel& ref )
-		{
-			ASSERT( 0 );
-		}
-
-		EventWheel& operator=( const EventWheel &ref )
-		{
-			ASSERT( 0 );
-			return(*this);
-		}
-
-		EventWheel()
-		{
-			m_size = 0;
-		}
-
-		~EventWheel()
-		{
-			for( size_t i = 0; i < m_event.size(); ++i ){
-				if( m_event[i] ){
-					FreeList().Free( m_event[i] );
-					m_event[i] = NULL;
-				}
-			}
-		}
-
-		void Resize( int size )
-		{
-			m_size = size;
-			m_event.resize( m_size, NULL );
-		}
-
-		// ポインタを返すだけで，確保を行わない
-		INLINE ListType* PeekEventList( int index ) const
-		{
-			ASSERT( index < m_size, "The passed index is out of range." );
-			return m_event[index];
-		}
-
-		// リストの取得
-		// まだ確保されていない場合，リストの領域を確保
-		INLINE ListType* GetEventList( int index )
-		{
-			ASSERT( index < m_size, "The passed index is out of range." );
-			ListType* eventList = m_event[index];
-			if( !eventList ){
-				eventList = FreeList().Allocate();
-				m_event[index] = eventList;
-			}
-			return eventList;
-		}
-
-		// リストの返却
-		INLINE void ReleaseEventList( ListType* list, int index )
-		{
-			ASSERT( m_event[index], "A not allocated list is released." );
-			m_event[index] = NULL;
-			FreeList().Free( list );
-		}
-
-	};
+    };
 
 #elif 1
 
-	// ハッシュ使用
-	class EventWheel
-	{
+    // フリーリストを用いてメモリ容量を削減
+    class EventWheel
+    {
 
-	protected:
-		typedef EventPtr  ListNode;
-		typedef EventList ListType;
+    protected:
+        typedef EventPtr  ListNode;
+        typedef EventList ListType;
 
-		// 各サイクル用のイベント
-		class EventHash
-		{
-		public:
-			size_t operator()(const int value) const
-			{
-				return (size_t)(value ^ (value >> 8));
-			}
-		};
+        // 各サイクル用のイベント
+        std::vector<ListType*> m_event;
 
-		pool_unordered_map<int, ListType, EventHash> m_event;
+        // 確保するサイズ
+        int m_size;
 
-		// 確保するサイズ
-		int m_size;
+        // フリーリスト
+        class EventFreeList
+        {
 
-	public:
+        public:
+            pool_vector<ListType*> m_eventFreeList; // ポインタのフリーリスト（スタック）
 
-		EventWheel()
-		{
-			m_size = 0;
-		}
 
-		~EventWheel()
-		{
-		}
-		void Resize( int size )
-		{
-			m_size = size;
-		}
+            EventFreeList()
+            {
+                m_clean = true;
+            }
 
-		// ポインタを返すだけで，確保を行わない
-		INLINE ListType* PeekEventList( int index ) 
-		{
-			ASSERT( index < m_size, "The passed index is out of range." );
-			pool_unordered_map<int, ListType, EventHash>::iterator i = m_event.find(index);
-			return i == m_event.end() ? NULL : &i->second;
-		}
+            ~EventFreeList()
+            {
+                for( size_t i = 0; i < m_eventFreeList.size(); ++i ){
+                    delete m_eventFreeList[i];
+                }
+                m_eventFreeList.clear();
+            }
 
-		// リストの取得
-		// まだ確保されていない場合，リストの領域を確保
-		INLINE ListType* GetEventList( int index )
-		{
-			ASSERT( index < m_size, "The passed index is out of range." );
-			pool_unordered_map<int, ListType, EventHash>::iterator i = m_event.find(index);
-			if( i == m_event.end() ){
-				m_event[index] = EventList();
-				return &m_event[index];
-			}
-			return &i->second;
-		}
+            EventFreeList( const EventFreeList& ref )
+            {
+                ASSERT( 0 );
+            }
 
-		// リストの返却
-		INLINE void ReleaseEventList( ListType* list, int index )
-		{
-			m_event.erase(index);
-		}
+            EventFreeList& operator=( const EventFreeList &ref )
+            {
+                ASSERT( 0 );
+                return(*this);
+            }
 
-	};
+            INLINE ListType* Allocate()
+            {
+                m_clean = false;
+                if( m_eventFreeList.size() == 0 ){
+                    return new ListType();
+                }
+
+                ListType* eventList = m_eventFreeList.back();
+                m_eventFreeList.pop_back();
+                return eventList;
+            }
+
+            INLINE void Free( ListType* eventList )
+            {
+                m_eventFreeList.push_back( eventList );
+            }
+
+        protected:
+            bool m_clean;
+        };
+
+        EventFreeList m_eventFreeList;
+        EventFreeList& FreeList()
+        {
+            return m_eventFreeList;
+        }
+        
+    public:
+
+        EventWheel( const EventWheel& ref )
+        {
+            ASSERT( 0 );
+        }
+
+        EventWheel& operator=( const EventWheel &ref )
+        {
+            ASSERT( 0 );
+            return(*this);
+        }
+
+        EventWheel()
+        {
+            m_size = 0;
+        }
+
+        ~EventWheel()
+        {
+            for( size_t i = 0; i < m_event.size(); ++i ){
+                if( m_event[i] ){
+                    FreeList().Free( m_event[i] );
+                    m_event[i] = NULL;
+                }
+            }
+        }
+
+        void Resize( int size )
+        {
+            m_size = size;
+            m_event.resize( m_size, NULL );
+        }
+
+        // ポインタを返すだけで，確保を行わない
+        INLINE ListType* PeekEventList( int index ) const
+        {
+            ASSERT( index < m_size, "The passed index is out of range." );
+            return m_event[index];
+        }
+
+        // リストの取得
+        // まだ確保されていない場合，リストの領域を確保
+        INLINE ListType* GetEventList( int index )
+        {
+            ASSERT( index < m_size, "The passed index is out of range." );
+            ListType* eventList = m_event[index];
+            if( !eventList ){
+                eventList = FreeList().Allocate();
+                m_event[index] = eventList;
+            }
+            return eventList;
+        }
+
+        // リストの返却
+        INLINE void ReleaseEventList( ListType* list, int index )
+        {
+            ASSERT( m_event[index], "A not allocated list is released." );
+            m_event[index] = NULL;
+            FreeList().Free( list );
+        }
+
+    };
+
+#elif 1
+
+    // ハッシュ使用
+    class EventWheel
+    {
+
+    protected:
+        typedef EventPtr  ListNode;
+        typedef EventList ListType;
+
+        // 各サイクル用のイベント
+        class EventHash
+        {
+        public:
+            size_t operator()(const int value) const
+            {
+                return (size_t)(value ^ (value >> 8));
+            }
+        };
+
+        pool_unordered_map<int, ListType, EventHash> m_event;
+
+        // 確保するサイズ
+        int m_size;
+
+    public:
+
+        EventWheel()
+        {
+            m_size = 0;
+        }
+
+        ~EventWheel()
+        {
+        }
+        void Resize( int size )
+        {
+            m_size = size;
+        }
+
+        // ポインタを返すだけで，確保を行わない
+        INLINE ListType* PeekEventList( int index ) 
+        {
+            ASSERT( index < m_size, "The passed index is out of range." );
+            pool_unordered_map<int, ListType, EventHash>::iterator i = m_event.find(index);
+            return i == m_event.end() ? NULL : &i->second;
+        }
+
+        // リストの取得
+        // まだ確保されていない場合，リストの領域を確保
+        INLINE ListType* GetEventList( int index )
+        {
+            ASSERT( index < m_size, "The passed index is out of range." );
+            pool_unordered_map<int, ListType, EventHash>::iterator i = m_event.find(index);
+            if( i == m_event.end() ){
+                m_event[index] = EventList();
+                return &m_event[index];
+            }
+            return &i->second;
+        }
+
+        // リストの返却
+        INLINE void ReleaseEventList( ListType* list, int index )
+        {
+            m_event.erase(index);
+        }
+
+    };
 #endif
 }
 

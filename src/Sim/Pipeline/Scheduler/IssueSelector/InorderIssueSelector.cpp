@@ -52,61 +52,61 @@ void InorderIssueSelector::Initialize( InitPhase phase )
 
 void InorderIssueSelector::Finalize()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void InorderIssueSelector::EvaluateSelect( Scheduler* scheduler )
 {
-	// Select issued ops.
-	int issueCount = 0;
-	int issueWidth = scheduler->GetIssueWidth();
+    // Select issued ops.
+    int issueCount = 0;
+    int issueWidth = scheduler->GetIssueWidth();
 
-	const OpList& readyOps = scheduler->GetReadyOps();
-	const OpList& notReadyOps = scheduler->GetNotReadyOps();
-	const SchedulingOps& wokeUpOps = scheduler->GetWokeUpOps();
+    const OpList& readyOps = scheduler->GetReadyOps();
+    const OpList& notReadyOps = scheduler->GetNotReadyOps();
+    const SchedulingOps& wokeUpOps = scheduler->GetWokeUpOps();
 
-	OpList::const_iterator			r = readyOps.begin();
-	SchedulingOps::const_iterator	w = wokeUpOps.begin();
+    OpList::const_iterator          r = readyOps.begin();
+    SchedulingOps::const_iterator   w = wokeUpOps.begin();
 
-	while( issueCount < issueWidth ){
-		OpIterator selected;
+    while( issueCount < issueWidth ){
+        OpIterator selected;
 
-		// Selects the oldest ops from ready ops on issue.
-		if( r != readyOps.end() && w != wokeUpOps.end() ){
-			// There are both of ready ops and woke-up ops.
-			if( (*r)->GetGlobalSerialID() < (*w)->GetGlobalSerialID() ){
-				selected = *r;	++r;
-			}
-			else{
-				selected = *w;	++w;
-			}
-		}
-		else if( r != readyOps.end() ){
-			// There are only ready ops.
-			selected = *r;	++r;
-		}
-		else if( w != wokeUpOps.end() ){
-			// There are only woke-up ops.
-			selected = *w;	++w;
-		}
-		else{
-			// No op can be selected.
-			break;
-		}
+        // Selects the oldest ops from ready ops on issue.
+        if( r != readyOps.end() && w != wokeUpOps.end() ){
+            // There are both of ready ops and woke-up ops.
+            if( (*r)->GetGlobalSerialID() < (*w)->GetGlobalSerialID() ){
+                selected = *r;  ++r;
+            }
+            else{
+                selected = *w;  ++w;
+            }
+        }
+        else if( r != readyOps.end() ){
+            // There are only ready ops.
+            selected = *r;  ++r;
+        }
+        else if( w != wokeUpOps.end() ){
+            // There are only woke-up ops.
+            selected = *w;  ++w;
+        }
+        else{
+            // No op can be selected.
+            break;
+        }
 
-		// If there are any older ops, the op is not selected.
-		if( notReadyOps.size() > 0 &&
-			notReadyOps.begin()->GetOp()->GetGlobalSerialID() < selected->GetGlobalSerialID() 
-		){
-			break;
-		}
+        // If there are any older ops, the op is not selected.
+        if( notReadyOps.size() > 0 &&
+            notReadyOps.begin()->GetOp()->GetGlobalSerialID() < selected->GetGlobalSerialID() 
+        ){
+            break;
+        }
 
-		if( scheduler->CanSelect( selected ) ) {
-			scheduler->ReserveSelect( selected );
-			++issueCount;
-		}
-		else{
-			g_dumper.Dump( DS_WAITING_UNIT, selected );
-		}
-	}
+        if( scheduler->CanSelect( selected ) ) {
+            scheduler->ReserveSelect( selected );
+            ++issueCount;
+        }
+        else{
+            g_dumper.Dump( DS_WAITING_UNIT, selected );
+        }
+    }
 }

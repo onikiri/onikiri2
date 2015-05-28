@@ -48,7 +48,7 @@ OpObserver::OpObserver()
 
 OpObserver::OpObserver(OpNotifier* notifier)
 {
-	notifier->Add(this);
+    notifier->Add(this);
 }
 
 OpObserver::~OpObserver()
@@ -68,25 +68,25 @@ OpNotifier::~OpNotifier()
 
 void OpNotifier::Add(OpObserver* observer)
 {
-	m_observer.push_back(observer);
+    m_observer.push_back(observer);
 }
 
 void OpNotifier::NotifyCommit(OpIterator op)
 {
-	for_each(
-		m_observer.begin(),
-		m_observer.end(),
-		NotifyFuncObj(op, &OpObserver::Commit)
-	);
+    for_each(
+        m_observer.begin(),
+        m_observer.end(),
+        NotifyFuncObj(op, &OpObserver::Commit)
+    );
 }
 
 void OpNotifier::NotifyFlush(OpIterator op)
 {
-	for_each(
-		m_observer.begin(),
-		m_observer.end(),
-		NotifyFuncObj(op, &OpObserver::Flush)
-	);
+    for_each(
+        m_observer.begin(),
+        m_observer.end(),
+        NotifyFuncObj(op, &OpObserver::Flush)
+    );
 }
 
 

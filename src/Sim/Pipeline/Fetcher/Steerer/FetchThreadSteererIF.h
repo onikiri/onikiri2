@@ -35,18 +35,18 @@
 
 namespace Onikiri
 {
-	class Thread;
+    class Thread;
 
-	class FetchThreadSteererIF
-	{
-	public:
-		FetchThreadSteererIF(){}
-		virtual ~FetchThreadSteererIF(){}
+    class FetchThreadSteererIF
+    {
+    public:
+        FetchThreadSteererIF(){}
+        virtual ~FetchThreadSteererIF(){}
 
-		virtual Thread* SteerThread(bool update) = 0;
-	};
+        virtual Thread* SteerThread(bool update) = 0;
+    };
 }
 
-#endif	// SIM_PIPELINE_FETCHER_FETCH_THREAD_STEERER_IF_H
+#endif  // SIM_PIPELINE_FETCHER_FETCH_THREAD_STEERER_IF_H
 
 

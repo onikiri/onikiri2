@@ -47,48 +47,48 @@
 
 namespace Onikiri 
 {
-	// 'PID' is Process ID.
-	// It identifies a memory space in a emulator.
-	static const int PID_INVALID = -1;
+    // 'PID' is Process ID.
+    // It identifies a memory space in a emulator.
+    static const int PID_INVALID = -1;
 
-	// 'TID' is Hardware Thread ID.
-	// It identifies hardware thread.
-	static const int TID_INVALID = -1;
+    // 'TID' is Hardware Thread ID.
+    // It identifies hardware thread.
+    static const int TID_INVALID = -1;
 
 
-	class PhysicalResourceIF
-	{
-	public:
-		virtual ~PhysicalResourceIF(){};
+    class PhysicalResourceIF
+    {
+    public:
+        virtual ~PhysicalResourceIF(){};
 
-		virtual int  GetThreadCount() = 0;
-		virtual void SetThreadCount(const int count) = 0;
-		
-		virtual int  GetTID(const int index) = 0;
-		virtual void SetTID(const int index, const int tid) = 0;
-	};
-	
+        virtual int  GetThreadCount() = 0;
+        virtual void SetThreadCount(const int count) = 0;
+        
+        virtual int  GetTID(const int index) = 0;
+        virtual void SetTID(const int index, const int tid) = 0;
+    };
+    
 
-	class LogicalResourceIF
-	{
-	public:
-		virtual ~LogicalResourceIF(){};
+    class LogicalResourceIF
+    {
+    public:
+        virtual ~LogicalResourceIF(){};
 
-		virtual int GetPID() const = 0;
-		virtual int GetTID() const = 0;
-	};
+        virtual int GetPID() const = 0;
+        virtual int GetTID() const = 0;
+    };
 
-	struct LogicalData
-	{
-		int pid;
-		int tid;
+    struct LogicalData
+    {
+        int pid;
+        int tid;
 
-		LogicalData( int newPId = PID_INVALID, int newTID = TID_INVALID ) : 
-			pid( newPId ),
-			tid( newTID )
-		{
-		}
-	};
+        LogicalData( int newPId = PID_INVALID, int newTID = TID_INVALID ) : 
+            pid( newPId ),
+            tid( newTID )
+        {
+        }
+    };
 
 }; // namespace Onikiri
 

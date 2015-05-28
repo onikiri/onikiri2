@@ -37,18 +37,18 @@
 
 namespace Onikiri 
 {
-	class Retirer;
+    class Retirer;
 
-	class OpRetireEvent : public EventBase<OpRetireEvent>
-	{
-	public:
-		OpRetireEvent( OpIterator op, Retirer* retirer );
-		virtual void Update();
+    class OpRetireEvent : public EventBase<OpRetireEvent>
+    {
+    public:
+        OpRetireEvent( OpIterator op, Retirer* retirer );
+        virtual void Update();
 
-	private:
-		OpIterator	m_op;
-		Retirer*	m_retirer;
-	};
+    private:
+        OpIterator  m_op;
+        Retirer*    m_retirer;
+    };
 
 }; // namespace Onikiri
 

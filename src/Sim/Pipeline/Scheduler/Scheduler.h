@@ -52,221 +52,221 @@
 
 namespace Onikiri 
 {
-	
-	struct IssueState;
-	class Thread;
-	class LatPred;
-	class ExecUnitIF;
-	class IssueSelectorIF;
+    
+    struct IssueState;
+    class Thread;
+    class LatPred;
+    class ExecUnitIF;
+    class IssueSelectorIF;
 
-	class Scheduler :
-		public PipelineNodeBase
-	{
-	public:
+    class Scheduler :
+        public PipelineNodeBase
+    {
+    public:
 
-		static const int MAX_SCHEDULING_OPS = 4096;
-		typedef fixed_sized_buffer< OpIterator, MAX_SCHEDULING_OPS, Scheduler > SchedulingOps;
-		//typedef pool_vector< OpIterator > SchedulingOps;
-
-
-		// parameter mapping
-		BEGIN_PARAM_MAP("")
-			BEGIN_PARAM_PATH(GetParamPath())
-				PARAM_ENTRY("@Index",			m_index);
-				PARAM_ENTRY("@IssueWidth",		m_issueWidth);
-				PARAM_ENTRY("@IssueLatency" ,	m_issueLatency);
-				PARAM_ENTRY("@WritebackLatency" ,m_writeBackLatency);
-				PARAM_ENTRY("@CommunicationLatency",	m_communicationLatency);
-				PARAM_ENTRY("@WindowCapacity",	m_windowCapacity);
-				BEGIN_PARAM_BINDING(  "@RemovePolicy", m_removePolicyParam, SchedulerRemovePolicy )
-					PARAM_BINDING_ENTRY( "Core",	RP_FOLLOW_CORE )
-					PARAM_BINDING_ENTRY( "Remove",	RP_REMOVE )
-					PARAM_BINDING_ENTRY( "Retain",	RP_RETAIN )
-					PARAM_BINDING_ENTRY( "RemoveAfterFinish",	RP_REMOVE_AFTER_FINISH )
-				END_PARAM_BINDING()
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( GetResultPath() )
-				CHAIN_PARAM_MAP("IssuedOpStatistics", m_issuedOpClassStat)
-			END_PARAM_PATH()
-		END_PARAM_MAP()
-
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core, "core", m_core )
-			RESOURCE_ENTRY( Thread, "thread", m_thread )
-			RESOURCE_SETTER_ENTRY( ExecUnitIF, "execUnits", SetExecUnit )
-			RESOURCE_ENTRY( IssueSelectorIF, "selector", m_selector )
-		END_RESOURCE_MAP()
-
-		Scheduler();
-		virtual ~Scheduler();
-
-		void Initialize(InitPhase phase);
-
-		// code に対応する演算器をセット
-		void SetExecUnit( PhysicalResourceArray<ExecUnitIF>& execUnits );
-
-		// code に対応する演算器を得る
-		ExecUnitIF* GetExecUnit(int code);
-
-		// PipelineNodeIF
-		virtual void Begin();
-		virtual void Evaluate();
-		virtual void Transition();
-		virtual void Update();
-
-		virtual void Commit( OpIterator op );
-		virtual void Cancel( OpIterator op );
-		virtual void Flush( OpIterator op );
-		virtual void Retire( OpIterator op );
-		virtual void ExitUpperPipeline( OpIterator op );
-
-		// Set a dependency satisfied in this cycle.
-		// This method is called from WakeupEvent::Evaluate().
-		void EvaluateDependency( OpIterator op );
-
-		// op に依存する命令をwake up するイベントを登録する
-		void RegisterWakeUpEvent( OpIterator op, int latencyFromOp );	
-
-		// Returns whether 'op' can be selected in this cycle.
-		// This method must be called only in a 'Evaluate' phase.
-		bool CanSelect( OpIterator op );
-
-		// Reserves 'op' to select in this cycle.
-		// This method must be called only in a 'Evaluate' phase.
-		void ReserveSelect( OpIterator op );
-
-		// issue
-		void Issue( OpIterator op );
-
-		// Finish
-		void Finished( OpIterator op );
-
-		// Write Back
-		void WriteBackBegin( OpIterator op );
-		void WriteBackEnd( OpIterator op );
+        static const int MAX_SCHEDULING_OPS = 4096;
+        typedef fixed_sized_buffer< OpIterator, MAX_SCHEDULING_OPS, Scheduler > SchedulingOps;
+        //typedef pool_vector< OpIterator > SchedulingOps;
 
 
-		// Re-schedule an op.
-		// An op is returned to not issued state (DISPATCHED) and 
-		// re-dcheduled.
-		bool Reschedule( OpIterator op );
+        // parameter mapping
+        BEGIN_PARAM_MAP("")
+            BEGIN_PARAM_PATH(GetParamPath())
+                PARAM_ENTRY("@Index",           m_index);
+                PARAM_ENTRY("@IssueWidth",      m_issueWidth);
+                PARAM_ENTRY("@IssueLatency" ,   m_issueLatency);
+                PARAM_ENTRY("@WritebackLatency" ,m_writeBackLatency);
+                PARAM_ENTRY("@CommunicationLatency",    m_communicationLatency);
+                PARAM_ENTRY("@WindowCapacity",  m_windowCapacity);
+                BEGIN_PARAM_BINDING(  "@RemovePolicy", m_removePolicyParam, SchedulerRemovePolicy )
+                    PARAM_BINDING_ENTRY( "Core",    RP_FOLLOW_CORE )
+                    PARAM_BINDING_ENTRY( "Remove",  RP_REMOVE )
+                    PARAM_BINDING_ENTRY( "Retain",  RP_RETAIN )
+                    PARAM_BINDING_ENTRY( "RemoveAfterFinish",   RP_REMOVE_AFTER_FINISH )
+                END_PARAM_BINDING()
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+                CHAIN_PARAM_MAP("IssuedOpStatistics", m_issuedOpClassStat)
+            END_PARAM_PATH()
+        END_PARAM_MAP()
 
-		// Return whether a scheduler can dispatch 'ops' or not.
-		bool CanAllocate( int ops );
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core, "core", m_core )
+            RESOURCE_ENTRY( Thread, "thread", m_thread )
+            RESOURCE_SETTER_ENTRY( ExecUnitIF, "execUnits", SetExecUnit )
+            RESOURCE_ENTRY( IssueSelectorIF, "selector", m_selector )
+        END_RESOURCE_MAP()
 
-		// Check whether an op is in this scheduler.
-		bool IsInScheduler( OpIterator op );
+        Scheduler();
+        virtual ~Scheduler();
 
-		// Returns the number of ops in this scheduler, which corresponds to an
-		// issue queue.
-		int GetOpCount();
+        void Initialize(InitPhase phase);
 
-		// accessors
-		int GetIndex() const			{ return m_index;  }
-		void SetIndex(int index)		{ m_index = index; }
-		const std::vector<ExecUnitIF*>& 
-			GetExecUnitList() const		{ return m_execUnit; }
-		int GetIssueLatency() const		{ return m_issueLatency; }
-		int GetIssueWidth()	  const		{ return m_issueWidth; }
+        // code に対応する演算器をセット
+        void SetExecUnit( PhysicalResourceArray<ExecUnitIF>& execUnits );
 
-		const OpList& GetReadyOps()			const	{	return m_readyOp;		}
-		const OpList& GetNotReadyOps()		const	{	return m_notReadyOp;	}
-		const OpBuffer& GetIssuedOps()		const	{	return m_issuedOp;		}
-		const SchedulingOps& GetWokeUpOps()	const	{	return m_evaluated.wokeUp;		} // Woke up ops in this cycle.
+        // code に対応する演算器を得る
+        ExecUnitIF* GetExecUnit(int code);
+
+        // PipelineNodeIF
+        virtual void Begin();
+        virtual void Evaluate();
+        virtual void Transition();
+        virtual void Update();
+
+        virtual void Commit( OpIterator op );
+        virtual void Cancel( OpIterator op );
+        virtual void Flush( OpIterator op );
+        virtual void Retire( OpIterator op );
+        virtual void ExitUpperPipeline( OpIterator op );
+
+        // Set a dependency satisfied in this cycle.
+        // This method is called from WakeupEvent::Evaluate().
+        void EvaluateDependency( OpIterator op );
+
+        // op に依存する命令をwake up するイベントを登録する
+        void RegisterWakeUpEvent( OpIterator op, int latencyFromOp );   
+
+        // Returns whether 'op' can be selected in this cycle.
+        // This method must be called only in a 'Evaluate' phase.
+        bool CanSelect( OpIterator op );
+
+        // Reserves 'op' to select in this cycle.
+        // This method must be called only in a 'Evaluate' phase.
+        void ReserveSelect( OpIterator op );
+
+        // issue
+        void Issue( OpIterator op );
+
+        // Finish
+        void Finished( OpIterator op );
+
+        // Write Back
+        void WriteBackBegin( OpIterator op );
+        void WriteBackEnd( OpIterator op );
 
 
-		// Hooks
-		struct RescheduleHookParam
-		{
-			bool canceled;		// If op is canceled, this parameter is set to true.
-		};
+        // Re-schedule an op.
+        // An op is returned to not issued state (DISPATCHED) and 
+        // re-dcheduled.
+        bool Reschedule( OpIterator op );
 
-		static HookPoint<Scheduler> s_dispatchedHook;
-		static HookPoint<Scheduler> s_readySigHook;
-		static HookPoint<Scheduler> s_wakeUpHook;
-		static HookPoint<Scheduler> s_selectHook;
-		static HookPoint<Scheduler> s_issueHook;
-		static HookPoint<Scheduler, RescheduleHookParam> s_rescheduleHook;
+        // Return whether a scheduler can dispatch 'ops' or not.
+        bool CanAllocate( int ops );
 
-	private:
-		typedef PipelineNodeBase BaseType;
+        // Check whether an op is in this scheduler.
+        bool IsInScheduler( OpIterator op );
 
-		OpList		m_notReadyOp;		// まだreadyになっていないop
-		OpList		m_readyOp;			// readyになってselectの対象になるop
-		OpBuffer	m_issuedOp;			// issueされたop
+        // Returns the number of ops in this scheduler, which corresponds to an
+        // issue queue.
+        int GetOpCount();
 
-		struct Evaluated
-		{
-			DependencySet	deps;		// Dependencies satisfied in this cycle.
-										// Waking-up is done with these dependencies.
-			SchedulingOps	wokeUp;	// Woke up ios in this cycle.
-			SchedulingOps	selected;	// Selected ops in this cycle.
-		} m_evaluated;
+        // accessors
+        int GetIndex() const            { return m_index;  }
+        void SetIndex(int index)        { m_index = index; }
+        const std::vector<ExecUnitIF*>& 
+            GetExecUnitList() const     { return m_execUnit; }
+        int GetIssueLatency() const     { return m_issueLatency; }
+        int GetIssueWidth()   const     { return m_issueWidth; }
 
-		int m_index;				// 何番目のスケジューラか
-		int m_issueWidth;			// 発行幅
-		int m_issueLatency;			// 発行レイテンシ
-		int m_writeBackLatency;		// The latency of write back.
-		std::vector<int> 
-			m_communicationLatency;	// スケジューラ間の通信レイテンシ
-		int m_windowCapacity;		// 命令ウインドウのサイズ
+        const OpList& GetReadyOps()         const   {   return m_readyOp;       }
+        const OpList& GetNotReadyOps()      const   {   return m_notReadyOp;    }
+        const OpBuffer& GetIssuedOps()      const   {   return m_issuedOp;      }
+        const SchedulingOps& GetWokeUpOps() const   {   return m_evaluated.wokeUp;      } // Woke up ops in this cycle.
 
-		// Load pipeline model.
-		// See comments in 'Core.h'
-		LoadPipelineModel m_loadPipelineModel;
 
-		// Whether forget or retain ops in a scheduler after issue.
-		SchedulerRemovePolicy m_removePolicyParam;
-		SchedulerRemovePolicy m_removePolicy;
+        // Hooks
+        struct RescheduleHookParam
+        {
+            bool canceled;      // If op is canceled, this parameter is set to true.
+        };
 
-		// Execution units.
-		std::vector<ExecUnitIF*> m_execUnit;
-		std::vector<ExecUnitIF*> m_execUnitCodeMap;
+        static HookPoint<Scheduler> s_dispatchedHook;
+        static HookPoint<Scheduler> s_readySigHook;
+        static HookPoint<Scheduler> s_wakeUpHook;
+        static HookPoint<Scheduler> s_selectHook;
+        static HookPoint<Scheduler> s_issueHook;
+        static HookPoint<Scheduler, RescheduleHookParam> s_rescheduleHook;
 
-		// Selector
-		IssueSelectorIF* m_selector;
+    private:
+        typedef PipelineNodeBase BaseType;
 
-		// スケジューラのクラスタ
-		struct Cluster
-		{
-			Scheduler*   scheduler;
-			int          issueLatency;			// 発行レイテンシ
-			int          communicationLatency;	// スケジューラ間の通信レイテンシ
-		};
-		std::vector<Cluster> m_clusters;
+        OpList      m_notReadyOp;       // まだreadyになっていないop
+        OpList      m_readyOp;          // readyになってselectの対象になるop
+        OpBuffer    m_issuedOp;         // issueされたop
 
-		// Statistics of ops.
-		OpClassStatistics m_issuedOpClassStat;
+        struct Evaluated
+        {
+            DependencySet   deps;       // Dependencies satisfied in this cycle.
+                                        // Waking-up is done with these dependencies.
+            SchedulingOps   wokeUp; // Woke up ios in this cycle.
+            SchedulingOps   selected;   // Selected ops in this cycle.
+        } m_evaluated;
 
-		// Clear evaluated conctext.
-		void ClearEvaluated();
+        int m_index;                // 何番目のスケジューラか
+        int m_issueWidth;           // 発行幅
+        int m_issueLatency;         // 発行レイテンシ
+        int m_writeBackLatency;     // The latency of write back.
+        std::vector<int> 
+            m_communicationLatency; // スケジューラ間の通信レイテンシ
+        int m_windowCapacity;       // 命令ウインドウのサイズ
 
-		// ディスパッチされてきたopを受け取る
-		void DispatchEnd(OpIterator op);
+        // Load pipeline model.
+        // See comments in 'Core.h'
+        LoadPipelineModel m_loadPipelineModel;
 
-		// wake up
-		void EvaluateWakeUp();
-		void UpdateWakeUp();
-		void WakeUp(OpIterator op);
-		void CheckOnWakeUp(OpIterator op);
+        // Whether forget or retain ops in a scheduler after issue.
+        SchedulerRemovePolicy m_removePolicyParam;
+        SchedulerRemovePolicy m_removePolicy;
 
-		// select
-		void EvaluateSelect();
-		void UpdateSelect();
-		void Select(OpIterator op);
-		void SelectBody(OpIterator op);
+        // Execution units.
+        std::vector<ExecUnitIF*> m_execUnit;
+        std::vector<ExecUnitIF*> m_execUnitCodeMap;
 
-		// issue
-		void IssueBody(OpIterator op);
+        // Selector
+        IssueSelectorIF* m_selector;
 
-		// Retire/Flush
-		void Delete( OpIterator op );
+        // スケジューラのクラスタ
+        struct Cluster
+        {
+            Scheduler*   scheduler;
+            int          issueLatency;          // 発行レイテンシ
+            int          communicationLatency;  // スケジューラ間の通信レイテンシ
+        };
+        std::vector<Cluster> m_clusters;
 
-		// opを実行するイベントを登録する
-		void RegisterExecuteEvent(OpIterator op, int latency);
+        // Statistics of ops.
+        OpClassStatistics m_issuedOpClassStat;
 
-	};
-	
+        // Clear evaluated conctext.
+        void ClearEvaluated();
+
+        // ディスパッチされてきたopを受け取る
+        void DispatchEnd(OpIterator op);
+
+        // wake up
+        void EvaluateWakeUp();
+        void UpdateWakeUp();
+        void WakeUp(OpIterator op);
+        void CheckOnWakeUp(OpIterator op);
+
+        // select
+        void EvaluateSelect();
+        void UpdateSelect();
+        void Select(OpIterator op);
+        void SelectBody(OpIterator op);
+
+        // issue
+        void IssueBody(OpIterator op);
+
+        // Retire/Flush
+        void Delete( OpIterator op );
+
+        // opを実行するイベントを登録する
+        void RegisterExecuteEvent(OpIterator op, int latency);
+
+    };
+    
 }; // namespace Onikiri;
 
 #endif

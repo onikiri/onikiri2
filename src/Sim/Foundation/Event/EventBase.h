@@ -42,162 +42,162 @@ namespace Onikiri
 //#define ONIKIRI_EVENT_STAT
 
 #ifdef  ONIKIRI_EVENT_STAT
-	class EventStatistics
-	{
-	public:
-		template <typename Event> 
-		void Add( const Event& event )
-		{
-			m_typeMap[ typeid( event ).name() ]++;
-		}
+    class EventStatistics
+    {
+    public:
+        template <typename Event> 
+        void Add( const Event& event )
+        {
+            m_typeMap[ typeid( event ).name() ]++;
+        }
 
-		~EventStatistics()
-		{
-			for( unordered_map< const char*, int >::iterator i = m_typeMap.begin(); i != m_typeMap.end(); ++i ){
-				printf( "%s:\t%d\n", i->first, i->second );		
-			}
-		}
-	protected:
-		unordered_map< const char*, int > m_typeMap;
-	};
+        ~EventStatistics()
+        {
+            for( unordered_map< const char*, int >::iterator i = m_typeMap.begin(); i != m_typeMap.end(); ++i ){
+                printf( "%s:\t%d\n", i->first, i->second );     
+            }
+        }
+    protected:
+        unordered_map< const char*, int > m_typeMap;
+    };
 #endif
 
-	class EventBaseImplement
-	{
-	public:
-		EventBaseImplement() :
-			m_refCount(0),
-			m_priority(RP_DEFAULT_EVENT),
-			m_canceled(false),
-			m_updated(false)
-		{
-		}
+    class EventBaseImplement
+    {
+    public:
+        EventBaseImplement() :
+            m_refCount(0),
+            m_priority(RP_DEFAULT_EVENT),
+            m_canceled(false),
+            m_updated(false)
+        {
+        }
 
-		virtual ~EventBaseImplement(){};
+        virtual ~EventBaseImplement(){};
 
-		//
-		// Reference count operations
-		//
+        //
+        // Reference count operations
+        //
 
-		INLINE void AddRef()
-		{
-			m_refCount++;
-		};
+        INLINE void AddRef()
+        {
+            m_refCount++;
+        };
 
-		INLINE void Release()
-		{
-			--m_refCount;
-			if( m_refCount == 0 ){
-				Destruct();
-			}
-		}
+        INLINE void Release()
+        {
+            --m_refCount;
+            if( m_refCount == 0 ){
+                Destruct();
+            }
+        }
 
-		//
-		// Event related methods
-		//
+        //
+        // Event related methods
+        //
 
-		bool IsCanceled() const
-		{
-			return m_canceled;
-		}
+        bool IsCanceled() const
+        {
+            return m_canceled;
+        }
 
-		bool IsUpdated() const
-		{
-			return m_updated;
-		}
+        bool IsUpdated() const
+        {
+            return m_updated;
+        }
 
-		void SetUpdated()
-		{
-			m_updated = true;
-		}
+        void SetUpdated()
+        {
+            m_updated = true;
+        }
 
-		void TriggerEvaluate()
-		{
-			if( !IsCanceled() ){
-				Evaluate();
-			}
-		}
+        void TriggerEvaluate()
+        {
+            if( !IsCanceled() ){
+                Evaluate();
+            }
+        }
 
-		void TriggerUpdate()
-		{
-			ASSERT( !IsUpdated() );
-			if( !IsCanceled() ){
-				Update();
-			}
-			SetUpdated();
-		}
+        void TriggerUpdate()
+        {
+            ASSERT( !IsUpdated() );
+            if( !IsCanceled() ){
+                Update();
+            }
+            SetUpdated();
+        }
 
-		void Cancel()
-		{
-			m_canceled = true;
-		}
+        void Cancel()
+        {
+            m_canceled = true;
+        }
 
-		int GetPriority() const
-		{
-			return m_priority; 
-		}
+        int GetPriority() const
+        {
+            return m_priority; 
+        }
 
-		void SetPriority( int priority )
-		{
-			m_priority = priority;
-		}
+        void SetPriority( int priority )
+        {
+            m_priority = priority;
+        }
 
-		virtual void Destruct() = 0;
-		virtual void Update() = 0;
-		virtual void Evaluate(){};
+        virtual void Destruct() = 0;
+        virtual void Update() = 0;
+        virtual void Evaluate(){};
 
-	protected:
-		int m_refCount;
-		int m_priority;
-		bool m_canceled;
-		bool m_updated;
+    protected:
+        int m_refCount;
+        int m_priority;
+        bool m_canceled;
+        bool m_updated;
 
 #ifdef  ONIKIRI_EVENT_STAT
-		static EventStatistics* GetStat()
-		{
-			static EventStatistics stat;
-			return &stat;
-		}
+        static EventStatistics* GetStat()
+        {
+            static EventStatistics stat;
+            return &stat;
+        }
 #endif
-	};
+    };
 
-	INLINE static void intrusive_ptr_add_ref( EventBaseImplement* ptr )
-	{
-		ptr->AddRef();
-	}
+    INLINE static void intrusive_ptr_add_ref( EventBaseImplement* ptr )
+    {
+        ptr->AddRef();
+    }
 
-	INLINE static void intrusive_ptr_release( EventBaseImplement* ptr )
-	{
-		ptr->Release();
-	}
+    INLINE static void intrusive_ptr_release( EventBaseImplement* ptr )
+    {
+        ptr->Release();
+    }
 
-	typedef boost::intrusive_ptr<EventBaseImplement> EventPtr;
+    typedef boost::intrusive_ptr<EventBaseImplement> EventPtr;
 
 
 
-	// イベントの基底クラス
-	template < typename T >
-	class EventBase :
-		public EventBaseImplement,
-		public PooledIntrusivePtrObject< T, EventBaseImplement >
-	{
-	public:
+    // イベントの基底クラス
+    template < typename T >
+    class EventBase :
+        public EventBaseImplement,
+        public PooledIntrusivePtrObject< T, EventBaseImplement >
+    {
+    public:
 
 #ifdef  ONIKIRI_EVENT_STAT
-		EventBase()
-		{
-			GetStat()->Add( *this );
-		}
+        EventBase()
+        {
+            GetStat()->Add( *this );
+        }
 #endif
 
-		virtual void Destruct()
-		{
-			PooledIntrusivePtrObject< T, EventBaseImplement >::Destruct( static_cast<T*>(this) );
-		};
+        virtual void Destruct()
+        {
+            PooledIntrusivePtrObject< T, EventBaseImplement >::Destruct( static_cast<T*>(this) );
+        };
 
-		// EventPtr T::Construct() is defined in PooledIntrusivePtrObject.
+        // EventPtr T::Construct() is defined in PooledIntrusivePtrObject.
 
-	};
+    };
 
 
 

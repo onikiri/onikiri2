@@ -37,92 +37,92 @@
 
 namespace Onikiri 
 {
-	class EmulatorWrapper : 
-		public EmulatorIF, 
-		public PhysicalResourceNode
-	{
-		EmulatorIF* m_body;
-	public:
+    class EmulatorWrapper : 
+        public EmulatorIF, 
+        public PhysicalResourceNode
+    {
+        EmulatorIF* m_body;
+    public:
 
-		EmulatorWrapper()
-		{
-			m_body = NULL;
-		}
+        EmulatorWrapper()
+        {
+            m_body = NULL;
+        }
 
-		~EmulatorWrapper()
-		{
-			ReleaseParam();
-		}
+        ~EmulatorWrapper()
+        {
+            ReleaseParam();
+        }
 
-		void SetEmulator( EmulatorIF* body )
-		{
-			m_body = body;
-		}
+        void SetEmulator( EmulatorIF* body )
+        {
+            m_body = body;
+        }
 
-		//
-		// PhysicalResourceNode
-		//
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
+        //
+        // PhysicalResourceNode
+        //
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
 
-		void Initialize(InitPhase phase)
-		{
-		};
+        void Initialize(InitPhase phase)
+        {
+        };
 
 
-		//
-		// EmulatorIF
-		//
-		std::pair<OpInfo**, int> GetOp(PC pc)
-		{
-			return m_body->GetOp( pc );
-		}
+        //
+        // EmulatorIF
+        //
+        std::pair<OpInfo**, int> GetOp(PC pc)
+        {
+            return m_body->GetOp( pc );
+        }
 
-		MemIF* GetMemImage()
-		{
-			return m_body->GetMemImage();
-		}
+        MemIF* GetMemImage()
+        {
+            return m_body->GetMemImage();
+        }
 
-		void Execute( OpStateIF* opStateIF, OpInfo* opInfo )
-		{
-			m_body->Execute( opStateIF, opInfo );
-		}
+        void Execute( OpStateIF* opStateIF, OpInfo* opInfo )
+        {
+            m_body->Execute( opStateIF, opInfo );
+        }
 
-		void Commit( OpStateIF* opStateIF, OpInfo* opInfo )
-		{
-			m_body->Commit( opStateIF, opInfo );
-		}
+        void Commit( OpStateIF* opStateIF, OpInfo* opInfo )
+        {
+            m_body->Commit( opStateIF, opInfo );
+        }
 
-		int GetProcessCount() const
-		{
-			return m_body->GetProcessCount();
-		}
+        int GetProcessCount() const
+        {
+            return m_body->GetProcessCount();
+        }
 
-		PC GetEntryPoint(int pid) const
-		{
-			return m_body->GetEntryPoint( pid );
-		}
+        PC GetEntryPoint(int pid) const
+        {
+            return m_body->GetEntryPoint( pid );
+        }
 
-		u64 GetInitialRegValue(int pid, int index) const
-		{
-			return m_body->GetInitialRegValue( pid, index );
-		}
+        u64 GetInitialRegValue(int pid, int index) const
+        {
+            return m_body->GetInitialRegValue( pid, index );
+        }
 
-		ISAInfoIF* GetISAInfo()
-		{
-			return m_body->GetISAInfo();
-		}
+        ISAInfoIF* GetISAInfo()
+        {
+            return m_body->GetISAInfo();
+        }
 
-		PC Skip(PC pc, u64 skipCount, u64* regArray, u64* executedInsnCount, u64* executedOpCount)
-		{
-			return m_body->Skip( pc, skipCount, regArray, executedInsnCount, executedOpCount );
-		}
+        PC Skip(PC pc, u64 skipCount, u64* regArray, u64* executedInsnCount, u64* executedOpCount)
+        {
+            return m_body->Skip( pc, skipCount, regArray, executedInsnCount, executedOpCount );
+        }
 
-		void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder ) 
-		{
-			m_body->SetExtraOpDecoder( extraOpDecoder );
-		}
-	};
+        void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder ) 
+        {
+            m_body->SetExtraOpDecoder( extraOpDecoder );
+        }
+    };
 }
 
 #endif // #ifndef __EMULATOR_WRAPPER_H

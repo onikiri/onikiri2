@@ -36,53 +36,53 @@
 
 namespace Onikiri {
 
-	namespace EmulatorUtility {
-		
-		class MemorySystem;
-		class ElfReader;
-		
-		// 64-bit Linux (ELF) 用のローダー
-		class Linux64Loader : public LoaderIF
-		{
-		public:
-			Linux64Loader(u16 machine);
-			virtual ~Linux64Loader();
+    namespace EmulatorUtility {
+        
+        class MemorySystem;
+        class ElfReader;
+        
+        // 64-bit Linux (ELF) 用のローダー
+        class Linux64Loader : public LoaderIF
+        {
+        public:
+            Linux64Loader(u16 machine);
+            virtual ~Linux64Loader();
 
-			// LoaderIF の実装
-			virtual void LoadBinary(EmulatorUtility::MemorySystem* memory, const String& command);
-			virtual void InitArgs(EmulatorUtility::MemorySystem* memory, u64 stackHead, u64 stackSize, const String& command, const String& commandArgs);
-			virtual u64 GetImageBase() const;
-			virtual u64 GetEntryPoint() const;
-			virtual std::pair<u64, size_t> GetCodeRange() const;
-			virtual u64 GetInitialRegValue(int index) const = 0;
-		protected:
-			virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
-			virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
-			u64 GetInitialSp() const;
-			bool IsBigEndian() const;
-		private:
-			std::pair<u64, size_t> m_codeRange;
+            // LoaderIF の実装
+            virtual void LoadBinary(EmulatorUtility::MemorySystem* memory, const String& command);
+            virtual void InitArgs(EmulatorUtility::MemorySystem* memory, u64 stackHead, u64 stackSize, const String& command, const String& commandArgs);
+            virtual u64 GetImageBase() const;
+            virtual u64 GetEntryPoint() const;
+            virtual std::pair<u64, size_t> GetCodeRange() const;
+            virtual u64 GetInitialRegValue(int index) const = 0;
+        protected:
+            virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
+            virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
+            u64 GetInitialSp() const;
+            bool IsBigEndian() const;
+        private:
+            std::pair<u64, size_t> m_codeRange;
 
-			// Memory write
-			void WriteMemory( MemorySystem* memory, u64 address, int size, u64 value );
+            // Memory write
+            void WriteMemory( MemorySystem* memory, u64 address, int size, u64 value );
 
-			// Endian
-			bool m_bigEndian;
-			// 実行ファイルを読み込んだアドレス
-			u64 m_imageBase;
-			// エントリーポイント
-			u64 m_entryPoint;
-			// SPの初期値
-			u64 m_initialSp;
+            // Endian
+            bool m_bigEndian;
+            // 実行ファイルを読み込んだアドレス
+            u64 m_imageBase;
+            // エントリーポイント
+            u64 m_entryPoint;
+            // SPの初期値
+            u64 m_initialSp;
 
-			u64 m_elfProgramHeaderOffset;
-			u64 m_elfProgramHeaderCount;
+            u64 m_elfProgramHeaderOffset;
+            u64 m_elfProgramHeaderCount;
 
-			// 読み込むELFファイルのELFマシン種別
-			u16 m_machine;
-		};
+            // 読み込むELFファイルのELFマシン種別
+            u16 m_machine;
+        };
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

@@ -33,38 +33,38 @@
 #define __EMULATORUTILITY_LOADERIF_H__
 
 namespace Onikiri {
-	namespace EmulatorUtility {
+    namespace EmulatorUtility {
 
-		class MemorySystem;
+        class MemorySystem;
 
-		// ターゲットのバイナリをメモリにロードし，引数を設定するインターフェイス
-		// Linux 用かもしれない
-		class LoaderIF
-		{
-		public:
-			virtual ~LoaderIF() {}
+        // ターゲットのバイナリをメモリにロードし，引数を設定するインターフェイス
+        // Linux 用かもしれない
+        class LoaderIF
+        {
+        public:
+            virtual ~LoaderIF() {}
 
-			// バイナリ command を memory にロードする
-			virtual void LoadBinary(MemorySystem* memory, const String& command) = 0;
+            // バイナリ command を memory にロードする
+            virtual void LoadBinary(MemorySystem* memory, const String& command) = 0;
 
-			// スタック [stackHead, stackHead+stackSize) に引数を設定する
-			virtual void InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize, const String& command, const String& commandArgs) = 0;
+            // スタック [stackHead, stackHead+stackSize) に引数を設定する
+            virtual void InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize, const String& command, const String& commandArgs) = 0;
 
-			// バイナリのロードされた領域の先頭アドレスを得る
-			// ※バイナリが連続領域にロードされることを仮定している
-			virtual u64 GetImageBase() const = 0;
+            // バイナリのロードされた領域の先頭アドレスを得る
+            // ※バイナリが連続領域にロードされることを仮定している
+            virtual u64 GetImageBase() const = 0;
 
-			// エントリポイントを得る
-			virtual u64 GetEntryPoint() const = 0;
+            // エントリポイントを得る
+            virtual u64 GetEntryPoint() const = 0;
 
-			// コード領域の範囲を返す (開始アドレス，バイト数) (Emulatorの最適化用)
-			virtual std::pair<u64, size_t> GetCodeRange() const = 0;
+            // コード領域の範囲を返す (開始アドレス，バイト数) (Emulatorの最適化用)
+            virtual std::pair<u64, size_t> GetCodeRange() const = 0;
 
-			// レジスタの初期値を得る
-			virtual u64 GetInitialRegValue(int index) const = 0;
-		};
+            // レジスタの初期値を得る
+            virtual u64 GetInitialRegValue(int index) const = 0;
+        };
 
-	} // namespace EmulatorUtility
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif

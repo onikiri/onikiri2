@@ -42,79 +42,79 @@
 
 namespace Onikiri
 {
-	inline static PC NextPC( PC pc ) 
-	{
-		pc.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
-		return pc;
-	}
+    inline static PC NextPC( PC pc ) 
+    {
+        pc.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
+        return pc;
+    }
 
-	class SimPC : public PC
-	{
-	public:
-		static const u64 WORD_SIZE = SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
+    class SimPC : public PC
+    {
+    public:
+        static const u64 WORD_SIZE = SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
 
 
-		SimPC()
-		{
-		}
+        SimPC()
+        {
+        }
 
-		SimPC(int pid, int tid, u64 address) :
-			PC(pid, tid, address)
-		{
-		}
+        SimPC(int pid, int tid, u64 address) :
+            PC(pid, tid, address)
+        {
+        }
 
-		SimPC(const PC& pc) :
-			PC(pc)
-		{
-		}
+        SimPC(const PC& pc) :
+            PC(pc)
+        {
+        }
 
-		// --- operator
-		SimPC& operator++() 
-		{
-			address += WORD_SIZE;
-			return *this;
-		}
+        // --- operator
+        SimPC& operator++() 
+        {
+            address += WORD_SIZE;
+            return *this;
+        }
 
-		SimPC operator++(int)  
-		{
-			SimPC pc = *this;
-			address += WORD_SIZE;
-			return pc;
-		}
+        SimPC operator++(int)  
+        {
+            SimPC pc = *this;
+            address += WORD_SIZE;
+            return pc;
+        }
 
-		void operator =(const PC& pc)
-		{
-			pid     = pc.pid;
-			tid     = pc.tid;
-			address = pc.address;
-		}
+        void operator =(const PC& pc)
+        {
+            pid     = pc.pid;
+            tid     = pc.tid;
+            address = pc.address;
+        }
 
-		bool operator ==(const PC& pc) const
-		{
-			return pc.operator ==(*this);
-		}
+        bool operator ==(const PC& pc) const
+        {
+            return pc.operator ==(*this);
+        }
 
-		bool operator !=(const PC& pc) const
-		{
-			return pc.operator !=(*this);
-		}
+        bool operator !=(const PC& pc) const
+        {
+            return pc.operator !=(*this);
+        }
 
-		// --- Utility method
-		SimPC Next() const
-		{
-			SimPC pc = *this;
-			pc.address += WORD_SIZE;
-			return pc;
-		}
+        // --- Utility method
+        SimPC Next() const
+        {
+            SimPC pc = *this;
+            pc.address += WORD_SIZE;
+            return pc;
+        }
 
-		SimPC Previous() const
-		{
-			SimPC pc = *this;
-			pc.address -= WORD_SIZE;
-			return pc;
-		}
-	};
+        SimPC Previous() const
+        {
+            SimPC pc = *this;
+            pc.address -= WORD_SIZE;
+            return pc;
+        }
+    };
 
-}	// namespace Onikiri
+}   // namespace Onikiri
 
 #endif

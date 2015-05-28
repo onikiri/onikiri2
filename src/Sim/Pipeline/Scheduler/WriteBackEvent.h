@@ -37,19 +37,19 @@
 
 namespace Onikiri 
 {
-	class Scheduler;
+    class Scheduler;
 
-	class OpWriteBackEvent : public EventBase<OpWriteBackEvent>
-	{
-	public:
-		OpWriteBackEvent( OpIterator op, Scheduler* scheduler, bool wbBegin );
-		virtual void Update();
-		
-	private:
-		OpIterator m_op;
-		Scheduler* m_scheduler;			// issueされるスケジューラ
-		bool m_wbBegin;
-	};
+    class OpWriteBackEvent : public EventBase<OpWriteBackEvent>
+    {
+    public:
+        OpWriteBackEvent( OpIterator op, Scheduler* scheduler, bool wbBegin );
+        virtual void Update();
+        
+    private:
+        OpIterator m_op;
+        Scheduler* m_scheduler;         // issueされるスケジューラ
+        bool m_wbBegin;
+    };
 
 }; // namespace Onikiri
 

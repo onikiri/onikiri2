@@ -40,33 +40,33 @@
 namespace Onikiri
 {
 
-	struct Exception
-	{
-		// The type of exception
-		enum ExceptionType
-		{
-			// Invalid (exception does not occur)
-			ET_INVALID,
+    struct Exception
+    {
+        // The type of exception
+        enum ExceptionType
+        {
+            // Invalid (exception does not occur)
+            ET_INVALID,
 
-			// Division by zero (not implemented yet)
-			ET_DIVISION_BY_ZERO,
+            // Division by zero (not implemented yet)
+            ET_DIVISION_BY_ZERO,
 
-			// User defined.
-			ET_USER_0,
-			ET_USER_1,
-			ET_USER_2,
-			ET_USER_3
-		};
+            // User defined.
+            ET_USER_0,
+            ET_USER_1,
+            ET_USER_2,
+            ET_USER_3
+        };
 
-		bool exception;
-		ExceptionType type;
+        bool exception;
+        ExceptionType type;
 
-		Exception() : 
-			exception( false ),
-			type( ET_INVALID )
-		{
-		}
-	};
+        Exception() : 
+            exception( false ),
+            type( ET_INVALID )
+        {
+        }
+    };
 }
 
 #endif

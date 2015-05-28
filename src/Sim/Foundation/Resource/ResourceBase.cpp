@@ -36,7 +36,7 @@ using namespace Onikiri;
 
 PhysicalResourceBase::PhysicalResourceBase()
 {
-	m_rid = RID_INVALID;
+    m_rid = RID_INVALID;
 }
 
 PhysicalResourceBase::~PhysicalResourceBase()
@@ -45,34 +45,34 @@ PhysicalResourceBase::~PhysicalResourceBase()
 
 int  PhysicalResourceBase::GetThreadCount()
 {
-	return (int)m_tid.size();
+    return (int)m_tid.size();
 }
 
 void PhysicalResourceBase::SetThreadCount(const int count)
 {
-	m_tid.resize( count, TID_INVALID );
+    m_tid.resize( count, TID_INVALID );
 }
 
 int  PhysicalResourceBase::GetTID(const int index)
 {
-	ASSERT( index < (int)m_tid.size() );
-	return m_tid[index];
+    ASSERT( index < (int)m_tid.size() );
+    return m_tid[index];
 }
 
 void PhysicalResourceBase::SetTID(const int index, const int tid)
 {
-	ASSERT( index < (int)m_tid.size() );
-	m_tid[index] = tid;
+    ASSERT( index < (int)m_tid.size() );
+    m_tid[index] = tid;
 }
 
 int  PhysicalResourceBase::GetRID()
 {
-	return m_rid;
+    return m_rid;
 }
 
 void PhysicalResourceBase::SetRID(const int rid)
 {
-	m_rid = rid;
+    m_rid = rid;
 }
 
 //
@@ -80,8 +80,8 @@ void PhysicalResourceBase::SetRID(const int rid)
 //
 LogicalResourceBase::LogicalResourceBase()
 {
-	m_pid = 0;
-	m_tid = 0;
+    m_pid = 0;
+    m_tid = 0;
 }
 
 LogicalResourceBase::~LogicalResourceBase()
@@ -90,21 +90,21 @@ LogicalResourceBase::~LogicalResourceBase()
 
 int  LogicalResourceBase::GetPID() const
 {
-	return m_pid;
+    return m_pid;
 }
 
 void LogicalResourceBase::SetPID(const int pid)
 {
-	m_pid = pid;
+    m_pid = pid;
 }
 
 int  LogicalResourceBase::GetTID() const
 {
-	return m_tid;
+    return m_tid;
 }
 
 void LogicalResourceBase::SetTID(const int tid)
 {
-	m_tid = tid;
+    m_tid = tid;
 }
 

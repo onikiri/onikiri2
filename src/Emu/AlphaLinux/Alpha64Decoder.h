@@ -35,32 +35,32 @@
 #include "Emu/AlphaLinux/Alpha64Info.h"
 
 namespace Onikiri {
-	namespace AlphaLinux {
+    namespace AlphaLinux {
 
-		class Alpha64Decoder
-		{
-		public:
-			struct DecodedInsn
-			{
-				// 即値
-				boost::array<u64, 2> Imm;
-				// オペランド・レジスタ(dest, src1..3)
-				boost::array<int, 4> Reg;
+        class Alpha64Decoder
+        {
+        public:
+            struct DecodedInsn
+            {
+                // 即値
+                boost::array<u64, 2> Imm;
+                // オペランド・レジスタ(dest, src1..3)
+                boost::array<int, 4> Reg;
 
-				u32 CodeWord;
+                u32 CodeWord;
 
-				DecodedInsn();
-				void clear();
-			};
-		public:
-			Alpha64Decoder();
-			// 命令codeWordをデコードし，outに格納する
-			void Decode(u32 codeWord, DecodedInsn* out);
-		private:
+                DecodedInsn();
+                void clear();
+            };
+        public:
+            Alpha64Decoder();
+            // 命令codeWordをデコードし，outに格納する
+            void Decode(u32 codeWord, DecodedInsn* out);
+        private:
 
-		};
+        };
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

@@ -37,36 +37,36 @@
 
 namespace Onikiri
 {
-	class PipelineNodeIF;
+    class PipelineNodeIF;
 
-	class Pipeline : public TimeWheelBase 
-	{
-	public:
-		Pipeline();
-		virtual ~Pipeline();
+    class Pipeline : public TimeWheelBase 
+    {
+    public:
+        Pipeline();
+        virtual ~Pipeline();
 
-		virtual void EnterPipeline( OpIterator op, int time, PipelineNodeIF* lowerNode );
-		virtual void ExitPipeline( OpIterator op, PipelineNodeIF* lowerNode );
-		virtual void AddUpperPipelineNode( PipelineNodeIF* node );
-		virtual int  GetOpCount();
-		
-		virtual void Retire( OpIterator op );
-		virtual void Flush( OpIterator op );
+        virtual void EnterPipeline( OpIterator op, int time, PipelineNodeIF* lowerNode );
+        virtual void ExitPipeline( OpIterator op, PipelineNodeIF* lowerNode );
+        virtual void AddUpperPipelineNode( PipelineNodeIF* node );
+        virtual int  GetOpCount();
+        
+        virtual void Retire( OpIterator op );
+        virtual void Flush( OpIterator op );
 
-		void EnableDumpStall( bool enable );
+        void EnableDumpStall( bool enable );
 
-		// --- TimeWheelBase
-		virtual void BeginStall();
-		virtual void EndStall();
+        // --- TimeWheelBase
+        virtual void BeginStall();
+        virtual void EndStall();
 
-	protected:
-		bool m_enableDumpStall;
+    protected:
+        bool m_enableDumpStall;
 
-		std::vector<PipelineNodeIF*> m_upperPipelineNodes;
-		
-		typedef pool_list<OpIterator> List;
-		List m_opList;
-	};
+        std::vector<PipelineNodeIF*> m_upperPipelineNodes;
+        
+        typedef pool_list<OpIterator> List;
+        List m_opList;
+    };
 
 }; // namespace Onikiri
 

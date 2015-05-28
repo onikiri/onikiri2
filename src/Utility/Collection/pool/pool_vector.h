@@ -39,60 +39,60 @@
 #include <vector>
 
 #ifdef ONIKIRI_USE_ONIKIRI_POOL_ALLOCATOR
-	#include "pool_allocator.h"
-	#define ONIKIRI_POOL_VECTOR_ALLOCATOR pool_allocator
+    #include "pool_allocator.h"
+    #define ONIKIRI_POOL_VECTOR_ALLOCATOR pool_allocator
 #else
-	#include <boost/pool/pool_alloc.hpp>
-	#define ONIKIRI_POOL_VECTOR_ALLOCATOR boost::pool_allocator
+    #include <boost/pool/pool_alloc.hpp>
+    #define ONIKIRI_POOL_VECTOR_ALLOCATOR boost::pool_allocator
 #endif
 
 namespace Onikiri
 {
-	template <typename T>
-	class pool_vector : 
-		public std::vector<T, ONIKIRI_POOL_VECTOR_ALLOCATOR<T> >
-	{
-		typedef ONIKIRI_POOL_VECTOR_ALLOCATOR<T>   allocator_type;
-		typedef std::vector<T, allocator_type > collection_type;
+    template <typename T>
+    class pool_vector : 
+        public std::vector<T, ONIKIRI_POOL_VECTOR_ALLOCATOR<T> >
+    {
+        typedef ONIKIRI_POOL_VECTOR_ALLOCATOR<T>   allocator_type;
+        typedef std::vector<T, allocator_type > collection_type;
 
-	public:
-		pool_vector()
-			: collection_type()
-		{
-		}
+    public:
+        pool_vector()
+            : collection_type()
+        {
+        }
 
-		explicit pool_vector(
-			const allocator_type& allocator
-		) :
-			collection_type(allocator)
-		{
-		}
+        explicit pool_vector(
+            const allocator_type& allocator
+        ) :
+            collection_type(allocator)
+        {
+        }
 
-		explicit pool_vector(
-			size_t n, 
-			const T& value = T(), 
-			const allocator_type& allocator = allocator_type()
-		) : 
-			collection_type(n, value, allocator) 
-		{
-		};
+        explicit pool_vector(
+            size_t n, 
+            const T& value = T(), 
+            const allocator_type& allocator = allocator_type()
+        ) : 
+            collection_type(n, value, allocator) 
+        {
+        };
 
-		template <class input_iterator>
-		pool_vector(
-			input_iterator begin, 
-			input_iterator end, 
-			const allocator_type& allocator = allocator_type()
-		) : 
-			collection_type(begin, end, allocator)
-		{
-		};
+        template <class input_iterator>
+        pool_vector(
+            input_iterator begin, 
+            input_iterator end, 
+            const allocator_type& allocator = allocator_type()
+        ) : 
+            collection_type(begin, end, allocator)
+        {
+        };
 
-		
-		pool_vector(const pool_vector<T>& x)
-			: collection_type(x)
-		{
-		}
-	};
+        
+        pool_vector(const pool_vector<T>& x)
+            : collection_type(x)
+        {
+        }
+    };
 
 }; // namespace Onikiri
 

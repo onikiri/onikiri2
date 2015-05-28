@@ -37,112 +37,112 @@
 
 namespace Onikiri
 {
-	class SystemManager : 
-		public SystemManagerIF, SystemIF,
-		public ParamExchange
-	{
-	public:
-		// Hooks for the notify of process information
-		enum PROCESS_NOTIFY_TYPE
-		{
-			PNT_TERMINATION = 0,		// process termination
-			PNT_READ_FILE_TO_MEMORY,	// read data from a file to memory
-			PNT_WRITE_FILE_FROM_MEMORY,	// write data from memory to a file
-			PNT_ALLOCATE_MEMORY,		// allocate memory
-			PNT_FREE_MEMORY,			// free memory
-		};
-		
-		struct ProcessNotifyParam
-		{
-			PROCESS_NOTIFY_TYPE type;
-			int  pid;
-			Addr addr;
-			u64  size;
-			u64  totalSize;
-		};
-		static HookPoint<SystemManager, ProcessNotifyParam> s_processNotifyHook;
+    class SystemManager : 
+        public SystemManagerIF, SystemIF,
+        public ParamExchange
+    {
+    public:
+        // Hooks for the notify of process information
+        enum PROCESS_NOTIFY_TYPE
+        {
+            PNT_TERMINATION = 0,        // process termination
+            PNT_READ_FILE_TO_MEMORY,    // read data from a file to memory
+            PNT_WRITE_FILE_FROM_MEMORY, // write data from memory to a file
+            PNT_ALLOCATE_MEMORY,        // allocate memory
+            PNT_FREE_MEMORY,            // free memory
+        };
+        
+        struct ProcessNotifyParam
+        {
+            PROCESS_NOTIFY_TYPE type;
+            int  pid;
+            Addr addr;
+            u64  size;
+            u64  totalSize;
+        };
+        static HookPoint<SystemManager, ProcessNotifyParam> s_processNotifyHook;
 
-		SystemManager();
-		virtual ~SystemManager();
+        SystemManager();
+        virtual ~SystemManager();
 
-		virtual void Main();
+        virtual void Main();
 
-		// SystemIF
-		virtual void NotifyProcessTermination(int pid);
-		virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size);
-		virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size);
-		virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate);
-		BEGIN_PARAM_MAP( "/Session/" )
-			BEGIN_PARAM_PATH("Emulator/")
-				PARAM_ENTRY("@TargetArchitecture",		m_context.targetArchitecture)
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH("Simulator/")
-				PARAM_ENTRY("System/@Mode",				m_context.mode)
-				PARAM_ENTRY("System/@SimulationCycles",	m_simulationCycles)
-				PARAM_ENTRY("System/@SimulationInsns",  m_simulationInsns)
-				PARAM_ENTRY("System/@SkipInsns",		m_skipInsns)
-				PARAM_ENTRY("System/Inorder/@EnableBPred",		m_context.inorderParam.enableBPred	)
-				PARAM_ENTRY("System/Inorder/@EnableHMPred",	m_context.inorderParam.enableHMPred	)
-				PARAM_ENTRY("System/Inorder/@EnableCache",		m_context.inorderParam.enableCache	)
-				PARAM_ENTRY("System/Debug/@DebugPort",	m_context.debugParam.debugPort	)
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( "Result/" )
-				PARAM_ENTRY("System/@ExecutedCycles",	m_executedCycles)
-				PARAM_ENTRY("System/@ExecutedInsns",	m_executedInsns)
-				PARAM_ENTRY("System/@SkippedInsns",		m_skippedInsns)
-				PARAM_ENTRY("System/@IPC",				m_ipc)
-				PARAM_ENTRY("System/@ProcessMemoryUsage",	m_processMemoryUsage)
-			END_PARAM_PATH()
-		END_PARAM_MAP()
+        // SystemIF
+        virtual void NotifyProcessTermination(int pid);
+        virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size);
+        virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size);
+        virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate);
+        BEGIN_PARAM_MAP( "/Session/" )
+            BEGIN_PARAM_PATH("Emulator/")
+                PARAM_ENTRY("@TargetArchitecture",      m_context.targetArchitecture)
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH("Simulator/")
+                PARAM_ENTRY("System/@Mode",             m_context.mode)
+                PARAM_ENTRY("System/@SimulationCycles", m_simulationCycles)
+                PARAM_ENTRY("System/@SimulationInsns",  m_simulationInsns)
+                PARAM_ENTRY("System/@SkipInsns",        m_skipInsns)
+                PARAM_ENTRY("System/Inorder/@EnableBPred",      m_context.inorderParam.enableBPred  )
+                PARAM_ENTRY("System/Inorder/@EnableHMPred", m_context.inorderParam.enableHMPred )
+                PARAM_ENTRY("System/Inorder/@EnableCache",      m_context.inorderParam.enableCache  )
+                PARAM_ENTRY("System/Debug/@DebugPort",  m_context.debugParam.debugPort  )
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( "Result/" )
+                PARAM_ENTRY("System/@ExecutedCycles",   m_executedCycles)
+                PARAM_ENTRY("System/@ExecutedInsns",    m_executedInsns)
+                PARAM_ENTRY("System/@SkippedInsns",     m_skippedInsns)
+                PARAM_ENTRY("System/@IPC",              m_ipc)
+                PARAM_ENTRY("System/@ProcessMemoryUsage",   m_processMemoryUsage)
+            END_PARAM_PATH()
+        END_PARAM_MAP()
 
 
-	protected:
-		typedef SystemBase::SystemContext SystemContext;
+    protected:
+        typedef SystemBase::SystemContext SystemContext;
 
-		SystemContext m_context;
-		SystemIF*     m_system;
+        SystemContext m_context;
+        SystemIF*     m_system;
 
-		s64 m_simulationCycles;	// simulation を行うサイクル数
-		s64 m_executedCycles;	// 実際に実行されたサイクル数
-		
-		s64 m_simulationInsns;	// simulation を行う命令数
-		s64 m_skipInsns;		// はじめにskipする命令数
+        s64 m_simulationCycles; // simulation を行うサイクル数
+        s64 m_executedCycles;   // 実際に実行されたサイクル数
+        
+        s64 m_simulationInsns;  // simulation を行う命令数
+        s64 m_skipInsns;        // はじめにskipする命令数
 
-		std::vector<s64> m_executedInsns;	// 実際に実行された命令数
-		std::vector<s64> m_skippedInsns;	// 実際にスキップ実行されたサイクル数
+        std::vector<s64> m_executedInsns;   // 実際に実行された命令数
+        std::vector<s64> m_skippedInsns;    // 実際にスキップ実行されたサイクル数
 
-		std::vector<double> m_ipc;			// ipc
-		std::vector<u64> m_processMemoryUsage;	// プロセス毎のメモリ使用量
-		ExtraOpDecoder m_extraOpDecoder;
+        std::vector<double> m_ipc;          // ipc
+        std::vector<u64> m_processMemoryUsage;  // プロセス毎のメモリ使用量
+        ExtraOpDecoder m_extraOpDecoder;
 
-		virtual void InitializeEmulator();
-		virtual void InitializeResources();
-		virtual void InitializeSimulationContext();
+        virtual void InitializeEmulator();
+        virtual void InitializeResources();
+        virtual void InitializeSimulationContext();
 
-		virtual void Initialize();
-		virtual void Finalize();
-		virtual void Run();
+        virtual void Initialize();
+        virtual void Finalize();
+        virtual void Run();
 
-		virtual void GetInitialContext( ArchitectureStateList* archState );
-		virtual bool SetSimulationContext( const ArchitectureStateList& archState );
+        virtual void GetInitialContext( ArchitectureStateList* archState );
+        virtual bool SetSimulationContext( const ArchitectureStateList& archState );
 
-		virtual void RunSimulation( SystemContext* context );
-		virtual void RunEmulation( SystemContext* context );
-		virtual void RunEmulationTrace( SystemContext* context );
-		virtual void RunEmulationDebug( SystemContext* context );
-		virtual void RunInorder( SystemContext* context );
+        virtual void RunSimulation( SystemContext* context );
+        virtual void RunEmulation( SystemContext* context );
+        virtual void RunEmulationTrace( SystemContext* context );
+        virtual void RunEmulationDebug( SystemContext* context );
+        virtual void RunInorder( SystemContext* context );
 
-		virtual void NotifyProcessTerminationBody( ProcessNotifyParam* );
-		virtual void NotifySyscallReadFileToMemoryBody( ProcessNotifyParam* );
-		virtual void NotifySyscallWriteFileFromMemoryBody( ProcessNotifyParam* );
-		virtual void NotifyMemoryAllocationBody( ProcessNotifyParam* );
+        virtual void NotifyProcessTerminationBody( ProcessNotifyParam* );
+        virtual void NotifySyscallReadFileToMemoryBody( ProcessNotifyParam* );
+        virtual void NotifySyscallWriteFileFromMemoryBody( ProcessNotifyParam* );
+        virtual void NotifyMemoryAllocationBody( ProcessNotifyParam* );
 
-		virtual void SetSystem( SystemIF* system );
-		
-		virtual void NotifyChangingMode( PhysicalResourceNode::SimulationMode mode );
+        virtual void SetSystem( SystemIF* system );
+        
+        virtual void NotifyChangingMode( PhysicalResourceNode::SimulationMode mode );
 
-	};
-}	// namespace Onikiri
+    };
+}   // namespace Onikiri
 
 #endif // #ifndef SIM_SYSTEM_SYSTEM_MANAGER_H
 

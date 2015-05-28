@@ -39,51 +39,51 @@
 
 namespace Onikiri {
 
-	class TraceDumper : public ParamExchange
-	{
-	private:
-		int m_enabled;
-		int m_detail;
-		int m_valDetail;
+    class TraceDumper : public ParamExchange
+    {
+    private:
+        int m_enabled;
+        int m_detail;
+        int m_valDetail;
 
-		bool m_gzipEnabled;	// Dumpをgzip圧縮するかどうか
-		int  m_gzipLevel;	// gzipの圧縮レベル
-		bool m_flush;		// 出力毎にフラッシュを行うかどうか
+        bool m_gzipEnabled; // Dumpをgzip圧縮するかどうか
+        int  m_gzipLevel;   // gzipの圧縮レベル
+        bool m_flush;       // 出力毎にフラッシュを行うかどうか
 
-		std::string m_filename;
-		boost::iostreams::filtering_ostream m_dumpStream;
-		
-		s64 m_cycle;
-		u64 m_skipInsns;
+        std::string m_filename;
+        boost::iostreams::filtering_ostream m_dumpStream;
+        
+        s64 m_cycle;
+        u64 m_skipInsns;
 
-		void Open( const String& suffix );
-		void Close();
-		void DumpString(const std::string& str);
-	public:
-		TraceDumper();
-		virtual ~TraceDumper();
+        void Open( const String& suffix );
+        void Close();
+        void DumpString(const std::string& str);
+    public:
+        TraceDumper();
+        virtual ~TraceDumper();
 
-		BEGIN_PARAM_MAP("/Session/Environment/Dumper/TraceDumper/")
-			PARAM_ENTRY("@EnableDump",		m_enabled)
-			PARAM_ENTRY("@DefaultDetail",	m_detail)
-			PARAM_ENTRY("@DetailRegValue",	m_valDetail)
-			PARAM_ENTRY("@FileName" ,		m_filename)
-			PARAM_ENTRY("@EnableGzip",		m_gzipEnabled)
-			PARAM_ENTRY("@GzipLevel",		m_gzipLevel)
-			PARAM_ENTRY("@SkipInsns",		m_skipInsns)
-			PARAM_ENTRY("@Flush",			m_flush)
-		END_PARAM_MAP()
+        BEGIN_PARAM_MAP("/Session/Environment/Dumper/TraceDumper/")
+            PARAM_ENTRY("@EnableDump",      m_enabled)
+            PARAM_ENTRY("@DefaultDetail",   m_detail)
+            PARAM_ENTRY("@DetailRegValue",  m_valDetail)
+            PARAM_ENTRY("@FileName" ,       m_filename)
+            PARAM_ENTRY("@EnableGzip",      m_gzipEnabled)
+            PARAM_ENTRY("@GzipLevel",       m_gzipLevel)
+            PARAM_ENTRY("@SkipInsns",       m_skipInsns)
+            PARAM_ENTRY("@Flush",           m_flush)
+        END_PARAM_MAP()
 
-		bool Enabled() const { return m_enabled != 0; }
-		int  Detail()  const { return m_detail;  }
+        bool Enabled() const { return m_enabled != 0; }
+        int  Detail()  const { return m_detail;  }
 
-		void Initialize( const String& suffix );
-		void Finalize();
-		void Dump(DUMP_STATE state, Op* op = NULL, int detail = -1);
-		void DumpStallBegin(Op* op);
-		void DumpStallEnd(Op* op);
-		void SetCurrentCycle(s64 cycle);
-	};
+        void Initialize( const String& suffix );
+        void Finalize();
+        void Dump(DUMP_STATE state, Op* op = NULL, int detail = -1);
+        void DumpStallBegin(Op* op);
+        void DumpStallEnd(Op* op);
+        void SetCurrentCycle(s64 cycle);
+    };
 
 
 }; // namespace Onikiri

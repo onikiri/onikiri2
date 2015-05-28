@@ -44,15 +44,15 @@ using namespace Onikiri;
 using namespace std;
 
 CacheAccessRequestQueue::CacheAccessRequestQueue(
-	Pipeline* pipe,
-	int ports,
-	int serializedCycles
+    Pipeline* pipe,
+    int ports,
+    int serializedCycles
 ) :
-	m_enabled( false ),
-	m_currentAccessID( 0 ),
-	m_pipe( pipe ),
-	m_ports( ports ),
-	m_serializedCycles( serializedCycles )
+    m_enabled( false ),
+    m_currentAccessID( 0 ),
+    m_pipe( pipe ),
+    m_ports( ports ),
+    m_serializedCycles( serializedCycles )
 {
 }
 
@@ -62,51 +62,51 @@ CacheAccessRequestQueue::~CacheAccessRequestQueue()
 
 void CacheAccessRequestQueue::SetEnabled( bool enabled )
 {
-	m_enabled = enabled;
+    m_enabled = enabled;
 }
 
 // Get a time when new memory access can start.
 s64 CacheAccessRequestQueue::GetNextAccessStartableTime()
 {
-	s64 now = m_pipe->GetNow(); 
-	if( m_ports == 0 || m_queue.size() == 0 ){
-		return now;
-	}
+    s64 now = m_pipe->GetNow(); 
+    if( m_ports == 0 || m_queue.size() == 0 ){
+        return now;
+    }
 
-	if( (int)m_queue.size() < m_ports ){
-		return now;
-	}
+    if( (int)m_queue.size() < m_ports ){
+        return now;
+    }
 
-	AccessQueue::reverse_iterator firstPortAccess = m_queue.rbegin();
-	for( int i = 0; i < m_ports - 1; i++ )
-	{
-		firstPortAccess++;
-		ASSERT( firstPortAccess != m_queue.rend() );
-	}
+    AccessQueue::reverse_iterator firstPortAccess = m_queue.rbegin();
+    for( int i = 0; i < m_ports - 1; i++ )
+    {
+        firstPortAccess++;
+        ASSERT( firstPortAccess != m_queue.rend() );
+    }
 
-	s64 serializingEndTime = firstPortAccess->serializingEndTime;
+    s64 serializingEndTime = firstPortAccess->serializingEndTime;
 
-	//printf( "%I64d - %I64d\n", now, serializingEndTime );
+    //printf( "%I64d - %I64d\n", now, serializingEndTime );
 
-	if( serializingEndTime < now )
-		return now;
-	else
-		return serializingEndTime;
+    if( serializingEndTime < now )
+        return now;
+    else
+        return serializingEndTime;
 }
 
 // Add an access state to the list.
 void CacheAccessRequestQueue::PushAccess( const CacheAccess& access, const AccessState& state, int latency )
 {
-	m_currentAccessID++;
-	m_queue.push_back( state );
+    m_currentAccessID++;
+    m_queue.push_back( state );
 
-	// An event of memory access end time.
-	AccessQueueIterator stateIterator = m_queue.end(); 
-	stateIterator--;
-	EventPtr evnt(
-		CacheAccessEndEvent::Construct( access, stateIterator, this )
-	);
-	m_pipe->AddEvent( evnt, latency ); 
+    // An event of memory access end time.
+    AccessQueueIterator stateIterator = m_queue.end(); 
+    stateIterator--;
+    EventPtr evnt(
+        CacheAccessEndEvent::Construct( access, stateIterator, this )
+    );
+    m_pipe->AddEvent( evnt, latency ); 
 }
 
 
@@ -114,74 +114,74 @@ void CacheAccessRequestQueue::PushAccess( const CacheAccess& access, const Acces
 // This method returns the latency of an access.
 // See more detailed comments in the method definition.
 s64 CacheAccessRequestQueue::Push( 
-	const Access& access,
-	int minLatency,
-	CacheAccessNotifieeIF* notifiee,
-	const CacheAccessNotificationParam& notification
+    const Access& access,
+    int minLatency,
+    CacheAccessNotifieeIF* notifiee,
+    const CacheAccessNotificationParam& notification
 ){
-	if( !m_enabled || m_ports == 0 || m_serializedCycles == 0 ){
-		// Notify access finish.
-		if( notifiee ){
-			notifiee->AccessFinished( access, notification );
-		}
-		return minLatency;
-	}
+    if( !m_enabled || m_ports == 0 || m_serializedCycles == 0 ){
+        // Notify access finish.
+        if( notifiee ){
+            notifiee->AccessFinished( access, notification );
+        }
+        return minLatency;
+    }
 
-	s64 now = m_pipe->GetNow();
+    s64 now = m_pipe->GetNow();
 
-	// Each access exclusively use one cache port for S cycles.
-	// After S cycles, a next access can start.
-	//   L: latency (Cache/@Latency)
-	//   S: serialized cycles ()
-	//   *: wait for serializing
-	//
-	//   A0: <--S--><------(L-S)------>
-	//   A1:   *****<--S--><------(L-S)------>
-	//   A2:    ***********<--S--><------(L-S)------>
+    // Each access exclusively use one cache port for S cycles.
+    // After S cycles, a next access can start.
+    //   L: latency (Cache/@Latency)
+    //   S: serialized cycles ()
+    //   *: wait for serializing
+    //
+    //   A0: <--S--><------(L-S)------>
+    //   A1:   *****<--S--><------(L-S)------>
+    //   A2:    ***********<--S--><------(L-S)------>
 
-	ASSERT( minLatency >= m_serializedCycles, "Minimum latency is shorter than serialized cycles." );
+    ASSERT( minLatency >= m_serializedCycles, "Minimum latency is shorter than serialized cycles." );
 
-	s64 serializingStartTime = GetNextAccessStartableTime();
-	s64 accessEndTime        = serializingStartTime + minLatency;
+    s64 serializingStartTime = GetNextAccessStartableTime();
+    s64 accessEndTime        = serializingStartTime + minLatency;
 
-	AccessState state = 
-	{
-		access,										// addr
-		m_currentAccessID,							// ID
-		now,										// start
-		accessEndTime,								// end
-		serializingStartTime,						// serializingStart
-		serializingStartTime + m_serializedCycles,	// serializingEnd
-		notifiee,									// notifiee
-		notification								// type
-	};
-	
-	int latency = (int)( accessEndTime - now );
-	PushAccess( access, state, latency );
-	return latency;
+    AccessState state = 
+    {
+        access,                                     // addr
+        m_currentAccessID,                          // ID
+        now,                                        // start
+        accessEndTime,                              // end
+        serializingStartTime,                       // serializingStart
+        serializingStartTime + m_serializedCycles,  // serializingEnd
+        notifiee,                                   // notifiee
+        notification                                // type
+    };
+    
+    int latency = (int)( accessEndTime - now );
+    PushAccess( access, state, latency );
+    return latency;
 }
 
 // Remove an access from the queue and notify this to a connected cache
 // when a memory access finishes. 
 void CacheAccessRequestQueue::Pop( 
-	const CacheAccess& access, AccessQueueIterator target 
+    const CacheAccess& access, AccessQueueIterator target 
 ){
 
-	ASSERT( m_enabled );
+    ASSERT( m_enabled );
 
-	// Remove an access request from the queue.
-	CacheAccessNotificationParam notification = target->notification;
-	CacheAccessNotifieeIF* notifiee = target->notifiee;
-	m_queue.erase( target );
-	
-	// Notify access finish.
-	if( notifiee ){
-		notifiee->AccessFinished( access, notification );
-	}
+    // Remove an access request from the queue.
+    CacheAccessNotificationParam notification = target->notification;
+    CacheAccessNotifieeIF* notifiee = target->notifiee;
+    m_queue.erase( target );
+    
+    // Notify access finish.
+    if( notifiee ){
+        notifiee->AccessFinished( access, notification );
+    }
 }
 
 // Returns the size of the access queue.
 size_t CacheAccessRequestQueue::GetSize() const
 {
-	return m_queue.size();
+    return m_queue.size();
 }

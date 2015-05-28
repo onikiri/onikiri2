@@ -39,11 +39,11 @@ using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::AlphaLinux;
 
 namespace {
-	const u16 MACHINE_ALPHA = 0x9026;
+    const u16 MACHINE_ALPHA = 0x9026;
 }
 
 AlphaLinuxLoader::AlphaLinuxLoader()
-	: Linux64Loader(MACHINE_ALPHA)		// machine = alpha
+    : Linux64Loader(MACHINE_ALPHA)      // machine = alpha
 {
 }
 
@@ -53,10 +53,10 @@ AlphaLinuxLoader::~AlphaLinuxLoader()
 
 u64 AlphaLinuxLoader::GetInitialRegValue(int index) const
 {
-	const int STACK_POINTER_REGNUM = 30;
+    const int STACK_POINTER_REGNUM = 30;
 
-	if (index == STACK_POINTER_REGNUM)
-		return GetInitialSp();
-	else
-		return 0;
+    if (index == STACK_POINTER_REGNUM)
+        return GetInitialSp();
+    else
+        return 0;
 }

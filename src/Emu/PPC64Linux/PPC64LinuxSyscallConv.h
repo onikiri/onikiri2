@@ -38,38 +38,38 @@
 
 namespace Onikiri {
 
-	namespace EmulatorUtility {
-		class ProcessState;
-		class MemorySystem;
-		class OpEmulationState;
-	}
+    namespace EmulatorUtility {
+        class ProcessState;
+        class MemorySystem;
+        class OpEmulationState;
+    }
 
-	namespace PPC64Linux {
+    namespace PPC64Linux {
 
-		class PPC64LinuxSyscallConv : public EmulatorUtility::Linux64SyscallConv
-		{
-		private:
-			PPC64LinuxSyscallConv();
-		public:
-			PPC64LinuxSyscallConv(EmulatorUtility::ProcessState* processState);
-			virtual ~PPC64LinuxSyscallConv();
+        class PPC64LinuxSyscallConv : public EmulatorUtility::Linux64SyscallConv
+        {
+        private:
+            PPC64LinuxSyscallConv();
+        public:
+            PPC64LinuxSyscallConv(EmulatorUtility::ProcessState* processState);
+            virtual ~PPC64LinuxSyscallConv();
 
-			// SetArg によって与えられた引数に従ってシステムコールを行う
-			virtual void Execute(EmulatorUtility::OpEmulationState* opState);
-		protected:
+            // SetArg によって与えられた引数に従ってシステムコールを行う
+            virtual void Execute(EmulatorUtility::OpEmulationState* opState);
+        protected:
 
-			// arch dependent
+            // arch dependent
 
-			// conversion
-			//virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
-			virtual int Get_MAP_ANONYMOUS();
-			virtual int Get_MREMAP_MAYMOVE();
-			virtual int Get_CLK_TCK();
+            // conversion
+            //virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
+            virtual int Get_MAP_ANONYMOUS();
+            virtual int Get_MREMAP_MAYMOVE();
+            virtual int Get_CLK_TCK();
 
-			virtual u32 OpenFlagTargetToHost(u32 flag);
-		};
+            virtual u32 OpenFlagTargetToHost(u32 flag);
+        };
 
-	} // namespace PPC64Linux
+    } // namespace PPC64Linux
 } // namespace Onikiri
 
 #endif

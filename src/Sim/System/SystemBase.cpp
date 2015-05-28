@@ -39,29 +39,29 @@ using namespace Onikiri;
 
 SystemBase::SystemContext::SystemContext()
 {
-	executionCycles = 0;	
-	executionInsns = 0;
-	executedCycles = 0;	
-	
-	globalClock = 0;
-	emulator = 0;
-	resBuilder = 0;
+    executionCycles = 0;    
+    executionInsns = 0;
+    executedCycles = 0; 
+    
+    globalClock = 0;
+    emulator = 0;
+    resBuilder = 0;
 }
 
 SystemBase::SystemBase()
 {
-	m_systemManager = NULL;
+    m_systemManager = NULL;
 }
 
 SystemBase::~SystemBase()
 {
-	if( m_systemManager )
-		m_systemManager->SetSystem( NULL );
+    if( m_systemManager )
+        m_systemManager->SetSystem( NULL );
 }
 
 void SystemBase::SetSystemManager( SystemManagerIF* systemManager )
 {
-	m_systemManager = systemManager;
+    m_systemManager = systemManager;
 }
 
 void SystemBase::Run( SystemContext* context )

@@ -39,37 +39,37 @@ using namespace Onikiri;
 // Constructor.
 OpClassStatistics::OpClassStatistics()
 {
-	m_numOps.resize(OpClassCode::Code_MAX, 0);
-	for(int i = 0; i < OpClassCode::Code_MAX; i++){
-		m_names.push_back(OpClassCode::ToString(i));
-	}
-	Reset();
+    m_numOps.resize(OpClassCode::Code_MAX, 0);
+    for(int i = 0; i < OpClassCode::Code_MAX; i++){
+        m_names.push_back(OpClassCode::ToString(i));
+    }
+    Reset();
 }
 
 // Increment a counter corresponding to 'op'.
 void OpClassStatistics::Increment(OpIterator op)
 {
-	const OpClass& opClass = op->GetOpClass();
-	m_numOps[opClass.GetCode()]++;
+    const OpClass& opClass = op->GetOpClass();
+    m_numOps[opClass.GetCode()]++;
 
-	if(opClass.IsFloat()){
-		m_numFpSrcOperands += op->GetSrcRegNum();
-		m_numFpDstOperands += op->GetDstRegNum();
-	}
-	else{
-		m_numIntSrcOperands += op->GetSrcRegNum();
-		m_numIntDstOperands += op->GetDstRegNum();
-	}
+    if(opClass.IsFloat()){
+        m_numFpSrcOperands += op->GetSrcRegNum();
+        m_numFpDstOperands += op->GetDstRegNum();
+    }
+    else{
+        m_numIntSrcOperands += op->GetSrcRegNum();
+        m_numIntDstOperands += op->GetDstRegNum();
+    }
 }
 
 // Reset statistics counters.
 void OpClassStatistics::Reset()
 {
-	for(size_t i = 0; i < m_numOps.size(); i++){
-		m_numOps[i] = 0;
-	}
-	m_numIntSrcOperands = 0;
-	m_numIntDstOperands = 0;
-	m_numFpSrcOperands = 0;
-	m_numFpDstOperands = 0;
+    for(size_t i = 0; i < m_numOps.size(); i++){
+        m_numOps[i] = 0;
+    }
+    m_numIntSrcOperands = 0;
+    m_numIntDstOperands = 0;
+    m_numFpSrcOperands = 0;
+    m_numFpDstOperands = 0;
 }

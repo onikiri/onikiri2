@@ -38,44 +38,44 @@ using namespace Onikiri;
 
 void Onikiri::EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_HEADER& h, bool bigEndian)
 {
-	// e_ident は変換不要
-	EndianSpecifiedToHostInPlace( h.e_type, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_machine, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_version, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_entry, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_phoff, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_shoff, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_flags, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_ehsize, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_phentsize, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_phnum, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_shentsize, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_shnum, bigEndian);
-	EndianSpecifiedToHostInPlace( h.e_shstrndx , bigEndian);
+    // e_ident は変換不要
+    EndianSpecifiedToHostInPlace( h.e_type, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_machine, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_version, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_entry, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_phoff, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_shoff, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_flags, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_ehsize, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_phentsize, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_phnum, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_shentsize, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_shnum, bigEndian);
+    EndianSpecifiedToHostInPlace( h.e_shstrndx , bigEndian);
 }
 
 void Onikiri::EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_SECTION& h, bool bigEndian)
 {
-	EndianSpecifiedToHostInPlace( h.sh_name, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_type, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_flags, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_addr, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_offset, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_size, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_link, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_info, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_addralign, bigEndian);
-	EndianSpecifiedToHostInPlace( h.sh_entsize, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_name, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_type, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_flags, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_addr, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_offset, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_size, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_link, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_info, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_addralign, bigEndian);
+    EndianSpecifiedToHostInPlace( h.sh_entsize, bigEndian);
 }
 
 void Onikiri::EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_PROGRAM& h, bool bigEndian)
 {
-	EndianSpecifiedToHostInPlace( h.p_type, bigEndian);
-	EndianSpecifiedToHostInPlace( h.p_flags, bigEndian);
-	EndianSpecifiedToHostInPlace( h.p_offset, bigEndian);
-	EndianSpecifiedToHostInPlace( h.p_vaddr, bigEndian);
-	EndianSpecifiedToHostInPlace( h.p_paddr, bigEndian);
-	EndianSpecifiedToHostInPlace( h.p_filesz, bigEndian);
-	EndianSpecifiedToHostInPlace( h.p_memsz, bigEndian);
-	EndianSpecifiedToHostInPlace( h.p_align, bigEndian);
+    EndianSpecifiedToHostInPlace( h.p_type, bigEndian);
+    EndianSpecifiedToHostInPlace( h.p_flags, bigEndian);
+    EndianSpecifiedToHostInPlace( h.p_offset, bigEndian);
+    EndianSpecifiedToHostInPlace( h.p_vaddr, bigEndian);
+    EndianSpecifiedToHostInPlace( h.p_paddr, bigEndian);
+    EndianSpecifiedToHostInPlace( h.p_filesz, bigEndian);
+    EndianSpecifiedToHostInPlace( h.p_memsz, bigEndian);
+    EndianSpecifiedToHostInPlace( h.p_align, bigEndian);
 }

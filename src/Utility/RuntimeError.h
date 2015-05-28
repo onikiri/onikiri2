@@ -43,89 +43,89 @@
 
 namespace Onikiri
 {
-	void SetAssertNoThrow( bool noThrow );
-	void SuppressWaning( bool suppress );
-	bool IsInException();
+    void SetAssertNoThrow( bool noThrow );
+    void SuppressWaning( bool suppress );
+    bool IsInException();
 
-	struct RuntimeErrorInfo
-	{
-		const char* file; 
-		int line;
-		const char* func;
-		const char* name;
-		const char* cond;
-		RuntimeErrorInfo(){};
-		RuntimeErrorInfo(
-			const char* fileArg, 
-			int lineArg,
-			const char* funcArg,
-			const char* nameArg,
-			const char* condArg
-		) : 
-			file( fileArg ),
-			line( lineArg ),
-			func( funcArg ),
-			name( nameArg ),
-			cond( condArg )
-		{
-		};
-	};
+    struct RuntimeErrorInfo
+    {
+        const char* file; 
+        int line;
+        const char* func;
+        const char* name;
+        const char* cond;
+        RuntimeErrorInfo(){};
+        RuntimeErrorInfo(
+            const char* fileArg, 
+            int lineArg,
+            const char* funcArg,
+            const char* nameArg,
+            const char* condArg
+        ) : 
+            file( fileArg ),
+            line( lineArg ),
+            func( funcArg ),
+            name( nameArg ),
+            cond( condArg )
+        {
+        };
+    };
 
-	void RuntimeErrorFunction( const RuntimeErrorInfo& info, const char* fmt, ... );
-	void RuntimeWarningFunction( const RuntimeErrorInfo& info, const char* fmt, ... );
+    void RuntimeErrorFunction( const RuntimeErrorInfo& info, const char* fmt, ... );
+    void RuntimeWarningFunction( const RuntimeErrorInfo& info, const char* fmt, ... );
 
-	void AssertFunction( const RuntimeErrorInfo& info, bool assertCond, const char* fmt, ... );
-	void AssertFunction( const RuntimeErrorInfo& info, bool assertCond );
+    void AssertFunction( const RuntimeErrorInfo& info, bool assertCond, const char* fmt, ... );
+    void AssertFunction( const RuntimeErrorInfo& info, bool assertCond );
 
-	// Source file & function name
-	static const char* Who()
-	{
-		return "Unknown";
-	}
-	#define ONIKIRI_DEBUG_NAME Who()
+    // Source file & function name
+    static const char* Who()
+    {
+        return "Unknown";
+    }
+    #define ONIKIRI_DEBUG_NAME Who()
 
-	#define DEBUG_WHERE_ARGS() \
-		ONIKIRI_DEBUG_FILE , ONIKIRI_DEBUG_LINE, ONIKIRI_DEBUG_FUNCTION, ONIKIRI_DEBUG_NAME
+    #define DEBUG_WHERE_ARGS() \
+        ONIKIRI_DEBUG_FILE , ONIKIRI_DEBUG_LINE, ONIKIRI_DEBUG_FUNCTION, ONIKIRI_DEBUG_NAME
 
     #if defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
-		// Runtime exception
-		#define THROW_RUNTIME_ERROR(...) \
-			RuntimeErrorFunction(	RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), ## __VA_ARGS__ )
+        // Runtime exception
+        #define THROW_RUNTIME_ERROR(...) \
+            RuntimeErrorFunction(   RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), ## __VA_ARGS__ )
 
-		// Runtime warning message
-		#define RUNTIME_WARNING(...) \
-			RuntimeWarningFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), ## __VA_ARGS__ )
-	#else
-		// Runtime exception
-		#define THROW_RUNTIME_ERROR(...) \
-			RuntimeErrorFunction(	RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), __VA_ARGS__ )
+        // Runtime warning message
+        #define RUNTIME_WARNING(...) \
+            RuntimeWarningFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), ## __VA_ARGS__ )
+    #else
+        // Runtime exception
+        #define THROW_RUNTIME_ERROR(...) \
+            RuntimeErrorFunction(   RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), __VA_ARGS__ )
 
-		// Runtime warning message
-		#define RUNTIME_WARNING(...) \
-			RuntimeWarningFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), __VA_ARGS__ )
-	#endif
+        // Runtime warning message
+        #define RUNTIME_WARNING(...) \
+            RuntimeWarningFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), "" ), __VA_ARGS__ )
+    #endif
 
-	// Assert
-	#ifdef ONIKIRI_DEBUG
+    // Assert
+    #ifdef ONIKIRI_DEBUG
     #if defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
-			// Assert
-			#define ASSERT(cond, ...) \
-				if(!(cond)){AssertFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), #cond ), false, ## __VA_ARGS__);}
-		#else
-			// C++0x supports a variable arguments length macro (__VA_ARGS__).
-			// Assert
-			#define ASSERT(cond, ...) \
-				if(!(cond)){AssertFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), #cond ), false, __VA_ARGS__);}
-		#endif
-	#else
-		#if defined(COMPILER_IS_MSVC) || defined(COMPILER_IS_GCC)
-			#define ASSERT(...)
-		#else
-			inline void AssertDummy(bool, const char* str, ...){};
-			inline void AssertDummy(bool){};
-			#define ASSERT AssertDummy
-		#endif
-	#endif
+            // Assert
+            #define ASSERT(cond, ...) \
+                if(!(cond)){AssertFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), #cond ), false, ## __VA_ARGS__);}
+        #else
+            // C++0x supports a variable arguments length macro (__VA_ARGS__).
+            // Assert
+            #define ASSERT(cond, ...) \
+                if(!(cond)){AssertFunction( RuntimeErrorInfo( DEBUG_WHERE_ARGS(), #cond ), false, __VA_ARGS__);}
+        #endif
+    #else
+        #if defined(COMPILER_IS_MSVC) || defined(COMPILER_IS_GCC)
+            #define ASSERT(...)
+        #else
+            inline void AssertDummy(bool, const char* str, ...){};
+            inline void AssertDummy(bool){};
+            #define ASSERT AssertDummy
+        #endif
+    #endif
 
 
 } // namespace Onikiri

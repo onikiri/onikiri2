@@ -41,18 +41,18 @@
 
 namespace Onikiri 
 {
-	class ExtraOpInfoIF : public OpInfo
-	{
-	public:
-		virtual void Execute( OpStateIF* opState ) = 0;
-	};
+    class ExtraOpInfoIF : public OpInfo
+    {
+    public:
+        virtual void Execute( OpStateIF* opState ) = 0;
+    };
 
-	class ExtraOpDecoderIF
-	{
-	public:
-		virtual ~ExtraOpDecoderIF(){}
-		virtual bool Decode( u32 codeWord, std::pair<ExtraOpInfoIF**, int>* decodedOps ) = 0;
-	};
+    class ExtraOpDecoderIF
+    {
+    public:
+        virtual ~ExtraOpDecoderIF(){}
+        virtual bool Decode( u32 codeWord, std::pair<ExtraOpInfoIF**, int>* decodedOps ) = 0;
+    };
 
 }; // namespace Onikiri
 

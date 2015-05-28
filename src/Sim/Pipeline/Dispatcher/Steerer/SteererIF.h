@@ -36,18 +36,18 @@
 
 namespace Onikiri 
 {
-	class Scheduler;
-	
-	// An interface of dispatch steerer
-	class DispatchSteererIF
-	{
-	public:
-		DispatchSteererIF(){}
-		virtual ~DispatchSteererIF(){}
+    class Scheduler;
+    
+    // An interface of dispatch steerer
+    class DispatchSteererIF
+    {
+    public:
+        DispatchSteererIF(){}
+        virtual ~DispatchSteererIF(){}
 
-		virtual Scheduler* Steer(OpIterator opIterator) = 0;
-	};
-	
+        virtual Scheduler* Steer(OpIterator opIterator) = 0;
+    };
+    
 }; // namespace Onikiri;
 
 #endif // __STEERERIF_H__

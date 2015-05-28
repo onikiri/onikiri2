@@ -42,138 +42,138 @@ using namespace Onikiri;
 
 Thread::Thread()
 {
-	m_emulator = 0;
-	m_core = 0;
-	m_inorderList = 0;
-	m_checkpointMaster = 0;
-	m_memOrderManager = 0;
-	m_regDepPred = 0;
-	m_memDepPred = 0;
-	
-	m_localTID = TID_INVALID;
-	m_active = false;
-	m_serialOpID = 0;
+    m_emulator = 0;
+    m_core = 0;
+    m_inorderList = 0;
+    m_checkpointMaster = 0;
+    m_memOrderManager = 0;
+    m_regDepPred = 0;
+    m_memDepPred = 0;
+    
+    m_localTID = TID_INVALID;
+    m_active = false;
+    m_serialOpID = 0;
 }
 
 Thread::~Thread()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void Thread::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
-	}
-	else if(phase == INIT_POST_CONNECTION){
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
+    }
+    else if(phase == INIT_POST_CONNECTION){
 
-		CheckNodeInitialized( "checkpointMaster",	m_checkpointMaster );
-		CheckNodeInitialized( "emulator",			m_emulator );
-		CheckNodeInitialized( "inorderList",		m_inorderList );
-		CheckNodeInitialized( "memOrderManager",	m_memOrderManager );
-		CheckNodeInitialized( "checkpointMaster",	m_checkpointMaster );
-		CheckNodeInitialized( "regDepPred",			m_regDepPred );
-		CheckNodeInitialized( "memDepPred",			m_memDepPred );
-		CheckNodeInitialized( "core",				m_core );
-		CheckNodeInitialized( "recoverer",			m_recoverer );
+        CheckNodeInitialized( "checkpointMaster",   m_checkpointMaster );
+        CheckNodeInitialized( "emulator",           m_emulator );
+        CheckNodeInitialized( "inorderList",        m_inorderList );
+        CheckNodeInitialized( "memOrderManager",    m_memOrderManager );
+        CheckNodeInitialized( "checkpointMaster",   m_checkpointMaster );
+        CheckNodeInitialized( "regDepPred",         m_regDepPred );
+        CheckNodeInitialized( "memDepPred",         m_memDepPred );
+        CheckNodeInitialized( "core",               m_core );
+        CheckNodeInitialized( "recoverer",          m_recoverer );
 
-		// CheckpointedData ÇÃèâä˙âª
-		m_fetchPC.Initialize(
-			m_checkpointMaster, 
-			CheckpointMaster::SLOT_FETCH
-		);
+        // CheckpointedData ÇÃèâä˙âª
+        m_fetchPC.Initialize(
+            m_checkpointMaster, 
+            CheckpointMaster::SLOT_FETCH
+        );
 
-		m_retiredOpID.Initialize(
-			m_checkpointMaster, 
-			CheckpointMaster::SLOT_FETCH
-		);
-		m_retiredOpID.GetCurrent() = 0;
-	}
+        m_retiredOpID.Initialize(
+            m_checkpointMaster, 
+            CheckpointMaster::SLOT_FETCH
+        );
+        m_retiredOpID.GetCurrent() = 0;
+    }
 }
 
 bool Thread::IsActive()
 {
-	return m_active;
+    return m_active;
 }
 
 void Thread::InitializeContext(PC pc)
 {
-	int pcTID = pc.tid;
-	if( pcTID != GetTID(0) ){
-		THROW_RUNTIME_ERROR( 
-			"The TID of 'pc' (%d) and the TID of this 'Thread' (%d) are different", 
-			pcTID,
-			GetTID(0)
-		);
-	}
+    int pcTID = pc.tid;
+    if( pcTID != GetTID(0) ){
+        THROW_RUNTIME_ERROR( 
+            "The TID of 'pc' (%d) and the TID of this 'Thread' (%d) are different", 
+            pcTID,
+            GetTID(0)
+        );
+    }
 
-	SetFetchPC( pc );
+    SetFetchPC( pc );
 }
 
 int Thread::GetTID()
 {
-	return GetTID(0);
+    return GetTID(0);
 }
 
 int Thread::GetTID( const int index )
 {
-	return PhysicalResourceNode::GetTID( index );
+    return PhysicalResourceNode::GetTID( index );
 }
 
 void Thread::SetLocalThreadID(int localTID)
 {
-	m_localTID = localTID;
+    m_localTID = localTID;
 }
 
 int  Thread::GetLocalThreadID() const
 {
-	return m_localTID;
+    return m_localTID;
 }
 
 void Thread::Activate( bool active )
 {
-	m_active = active;
+    m_active = active;
 }
 
 void Thread::SetFetchPC(const PC& pc)
 {
-	ASSERT(
-		pc.tid == GetTID(0),
-		"The passed pc has invalid tid."
-	);
-	*m_fetchPC = pc;
+    ASSERT(
+        pc.tid == GetTID(0),
+        "The passed pc has invalid tid."
+    );
+    *m_fetchPC = pc;
 }
 
 PC   Thread::GetFetchPC() const
 {
-	return *m_fetchPC;
+    return *m_fetchPC;
 }
 
 u64  Thread::GetOpRetiredID()
 {
-	return *m_retiredOpID;
+    return *m_retiredOpID;
 }
 
 u64  Thread::GetOpSerialID()
 {
-	return m_serialOpID;
+    return m_serialOpID;
 }
 
 void Thread::AddOpRetiredID(u64 num)
 {
-	*m_retiredOpID = *m_retiredOpID + num;
+    *m_retiredOpID = *m_retiredOpID + num;
 }
 
 void Thread::AddOpSerialID(u64 num)
 {
-	m_serialOpID += num;
+    m_serialOpID += num;
 }
 
 void Thread::SetThreadCount(const int count)
 {
-	if( count != 1 ){
-		THROW_RUNTIME_ERROR( "The tid count of the 'Thread' class must be 1" );
-	}
-	PhysicalResourceNode::SetThreadCount( count );
+    if( count != 1 ){
+        THROW_RUNTIME_ERROR( "The tid count of the 'Thread' class must be 1" );
+    }
+    PhysicalResourceNode::SetThreadCount( count );
 }
 

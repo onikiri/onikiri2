@@ -36,45 +36,45 @@
 
 namespace shttl 
 {
-	//
-	// A base class of a replacer.
-	// Each class that implements a replace algorithm inherits this class. 
-	//
-	// 'key_type' is a type of a key passed by 'setassoc_table' and 
-	// is used for user implementation.
-	//
-	template < typename key_t >
-	class replacer 
-	{
-	public:
-		typedef size_t size_type;
-		typedef key_t  key_type;
-		static const size_type invalid_way = ~((size_type)0);
+    //
+    // A base class of a replacer.
+    // Each class that implements a replace algorithm inherits this class. 
+    //
+    // 'key_type' is a type of a key passed by 'setassoc_table' and 
+    // is used for user implementation.
+    //
+    template < typename key_t >
+    class replacer 
+    {
+    public:
+        typedef size_t size_type;
+        typedef key_t  key_type;
+        static const size_type invalid_way = ~((size_type)0);
 
-	#ifdef SHTTL_DEBUG
-		// These pure virtual functions are only for type checking.
+    #ifdef SHTTL_DEBUG
+        // These pure virtual functions are only for type checking.
 
-		virtual ~replacer() {}    
+        virtual ~replacer() {}    
 
-		// Constructs a replacer.
-		virtual void construct(
-			const size_type set_num,
-			const size_type way_num
-		) = 0;
+        // Constructs a replacer.
+        virtual void construct(
+            const size_type set_num,
+            const size_type way_num
+        ) = 0;
 
-		virtual void touch(
-			const size_type index,
-			const size_type way,
-			const key_type  key
-		) = 0;
+        virtual void touch(
+            const size_type index,
+            const size_type way,
+            const key_type  key
+        ) = 0;
 
-		virtual size_type target(
-			const size_type index
-		) = 0;
+        virtual size_type target(
+            const size_type index
+        ) = 0;
 
-	#endif
+    #endif
 
-	};
+    };
 
 } // namespace shttl
 

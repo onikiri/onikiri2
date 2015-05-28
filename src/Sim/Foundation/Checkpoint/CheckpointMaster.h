@@ -37,80 +37,80 @@
 
 namespace Onikiri
 {
-	class Checkpoint;
+    class Checkpoint;
 
-	// A class managing check-pointed data.
-	// 'Checkpoint' is a mechanism that backs up states and
-	// recovers on mis-prediction.
-	class CheckpointMaster : public PhysicalResourceNode
-	{
-	public:
-		typedef pool_list< Checkpoint* > CheckpointListType;
-		typedef CheckpointListType::iterator CheckpointListIterator;
+    // A class managing check-pointed data.
+    // 'Checkpoint' is a mechanism that backs up states and
+    // recovers on mis-prediction.
+    class CheckpointMaster : public PhysicalResourceNode
+    {
+    public:
+        typedef pool_list< Checkpoint* > CheckpointListType;
+        typedef CheckpointListType::iterator CheckpointListIterator;
 
-		typedef pool_vector< CheckpointedDataBase* > CheckpointedDataListType;
-		typedef CheckpointedDataListType::iterator CheckpoinedtDataListIterator;
+        typedef pool_vector< CheckpointedDataBase* > CheckpointedDataListType;
+        typedef CheckpointedDataListType::iterator CheckpoinedtDataListIterator;
 
-		enum Slot 
-		{
-			SLOT_FETCH = 0,
-			SLOT_RENAME,
-			SLOT_MAX
-		};
+        enum Slot 
+        {
+            SLOT_FETCH = 0,
+            SLOT_RENAME,
+            SLOT_MAX
+        };
 
-		// parameter mapping
-		BEGIN_PARAM_MAP( GetParamPath() )
-			PARAM_ENTRY("@Capacity", m_capacity)
-		END_PARAM_MAP()
+        // parameter mapping
+        BEGIN_PARAM_MAP( GetParamPath() )
+            PARAM_ENTRY("@Capacity", m_capacity)
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
 
-		CheckpointMaster();
-		virtual ~CheckpointMaster();
+        CheckpointMaster();
+        virtual ~CheckpointMaster();
 
-		void Initialize( InitPhase phase );
+        void Initialize( InitPhase phase );
 
-		// Register check pointed data.
-		// This method must be called from CheckpointedData::Initialize().
-		CheckpointedDataHandle Register( CheckpointedDataBase* data, Slot slot );
+        // Register check pointed data.
+        // This method must be called from CheckpointedData::Initialize().
+        CheckpointedDataHandle Register( CheckpointedDataBase* data, Slot slot );
 
-		// Create a new checkpoint.
-		// Returns the pointer of a checkpoint that identifies a generation of check-pointed data.
-		Checkpoint* CreateCheckpoint();
+        // Create a new checkpoint.
+        // Returns the pointer of a checkpoint that identifies a generation of check-pointed data.
+        Checkpoint* CreateCheckpoint();
 
-		// Current data is becked up to 'checkpoint'.
-		void Backup( Checkpoint* checkpoint, Slot slot );
+        // Current data is becked up to 'checkpoint'.
+        void Backup( Checkpoint* checkpoint, Slot slot );
 
-		// Commits 'checkpoint'.
-		void Commit( Checkpoint* checkpoint );
+        // Commits 'checkpoint'.
+        void Commit( Checkpoint* checkpoint );
 
-		// Flushes 'checkpoint'.
-		void Flush( Checkpoint* checkpoint );
+        // Flushes 'checkpoint'.
+        void Flush( Checkpoint* checkpoint );
 
-		// Recover current data to check-pointed data of 'checkpoint'.
-		void Recover( Checkpoint* checkpoint );
+        // Recover current data to check-pointed data of 'checkpoint'.
+        void Recover( Checkpoint* checkpoint );
 
-		// accessors
-		bool CanCreate( int num ) const
-		{
-			return m_capacity >= m_checkpoint.size() + num; 
-		}
+        // accessors
+        bool CanCreate( int num ) const
+        {
+            return m_capacity >= m_checkpoint.size() + num; 
+        }
 
-	protected:
-		size_t m_capacity;	// The maximum number of checkpoints.
+    protected:
+        size_t m_capacity;  // The maximum number of checkpoints.
 
-		CheckpointedDataListType m_data;
-		std::vector<CheckpointedDataListType> m_dataTable;	// Indexed by Slot
+        CheckpointedDataListType m_data;
+        std::vector<CheckpointedDataListType> m_dataTable;  // Indexed by Slot
 
-		CheckpointListType m_checkpoint;
-		
-		// An object pool for checkpoints.
-		boost::object_pool<Checkpoint> m_checkpointPool;
-		Checkpoint* ConstructCheckpoint( size_t refSize );
-		void DestroyCheckpoint( Checkpoint* cp );
+        CheckpointListType m_checkpoint;
+        
+        // An object pool for checkpoints.
+        boost::object_pool<Checkpoint> m_checkpointPool;
+        Checkpoint* ConstructCheckpoint( size_t refSize );
+        void DestroyCheckpoint( Checkpoint* cp );
 
-	};
+    };
 
 }; // namespace Onikiri
 

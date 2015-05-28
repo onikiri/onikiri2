@@ -38,29 +38,29 @@
 
 namespace Onikiri 
 {
-	// An event triggered on the execution finish of an op.
-	class OpFinishEvent : public EventBase<OpFinishEvent>
-	{
-	public:
+    // An event triggered on the execution finish of an op.
+    class OpFinishEvent : public EventBase<OpFinishEvent>
+    {
+    public:
 
-		struct FinishHookParam
-		{
-			// This flag is true when 'm_op' is flushed and is not alive.
-			// In an execution finish phase, an op may be flushed by recovery from 
-			// miss prediction and a hook method may be passed a dead op in this case.
-			bool flushed;	
-		};
+        struct FinishHookParam
+        {
+            // This flag is true when 'm_op' is flushed and is not alive.
+            // In an execution finish phase, an op may be flushed by recovery from 
+            // miss prediction and a hook method may be passed a dead op in this case.
+            bool flushed;   
+        };
 
-		// Prototype: void OnFinish( OpIterator op, FinishParam* param );
-		static HookPoint<OpFinishEvent, FinishHookParam> s_finishHook;
+        // Prototype: void OnFinish( OpIterator op, FinishParam* param );
+        static HookPoint<OpFinishEvent, FinishHookParam> s_finishHook;
 
-		OpFinishEvent( OpIterator op );
-		virtual void Update();
+        OpFinishEvent( OpIterator op );
+        virtual void Update();
 
-	protected:
-		OpIterator m_op;
+    protected:
+        OpIterator m_op;
 
-	};
+    };
 
 
 }; // namespace Onikiri

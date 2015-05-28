@@ -40,56 +40,56 @@
 
 namespace Onikiri
 {
-	// An event for notifying the end of cache accesses to CacheAccessRequestQueue.
-	class CacheAccessEndEvent :
-		public EventBase<CacheAccessEndEvent>
-	{
-	public:
+    // An event for notifying the end of cache accesses to CacheAccessRequestQueue.
+    class CacheAccessEndEvent :
+        public EventBase<CacheAccessEndEvent>
+    {
+    public:
 
-		typedef
-			CacheAccessRequestQueue::AccessQueueIterator
-			AccessQueueIterator;
+        typedef
+            CacheAccessRequestQueue::AccessQueueIterator
+            AccessQueueIterator;
 
-		CacheAccessEndEvent( 
-			const CacheAccess& access, 
-			AccessQueueIterator target, 
-			CacheAccessRequestQueue* accessReqQueue 
-		);
+        CacheAccessEndEvent( 
+            const CacheAccess& access, 
+            AccessQueueIterator target, 
+            CacheAccessRequestQueue* accessReqQueue 
+        );
 
-		virtual void Update(); 
+        virtual void Update(); 
 
-	private:
-		CacheAccess			m_access;		
-		AccessQueueIterator	m_target;
-		CacheAccessRequestQueue*	m_accessReqQueue;
-	};
+    private:
+        CacheAccess         m_access;       
+        AccessQueueIterator m_target;
+        CacheAccessRequestQueue*    m_accessReqQueue;
+    };
 
 
 
-	// PendingAccessの終了タイミングをキャッシュに伝えるためのクラス
-	// 他のEventと異なり、opがflushされてもキャッシュアクセスはキャンセルされないので、
-	// このEventがキャンセルされることはない
-	// そのためopのm_eventにはMemoryAccessEndEventは追加せず、Cacheの中でこのEventを管理する
-	class MissedAccessRearchEvent :
-		public EventBase<MissedAccessRearchEvent>
-	{
-	private:
-		// PendingAccessを開始したアドレス
-		CacheAccess			m_access;		
-		CacheMissedAccessList::AccessListIterator
-							m_target;
-		CacheMissedAccessList*	m_pendingAccess;
+    // PendingAccessの終了タイミングをキャッシュに伝えるためのクラス
+    // 他のEventと異なり、opがflushされてもキャッシュアクセスはキャンセルされないので、
+    // このEventがキャンセルされることはない
+    // そのためopのm_eventにはMemoryAccessEndEventは追加せず、Cacheの中でこのEventを管理する
+    class MissedAccessRearchEvent :
+        public EventBase<MissedAccessRearchEvent>
+    {
+    private:
+        // PendingAccessを開始したアドレス
+        CacheAccess         m_access;       
+        CacheMissedAccessList::AccessListIterator
+                            m_target;
+        CacheMissedAccessList*  m_pendingAccess;
 
-	public:
-		MissedAccessRearchEvent( 
-			const CacheAccess& access, 
-			CacheMissedAccessList::AccessListIterator target, 
-			CacheMissedAccessList* accessList 
-		);
+    public:
+        MissedAccessRearchEvent( 
+            const CacheAccess& access, 
+            CacheMissedAccessList::AccessListIterator target, 
+            CacheMissedAccessList* accessList 
+        );
 
-		// m_addrのPendingAccessが終了することをキャッシュに通知
-		virtual void Update(); 
-	};
+        // m_addrのPendingAccessが終了することをキャッシュに通知
+        virtual void Update(); 
+    };
 
 }; // namespace Onikiri
 

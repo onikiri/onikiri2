@@ -37,8 +37,8 @@ using namespace std;
 using namespace Onikiri;
 
 ExecUnitReserver::ExecUnitReserver() : 
-	m_unitCount( 0 ),
-	m_current( 0 )
+    m_unitCount( 0 ),
+    m_current( 0 )
 {
 
 }
@@ -50,72 +50,72 @@ ExecUnitReserver::~ExecUnitReserver()
 
 void ExecUnitReserver::Initialize( int unitCount, int wheelSize )
 {
-	m_unitCount = unitCount;
-	m_wheel.resize( wheelSize, 0 );
+    m_unitCount = unitCount;
+    m_wheel.resize( wheelSize, 0 );
 }
 
 int ExecUnitReserver::GetWheelIndex( int delta )
 {
-	int index = (int)m_current + delta;
-	int size = (int)m_wheel.size();
-	if( index >= size ){
-		index -= size;
-	}
-	return index;
+    int index = (int)m_current + delta;
+    int size = (int)m_wheel.size();
+    if( index >= size ){
+        index -= size;
+    }
+    return index;
 }
 
 void ExecUnitReserver::Begin()
 {
-	m_resvQueue.clear();
+    m_resvQueue.clear();
 }
 
 bool ExecUnitReserver::CanReserve( int n, int time, int period )
 {
-	for( int p = 0; p < period; ++p ){
-		int now = time + p;
-		int index = GetWheelIndex( now );
-		int count = m_wheel[ index ];
+    for( int p = 0; p < period; ++p ){
+        int now = time + p;
+        int index = GetWheelIndex( now );
+        int count = m_wheel[ index ];
 
-		for( ReservationQueue::iterator i = m_resvQueue.begin(); i != m_resvQueue.end(); ++i ){
-			int begin = i->time;
-			int end   = begin + i->period;
-			if( begin <= now && now < end ){
-				count += i->count;
-			}
-		}
+        for( ReservationQueue::iterator i = m_resvQueue.begin(); i != m_resvQueue.end(); ++i ){
+            int begin = i->time;
+            int end   = begin + i->period;
+            if( begin <= now && now < end ){
+                count += i->count;
+            }
+        }
 
-		if( count + n > m_unitCount ){
-			return false;
-		}
-	}
-	return true;
+        if( count + n > m_unitCount ){
+            return false;
+        }
+    }
+    return true;
 }
 
 void ExecUnitReserver::Reserve( int n, int time, int period )
 {
-	Reservation res;
-	res.count = n;
-	res.time = time;
-	res.period = period;
-	m_resvQueue.push_back( res );
+    Reservation res;
+    res.count = n;
+    res.time = time;
+    res.period = period;
+    m_resvQueue.push_back( res );
 }
 
 void ExecUnitReserver::Update()
 {
-	// Update the reservation wheel based on the reservation queue.
-	for( ReservationQueue::iterator i = m_resvQueue.begin(); i != m_resvQueue.end(); ++i ){
-		for( int cycle = 0; cycle < i->period; ++cycle ){
-			int index = GetWheelIndex( i->time + cycle );
-			m_wheel[ index ] += i->count;
-			ASSERT( 
-				m_wheel[ index ] <= m_unitCount, 
-				"Execution units are reserved exceed a limit." 
-			);
-		}
-	}
+    // Update the reservation wheel based on the reservation queue.
+    for( ReservationQueue::iterator i = m_resvQueue.begin(); i != m_resvQueue.end(); ++i ){
+        for( int cycle = 0; cycle < i->period; ++cycle ){
+            int index = GetWheelIndex( i->time + cycle );
+            m_wheel[ index ] += i->count;
+            ASSERT( 
+                m_wheel[ index ] <= m_unitCount, 
+                "Execution units are reserved exceed a limit." 
+            );
+        }
+    }
 
-	// Reset a count of this cycle.
-	m_wheel[ GetWheelIndex(0) ] = 0;
+    // Reset a count of this cycle.
+    m_wheel[ GetWheelIndex(0) ] = 0;
 
-	m_current = GetWheelIndex(1);	// Get an index for a next cycle.
+    m_current = GetWheelIndex(1);   // Get an index for a next cycle.
 }

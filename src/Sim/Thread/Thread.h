@@ -39,85 +39,85 @@
 
 namespace Onikiri 
 {
-	class EmulatorIF;
-	class Core;
-	class InorderList;
-	class CheckpointMaster;
-	class MemOrderManager;
-	class RegDepPredIF;
-	class MemDepPredIF;
-	class Recoverer;
+    class EmulatorIF;
+    class Core;
+    class InorderList;
+    class CheckpointMaster;
+    class MemOrderManager;
+    class RegDepPredIF;
+    class MemDepPredIF;
+    class Recoverer;
 
-	class Thread : 
-		public PhysicalResourceNode
-	{
-		
-	public:
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( EmulatorIF,			"emulator",			m_emulator )
-			RESOURCE_ENTRY( InorderList,		"inorderList",      m_inorderList )
-			RESOURCE_ENTRY( MemOrderManager,	"memOrderManager",  m_memOrderManager )
-			RESOURCE_ENTRY( CheckpointMaster,	"checkpointMaster", m_checkpointMaster )
-			RESOURCE_ENTRY( RegDepPredIF,		"regDepPred",		m_regDepPred )
-			RESOURCE_ENTRY( MemDepPredIF,		"memDepPred",		m_memDepPred )
-			RESOURCE_ENTRY( Core,				"core",				m_core )
-			RESOURCE_ENTRY( Recoverer,			"recoverer",		m_recoverer )
-		END_RESOURCE_MAP()
+    class Thread : 
+        public PhysicalResourceNode
+    {
+        
+    public:
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( EmulatorIF,         "emulator",         m_emulator )
+            RESOURCE_ENTRY( InorderList,        "inorderList",      m_inorderList )
+            RESOURCE_ENTRY( MemOrderManager,    "memOrderManager",  m_memOrderManager )
+            RESOURCE_ENTRY( CheckpointMaster,   "checkpointMaster", m_checkpointMaster )
+            RESOURCE_ENTRY( RegDepPredIF,       "regDepPred",       m_regDepPred )
+            RESOURCE_ENTRY( MemDepPredIF,       "memDepPred",       m_memDepPred )
+            RESOURCE_ENTRY( Core,               "core",             m_core )
+            RESOURCE_ENTRY( Recoverer,          "recoverer",        m_recoverer )
+        END_RESOURCE_MAP()
 
-		Thread();
-		virtual ~Thread();
-		void Initialize(InitPhase phase);
+        Thread();
+        virtual ~Thread();
+        void Initialize(InitPhase phase);
 
-		int GetTID();
-		int GetTID( const int index );
-		void SetLocalThreadID(int localTID);
-		int  GetLocalThreadID() const;
+        int GetTID();
+        int GetTID( const int index );
+        void SetLocalThreadID(int localTID);
+        int  GetLocalThreadID() const;
 
-		bool IsActive();
-		void Activate( bool active );
-		void InitializeContext(PC pc);
+        bool IsActive();
+        void Activate( bool active );
+        void InitializeContext(PC pc);
 
-		void SetFetchPC(const PC& pc);
-		PC   GetFetchPC() const;
-		u64  GetOpRetiredID();
-		u64  GetOpSerialID();
-		void AddOpRetiredID(u64 num);
-		void AddOpSerialID(u64 num);
+        void SetFetchPC(const PC& pc);
+        PC   GetFetchPC() const;
+        u64  GetOpRetiredID();
+        u64  GetOpSerialID();
+        void AddOpRetiredID(u64 num);
+        void AddOpSerialID(u64 num);
 
-		void SetThreadCount(const int count);
-		// accessors
-		Core*				GetCore()				const 	{ return m_core;				}
-		InorderList*		GetInorderList()		const 	{ return m_inorderList;			}
-		MemOrderManager*	GetMemOrderManager()	const 	{ return m_memOrderManager;		}
-		CheckpointMaster*	GetCheckpointMaster()	const 	{ return m_checkpointMaster;	}
-		RegDepPredIF*		GetRegDepPred()			const 	{ return m_regDepPred;			}
-		MemDepPredIF*		GetMemDepPred()			const 	{ return m_memDepPred;			}
-		Recoverer*			GetRecoverer()			const 	{ return m_recoverer;			}
+        void SetThreadCount(const int count);
+        // accessors
+        Core*               GetCore()               const   { return m_core;                }
+        InorderList*        GetInorderList()        const   { return m_inorderList;         }
+        MemOrderManager*    GetMemOrderManager()    const   { return m_memOrderManager;     }
+        CheckpointMaster*   GetCheckpointMaster()   const   { return m_checkpointMaster;    }
+        RegDepPredIF*       GetRegDepPred()         const   { return m_regDepPred;          }
+        MemDepPredIF*       GetMemDepPred()         const   { return m_memDepPred;          }
+        Recoverer*          GetRecoverer()          const   { return m_recoverer;           }
 
-	private:
-		// member variables
-		EmulatorIF*			m_emulator;
-		Core*				m_core;
-		InorderList*		m_inorderList;
-		CheckpointMaster*	m_checkpointMaster;
-		MemOrderManager*	m_memOrderManager;
-		RegDepPredIF*		m_regDepPred;
-		MemDepPredIF*		m_memDepPred;
-		Recoverer*			m_recoverer;
+    private:
+        // member variables
+        EmulatorIF*         m_emulator;
+        Core*               m_core;
+        InorderList*        m_inorderList;
+        CheckpointMaster*   m_checkpointMaster;
+        MemOrderManager*    m_memOrderManager;
+        RegDepPredIF*       m_regDepPred;
+        MemDepPredIF*       m_memDepPred;
+        Recoverer*          m_recoverer;
 
-		int m_localTID;
-		bool m_active;
-		CheckpointedData<PC> m_fetchPC;
+        int m_localTID;
+        bool m_active;
+        CheckpointedData<PC> m_fetchPC;
 
-		// リタイアした順番に振られるOpのインデックス
-		// Fetchの段階で振るため、チェックポイントで管理する
-		CheckpointedData<u64> m_retiredOpID; 
-		u64 m_serialOpID; 
+        // リタイアした順番に振られるOpのインデックス
+        // Fetchの段階で振るため、チェックポイントで管理する
+        CheckpointedData<u64> m_retiredOpID; 
+        u64 m_serialOpID; 
 
-	};	// class Thread
+    };  // class Thread
 
-}	// namespace Onikiri 
+}   // namespace Onikiri 
 
-#endif	// #ifndef SIM_THREAD_THREAD_H
+#endif  // #ifndef SIM_THREAD_THREAD_H
 
 

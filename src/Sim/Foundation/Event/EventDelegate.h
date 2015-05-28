@@ -42,39 +42,39 @@
 namespace Onikiri
 {
 
-	template <class ClassType, class ParamType>
-	class EventDelegate : 
-		public EventBase< EventDelegate<ClassType, ParamType> >
-	{
-		using EventBase< EventDelegate<ClassType, ParamType> >::SetPriority;
-		using EventBase< EventDelegate<ClassType, ParamType> >::GetPriority;
-		typedef void (ClassType::*MethodType)(ParamType);
-		ClassType* m_obj;
-		MethodType m_func;
-		ParamType  m_param;	
+    template <class ClassType, class ParamType>
+    class EventDelegate : 
+        public EventBase< EventDelegate<ClassType, ParamType> >
+    {
+        using EventBase< EventDelegate<ClassType, ParamType> >::SetPriority;
+        using EventBase< EventDelegate<ClassType, ParamType> >::GetPriority;
+        typedef void (ClassType::*MethodType)(ParamType);
+        ClassType* m_obj;
+        MethodType m_func;
+        ParamType  m_param; 
 
-	public:
-		EventDelegate(ClassType* obj, MethodType func, ParamType param, int priority = RP_DEFAULT_EVENT) : 
-			m_obj   ( obj ),
-			m_func  ( func ),
-			m_param ( param )
-		{
-			SetPriority(priority);
-		};
+    public:
+        EventDelegate(ClassType* obj, MethodType func, ParamType param, int priority = RP_DEFAULT_EVENT) : 
+            m_obj   ( obj ),
+            m_func  ( func ),
+            m_param ( param )
+        {
+            SetPriority(priority);
+        };
 
-		EventDelegate(const EventDelegate& ref) : 
-			m_obj   ( ref.obj ),
-			m_func  ( ref.func ),
-			m_param ( ref.param )
-		{
-			SetPriority( ref.GetPriority() );
-		};
+        EventDelegate(const EventDelegate& ref) : 
+            m_obj   ( ref.obj ),
+            m_func  ( ref.func ),
+            m_param ( ref.param )
+        {
+            SetPriority( ref.GetPriority() );
+        };
 
-		void Update()
-		{
-			(m_obj->*m_func)( m_param );
-		};
-	};
+        void Update()
+        {
+            (m_obj->*m_func)( m_param );
+        };
+    };
 
 } //namespace Onikiri
 

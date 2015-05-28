@@ -41,81 +41,81 @@ using namespace Onikiri;
 // --
 OpArray::ArrayID::~ArrayID()
 {
-	delete m_op;
+    delete m_op;
 }
 
 // --
 OpArray::OpArray(int capacity) : 
-	m_capacity(capacity)
+    m_capacity(capacity)
 {
-	// Op の確保
-	for(int k = 0; k < m_capacity; ++k) {
-		// ArrayID の作成(この時点ではOpがまだ作成されていないので0)
-		ArrayID* arrayID = new ArrayID(0, this, k);
-		// arrayID を利用して op を作成
-		Op* op = new Op( OpIterator(arrayID) );
-		// arrayID に op をセット
-		arrayID->SetOp(op);
-			
-		m_body.push_back(arrayID);
-	}
+    // Op の確保
+    for(int k = 0; k < m_capacity; ++k) {
+        // ArrayID の作成(この時点ではOpがまだ作成されていないので0)
+        ArrayID* arrayID = new ArrayID(0, this, k);
+        // arrayID を利用して op を作成
+        Op* op = new Op( OpIterator(arrayID) );
+        // arrayID に op をセット
+        arrayID->SetOp(op);
+            
+        m_body.push_back(arrayID);
+    }
 
-	// 使用中かどうかのフラグの初期化
-	m_alive.resize(m_capacity, false);
-	
-	// free list の初期化
-	m_freeList.reserve(m_capacity);
-	for(int k = 0; k < m_capacity; ++k) {
-		m_freeList.push_back(k);
-	}
+    // 使用中かどうかのフラグの初期化
+    m_alive.resize(m_capacity, false);
+    
+    // free list の初期化
+    m_freeList.reserve(m_capacity);
+    for(int k = 0; k < m_capacity; ++k) {
+        m_freeList.push_back(k);
+    }
 }
 
 OpArray::~OpArray()
 {
-	for(int k = 0; k < m_capacity; ++k) {
-		delete m_body[k];
-	}
-	m_body.clear();
+    for(int k = 0; k < m_capacity; ++k) {
+        delete m_body[k];
+    }
+    m_body.clear();
 }
 
 OpIterator OpArray::CreateOp()
 {
-	if( IsFull() ) {
-		THROW_RUNTIME_ERROR("OpArray is full.(increase Core/@OpArrayCapacity)");
-	}
-	// free list の末尾を返す
-	ID id = m_freeList.back();
+    if( IsFull() ) {
+        THROW_RUNTIME_ERROR("OpArray is full.(increase Core/@OpArrayCapacity)");
+    }
+    // free list の末尾を返す
+    ID id = m_freeList.back();
 
-	// free list から pop
-	m_freeList.pop_back();
+    // free list から pop
+    m_freeList.pop_back();
 
-	// 使用中フラグを立てる
-	ASSERT( 
-		!IsAlive(id),
-		"alive id reused.(id = %d)",
-		id
-	);
-	m_alive[id] = true;
+    // 使用中フラグを立てる
+    ASSERT( 
+        !IsAlive(id),
+        "alive id reused.(id = %d)",
+        id
+    );
+    m_alive[id] = true;
 
-	// id番目のオリジナルのOpIteratorを返す
-	return OpIterator(m_body[id]);
+    // id番目のオリジナルのOpIteratorを返す
+    return OpIterator(m_body[id]);
 }
 
 void OpArray::ReleaseOp(const OpIterator& opIterator)
 {
-	ID id = opIterator.GetID();
+    ID id = opIterator.GetID();
 
-	ASSERT(
-		IsAlive(opIterator),
-		"not alive op released.(id = %d)",
-		id
-	);
-	// 解放されたので生存フラグを落とす
-	m_alive[id] = false;
-	m_freeList.push_back(id);
+    ASSERT(
+        IsAlive(opIterator),
+        "not alive op released.(id = %d)",
+        id
+    );
+    // 解放されたので生存フラグを落とす
+    m_alive[id] = false;
+    m_freeList.push_back(id);
 }
 
 bool OpArray::IsAlive(const OpIterator& opIterator) const
 {
-	return IsAlive( opIterator.GetID() ); 
+    return IsAlive( opIterator.GetID() ); 
 }

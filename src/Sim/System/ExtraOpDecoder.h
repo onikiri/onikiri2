@@ -45,22 +45,22 @@
 
 namespace Onikiri
 {
-	struct ExtraOpDecodeArgs
-	{
-		u32 codeWord;
-		std::pair<ExtraOpInfoIF**, int>* decodedOps;
-		bool decoded;
-	};
+    struct ExtraOpDecodeArgs
+    {
+        u32 codeWord;
+        std::pair<ExtraOpInfoIF**, int>* decodedOps;
+        bool decoded;
+    };
 
-	class ExtraOpDecoder : public ExtraOpDecoderIF
-	{
-	public:
-		ExtraOpDecoder();
-		bool Decode( u32 codeWord, std::pair<ExtraOpInfoIF**, int>* decodedOps );
+    class ExtraOpDecoder : public ExtraOpDecoderIF
+    {
+    public:
+        ExtraOpDecoder();
+        bool Decode( u32 codeWord, std::pair<ExtraOpInfoIF**, int>* decodedOps );
 
-		// Prototype : void Decode( HookParameter<ExtraOpDecoder, ExtraOpDecodeArgs>* args )
-		static HookPoint<ExtraOpDecoder, ExtraOpDecodeArgs> s_extraOpDecodeHook;
-	};
+        // Prototype : void Decode( HookParameter<ExtraOpDecoder, ExtraOpDecodeArgs>* args )
+        static HookPoint<ExtraOpDecoder, ExtraOpDecodeArgs> s_extraOpDecodeHook;
+    };
 }
 
 #endif // __ONIKIRI_SYSTEM_MANAGER_EXTRA_OP_MANAGER_H__

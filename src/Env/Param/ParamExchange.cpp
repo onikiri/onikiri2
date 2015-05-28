@@ -41,42 +41,42 @@ using namespace Onikiri;
 
 ParamExchange::ParamExchange()
 {
-	m_released = false;
+    m_released = false;
 }
 
 ParamExchange::~ParamExchange()
 {
-	if( !m_released && !IsInException() ){
-		THROW_RUNTIME_ERROR(
-			"ReleaseParam() is not called in the inherited class"
-		);
-	}
+    if( !m_released && !IsInException() ){
+        THROW_RUNTIME_ERROR(
+            "ReleaseParam() is not called in the inherited class"
+        );
+    }
 };
 
 void ParamExchange::LoadParam()
 {
-	ProcessParamMap(false);
+    ProcessParamMap(false);
 }
 
 void ParamExchange::ReleaseParam()
 {
-	ProcessParamMap(true);
-	m_released = true;
+    ProcessParamMap(true);
+    m_released = true;
 }
 
 bool ParamExchange::IsParameterReleased()
 {
-	return m_released;
+    return m_released;
 }
 
 
 const ParamXMLPath& ParamExchangeChild::GetChildRootPath()
 {
-	return m_rootPath;
+    return m_rootPath;
 }
 
 void ParamExchangeChild::SetRootPath(const ParamXMLPath& root)
 {
-	ParamExchangeBase::SetRootPath(root);
+    ParamExchangeBase::SetRootPath(root);
 }
 

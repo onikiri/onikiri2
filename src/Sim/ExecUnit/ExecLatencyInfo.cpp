@@ -43,49 +43,49 @@ ExecLatencyInfo::ExecLatencyInfo()
 
 ExecLatencyInfo::~ExecLatencyInfo()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void ExecLatencyInfo::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
-		for(size_t i = 0; i < m_latencyInfo.size(); i++){
-			int code    = OpClassCode::FromString(m_latencyInfo[i].code);
-			int latency = m_latencyInfo[i].latency;
-			if((int)m_latency.size() <= code)
-				m_latency.resize(code+1, -1);
-			m_latency[code] = latency;
-		}
-	}
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
+        for(size_t i = 0; i < m_latencyInfo.size(); i++){
+            int code    = OpClassCode::FromString(m_latencyInfo[i].code);
+            int latency = m_latencyInfo[i].latency;
+            if((int)m_latency.size() <= code)
+                m_latency.resize(code+1, -1);
+            m_latency[code] = latency;
+        }
+    }
 }
 /*
 // system に初期化時にレイテンシを教えてもらう関数
 void ExecLatencyInfo::SetLatency(int code, int latency)
 {
-	// code が最大のインデックスになるように拡張する
-	while(code >= static_cast<int>(m_latency.size())) {
-		m_latency.push_back(-1);
-	}
+    // code が最大のインデックスになるように拡張する
+    while(code >= static_cast<int>(m_latency.size())) {
+        m_latency.push_back(-1);
+    }
 
-	m_latency[code] = latency;
+    m_latency[code] = latency;
 }
 */
 int ExecLatencyInfo::GetLatency( int code ) const 
 {
-	// 範囲チェック
-	ASSERT(code >= 0 && code < static_cast<int>(m_latency.size()), 
-		"illegal code %d.", code);
+    // 範囲チェック
+    ASSERT(code >= 0 && code < static_cast<int>(m_latency.size()), 
+        "illegal code %d.", code);
 
-	// レイテンシがセットされているかどうかのチェック
-	ASSERT(m_latency[code] > 0, 
-		"latency not set for code %d.", code);
+    // レイテンシがセットされているかどうかのチェック
+    ASSERT(m_latency[code] > 0, 
+        "latency not set for code %d.", code);
 
-	return m_latency[ code ];
+    return m_latency[ code ];
 }
 
 int ExecLatencyInfo::GetLatency( OpIterator op ) const 
 {
-	int code = op->GetOpClass().GetCode();
-	return GetLatency( code );
+    int code = op->GetOpClass().GetCode();
+    return GetLatency( code );
 }

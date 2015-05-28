@@ -39,84 +39,84 @@
 namespace Onikiri
 {
 
-	class ParamXMLPath
-	{
-	public:
+    class ParamXMLPath
+    {
+    public:
 
-		enum NodeType
-		{
-			NT_NORMAL = 0,
-			NT_ATTRIBUTE,
-			NT_ARRAY,
-			NT_COUNT_FUNCTION,
-			NT_TEXT,
-		};
+        enum NodeType
+        {
+            NT_NORMAL = 0,
+            NT_ATTRIBUTE,
+            NT_ARRAY,
+            NT_COUNT_FUNCTION,
+            NT_TEXT,
+        };
 
-		struct Node
-		{
-			Node();
+        struct Node
+        {
+            Node();
 
-			String   str;
-			NodeType type;
-			int      arrayIndex;
-		};
+            String   str;
+            NodeType type;
+            int      arrayIndex;
+        };
 
-		typedef boost::shared_ptr<Node> NodePtr;
-		typedef std::list<NodePtr> Path;
+        typedef boost::shared_ptr<Node> NodePtr;
+        typedef std::list<NodePtr> Path;
 
-		ParamXMLPath();
-		ParamXMLPath( const ParamXMLPath& org );
-		ParamXMLPath( const String& source );
-		ParamXMLPath( const std::string& source );
-		ParamXMLPath( const char* source );
+        ParamXMLPath();
+        ParamXMLPath( const ParamXMLPath& org );
+        ParamXMLPath( const String& source );
+        ParamXMLPath( const std::string& source );
+        ParamXMLPath( const char* source );
 
-		virtual ~ParamXMLPath();
-		void Parse( Path& path, const String& str );
-		String ToString() const;
+        virtual ~ParamXMLPath();
+        void Parse( Path& path, const String& str );
+        String ToString() const;
 
-		ParamXMLPath& operator +=( const ParamXMLPath& rhs );
-		ParamXMLPath& operator +=( const String& rhs );
-		ParamXMLPath& operator +=( const char* rhs );
-		ParamXMLPath  operator +( const ParamXMLPath& rhs ) const;
-		ParamXMLPath  operator +( const String& rhs ) const;
-		ParamXMLPath  operator +( const char* rhs ) const;
-		ParamXMLPath& operator =( const String& rhs );
-		ParamXMLPath& operator =( const char* rhs );
+        ParamXMLPath& operator +=( const ParamXMLPath& rhs );
+        ParamXMLPath& operator +=( const String& rhs );
+        ParamXMLPath& operator +=( const char* rhs );
+        ParamXMLPath  operator +( const ParamXMLPath& rhs ) const;
+        ParamXMLPath  operator +( const String& rhs ) const;
+        ParamXMLPath  operator +( const char* rhs ) const;
+        ParamXMLPath& operator =( const String& rhs );
+        ParamXMLPath& operator =( const char* rhs );
 
-		void Add( const String& path );
-		void AddAttribute( const String& path );
-		void AddArray( const String& path, int index );
-		void SetArray( const ParamXMLPath& basePath, const String& relativePath, int index );
+        void Add( const String& path );
+        void AddAttribute( const String& path );
+        void AddArray( const String& path, int index );
+        void SetArray( const ParamXMLPath& basePath, const String& relativePath, int index );
 
-		NodePtr& Back();
-		const NodePtr Back() const;
-		void RemoveLast();
+        NodePtr& Back();
+        const NodePtr Back() const;
+        void RemoveLast();
 
-		// List compatible interfaces
-		typedef Path::iterator iterator;
-		typedef Path::const_iterator const_iterator;
-		iterator begin();
-		iterator end();
-		const_iterator begin() const;
-		const_iterator end() const;
-		void pop_back();
-		NodePtr& back();
-		const NodePtr& back() const;
+        // List compatible interfaces
+        typedef Path::iterator iterator;
+        typedef Path::const_iterator const_iterator;
+        iterator begin();
+        iterator end();
+        const_iterator begin() const;
+        const_iterator end() const;
+        void pop_back();
+        NodePtr& back();
+        const NodePtr& back() const;
 
-	protected:
-		Path m_path;
-		typedef std::vector<String> TokenList;
-		TokenList::const_iterator 
-			NextToken(
-				const TokenList& tokens, 
-				TokenList::const_iterator cur, 
-				const String& source
-			);
-	};
-	
+    protected:
+        Path m_path;
+        typedef std::vector<String> TokenList;
+        TokenList::const_iterator 
+            NextToken(
+                const TokenList& tokens, 
+                TokenList::const_iterator cur, 
+                const String& source
+            );
+    };
+    
 
-}	// namespace Onikiri
+}   // namespace Onikiri
 
-#endif	// #ifdef ENV_PARAM_PARAM_XML_PATH_H
+#endif  // #ifdef ENV_PARAM_PARAM_XML_PATH_H
 
 

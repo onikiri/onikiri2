@@ -39,46 +39,46 @@
 
 namespace Onikiri
 {
-	// Instruction Set Architecture Type
-	enum ISA_TYPE
-	{
-		ISA_ALPHA,	// Alpha
-		ISA_PPC64,	// PowerPC 64bit
-	};
+    // Instruction Set Architecture Type
+    enum ISA_TYPE
+    {
+        ISA_ALPHA,  // Alpha
+        ISA_PPC64,  // PowerPC 64bit
+    };
 
-	class ISAInfoIF
-	{
-	public:
-		virtual ~ISAInfoIF()
-		{
-		};
+    class ISAInfoIF
+    {
+    public:
+        virtual ~ISAInfoIF()
+        {
+        };
 
-		virtual ISA_TYPE GetISAType() = 0;
+        virtual ISA_TYPE GetISAType() = 0;
 
-		virtual int GetInstructionWordBitSize() = 0;
-		virtual int GetRegisterWordBitSize() = 0;
-		virtual int GetAddressSpaceBitSize() = 0;
+        virtual int GetInstructionWordBitSize() = 0;
+        virtual int GetRegisterWordBitSize() = 0;
+        virtual int GetAddressSpaceBitSize() = 0;
 
-		// 論理レジスタの数を得る
-		virtual int GetRegisterCount() = 0;
-		virtual int GetMaxSrcRegCount() = 0;
-		virtual int GetMaxDstRegCount() = 0;
+        // 論理レジスタの数を得る
+        virtual int GetRegisterCount() = 0;
+        virtual int GetMaxSrcRegCount() = 0;
+        virtual int GetMaxDstRegCount() = 0;
 
-		// 論理レジスタ regNum のレジスタセグメント (同じ物理レジスタセットを使用する論理レジスタの集合) IDを得る
-		virtual int GetRegisterSegmentID(int regNum) = 0;
-	
-		// 論理レジスタのセグメント数を返す
-		virtual int GetRegisterSegmentCount() = 0;
+        // 論理レジスタ regNum のレジスタセグメント (同じ物理レジスタセットを使用する論理レジスタの集合) IDを得る
+        virtual int GetRegisterSegmentID(int regNum) = 0;
+    
+        // 論理レジスタのセグメント数を返す
+        virtual int GetRegisterSegmentCount() = 0;
 
-		// GetOpした時に1つのPCに対して生成されるOpInfoの最大数 
-		virtual int GetMaxOpInfoCountPerPC() = 0;
+        // GetOpした時に1つのPCに対して生成されるOpInfoの最大数 
+        virtual int GetMaxOpInfoCountPerPC() = 0;
 
-		// Endian
-		virtual bool IsLittleEndian() = 0;
+        // Endian
+        virtual bool IsLittleEndian() = 0;
 
-		// The maximum width(bytes) of memory accesses.
-		virtual int GetMaxMemoryAccessByteSize() = 0;
-	};
+        // The maximum width(bytes) of memory accesses.
+        virtual int GetMaxMemoryAccessByteSize() = 0;
+    };
 }
 
 #endif

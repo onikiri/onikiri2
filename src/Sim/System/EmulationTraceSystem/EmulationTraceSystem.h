@@ -38,13 +38,13 @@
 namespace Onikiri 
 {
 
-	// A system that generates an emulation log.
-	class EmulationTraceSystem : public SystemBase
-	{
-	public:
-		void Run( SystemContext* context );
-	};
-	
+    // A system that generates an emulation log.
+    class EmulationTraceSystem : public SystemBase
+    {
+    public:
+        void Run( SystemContext* context );
+    };
+    
 }; // namespace Onikiri
 
 #endif // __EMULATION_TRACE_SYSTEM_H__

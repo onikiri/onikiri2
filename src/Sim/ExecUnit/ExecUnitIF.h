@@ -36,51 +36,51 @@
 
 namespace Onikiri 
 {
-	class Scheduler;
-	class ExecLatencyInfo;
-	class ExecUnitReserver;
-	class OpClass;
+    class Scheduler;
+    class ExecLatencyInfo;
+    class ExecUnitReserver;
+    class OpClass;
 
-	// 演算器(ALUなど)のインターフェース
-	class ExecUnitIF 
-	{
-	public:
-		ExecUnitIF() {}
-		virtual ~ExecUnitIF() {}
+    // 演算器(ALUなど)のインターフェース
+    class ExecUnitIF 
+    {
+    public:
+        ExecUnitIF() {}
+        virtual ~ExecUnitIF() {}
 
 
-		// 実行レイテンシ後に FinishEvent を登録する
-		virtual void Execute( OpIterator op ) = 0;
+        // 実行レイテンシ後に FinishEvent を登録する
+        virtual void Execute( OpIterator op ) = 0;
 
-		// 毎サイクル呼ばれる
-		virtual void Begin() = 0;
+        // 毎サイクル呼ばれる
+        virtual void Begin() = 0;
 
-		// Called in Evaluate phase.
-		virtual bool CanReserve( OpIterator op, int time ) = 0;
-		
-		// Called in Evaluate phase.
-		virtual void Reserve( OpIterator op, int time ) = 0;
+        // Called in Evaluate phase.
+        virtual bool CanReserve( OpIterator op, int time ) = 0;
+        
+        // Called in Evaluate phase.
+        virtual void Reserve( OpIterator op, int time ) = 0;
 
-		// Called in Update phase.
-		virtual void Update() = 0;
+        // Called in Update phase.
+        virtual void Update() = 0;
 
-		// Get a reserver when you need to manually reserve execution units 
-		// without CanReserve()/Reserve().
-		virtual ExecUnitReserver* GetReserver() = 0; 
-		
-		// ExecLatencyInfoを返す
-		virtual ExecLatencyInfo* GetExecLatencyInfo() = 0;
+        // Get a reserver when you need to manually reserve execution units 
+        // without CanReserve()/Reserve().
+        virtual ExecUnitReserver* GetReserver() = 0; 
+        
+        // ExecLatencyInfoを返す
+        virtual ExecLatencyInfo* GetExecLatencyInfo() = 0;
 
-		// OpClass から取りうるレイテンシの種類の数を返す
-		virtual int GetLatencyCount( const OpClass& opClass ) = 0;
+        // OpClass から取りうるレイテンシの種類の数を返す
+        virtual int GetLatencyCount( const OpClass& opClass ) = 0;
 
-		// OpClass とインデクスからレイテンシを返す
-		virtual int GetLatency( const OpClass& opClass, int index ) = 0;
+        // OpClass とインデクスからレイテンシを返す
+        virtual int GetLatency( const OpClass& opClass, int index ) = 0;
 
-		// Return a code of OpClass mapped to this unit.
-		virtual int GetMappedCode( int index ) = 0;
-		virtual int GetMappedCodeCount() = 0;
-	};
+        // Return a code of OpClass mapped to this unit.
+        virtual int GetMappedCode( int index ) = 0;
+        virtual int GetMappedCodeCount() = 0;
+    };
 
 }; // namespace Onikiri
 

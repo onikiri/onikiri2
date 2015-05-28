@@ -45,20 +45,20 @@ using namespace Onikiri;
 
 namespace Onikiri 
 {
-	HookPoint<OpExecuteEvent> OpExecuteEvent::s_executeHook;
-};	// namespace Onikiri
+    HookPoint<OpExecuteEvent> OpExecuteEvent::s_executeHook;
+};  // namespace Onikiri
 
 OpExecuteEvent::OpExecuteEvent( OpIterator op ) : m_op( op )
 {
-	// OpExecuteEvent may invoke OpDetectLatPredMissEvent and OpFinishEvent, 
-	// so this event's priority must be set OpFinishEvent. 
-	SetPriority( RP_EXECUTION_FINISH );
+    // OpExecuteEvent may invoke OpDetectLatPredMissEvent and OpFinishEvent, 
+    // so this event's priority must be set OpFinishEvent. 
+    SetPriority( RP_EXECUTION_FINISH );
 }
 
 void OpExecuteEvent::Update()
 {
-	HOOK_SECTION_OP( s_executeHook, m_op ){
-		// 演算器に実行終了のタイミングで FinishEvent を追加してもらう
-		m_op->GetExecUnit()->Execute( m_op );
-	}
+    HOOK_SECTION_OP( s_executeHook, m_op ){
+        // 演算器に実行終了のタイミングで FinishEvent を追加してもらう
+        m_op->GetExecUnit()->Execute( m_op );
+    }
 }

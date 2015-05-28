@@ -39,45 +39,45 @@
 namespace Onikiri
 {
 
-	// 命令のコードに対応するレイテンシを返すクラス
-	// 命令のコードがシステム固有なので、外からデータをセットしてもらう
-	class ExecLatencyInfo : 
-		public PhysicalResourceNode
-	{
-	public:
-		
-		BEGIN_PARAM_MAP( GetParamPath() )
-			PARAM_ENTRY("@Name", m_name)
-			CHAIN_PARAM_MAP("Latency", m_latencyInfo)
-		END_PARAM_MAP()
+    // 命令のコードに対応するレイテンシを返すクラス
+    // 命令のコードがシステム固有なので、外からデータをセットしてもらう
+    class ExecLatencyInfo : 
+        public PhysicalResourceNode
+    {
+    public:
+        
+        BEGIN_PARAM_MAP( GetParamPath() )
+            PARAM_ENTRY("@Name", m_name)
+            CHAIN_PARAM_MAP("Latency", m_latencyInfo)
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
 
-		ExecLatencyInfo();
-		virtual ~ExecLatencyInfo();
-		void Initialize(InitPhase phase);
+        ExecLatencyInfo();
+        virtual ~ExecLatencyInfo();
+        void Initialize(InitPhase phase);
 
-	//	void SetLatency(int code, int latency);
-		int GetLatency( int code ) const;
-		int GetLatency( OpIterator op ) const;
+    //  void SetLatency(int code, int latency);
+        int GetLatency( int code ) const;
+        int GetLatency( OpIterator op ) const;
 
-	protected:
-		std::vector< int > m_latency;
-		String m_name;
+    protected:
+        std::vector< int > m_latency;
+        String m_name;
 
-		struct LatencyInfo : public ParamExchangeChild
-		{
-			String code;
-			int    latency;
-			BEGIN_PARAM_MAP( "" )
-				PARAM_ENTRY( "@Code",    code )
-				PARAM_ENTRY( "@Latency", latency )
-			END_PARAM_MAP()
-		};
-		
-		std::vector<LatencyInfo> m_latencyInfo;
-	};
+        struct LatencyInfo : public ParamExchangeChild
+        {
+            String code;
+            int    latency;
+            BEGIN_PARAM_MAP( "" )
+                PARAM_ENTRY( "@Code",    code )
+                PARAM_ENTRY( "@Latency", latency )
+            END_PARAM_MAP()
+        };
+        
+        std::vector<LatencyInfo> m_latencyInfo;
+    };
 
 }; // namespace Onikiri
 

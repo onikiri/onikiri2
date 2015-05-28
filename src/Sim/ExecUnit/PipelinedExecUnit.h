@@ -38,26 +38,26 @@
 namespace Onikiri 
 {
 
-	// パイプライン化された演算器の集合
-	class PipelinedExecUnit : public ExecUnitBase
-	{
-	public:
-		BEGIN_PARAM_MAP("")
-			CHAIN_BASE_PARAM_MAP( ExecUnitBase )
-		END_PARAM_MAP()
+    // パイプライン化された演算器の集合
+    class PipelinedExecUnit : public ExecUnitBase
+    {
+    public:
+        BEGIN_PARAM_MAP("")
+            CHAIN_BASE_PARAM_MAP( ExecUnitBase )
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			CHAIN_BASE_RESOURCE_MAP( ExecUnitBase )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            CHAIN_BASE_RESOURCE_MAP( ExecUnitBase )
+        END_RESOURCE_MAP()
 
-		virtual void Execute( OpIterator op );
+        virtual void Execute( OpIterator op );
 
-		// Called in Evaluate phase.
-		virtual bool CanReserve( OpIterator op, int time );
-		
-		// Called in Evaluate phase.
-		virtual void Reserve( OpIterator op, int time );
-	};
+        // Called in Evaluate phase.
+        virtual bool CanReserve( OpIterator op, int time );
+        
+        // Called in Evaluate phase.
+        virtual void Reserve( OpIterator op, int time );
+    };
 
 }; // namespace Onikiri
 

@@ -47,31 +47,31 @@
 
 namespace Onikiri
 {
-	namespace SimISAInfoDef
-	{
-		//
-		// Instruction width : 32bit
-		// Register width    : 64bit
-		// Address space     : 64bit
-		//
-		struct SimISAInfo_IW32_RW64_AS64
-		{
-			static const int INSTRUCTION_WORD_BIT_SIZE   = 32;
-			static const int INSTRUCTION_WORD_BYTE_SIZE  = 4;
-			static const int INSTRUCTION_WORD_BYTE_SHIFT = 2;
+    namespace SimISAInfoDef
+    {
+        //
+        // Instruction width : 32bit
+        // Register width    : 64bit
+        // Address space     : 64bit
+        //
+        struct SimISAInfo_IW32_RW64_AS64
+        {
+            static const int INSTRUCTION_WORD_BIT_SIZE   = 32;
+            static const int INSTRUCTION_WORD_BYTE_SIZE  = 4;
+            static const int INSTRUCTION_WORD_BYTE_SHIFT = 2;
 
-			static const int MAX_SRC_REG_COUNT = 4;
-			static const int MAX_DST_REG_COUNT = 3;
+            static const int MAX_SRC_REG_COUNT = 4;
+            static const int MAX_DST_REG_COUNT = 3;
 
-			static const int MAX_REG_COUNT = 80;
-			static const int MAX_REG_SEGMENT_COUNT = 6;
-			static const int MAX_OP_INFO_COUNT_PER_PC = 4;
+            static const int MAX_REG_COUNT = 80;
+            static const int MAX_REG_SEGMENT_COUNT = 6;
+            static const int MAX_OP_INFO_COUNT_PER_PC = 4;
 
-			static bool TestISAInfo(ISAInfoIF* info);
-		};
-	}
+            static bool TestISAInfo(ISAInfoIF* info);
+        };
+    }
 
-	typedef SimISAInfoDef::SimISAInfo_IW32_RW64_AS64 SimISAInfo;
+    typedef SimISAInfoDef::SimISAInfo_IW32_RW64_AS64 SimISAInfo;
 };
 
-#endif	// #ifdef SIM_ISA_INFO_H
+#endif  // #ifdef SIM_ISA_INFO_H

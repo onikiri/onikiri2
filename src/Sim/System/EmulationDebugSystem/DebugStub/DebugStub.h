@@ -38,62 +38,62 @@
 #include "SysDeps/Boost/asio.h"
 
 namespace Onikiri{
-	class DebugStub
-	{
-		boost::asio::io_service m_ioService;
-		boost::asio::ip::tcp::acceptor m_acc;
-		boost::asio::ip::tcp::iostream m_iostream;
-		std::string m_streamBuffer;
-		SystemBase::SystemContext* m_context;
-		int m_pid;
-		bool m_stopExec;
-		int m_stopCount;
+    class DebugStub
+    {
+        boost::asio::io_service m_ioService;
+        boost::asio::ip::tcp::acceptor m_acc;
+        boost::asio::ip::tcp::iostream m_iostream;
+        std::string m_streamBuffer;
+        SystemBase::SystemContext* m_context;
+        int m_pid;
+        bool m_stopExec;
+        int m_stopCount;
 
-		typedef std::pair<u64,int> pointpair;
-		typedef std::map<u64,int> Pointmap;
-		typedef std::list<pointpair> WatchList;
+        typedef std::pair<u64,int> pointpair;
+        typedef std::map<u64,int> Pointmap;
+        typedef std::list<pointpair> WatchList;
 
-		Pointmap m_breakpoint;
-		WatchList m_watchWrite;
-		WatchList m_watchRead;
-		WatchList m_watchAccess;
+        Pointmap m_breakpoint;
+        WatchList m_watchWrite;
+        WatchList m_watchRead;
+        WatchList m_watchAccess;
 
-		struct DebugPacket
-		{
-			char letter;
-			std::string command;
-			std::vector<std::string> params;
+        struct DebugPacket
+        {
+            char letter;
+            std::string command;
+            std::vector<std::string> params;
 
-			void clear(){
-				letter = 0;
-				command = "";
-				params.clear();
-			}
-		};
-		DebugPacket m_packet;
+            void clear(){
+                letter = 0;
+                command = "";
+                params.clear();
+            }
+        };
+        DebugPacket m_packet;
 
-		// Communicating functions
-		bool GetStartChar();
-		bool GetStream();
-		void ParsePacket();
-		void ExecDebug();
-		void SendPacket(std::string packet);
+        // Communicating functions
+        bool GetStartChar();
+        bool GetStream();
+        void ParsePacket();
+        void ExecDebug();
+        void SendPacket(std::string packet);
 
-		// Utility functions
-		u64 GetRegister(int i);
-		void SetRegister( int i, u64 value );
-		u64 GetMemory(MemAccess* access);
-		void SetMemory(MemAccess* access);
-		u64 HexStrToU64(std::string str);
-		std::string U64ToHexStr(u64 val, int num);
-		u64 ParseBinary(std::string binStr);
-		bool IsAddressOverlap(MemAccess access, pointpair watchpoint);
-	public:
-		DebugStub(SystemBase::SystemContext* context, int pid);
-		~DebugStub();
+        // Utility functions
+        u64 GetRegister(int i);
+        void SetRegister( int i, u64 value );
+        u64 GetMemory(MemAccess* access);
+        void SetMemory(MemAccess* access);
+        u64 HexStrToU64(std::string str);
+        std::string U64ToHexStr(u64 val, int num);
+        u64 ParseBinary(std::string binStr);
+        bool IsAddressOverlap(MemAccess access, pointpair watchpoint);
+    public:
+        DebugStub(SystemBase::SystemContext* context, int pid);
+        ~DebugStub();
 
-		void OnExec(EmulationDebugOp* op);
-	};
+        void OnExec(EmulationDebugOp* op);
+    };
 
 }
 

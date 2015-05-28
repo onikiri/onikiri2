@@ -47,6 +47,6 @@
 
 namespace Onikiri
 {
-}	// namespace Onikiri
+}   // namespace Onikiri
 
-#endif	// #ifndef SIM_FOUNDATION_DEBUG_H
+#endif  // #ifndef SIM_FOUNDATION_DEBUG_H

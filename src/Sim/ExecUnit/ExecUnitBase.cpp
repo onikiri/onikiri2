@@ -51,11 +51,11 @@ using namespace std;
 
 ExecUnitBase::ExecUnitBase()
 {
-	m_execLatencyInfo = 0;
-	m_core = 0;
-	m_numPorts = 0;
-	m_numUsed = 0;
-	m_numUsable = 0;
+    m_execLatencyInfo = 0;
+    m_core = 0;
+    m_numPorts = 0;
+    m_numUsed = 0;
+    m_numUsable = 0;
 }
 
 ExecUnitBase::~ExecUnitBase()
@@ -64,193 +64,193 @@ ExecUnitBase::~ExecUnitBase()
 
 void ExecUnitBase::Initialize( InitPhase phase )
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
-		for(size_t i = 0; i < m_codeStr.size(); i++){
-			m_code.push_back( OpClassCode::FromString( m_codeStr[i] ) );
-		}
-	}
-	else if(phase == INIT_POST_CONNECTION){
-		CheckNodeInitialized( "execLatencyInfo", m_execLatencyInfo );
-		CheckNodeInitialized( "core", m_core );
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
+        for(size_t i = 0; i < m_codeStr.size(); i++){
+            m_code.push_back( OpClassCode::FromString( m_codeStr[i] ) );
+        }
+    }
+    else if(phase == INIT_POST_CONNECTION){
+        CheckNodeInitialized( "execLatencyInfo", m_execLatencyInfo );
+        CheckNodeInitialized( "core", m_core );
 
-		m_reserver.Initialize( m_numPorts, m_core->GetTimeWheelSize() );
-	}
+        m_reserver.Initialize( m_numPorts, m_core->GetTimeWheelSize() );
+    }
 }
 
 void ExecUnitBase::Finalize()
 {
-	if( m_core ){
-		m_numUsable = m_core->GetGlobalClock()->GetTick() * m_numPorts;
-	}
-	ReleaseParam();
+    if( m_core ){
+        m_numUsable = m_core->GetGlobalClock()->GetTick() * m_numPorts;
+    }
+    ReleaseParam();
 }
 
 int ExecUnitBase::GetMappedCode(int i)
 {
-	if((int)m_code.size() <= i)
-		THROW_RUNTIME_ERROR("invalid mapped code.");
-	return m_code[i];
+    if((int)m_code.size() <= i)
+        THROW_RUNTIME_ERROR("invalid mapped code.");
+    return m_code[i];
 }
 
 int ExecUnitBase::GetMappedCodeCount()
 {
-	return (int)m_code.size();
+    return (int)m_code.size();
 }
 
 void ExecUnitBase::Execute( OpIterator op )
 {
-	// ExecutionBegin() ではエミュレーションが行われる
-	// 実行の正しさの検証を行うため--実行ステージの最初の段階で，
-	// 正しいソース・オペランドが得られているかどうかを確かめるため--
-	// execution stages の最初でエミュレーションを行う．
+    // ExecutionBegin() ではエミュレーションが行われる
+    // 実行の正しさの検証を行うため--実行ステージの最初の段階で，
+    // 正しいソース・オペランドが得られているかどうかを確かめるため--
+    // execution stages の最初でエミュレーションを行う．
 
-	// When a multi-issue mode is enabled, Execute() need to be called more than once,
-	// because access order violation is detected from 'executed' load ops.
-	// Re-scheduling changes the status of load ops to 'un-executed' and
-	// cannot detect those load ops.
-	op->ExecutionBegin();
-	g_dumper.Dump( DS_EXECUTE, op );
-	op->SetStatus( OpStatus::OS_EXECUTING );
+    // When a multi-issue mode is enabled, Execute() need to be called more than once,
+    // because access order violation is detected from 'executed' load ops.
+    // Re-scheduling changes the status of load ops to 'un-executed' and
+    // cannot detect those load ops.
+    op->ExecutionBegin();
+    g_dumper.Dump( DS_EXECUTE, op );
+    op->SetStatus( OpStatus::OS_EXECUTING );
 }
 
 
 void ExecUnitBase::RegisterEvents( OpIterator op, const int latency )
 {
-	IssueState issueState = op->GetIssueState();
+    IssueState issueState = op->GetIssueState();
 
-	// Record a cycle time when execution is kicked initially. 
-	// 'executionKicked' is cleared when op is canceled by the other ops.
-	if( !issueState.executionKicked ){
-		issueState.executionKickedTime =
-			op->GetScheduler()->GetLowerPipeline()->GetNow();
-		issueState.executionLatency = latency;
-	}
+    // Record a cycle time when execution is kicked initially. 
+    // 'executionKicked' is cleared when op is canceled by the other ops.
+    if( !issueState.executionKicked ){
+        issueState.executionKickedTime =
+            op->GetScheduler()->GetLowerPipeline()->GetNow();
+        issueState.executionLatency = latency;
+    }
 
-	if( issueState.multiIssue ){
-		// Multi issue mode
-		const LatPredResult::Scheduling& schd = op->GetLatPredRsult().Get(0);
-		if( schd.latency == latency ){
-			RegisterFinishEvent( op, latency );	// 実行終了イベントの登録
-		}
-		else{
-			RegisterRescheduleEvent( op, latency, &issueState );
-		}
-	}
-	else{
-		// Single issue mode
-		if( issueState.executionKicked ){
-			THROW_RUNTIME_ERROR( "An op is executed more than once." );
-		}
-		else{
-			RegisterFinishEvent( op, latency );	// 実行終了イベントの登録
-			RegisterDetectEvent( op, latency );	// 予測ミス検出イベントの登録
-		}
-	}
+    if( issueState.multiIssue ){
+        // Multi issue mode
+        const LatPredResult::Scheduling& schd = op->GetLatPredRsult().Get(0);
+        if( schd.latency == latency ){
+            RegisterFinishEvent( op, latency ); // 実行終了イベントの登録
+        }
+        else{
+            RegisterRescheduleEvent( op, latency, &issueState );
+        }
+    }
+    else{
+        // Single issue mode
+        if( issueState.executionKicked ){
+            THROW_RUNTIME_ERROR( "An op is executed more than once." );
+        }
+        else{
+            RegisterFinishEvent( op, latency ); // 実行終了イベントの登録
+            RegisterDetectEvent( op, latency ); // 予測ミス検出イベントの登録
+        }
+    }
 
-	issueState.executionKicked = true;
-	op->SetIssueState( issueState );
+    issueState.executionKicked = true;
+    op->SetIssueState( issueState );
 
 }
 
 
 void ExecUnitBase::RegisterFinishEvent( OpIterator op, const int latency )
 {
-	// finish イベントを登録する
-	EventPtr finishEvent(
-		OpFinishEvent::Construct( op ));
-	// RegisterFinishEvent は命令の実行開始時(OpExecuteEvent)に呼ばれる
-	// そのため Finish するのは実行レイテンシ-1 サイクル後
-	op->AddEvent( 
-		finishEvent,
-		op->GetScheduler()->GetLowerPipeline(), 
-		latency - 1 
-	);
+    // finish イベントを登録する
+    EventPtr finishEvent(
+        OpFinishEvent::Construct( op ));
+    // RegisterFinishEvent は命令の実行開始時(OpExecuteEvent)に呼ばれる
+    // そのため Finish するのは実行レイテンシ-1 サイクル後
+    op->AddEvent( 
+        finishEvent,
+        op->GetScheduler()->GetLowerPipeline(), 
+        latency - 1 
+    );
 }
 
 void ExecUnitBase::RegisterDetectEvent( OpIterator op, const int latency )
 {
-	const LatPredResult& predResult = op->GetLatPredRsult();
+    const LatPredResult& predResult = op->GetLatPredRsult();
 
-	// Detect events
-	Scheduler* scheduler = op->GetScheduler();
-	int wakeups = predResult.GetCount();
-	for( int i = 0; i < wakeups - 1; i++ ){
-		const LatPredResult::Scheduling& sched = predResult.Get( i );
-		if( sched.wakeup ){
+    // Detect events
+    Scheduler* scheduler = op->GetScheduler();
+    int wakeups = predResult.GetCount();
+    for( int i = 0; i < wakeups - 1; i++ ){
+        const LatPredResult::Scheduling& sched = predResult.Get( i );
+        if( sched.wakeup ){
 
-			EventPtr detectLatPredMiss(
-				OpDetectLatPredMissEvent::Construct( op, 0, sched.latency, latency )
-			);
-			op->AddEvent(
-				detectLatPredMiss,
-				scheduler->GetLowerPipeline(),
-				sched.latency - 1
-			);
-		}
-	}
+            EventPtr detectLatPredMiss(
+                OpDetectLatPredMissEvent::Construct( op, 0, sched.latency, latency )
+            );
+            op->AddEvent(
+                detectLatPredMiss,
+                scheduler->GetLowerPipeline(),
+                sched.latency - 1
+            );
+        }
+    }
 }
 
 void ExecUnitBase::RegisterRescheduleEvent( OpIterator op, const int latency, IssueState* issueState )
 {
-	const LatPredResult::Scheduling& schd = op->GetLatPredRsult().Get(0);
-	int minLatency = schd.latency;
+    const LatPredResult::Scheduling& schd = op->GetLatPredRsult().Get(0);
+    int minLatency = schd.latency;
 
 
-	int elpasedTime = (int)( op->GetScheduler()->GetLowerPipeline()->GetNow() - issueState->executionKickedTime );
-	int latencyOffset = op->GetScheduler()->GetIssueLatency() + 1 + minLatency;
+    int elpasedTime = (int)( op->GetScheduler()->GetLowerPipeline()->GetNow() - issueState->executionKickedTime );
+    int latencyOffset = op->GetScheduler()->GetIssueLatency() + 1 + minLatency;
 
-	// Search next speculatively rescheduling timing.
-	const LatPredResult& predResult = op->GetLatPredRsult();
-	int wakeups = predResult.GetCount();
-	int rsLatency = 0;
-	bool speculative = false;
-	for( int i = issueState->currentPredIndex + 1; i < wakeups; i++ ){
-		const LatPredResult::Scheduling& sched = predResult.Get( i );
-		if( sched.wakeup ){
-			issueState->currentPredIndex = i;
-			rsLatency = predResult.Get(i).latency - latencyOffset - elpasedTime;
-			speculative = true;
-			break;
-		}
-	}
-			
-	// There is no speculative rescheduling timing, wait for the latency.
-	if( !speculative ){
-		rsLatency = latency - latencyOffset;
-	}
+    // Search next speculatively rescheduling timing.
+    const LatPredResult& predResult = op->GetLatPredRsult();
+    int wakeups = predResult.GetCount();
+    int rsLatency = 0;
+    bool speculative = false;
+    for( int i = issueState->currentPredIndex + 1; i < wakeups; i++ ){
+        const LatPredResult::Scheduling& sched = predResult.Get( i );
+        if( sched.wakeup ){
+            issueState->currentPredIndex = i;
+            rsLatency = predResult.Get(i).latency - latencyOffset - elpasedTime;
+            speculative = true;
+            break;
+        }
+    }
+            
+    // There is no speculative rescheduling timing, wait for the latency.
+    if( !speculative ){
+        rsLatency = latency - latencyOffset;
+    }
 
-	if( rsLatency < 1 ){
-		rsLatency = 1;
-	}
+    if( rsLatency < 1 ){
+        rsLatency = 1;
+    }
 
-	// When ops are speculatively waken-up, detection events need to be registered.
-	if( (!issueState->executionKicked && schd.wakeup) || 
-		issueState->executionKicked
-	){
-		// Detection events need to occur before re-scheduling events occur,
-		// because re-scheduling events cancel all the other events.
-		if( rsLatency < minLatency ){
-			rsLatency = minLatency;
-		}
+    // When ops are speculatively waken-up, detection events need to be registered.
+    if( (!issueState->executionKicked && schd.wakeup) || 
+        issueState->executionKicked
+    ){
+        // Detection events need to occur before re-scheduling events occur,
+        // because re-scheduling events cancel all the other events.
+        if( rsLatency < minLatency ){
+            rsLatency = minLatency;
+        }
 
-		// An op is issued when the op is finished for 'minLatency' except the first time,
-		// so detection events are registered after 'minLatency'.
-		EventPtr detectLatPredMiss(
-			OpDetectLatPredMissEvent::Construct( op, 0, minLatency, latency )
-		);
-		op->AddEvent(
-			detectLatPredMiss,
-			op->GetScheduler()->GetLowerPipeline(),
-			minLatency - 1
-		);
-	}
+        // An op is issued when the op is finished for 'minLatency' except the first time,
+        // so detection events are registered after 'minLatency'.
+        EventPtr detectLatPredMiss(
+            OpDetectLatPredMissEvent::Construct( op, 0, minLatency, latency )
+        );
+        op->AddEvent(
+            detectLatPredMiss,
+            op->GetScheduler()->GetLowerPipeline(),
+            minLatency - 1
+        );
+    }
 
-	// Re-scheduling events need to be registered after detection events.
-	EventPtr evnt(
-		OpRescheduleEvent::Construct(op)
-	);
-	op->AddEvent( evnt, op->GetScheduler()->GetLowerPipeline(), rsLatency, Op::EVENT_MASK_WAKEUP_RELATED );
+    // Re-scheduling events need to be registered after detection events.
+    EventPtr evnt(
+        OpRescheduleEvent::Construct(op)
+    );
+    op->AddEvent( evnt, op->GetScheduler()->GetLowerPipeline(), rsLatency, Op::EVENT_MASK_WAKEUP_RELATED );
 
 
 
@@ -261,26 +261,26 @@ void ExecUnitBase::RegisterRescheduleEvent( OpIterator op, const int latency, Is
 // OpClass から取りうるレイテンシの種類の数を返す
 int ExecUnitBase::GetLatencyCount(const OpClass& opClass)
 {
-	// 通常の演算器ではレイテンシは固定
-	return 1;
+    // 通常の演算器ではレイテンシは固定
+    return 1;
 }
 
 // OpClass とインデクスからレイテンシを返す
 int ExecUnitBase::GetLatency(const OpClass& opClass, int index)
 {
-	// 単にExecLatencyInfoをひいてかえす
-	return m_execLatencyInfo->GetLatency(opClass.GetCode());
+    // 単にExecLatencyInfoをひいてかえす
+    return m_execLatencyInfo->GetLatency(opClass.GetCode());
 }
 
 // 毎サイクル呼ばれる
 void ExecUnitBase::Begin()
 {
-	m_reserver.Begin();
+    m_reserver.Begin();
 }
 
 // Called in Update phase.
 void ExecUnitBase::Update()
 {
-	m_reserver.Update();
+    m_reserver.Update();
 }
 

@@ -38,26 +38,26 @@
 
 namespace Onikiri
 {
-	class OpClass;
-	
-	enum BranchType
-	{
-		BT_CONDITIONAL = 0,
-		BT_UNCONDITIONAL,
-		BT_CALL,
-		BT_RETURN,
-		BT_CONDITIONAL_RETURN,
-		BT_NON,
-		BT_END				// dummy
-	};
+    class OpClass;
+    
+    enum BranchType
+    {
+        BT_CONDITIONAL = 0,
+        BT_UNCONDITIONAL,
+        BT_CALL,
+        BT_RETURN,
+        BT_CONDITIONAL_RETURN,
+        BT_NON,
+        BT_END              // dummy
+    };
 
-	class BranchTypeUtility
-	{
-	public:
-		BranchType OpClassToBranchType(const OpClass& opClass) const;
-		size_t     GetTypeCount() const;
-		String     GetTypeName(size_t index) const;
-	};
+    class BranchTypeUtility
+    {
+    public:
+        BranchType OpClassToBranchType(const OpClass& opClass) const;
+        size_t     GetTypeCount() const;
+        String     GetTypeName(size_t index) const;
+    };
 } // namespace Onikiri
 
 #endif

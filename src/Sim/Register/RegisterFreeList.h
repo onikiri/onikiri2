@@ -36,46 +36,46 @@
 
 namespace Onikiri 
 {
-	class RegisterFile;
-	class Core;
-	class EmulatorIF;
+    class RegisterFile;
+    class Core;
+    class EmulatorIF;
 
-	class RegisterFreeList 
-		: public PhysicalResourceNode
-	{
-		// フリーリスト
-		// Allocationが可能な物理レジスタの番号を管理する
-		std::vector< pool_list<int> > m_freeList;
+    class RegisterFreeList 
+        : public PhysicalResourceNode
+    {
+        // フリーリスト
+        // Allocationが可能な物理レジスタの番号を管理する
+        std::vector< pool_list<int> > m_freeList;
 
-		// emulator
-		PhysicalResourceArray<EmulatorIF> m_emulator;
+        // emulator
+        PhysicalResourceArray<EmulatorIF> m_emulator;
 
-		// レジスタ本体
-		PhysicalResourceArray<RegisterFile> m_registerFile;
+        // レジスタ本体
+        PhysicalResourceArray<RegisterFile> m_registerFile;
 
-		// Core
-		PhysicalResourceArray<Core> m_core;
+        // Core
+        PhysicalResourceArray<Core> m_core;
 
 
-	public:
+    public:
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core,			"core",			m_core )
-			RESOURCE_ENTRY( EmulatorIF,		"emulator",		m_emulator )
-			RESOURCE_ENTRY( RegisterFile,	"registerFile", m_registerFile )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core,           "core",         m_core )
+            RESOURCE_ENTRY( EmulatorIF,     "emulator",     m_emulator )
+            RESOURCE_ENTRY( RegisterFile,   "registerFile", m_registerFile )
+        END_RESOURCE_MAP()
 
-		RegisterFreeList();
-		virtual ~RegisterFreeList();
+        RegisterFreeList();
+        virtual ~RegisterFreeList();
 
-		void Initialize(InitPhase phase);
+        void Initialize(InitPhase phase);
 
-		void Release(int segment, int phyRegNum);
-		int Allocate(int segment);
+        void Release(int segment, int phyRegNum);
+        int Allocate(int segment);
 
-		int GetSegmentCount();
-		int GetFreeEntryCount(int segment);
-	};
+        int GetSegmentCount();
+        int GetFreeEntryCount(int segment);
+    };
 
 }; // namespace Onikiri
 

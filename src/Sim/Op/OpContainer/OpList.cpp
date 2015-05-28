@@ -41,18 +41,18 @@ OpList::OpList()
 
 OpList::OpList( const OpArray& opArray )
 {
-	resize( opArray );
+    resize( opArray );
 }
 
 void OpList::resize( const OpArray& opArray )
 {
-	resize( opArray.GetCapacity() );
+    resize( opArray.GetCapacity() );
 }
 
 void OpList::resize( int capacity )
 {
-	alive_table.resize( capacity, false );
-	iterator_table.resize( capacity );
+    alive_table.resize( capacity, false );
+    iterator_table.resize( capacity );
 }
 
 OpList::~OpList()
@@ -61,106 +61,106 @@ OpList::~OpList()
 
 OpList::iterator OpList::get_iterator( const OpIterator& opIterator ) const
 {
-	return iterator_table[ opIterator.GetID() ];
+    return iterator_table[ opIterator.GetID() ];
 }
 
 OpList::iterator OpList::operator[]( const OpIterator& opIterator ) const
 {
-	return get_iterator( opIterator );
+    return get_iterator( opIterator );
 }
 
 OpList::iterator OpList::insert( iterator pos, const OpIterator& opIterator )
 {
-	OpArray::ID id     = opIterator.GetID();
+    OpArray::ID id     = opIterator.GetID();
 
-	ASSERT(
-		alive_table[ id ] == false, 
-		"opIterator inserted twice."
-	);
-	
-	iterator iter = 
-		list_type::insert( pos, opIterator );
+    ASSERT(
+        alive_table[ id ] == false, 
+        "opIterator inserted twice."
+    );
+    
+    iterator iter = 
+        list_type::insert( pos, opIterator );
 
-	iterator_table[ id ] = iter;
-	alive_table[ id ] = true;
+    iterator_table[ id ] = iter;
+    alive_table[ id ] = true;
 
-	return iter;
+    return iter;
 }
 
 OpList::iterator OpList::erase( const OpIterator& opIterator )
 {
-	return erase( get_iterator(opIterator) );
+    return erase( get_iterator(opIterator) );
 }
 
 OpList::iterator OpList::erase( iterator pos )
 {
-	// 再度同じ handle が insert されるときに初期化されるので、
-	// erase する時に m_iteratorTable の該当する要素には何もしない
-	OpArray::ID     id     = pos->GetID();
+    // 再度同じ handle が insert されるときに初期化されるので、
+    // erase する時に m_iteratorTable の該当する要素には何もしない
+    OpArray::ID     id     = pos->GetID();
 
-	alive_table[ id ] = false;
-	iterator_table[ id ] = end();
-	
-	return list_type::erase( pos );
+    alive_table[ id ] = false;
+    iterator_table[ id ] = end();
+    
+    return list_type::erase( pos );
 }
 
 void OpList::clear()
 {
-	list_type::clear();
-	alive_table.reset();
+    list_type::clear();
+    alive_table.reset();
 }
 
 OpList::iterator OpList::find( const OpIterator& opIterator )
 {
-	if( alive_table[ opIterator.GetID() ] == true ) {
-		return get_iterator(opIterator);
-	}else {
-		return list_type::end();
-	}
+    if( alive_table[ opIterator.GetID() ] == true ) {
+        return get_iterator(opIterator);
+    }else {
+        return list_type::end();
+    }
 }
 
 size_t OpList::count( const OpIterator& op ) const
 {
-	if( alive_table[ op.GetID() ] == true ) {
-		return 1;
-	}else {
-		return 0;
-	}
+    if( alive_table[ op.GetID() ] == true ) {
+        return 1;
+    }else {
+        return 0;
+    }
 }
 
 bool OpList::find_and_erase( OpIterator op )
 {
-	iterator i = find(op);
-	bool erased = i != end();
-	if(erased){
-		erase(i);
-	}
-	return erased;
+    iterator i = find(op);
+    bool erased = i != end();
+    if(erased){
+        erase(i);
+    }
+    return erased;
 }
 
 void OpList::push_inorder( OpIterator op )
 {
-	// 空であればpush_backして終わり
-	if(empty()) {
-		push_back(op);
-		return;
-	}
+    // 空であればpush_backして終わり
+    if(empty()) {
+        push_back(op);
+        return;
+    }
 
-	// 後ろ側からopよりSerialIDが小さいOpIteratorを見つける
-	iterator iter = end();
-	u64 id = op->GetGlobalSerialID();
-	do {
-		--iter;
-		if( (*iter)->GetGlobalSerialID() < id ) {
-			// 見つけたOpIteratorの後ろにopを挿入
-			// insert は指定した要素の直前に挿入なので1回インクリメント
-			++iter;
-			insert(iter, op);
-			return;
-		}
-	} while( iter != begin() );
-	
-	// 先頭まで達したら先頭に入れる
-	push_front(op);
+    // 後ろ側からopよりSerialIDが小さいOpIteratorを見つける
+    iterator iter = end();
+    u64 id = op->GetGlobalSerialID();
+    do {
+        --iter;
+        if( (*iter)->GetGlobalSerialID() < id ) {
+            // 見つけたOpIteratorの後ろにopを挿入
+            // insert は指定した要素の直前に挿入なので1回インクリメント
+            ++iter;
+            insert(iter, op);
+            return;
+        }
+    } while( iter != begin() );
+    
+    // 先頭まで達したら先頭に入れる
+    push_front(op);
 }
 

@@ -36,12 +36,12 @@
 
 namespace Onikiri 
 {
-	// A system that runs in an emulation mode
-	class EmulationSystem : public SystemBase
-	{
-	public:
-		void Run( SystemContext* context );
-	};
+    // A system that runs in an emulation mode
+    class EmulationSystem : public SystemBase
+    {
+    public:
+        void Run( SystemContext* context );
+    };
 }; // namespace Onikiri
 
 #endif // __EMULATION_SYSTEM_H__

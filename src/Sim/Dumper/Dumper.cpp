@@ -42,7 +42,7 @@
 
 namespace Onikiri
 {
-	Dumper g_dumper;
+    Dumper g_dumper;
 }
 
 using namespace std;
@@ -50,195 +50,195 @@ using namespace Onikiri;
 
 Dumper::Dumper()
 {
-	m_dumpEnabled = false;
+    m_dumpEnabled = false;
 }
 
 Dumper::~Dumper()
 {
-	ReleaseDumper();
+    ReleaseDumper();
 }
 
 
 void Dumper::CreateThreadDumper( 
-	ThreadDumper* threadDumper, 
-	const String& suffix, 
-	PhysicalResourceArray<Core>& coreList 
+    ThreadDumper* threadDumper, 
+    const String& suffix, 
+    PhysicalResourceArray<Core>& coreList 
 ){
-	ThreadDumper newDumper = 
-	{
-		new TraceDumper(),
-		new VisualizationDumper(),
-		new CountDumper()
-	};
-	*threadDumper = newDumper;
+    ThreadDumper newDumper = 
+    {
+        new TraceDumper(),
+        new VisualizationDumper(),
+        new CountDumper()
+    };
+    *threadDumper = newDumper;
 
-	threadDumper->traceDumper->Initialize( suffix );
-	threadDumper->visDumper->Initialize( suffix, coreList );
-	threadDumper->countDumper->Initialize( suffix );
+    threadDumper->traceDumper->Initialize( suffix );
+    threadDumper->visDumper->Initialize( suffix, coreList );
+    threadDumper->countDumper->Initialize( suffix );
 
-	m_dumpEnabled =
-		threadDumper->traceDumper->Enabled() || 
-		threadDumper->visDumper->IsEnabled()   ||
-		threadDumper->countDumper->Enabled() || 
-		m_dumpEnabled;
-	m_dumperList.push_back( *threadDumper );
+    m_dumpEnabled =
+        threadDumper->traceDumper->Enabled() || 
+        threadDumper->visDumper->IsEnabled()   ||
+        threadDumper->countDumper->Enabled() || 
+        m_dumpEnabled;
+    m_dumperList.push_back( *threadDumper );
 }
 
 
 void Dumper::Initialize(
-	PhysicalResourceArray<Core>& coreList,
-	PhysicalResourceArray<Thread>& threadList 
+    PhysicalResourceArray<Core>& coreList,
+    PhysicalResourceArray<Thread>& threadList 
 ){
-	LoadParam();
+    LoadParam();
 
-	m_dumpEnabled = false;
+    m_dumpEnabled = false;
 
-	if( m_dumpEachThread ){
-		for( int i = 0; i < threadList.GetSize(); i++ ){
-			Thread* thread = threadList[i];
-			ThreadDumper dumper;
-			String suffix = "t" + boost::lexical_cast<String>(i);
-			CreateThreadDumper( &dumper, suffix, coreList );
-			m_dumperMap[thread] = dumper;
-		}
-	}
-	else if( m_dumpEachCore ){
-		for( int i = 0; i < coreList.GetSize(); i++ ){
-			Core* core = coreList[i];
+    if( m_dumpEachThread ){
+        for( int i = 0; i < threadList.GetSize(); i++ ){
+            Thread* thread = threadList[i];
+            ThreadDumper dumper;
+            String suffix = "t" + boost::lexical_cast<String>(i);
+            CreateThreadDumper( &dumper, suffix, coreList );
+            m_dumperMap[thread] = dumper;
+        }
+    }
+    else if( m_dumpEachCore ){
+        for( int i = 0; i < coreList.GetSize(); i++ ){
+            Core* core = coreList[i];
 
-			ThreadDumper dumper;
-			String suffix = "c" + boost::lexical_cast<String>(i);
-			CreateThreadDumper( &dumper, suffix, coreList );
+            ThreadDumper dumper;
+            String suffix = "c" + boost::lexical_cast<String>(i);
+            CreateThreadDumper( &dumper, suffix, coreList );
 
-			for( int j = 0; j < core->GetThreadCount(); j++ ){
-				Thread* thread = core->GetThread(j);
-				m_dumperMap[thread] = dumper;
-			}
-		}
-	}
-	else{
-		ThreadDumper dumper;
-		CreateThreadDumper( &dumper, "", coreList );
-		for( int i = 0; i < threadList.GetSize(); i++ ){
-			Thread* thread = threadList[i];
-			m_dumperMap[thread] = dumper;
-		}
-	}
+            for( int j = 0; j < core->GetThreadCount(); j++ ){
+                Thread* thread = core->GetThread(j);
+                m_dumperMap[thread] = dumper;
+            }
+        }
+    }
+    else{
+        ThreadDumper dumper;
+        CreateThreadDumper( &dumper, "", coreList );
+        for( int i = 0; i < threadList.GetSize(); i++ ){
+            Thread* thread = threadList[i];
+            m_dumperMap[thread] = dumper;
+        }
+    }
 }
 
 template <class T> static void DeleteDumper(T*& ptr)
 {
-	if(ptr){
-		delete ptr;
-		ptr = NULL;
-	}
+    if(ptr){
+        delete ptr;
+        ptr = NULL;
+    }
 }
 
 void Dumper::Finalize()
 {
-	for( DumperList::iterator i = m_dumperList.begin();
-		i != m_dumperList.end();
-		++i
-	){
-		i->traceDumper->Finalize();
-		i->visDumper->Finalize();
-		i->countDumper->Finalize();
-	}
-	ReleaseDumper();
-	ReleaseParam();
+    for( DumperList::iterator i = m_dumperList.begin();
+        i != m_dumperList.end();
+        ++i
+    ){
+        i->traceDumper->Finalize();
+        i->visDumper->Finalize();
+        i->countDumper->Finalize();
+    }
+    ReleaseDumper();
+    ReleaseParam();
 }
 
 void Dumper::ReleaseDumper()
 {
-	for( DumperList::iterator i = m_dumperList.begin();
-		i != m_dumperList.end();
-		++i
-	){
-		DeleteDumper( i->traceDumper );
-		DeleteDumper( i->visDumper );
-		DeleteDumper( i->countDumper );
-	}
+    for( DumperList::iterator i = m_dumperList.begin();
+        i != m_dumperList.end();
+        ++i
+    ){
+        DeleteDumper( i->traceDumper );
+        DeleteDumper( i->visDumper );
+        DeleteDumper( i->countDumper );
+    }
 
-	m_dumperList.clear();
-	m_dumperMap.clear();
+    m_dumperList.clear();
+    m_dumperMap.clear();
 }
 
 
 void Dumper::DumpStallBeginImpl(OpIterator op)
 {
-	Thread* thread = op->GetThread();
-	ThreadDumper& dumper = m_dumperMap[thread];
+    Thread* thread = op->GetThread();
+    ThreadDumper& dumper = m_dumperMap[thread];
 
-	dumper.traceDumper->DumpStallBegin(&*op);
-	dumper.visDumper->PrintStallBegin(op);
+    dumper.traceDumper->DumpStallBegin(&*op);
+    dumper.visDumper->PrintStallBegin(op);
 }
 
 void Dumper::DumpStallEndImpl(OpIterator op)
 {
-	Thread* thread = op->GetThread();
-	ThreadDumper& dumper = m_dumperMap[thread];
+    Thread* thread = op->GetThread();
+    ThreadDumper& dumper = m_dumperMap[thread];
 
-	dumper.traceDumper->DumpStallEnd(&*op);
-	dumper.visDumper->PrintStallEnd(op);
+    dumper.traceDumper->DumpStallEnd(&*op);
+    dumper.visDumper->PrintStallEnd(op);
 }
 
 void Dumper::DumpImpl(DUMP_STATE state, OpIterator op, int detail)
 {
-	if(!m_dumpEnabled)
-		return;
+    if(!m_dumpEnabled)
+        return;
 
-	Thread* thread = op->GetThread();
-	ThreadDumper& dumper = m_dumperMap[thread];
+    Thread* thread = op->GetThread();
+    ThreadDumper& dumper = m_dumperMap[thread];
 
-	dumper.traceDumper->Dump(state, &*op, detail);
-	dumper.visDumper->PrintOpState(op, state);
+    dumper.traceDumper->Dump(state, &*op, detail);
+    dumper.visDumper->PrintOpState(op, state);
 }
 
 void Dumper::SetCurrentCycleImpl( Thread* thread, s64 cycle )
 {
-	if(!m_dumpEnabled)
-		return;
+    if(!m_dumpEnabled)
+        return;
 
-	ThreadDumper& dumper = m_dumperMap[thread];
-	dumper.traceDumper->SetCurrentCycle(cycle);
-	dumper.visDumper->SetCurrentCycle(cycle);
-	dumper.countDumper->SetCurrentCycle(cycle);
+    ThreadDumper& dumper = m_dumperMap[thread];
+    dumper.traceDumper->SetCurrentCycle(cycle);
+    dumper.visDumper->SetCurrentCycle(cycle);
+    dumper.countDumper->SetCurrentCycle(cycle);
 }
 
 void Dumper::SetCurrentInsnCountImpl( Thread* thread, s64 count )
 {
-	if(!m_dumpEnabled)
-		return;
+    if(!m_dumpEnabled)
+        return;
 
-	ThreadDumper& dumper = m_dumperMap[thread];
-	dumper.countDumper->SetCurrentInsnCount(count);
-	dumper.visDumper->SetCurrentInsnCount(thread,count);
+    ThreadDumper& dumper = m_dumperMap[thread];
+    dumper.countDumper->SetCurrentInsnCount(count);
+    dumper.visDumper->SetCurrentInsnCount(thread,count);
 }
 
 void Dumper::DumpOpDependencyImpl(
-	const OpIterator producerOp, const OpIterator consumerOp, DumpDependency type )
+    const OpIterator producerOp, const OpIterator consumerOp, DumpDependency type )
 {
-	if(!m_dumpEnabled)
-		return;
+    if(!m_dumpEnabled)
+        return;
 
-	Thread* thread = producerOp->GetThread();
-	ThreadDumper& dumper = m_dumperMap[thread];
-	dumper.visDumper->PrintOpDependency( producerOp, consumerOp, type );
+    Thread* thread = producerOp->GetThread();
+    ThreadDumper& dumper = m_dumperMap[thread];
+    dumper.visDumper->PrintOpDependency( producerOp, consumerOp, type );
 }
 
 void Dumper::DumpRawStageImpl( OpIterator op, bool begin, const char*stage, DumpLane lane )
 {
-	if(!m_dumpEnabled)
-		return;
+    if(!m_dumpEnabled)
+        return;
 
-	ASSERT( !op.IsNull(), "A null op is passed." );
-	Thread* thread = op->GetThread();
-	ThreadDumper& dumper = m_dumperMap[thread];
-	dumper.visDumper->PrintRawOutput( op, begin, stage, lane );
-}	
+    ASSERT( !op.IsNull(), "A null op is passed." );
+    Thread* thread = op->GetThread();
+    ThreadDumper& dumper = m_dumperMap[thread];
+    dumper.visDumper->PrintRawOutput( op, begin, stage, lane );
+}   
 void Dumper::SetEnabledImpl( bool enabled )
 {
-	m_dumpEnabled = enabled;
+    m_dumpEnabled = enabled;
 }
 
 

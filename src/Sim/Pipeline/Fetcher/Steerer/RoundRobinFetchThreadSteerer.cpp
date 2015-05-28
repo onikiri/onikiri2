@@ -37,7 +37,7 @@
 using namespace Onikiri;
 
 RoundRobinFetchThreadSteerer::RoundRobinFetchThreadSteerer() :
-	m_nextThread(0)
+    m_nextThread(0)
 {
 }
 
@@ -48,43 +48,43 @@ RoundRobinFetchThreadSteerer::~RoundRobinFetchThreadSteerer()
 
 void RoundRobinFetchThreadSteerer::Initialize( InitPhase phase )
 {
-	if (phase == INIT_PRE_CONNECTION){
-		LoadParam();
-		return;
-	}
-	if (phase == INIT_POST_CONNECTION){
+    if (phase == INIT_PRE_CONNECTION){
+        LoadParam();
+        return;
+    }
+    if (phase == INIT_POST_CONNECTION){
 
-		CheckNodeInitialized( "thread", m_thread );
+        CheckNodeInitialized( "thread", m_thread );
 
-	}
+    }
 }
 
 void RoundRobinFetchThreadSteerer::Finalize()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 Thread* RoundRobinFetchThreadSteerer::SteerThread(bool update)
 {
-	int count = 0;
-	int currentFetchThread = m_nextThread;
-	bool found = true;
-	while ( !m_thread[currentFetchThread]->IsActive() )
-	{
-		currentFetchThread = (currentFetchThread + 1) % m_thread.GetSize();
-		count++;
-		if( count >= m_thread.GetSize() ){
-			found = false;
-			break;
-		}
-	}
+    int count = 0;
+    int currentFetchThread = m_nextThread;
+    bool found = true;
+    while ( !m_thread[currentFetchThread]->IsActive() )
+    {
+        currentFetchThread = (currentFetchThread + 1) % m_thread.GetSize();
+        count++;
+        if( count >= m_thread.GetSize() ){
+            found = false;
+            break;
+        }
+    }
 
-	if( update )
-		m_nextThread = (currentFetchThread + 1) % m_thread.GetSize();
+    if( update )
+        m_nextThread = (currentFetchThread + 1) % m_thread.GetSize();
 
-	if( !found ){
-		return NULL;
-	}
+    if( !found ){
+        return NULL;
+    }
 
-	return m_thread[currentFetchThread];
+    return m_thread[currentFetchThread];
 }

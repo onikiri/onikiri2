@@ -44,32 +44,32 @@ using namespace Onikiri;
 
 int main(int argc, char* argv[])
 {
-	try{
-		// Initialization
-		vector<String> userDefaultParam;
-		InitializeUserDefaultParameter( &userDefaultParam );
-		g_env.Initialize( argc, argv, userDefaultParam );
+    try{
+        // Initialization
+        vector<String> userDefaultParam;
+        InitializeUserDefaultParameter( &userDefaultParam );
+        g_env.Initialize( argc, argv, userDefaultParam );
 
-		// Main execution
-		SystemManager systemManager;
-		systemManager.Main();
-	}
-	catch( std::runtime_error& error ){
-		g_env.SetError( true, error.what() );
-		g_env.Print( "\n%s", error.what() );
-	}
+        // Main execution
+        SystemManager systemManager;
+        systemManager.Main();
+    }
+    catch( std::runtime_error& error ){
+        g_env.SetError( true, error.what() );
+        g_env.Print( "\n%s", error.what() );
+    }
 
-	// Finalization 
-	try{
-		g_env.Finalize();
-	}
-	catch( std::runtime_error& error ){
-		g_env.Print( error.what() );
-		if( !g_env.IsDumpSuccess() ){
-			g_env.PrintFatalErrorXML();
-		}
-	}
+    // Finalization 
+    try{
+        g_env.Finalize();
+    }
+    catch( std::runtime_error& error ){
+        g_env.Print( error.what() );
+        if( !g_env.IsDumpSuccess() ){
+            g_env.PrintFatalErrorXML();
+        }
+    }
 
-	return 0;
+    return 0;
 };
 

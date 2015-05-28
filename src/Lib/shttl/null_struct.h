@@ -34,9 +34,9 @@
 
 namespace shttl
 {
-	struct null_struct
-	{
-	};
+    struct null_struct
+    {
+    };
 
 } // namespace shttl
 

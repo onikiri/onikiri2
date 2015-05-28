@@ -36,8 +36,8 @@
 //
 //  Ex. :
 //    BEGIN_USER_RESOURCE_TYPE_MAP()
-//	      RESOURCE_INTERFACE_ENTRY(Core)
-//	      RESOURCE_TYPE_ENTRY(Core)
+//        RESOURCE_INTERFACE_ENTRY(Core)
+//        RESOURCE_TYPE_ENTRY(Core)
 //    END_USER_RESOURCE_TYPE_MAP()
 //
 
@@ -48,22 +48,22 @@
 
 BEGIN_USER_RESOURCE_TYPE_MAP()
 
-	// You can remove the following if you don't need the samples.
+    // You can remove the following if you don't need the samples.
 
 #ifdef USE_SAMPLE_NULL
-	RESOURCE_TYPE_ENTRY( SampleNull )
+    RESOURCE_TYPE_ENTRY( SampleNull )
 #endif
 
 #ifdef USE_SAMPLE_HOOK_MODULE
-	RESOURCE_TYPE_ENTRY( SampleHookModule )
+    RESOURCE_TYPE_ENTRY( SampleHookModule )
 #endif
 
 #ifdef USE_SAMPLE_BPRED
-	RESOURCE_TYPE_ENTRY( SampleAlwaysHitBrDirPredictor )
+    RESOURCE_TYPE_ENTRY( SampleAlwaysHitBrDirPredictor )
 #endif
 
 #ifdef USE_SAMPLE_PREFETCHER
-	RESOURCE_TYPE_ENTRY( SamplePrefetcher )
+    RESOURCE_TYPE_ENTRY( SamplePrefetcher )
 #endif
 
 END_USER_RESOURCE_TYPE_MAP()

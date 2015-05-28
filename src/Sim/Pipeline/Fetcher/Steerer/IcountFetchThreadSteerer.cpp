@@ -41,8 +41,8 @@
 using namespace Onikiri;
 
 IcountFetchThreadSteerer::IcountFetchThreadSteerer() :
-	m_nextThread(0),
-	m_evaluatedThread(0)
+    m_nextThread(0),
+    m_evaluatedThread(0)
 {
 }
 
@@ -52,89 +52,89 @@ IcountFetchThreadSteerer::~IcountFetchThreadSteerer()
 
 void IcountFetchThreadSteerer::Initialize(InitPhase phase)
 {
-	if (phase == INIT_PRE_CONNECTION){
-		LoadParam();
-		return;
-	}
-	if (phase == INIT_POST_CONNECTION){
+    if (phase == INIT_PRE_CONNECTION){
+        LoadParam();
+        return;
+    }
+    if (phase == INIT_POST_CONNECTION){
 
-		CheckNodeInitialized( "thread", m_thread );
+        CheckNodeInitialized( "thread", m_thread );
 
-	}
+    }
 }
 
 void IcountFetchThreadSteerer::Finalize()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 Thread* IcountFetchThreadSteerer::SteerThread(bool update)
 {
-	int threadCount = m_thread.GetSize();
-	std::vector<int> frontendInsnNum(threadCount,0);
+    int threadCount = m_thread.GetSize();
+    std::vector<int> frontendInsnNum(threadCount,0);
 
-	// Count the number of instructions in front-end for each thread.
-	for (int tid = 0; tid < threadCount; tid++)
-	{
-		InorderList* inorderList = m_thread[tid]->GetInorderList();
-		for (OpIterator op = inorderList->GetFrontOp(); op != OpIterator(0); op = inorderList->GetNextIndexOp(op))
-		{
-			if ( !op->IsDispatched() ||
-				(!op->GetOpClass().IsNop() && op->GetScheduler()->IsInScheduler(op)) )
-			{
-				frontendInsnNum[tid]++;
-			}
-		}
-	}
+    // Count the number of instructions in front-end for each thread.
+    for (int tid = 0; tid < threadCount; tid++)
+    {
+        InorderList* inorderList = m_thread[tid]->GetInorderList();
+        for (OpIterator op = inorderList->GetFrontOp(); op != OpIterator(0); op = inorderList->GetNextIndexOp(op))
+        {
+            if ( !op->IsDispatched() ||
+                (!op->GetOpClass().IsNop() && op->GetScheduler()->IsInScheduler(op)) )
+            {
+                frontendInsnNum[tid]++;
+            }
+        }
+    }
 
-	// Find active thread
-	int currentFetchThread = m_nextThread;
-	int count = 0;
-	bool found = true;
-	while ( !m_thread[currentFetchThread]->IsActive() )
-	{
-		currentFetchThread = (currentFetchThread + 1) % threadCount;
-		count++;
-		if( count > threadCount ){
-			found = false;
-			break;
-		}
-	}
+    // Find active thread
+    int currentFetchThread = m_nextThread;
+    int count = 0;
+    bool found = true;
+    while ( !m_thread[currentFetchThread]->IsActive() )
+    {
+        currentFetchThread = (currentFetchThread + 1) % threadCount;
+        count++;
+        if( count > threadCount ){
+            found = false;
+            break;
+        }
+    }
 
-	if( !found ){
-		if( update )
-			m_nextThread = currentFetchThread;
-		return NULL;
-	}
+    if( !found ){
+        if( update )
+            m_nextThread = currentFetchThread;
+        return NULL;
+    }
 
-	// Find a thread that has the smallest number of instructions in front-end.
-	int targetThread = currentFetchThread;
-	count = 0;
-	do 
-	{
-		currentFetchThread = (currentFetchThread + 1) % threadCount;
-		if (m_thread[currentFetchThread]->IsActive() && frontendInsnNum[targetThread] > frontendInsnNum[currentFetchThread])
-		{
-			targetThread = currentFetchThread;
-		}
-		count++;
-	} while ( count <= threadCount );
+    // Find a thread that has the smallest number of instructions in front-end.
+    int targetThread = currentFetchThread;
+    count = 0;
+    do 
+    {
+        currentFetchThread = (currentFetchThread + 1) % threadCount;
+        if (m_thread[currentFetchThread]->IsActive() && frontendInsnNum[targetThread] > frontendInsnNum[currentFetchThread])
+        {
+            targetThread = currentFetchThread;
+        }
+        count++;
+    } while ( count <= threadCount );
 
-	if( update ){
-		if ( m_evaluatedThread != targetThread )
-		{
-			targetThread = m_evaluatedThread;
-			m_nextThread = (targetThread + 1) % threadCount;
-		}
-		else
-		{
-			m_nextThread = (targetThread + 1) % threadCount;
-		}
-	}
-	else
-	{
-		m_evaluatedThread = targetThread;
-	}
+    if( update ){
+        if ( m_evaluatedThread != targetThread )
+        {
+            targetThread = m_evaluatedThread;
+            m_nextThread = (targetThread + 1) % threadCount;
+        }
+        else
+        {
+            m_nextThread = (targetThread + 1) % threadCount;
+        }
+    }
+    else
+    {
+        m_evaluatedThread = targetThread;
+    }
 
-	return m_thread[targetThread];
+    return m_thread[targetThread];
 }

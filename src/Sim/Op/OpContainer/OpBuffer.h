@@ -38,90 +38,90 @@
 
 namespace Onikiri 
 {
-	class OpBuffer : 
-		protected OpList,
-		public ClockedResourceBase
-	{
-	protected:
-		void CheckAndDumpStallBegin( OpIterator op )
-		{
-			if( IsStalledThisCycle() )
-				g_dumper.DumpStallBegin( op );
-		}
+    class OpBuffer : 
+        protected OpList,
+        public ClockedResourceBase
+    {
+    protected:
+        void CheckAndDumpStallBegin( OpIterator op )
+        {
+            if( IsStalledThisCycle() )
+                g_dumper.DumpStallBegin( op );
+        }
 
 
-	public:
+    public:
 
-		typedef OpList::iterator iterator;
+        typedef OpList::iterator iterator;
 
-		OpBuffer();
-		OpBuffer( const OpArray& opArray );
-		virtual ~OpBuffer();
+        OpBuffer();
+        OpBuffer( const OpArray& opArray );
+        virtual ~OpBuffer();
 
-		// Dump stall information of containing ops.
-		virtual void BeginStall();
-		virtual void EndStall();
+        // Dump stall information of containing ops.
+        virtual void BeginStall();
+        virtual void EndStall();
 
-		// --- OpList
-		// Note: These methods are not virtual.
-		void resize(const OpArray& opArray)
-		{
-			OpList::resize( opArray );
-		}
+        // --- OpList
+        // Note: These methods are not virtual.
+        void resize(const OpArray& opArray)
+        {
+            OpList::resize( opArray );
+        }
 
-		void resize( int capacity )
-		{
-			OpList::resize( capacity );
-		}
+        void resize( int capacity )
+        {
+            OpList::resize( capacity );
+        }
 
-		size_t size() const
-		{
-			return OpList::size();
-		}
-		size_t count( const OpIterator& op ) const
-		{
-			return OpList::count( op );
-		}
+        size_t size() const
+        {
+            return OpList::size();
+        }
+        size_t count( const OpIterator& op ) const
+        {
+            return OpList::count( op );
+        }
 
-		bool find_and_erase( OpIterator op )
-		{
-			return OpList::find_and_erase( op );
-		}
+        bool find_and_erase( OpIterator op )
+        {
+            return OpList::find_and_erase( op );
+        }
 
-		iterator insert( iterator pos, const OpIterator& op )
-		{
-			CheckAndDumpStallBegin( op );
-			return OpList::insert( pos, op );
-		}
+        iterator insert( iterator pos, const OpIterator& op )
+        {
+            CheckAndDumpStallBegin( op );
+            return OpList::insert( pos, op );
+        }
 
-		void push_inorder( OpIterator op )
-		{
-			CheckAndDumpStallBegin( op );
-			OpList::push_inorder( op );
-		}
+        void push_inorder( OpIterator op )
+        {
+            CheckAndDumpStallBegin( op );
+            OpList::push_inorder( op );
+        }
 
-		void push_front( const OpIterator& op )
-		{
-			CheckAndDumpStallBegin( op );
-			OpList::push_front( op );
-		}
+        void push_front( const OpIterator& op )
+        {
+            CheckAndDumpStallBegin( op );
+            OpList::push_front( op );
+        }
 
-		void push_back( const OpIterator& op )
-		{
-			CheckAndDumpStallBegin( op );
-			OpList::push_back( op );
-		}
+        void push_back( const OpIterator& op )
+        {
+            CheckAndDumpStallBegin( op );
+            OpList::push_back( op );
+        }
 
-		iterator begin()
-		{
-			return OpList::begin();
-		}
+        iterator begin()
+        {
+            return OpList::begin();
+        }
 
-		iterator end()
-		{
-			return OpList::end();
-		}
-	};
+        iterator end()
+        {
+            return OpList::end();
+        }
+    };
 }; // namespace Onikiri
 
 #endif // __OpHASHLIST_H__

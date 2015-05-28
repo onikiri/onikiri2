@@ -46,89 +46,89 @@
 
 namespace Onikiri 
 {
-	class Core;
-	class PHT;
-	class GlobalHistory;
+    class Core;
+    class PHT;
+    class GlobalHistory;
 
-	class GShare : 
-		public PhysicalResourceNode,
-		public DirPredIF
-	{
-	private:
-		// Parameter
-		int m_globalHistoryBits;
-		int m_pthIndexBits;
-		bool m_addrXORConvolute;	// Calculate pht index using xor-convolution.
+    class GShare : 
+        public PhysicalResourceNode,
+        public DirPredIF
+    {
+    private:
+        // Parameter
+        int m_globalHistoryBits;
+        int m_pthIndexBits;
+        bool m_addrXORConvolute;    // Calculate pht index using xor-convolution.
 
-		// 
-		Core* m_core;
-		PHT*    m_pht;			// PHT
-		PhysicalResourceArray<GlobalHistory> 
-			m_globalHistory;	// GlobalHistory
+        // 
+        Core* m_core;
+        PHT*    m_pht;          // PHT
+        PhysicalResourceArray<GlobalHistory> 
+            m_globalHistory;    // GlobalHistory
 
-		// Prediction information
-		struct PredInfo
-		{
-			// PHT index used for updating PHT
-			int  phtIndex;
+        // Prediction information
+        struct PredInfo
+        {
+            // PHT index used for updating PHT
+            int  phtIndex;
 
-			// predicted direction
-			bool direction;
-		};
-		OpExtraStateTable<PredInfo> m_predTable;
+            // predicted direction
+            bool direction;
+        };
+        OpExtraStateTable<PredInfo> m_predTable;
 
-		// statistical information
-		s64 m_numPred;
-		s64 m_numHit;
-		s64 m_numMiss;
-		s64 m_numRetire;
+        // statistical information
+        s64 m_numPred;
+        s64 m_numHit;
+        s64 m_numMiss;
+        s64 m_numRetire;
 
-	public:
-		BEGIN_PARAM_MAP("")
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY("@GlobalHistoryBits",   m_globalHistoryBits)
-				PARAM_ENTRY("@AddressXORConvolute", m_addrXORConvolute)
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( GetResultPath() )
-				PARAM_ENTRY( "@NumPred",		m_numPred)
-				PARAM_ENTRY( "@NumHit",		m_numHit)
-				PARAM_ENTRY( "@NumMiss",		m_numMiss)
-				PARAM_ENTRY( "@NumRetire",	m_numRetire)
-				RESULT_RATE_SUM_ENTRY( "@HitRate", \
-					m_numHit, m_numHit, m_numMiss )
-			END_PARAM_PATH()
-		END_PARAM_MAP()
+    public:
+        BEGIN_PARAM_MAP("")
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY("@GlobalHistoryBits",   m_globalHistoryBits)
+                PARAM_ENTRY("@AddressXORConvolute", m_addrXORConvolute)
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+                PARAM_ENTRY( "@NumPred",        m_numPred)
+                PARAM_ENTRY( "@NumHit",     m_numHit)
+                PARAM_ENTRY( "@NumMiss",        m_numMiss)
+                PARAM_ENTRY( "@NumRetire",  m_numRetire)
+                RESULT_RATE_SUM_ENTRY( "@HitRate", \
+                    m_numHit, m_numHit, m_numMiss )
+            END_PARAM_PATH()
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core, "core", m_core )
-			RESOURCE_ENTRY( PHT,  "pht",  m_pht )
-			RESOURCE_ENTRY( GlobalHistory, "globalHistory", m_globalHistory )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core, "core", m_core )
+            RESOURCE_ENTRY( PHT,  "pht",  m_pht )
+            RESOURCE_ENTRY( GlobalHistory, "globalHistory", m_globalHistory )
+        END_RESOURCE_MAP()
 
-		GShare();
-		virtual ~GShare();
+        GShare();
+        virtual ~GShare();
 
-		// 初期化
-		void Initialize(InitPhase phase);
+        // 初期化
+        void Initialize(InitPhase phase);
 
-		// 分岐の方向を予測
-		bool Predict(OpIterator op, PC predIndexPC);
+        // 分岐の方向を予測
+        bool Predict(OpIterator op, PC predIndexPC);
 
-		//
-		// 実行完了
-		// 再実行で複数回呼ばれる可能性がある
-		// また、間違っている結果を持っている可能性もある
-		//
-		// opの実行完了時にPHTのUpdateを行う
-		void Finished(OpIterator op);
+        //
+        // 実行完了
+        // 再実行で複数回呼ばれる可能性がある
+        // また、間違っている結果を持っている可能性もある
+        //
+        // opの実行完了時にPHTのUpdateを行う
+        void Finished(OpIterator op);
 
-		// opのretire時の動作
-		void Retired(OpIterator op);
+        // opのretire時の動作
+        void Retired(OpIterator op);
 
-		// PCに対応するPHTのインデックスを返す
-		int GetPHTIndex(int localThreadID, const PC& pc);
+        // PCに対応するPHTのインデックスを返す
+        int GetPHTIndex(int localThreadID, const PC& pc);
 
-	};
+    };
 
 }; // namespace Onikiri
 

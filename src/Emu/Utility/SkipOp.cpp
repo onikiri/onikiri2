@@ -48,63 +48,63 @@ SkipOp::~SkipOp()
 // OpStateIF
 PC SkipOp::GetPC() const
 {
-	ASSERT(0, "do not call");
-	return Addr();
+    ASSERT(0, "do not call");
+    return Addr();
 }
 
 const u64 SkipOp::GetSrc(const int index) const
 {
-	ASSERT(0, "do not call");
-	return 0;
+    ASSERT(0, "do not call");
+    return 0;
 }
 
 const u64 SkipOp::GetDst(const int index) const
 {
-	ASSERT(0, "do not call");
-	return 0;
+    ASSERT(0, "do not call");
+    return 0;
 }
 
 
 void SkipOp::SetDst(const int index, const u64 value)
 {
-	ASSERT(0, "do not call");
+    ASSERT(0, "do not call");
 }
 
 void SkipOp::SetTakenPC(const PC takenPC)
 {
-	ASSERT(0, "do not call");
+    ASSERT(0, "do not call");
 }
 
 PC SkipOp::GetTakenPC() const
 {
-	ASSERT(0, "do not call");
-	return Addr();
+    ASSERT(0, "do not call");
+    return Addr();
 }
 
 void SkipOp::SetTaken(const bool taken)
 {
-	ASSERT(0, "do not call");
+    ASSERT(0, "do not call");
 }
 
 bool SkipOp::GetTaken() const
 {
-	ASSERT(0, "do not call");
-	return false;
+    ASSERT(0, "do not call");
+    return false;
 }
 
 // MemIF
 void SkipOp::Read( MemAccess* access )
 {
-	m_mainMem->Read(access);
-	if( access->result != MemAccess::MAR_SUCCESS ){
-		RUNTIME_WARNING( "An access violation occurs.\n%s", access->ToString().c_str() );
-	}
+    m_mainMem->Read(access);
+    if( access->result != MemAccess::MAR_SUCCESS ){
+        RUNTIME_WARNING( "An access violation occurs.\n%s", access->ToString().c_str() );
+    }
 }
 
 void SkipOp::Write( MemAccess* access )
 {
-	m_mainMem->Write(access);
-	if( access->result != MemAccess::MAR_SUCCESS ){
-		RUNTIME_WARNING( "An access violation occurs.\n%s", access->ToString().c_str() );
-	}
+    m_mainMem->Write(access);
+    if( access->result != MemAccess::MAR_SUCCESS ){
+        RUNTIME_WARNING( "An access violation occurs.\n%s", access->ToString().c_str() );
+    }
 }

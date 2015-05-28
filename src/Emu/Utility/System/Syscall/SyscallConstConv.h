@@ -33,50 +33,50 @@
 #define __EMULATORUTILITY_SYSCALLCONSTCONV_H__
 
 namespace Onikiri { 
-	namespace EmulatorUtility {
+    namespace EmulatorUtility {
 
-		class SyscallConstConvIF
-		{
-		public:
-			virtual ~SyscallConstConvIF() {};
-			virtual u32 HostToTarget(u32 val) = 0;
-			virtual u32 TargetToHost(u32 val) = 0;
-		};
+        class SyscallConstConvIF
+        {
+        public:
+            virtual ~SyscallConstConvIF() {};
+            virtual u32 HostToTarget(u32 val) = 0;
+            virtual u32 TargetToHost(u32 val) = 0;
+        };
 
 
-		class SyscallConstConvEnum : public SyscallConstConvIF
-		{
-		public:
-			SyscallConstConvEnum(u32* host_consts, u32* target_consts, int consts_size);
-		public:
-			virtual u32 HostToTarget(u32 val);
-			virtual u32 TargetToHost(u32 val);
+        class SyscallConstConvEnum : public SyscallConstConvIF
+        {
+        public:
+            SyscallConstConvEnum(u32* host_consts, u32* target_consts, int consts_size);
+        public:
+            virtual u32 HostToTarget(u32 val);
+            virtual u32 TargetToHost(u32 val);
 
-		private:
-			u32 Convert(u32 val, u32* from, u32* to);
+        private:
+            u32 Convert(u32 val, u32* from, u32* to);
 
-			u32* m_hostConsts;
-			u32* m_targetConsts;
-			int m_constsSize;
-		};
+            u32* m_hostConsts;
+            u32* m_targetConsts;
+            int m_constsSize;
+        };
 
-		class SyscallConstConvBitwise : public SyscallConstConvIF
-		{
-		public:
-			SyscallConstConvBitwise(u32* host_consts, u32* target_consts, int consts_size);
-		public:
-			virtual u32 HostToTarget(u32 val);
-			virtual u32 TargetToHost(u32 val);
-		private:
-			u32 Convert(u32 val, u32* from, u32* to);
+        class SyscallConstConvBitwise : public SyscallConstConvIF
+        {
+        public:
+            SyscallConstConvBitwise(u32* host_consts, u32* target_consts, int consts_size);
+        public:
+            virtual u32 HostToTarget(u32 val);
+            virtual u32 TargetToHost(u32 val);
+        private:
+            u32 Convert(u32 val, u32* from, u32* to);
 
-			u32* m_hostConsts;
-			u32* m_targetConsts;
-			int m_constsSize;
-		};
+            u32* m_hostConsts;
+            u32* m_targetConsts;
+            int m_constsSize;
+        };
 
-	}	// namespace EmulatorUtility {
-}	// namespace Onikiri { 
+    }   // namespace EmulatorUtility {
+}   // namespace Onikiri { 
 
-	
+    
 #endif

@@ -35,55 +35,55 @@
 #include "Interface/ISAInfo.h"
 
 namespace Onikiri {
-	namespace PPC64Linux {
+    namespace PPC64Linux {
 
-		// PPC64のISA情報
-		class PPC64Info : public ISAInfoIF
-		{
-		public:
-			static const int InstructionWordBitSize = 32;
-			static const int MaxSrcRegCount = 4;
-			static const int MaxDstRegCount = 3;
-			static const int MaxImmCount = 4;
-			// Int : 32
-			// FP  : 32
-			// CR  : 8   (Condition Register)
-			// SPR : 2   (Link Register, Count Register)
-			// Flag : 2  (FPSCR, CF)
-			// ADDR : 1
-			static const int RegisterCount = 32 + 32 + 8 + 2 + 2 + 1;
-			
-			static const int REG_CR0     = 64;
+        // PPC64のISA情報
+        class PPC64Info : public ISAInfoIF
+        {
+        public:
+            static const int InstructionWordBitSize = 32;
+            static const int MaxSrcRegCount = 4;
+            static const int MaxDstRegCount = 3;
+            static const int MaxImmCount = 4;
+            // Int : 32
+            // FP  : 32
+            // CR  : 8   (Condition Register)
+            // SPR : 2   (Link Register, Count Register)
+            // Flag : 2  (FPSCR, CF)
+            // ADDR : 1
+            static const int RegisterCount = 32 + 32 + 8 + 2 + 2 + 1;
+            
+            static const int REG_CR0     = 64;
 
-			static const int REG_LINK    = 72;
-			static const int REG_COUNT   = 73;
-			//static const int REG_XER     = ;
-			static const int REG_FPSCR   = 74;
-			//static const int REG_SO      = ;
-			static const int REG_CA      = 75;	// (carry flag) CA は独立したレジスタとして管理しておく
-			static const int REG_ADDRESS = 76;
+            static const int REG_LINK    = 72;
+            static const int REG_COUNT   = 73;
+            //static const int REG_XER     = ;
+            static const int REG_FPSCR   = 74;
+            //static const int REG_SO      = ;
+            static const int REG_CA      = 75;  // (carry flag) CA は独立したレジスタとして管理しておく
+            static const int REG_ADDRESS = 76;
 
-			// XERは使用されていないのでとりあえず未実装．ただし，CF (carry flag) は使用される
+            // XERは使用されていないのでとりあえず未実装．ただし，CF (carry flag) は使用される
 
-			static const int MAX_MEMORY_ACCESS_WIDTH = 8;
-
-
-			virtual ISA_TYPE GetISAType();
-			virtual int GetInstructionWordBitSize();
-			virtual int GetRegisterWordBitSize();
-			virtual int GetRegisterCount();
-			virtual int GetAddressSpaceBitSize();
-			virtual int GetMaxSrcRegCount();
-			virtual int GetMaxDstRegCount();
-			virtual int GetRegisterSegmentID(int regNum);
-			virtual int GetRegisterSegmentCount();
-			virtual int GetMaxOpInfoCountPerPC();
-			virtual int GetMaxMemoryAccessByteSize();
-			virtual bool IsLittleEndian();
-		};
+            static const int MAX_MEMORY_ACCESS_WIDTH = 8;
 
 
-	} // namespace PPC64Linux
+            virtual ISA_TYPE GetISAType();
+            virtual int GetInstructionWordBitSize();
+            virtual int GetRegisterWordBitSize();
+            virtual int GetRegisterCount();
+            virtual int GetAddressSpaceBitSize();
+            virtual int GetMaxSrcRegCount();
+            virtual int GetMaxDstRegCount();
+            virtual int GetRegisterSegmentID(int regNum);
+            virtual int GetRegisterSegmentCount();
+            virtual int GetMaxOpInfoCountPerPC();
+            virtual int GetMaxMemoryAccessByteSize();
+            virtual bool IsLittleEndian();
+        };
+
+
+    } // namespace PPC64Linux
 } // namespace Onikiri
 
 #endif

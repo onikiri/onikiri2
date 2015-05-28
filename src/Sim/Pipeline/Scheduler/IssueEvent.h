@@ -37,16 +37,16 @@
 
 namespace Onikiri 
 {
-	class Scheduler;
+    class Scheduler;
 
-	class OpIssueEvent : public EventBase<OpIssueEvent>
-	{
-	public:
-		OpIssueEvent( OpIterator op );
-		virtual void Update();
-	private:
-		OpIterator m_op;
-	};
+    class OpIssueEvent : public EventBase<OpIssueEvent>
+    {
+    public:
+        OpIssueEvent( OpIterator op );
+        virtual void Update();
+    private:
+        OpIterator m_op;
+    };
 
 }; // namespace Onikiri
 

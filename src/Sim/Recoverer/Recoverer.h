@@ -41,145 +41,145 @@
 
 namespace Onikiri
 {
-	class InorderList;
-	class Core;
-	class Thread;
-	class Checkpoint;
-	class CheckpointMaster;
+    class InorderList;
+    class Core;
+    class Thread;
+    class Checkpoint;
+    class CheckpointMaster;
 
-	class Recoverer : public PhysicalResourceNode
-	{
-	public:
-		typedef DataPredMissRecovery Recovery;
+    class Recoverer : public PhysicalResourceNode
+    {
+    public:
+        typedef DataPredMissRecovery Recovery;
 
-		// parameter mapping
-		BEGIN_PARAM_MAP("")
-			
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY( "@BranchPredRecoveryLatency",	m_brPredRecoveryLatency )
-				PARAM_ENTRY( "@ExceptionRecoverylatency",	m_exceptionRecoveryLatency )
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( GetResultPath() )
-				BEGIN_PARAM_PATH( "LatPredRecovery/" )
-					PARAM_ENTRY( "@NumRecovery",	m_latPredRecoveryCount )
-					PARAM_ENTRY( "@NumOps",			m_latPredRecoveryOps )
-				END_PARAM_PATH()
-				BEGIN_PARAM_PATH( "AddrPredRecovery/" )
-					PARAM_ENTRY( "@NumRecovery",	m_addrPredRecoveryCount )
-					PARAM_ENTRY( "@NumOps",			m_addrPredRecoveryOps )
-				END_PARAM_PATH()
-				BEGIN_PARAM_PATH( "ValuePredRecovery/" )
-					PARAM_ENTRY( "@NumRecovery",	m_valuePredRecoveryCount )
-					PARAM_ENTRY( "@NumOps",			m_valuePredRecoveryOps )
-				END_PARAM_PATH()
-				BEGIN_PARAM_PATH( "PartialLoadRecovery/" )
-					PARAM_ENTRY( "@NumRecovery",	m_partialReadRecoveryCount )
-					PARAM_ENTRY( "@NumOps",			m_partialReadRecoveryOps )
-				END_PARAM_PATH()
-				BEGIN_PARAM_PATH( "BracnchPredRecovery/" )
-					PARAM_ENTRY( "@NumRecovery",	m_brPredRecoveryCount )
-					PARAM_ENTRY( "@NumOps",			m_brPredRecoveryOps )
-				END_PARAM_PATH()
-				BEGIN_PARAM_PATH( "ExceptionRecovery/" )
-					PARAM_ENTRY( "@NumRecovery",	m_exceptionRecoveryCount )
-					PARAM_ENTRY( "@NumOps",			m_exceptionRecoveryOps )
-				END_PARAM_PATH()
-			END_PARAM_PATH()
+        // parameter mapping
+        BEGIN_PARAM_MAP("")
+            
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY( "@BranchPredRecoveryLatency",  m_brPredRecoveryLatency )
+                PARAM_ENTRY( "@ExceptionRecoverylatency",   m_exceptionRecoveryLatency )
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+                BEGIN_PARAM_PATH( "LatPredRecovery/" )
+                    PARAM_ENTRY( "@NumRecovery",    m_latPredRecoveryCount )
+                    PARAM_ENTRY( "@NumOps",         m_latPredRecoveryOps )
+                END_PARAM_PATH()
+                BEGIN_PARAM_PATH( "AddrPredRecovery/" )
+                    PARAM_ENTRY( "@NumRecovery",    m_addrPredRecoveryCount )
+                    PARAM_ENTRY( "@NumOps",         m_addrPredRecoveryOps )
+                END_PARAM_PATH()
+                BEGIN_PARAM_PATH( "ValuePredRecovery/" )
+                    PARAM_ENTRY( "@NumRecovery",    m_valuePredRecoveryCount )
+                    PARAM_ENTRY( "@NumOps",         m_valuePredRecoveryOps )
+                END_PARAM_PATH()
+                BEGIN_PARAM_PATH( "PartialLoadRecovery/" )
+                    PARAM_ENTRY( "@NumRecovery",    m_partialReadRecoveryCount )
+                    PARAM_ENTRY( "@NumOps",         m_partialReadRecoveryOps )
+                END_PARAM_PATH()
+                BEGIN_PARAM_PATH( "BracnchPredRecovery/" )
+                    PARAM_ENTRY( "@NumRecovery",    m_brPredRecoveryCount )
+                    PARAM_ENTRY( "@NumOps",         m_brPredRecoveryOps )
+                END_PARAM_PATH()
+                BEGIN_PARAM_PATH( "ExceptionRecovery/" )
+                    PARAM_ENTRY( "@NumRecovery",    m_exceptionRecoveryCount )
+                    PARAM_ENTRY( "@NumOps",         m_exceptionRecoveryOps )
+                END_PARAM_PATH()
+            END_PARAM_PATH()
 
-		END_PARAM_MAP()
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core,				"core",				m_core )
-			RESOURCE_ENTRY( Thread,				"thread",			m_thread )
-			RESOURCE_ENTRY( InorderList,		"inorderList",		m_inorderList )
-			RESOURCE_ENTRY( CheckpointMaster,	"checkpointMaster",	m_checkpointMaster )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core,               "core",             m_core )
+            RESOURCE_ENTRY( Thread,             "thread",           m_thread )
+            RESOURCE_ENTRY( InorderList,        "inorderList",      m_inorderList )
+            RESOURCE_ENTRY( CheckpointMaster,   "checkpointMaster", m_checkpointMaster )
+        END_RESOURCE_MAP()
 
-		Recoverer();
-		virtual ~Recoverer();
+        Recoverer();
+        virtual ~Recoverer();
 
-		virtual void Initialize( InitPhase phase );
-		virtual void Finalize();
+        virtual void Initialize( InitPhase phase );
+        virtual void Finalize();
 
-		
-		// Recover a processor from branch miss prediction.
-		// Ops after 'branch' are flushed and re-fetched.
-		void RecoverBPredMiss( OpIterator branch );
+        
+        // Recover a processor from branch miss prediction.
+        // Ops after 'branch' are flushed and re-fetched.
+        void RecoverBPredMiss( OpIterator branch );
 
-		// Recover a processor from exception.
-		void RecoverException( OpIterator causer );
+        // Recover a processor from exception.
+        void RecoverException( OpIterator causer );
 
-		// Recover a processor from data miss prediction.
-		// These methods return the number of squashed/canceled instructions.
-		int RecoverDataPredMiss( 
-			OpIterator producer,
-			OpIterator consumer, 
-			DataPredMissRecovery::Type dataPredType 
-		);
-
-
-		// Recover a processor from general miss prediction.
-		int RecoverDataPredMiss( 
-			OpIterator producer,
-			OpIterator consumer, 
-			const DataPredMissRecovery& recovery
-		);
-				
-		// Re-fetch all ops.
-		int RecoverByRefetch( OpIterator missedOp, OpIterator startOp );
-
-		// Re-issue all ops.
-		int RecoverByRescheduleAll( OpIterator missedOp, OpIterator startOp );
-
-		// Re-issue not finished ops.
-		int RecoverByRescheduleNotFinished(OpIterator missedOp, OpIterator startOp);
-
-		// Re-issue consumer ops selectively.
-		int RecoverByRescheduleSelective( OpIterator producerOp, Recovery::From from );
+        // Recover a processor from data miss prediction.
+        // These methods return the number of squashed/canceled instructions.
+        int RecoverDataPredMiss( 
+            OpIterator producer,
+            OpIterator consumer, 
+            DataPredMissRecovery::Type dataPredType 
+        );
 
 
-	protected:
+        // Recover a processor from general miss prediction.
+        int RecoverDataPredMiss( 
+            OpIterator producer,
+            OpIterator consumer, 
+            const DataPredMissRecovery& recovery
+        );
+                
+        // Re-fetch all ops.
+        int RecoverByRefetch( OpIterator missedOp, OpIterator startOp );
 
-		Core*				m_core;
-		Thread*				m_thread;
-		InorderList*		m_inorderList;
-		CheckpointMaster*	m_checkpointMaster;
+        // Re-issue all ops.
+        int RecoverByRescheduleAll( OpIterator missedOp, OpIterator startOp );
 
-		s64 m_latPredRecoveryCount;
-		s64 m_addrPredRecoveryCount;
-		s64 m_valuePredRecoveryCount;
-		s64 m_partialReadRecoveryCount;
+        // Re-issue not finished ops.
+        int RecoverByRescheduleNotFinished(OpIterator missedOp, OpIterator startOp);
 
-		s64 m_latPredRecoveryOps;
-		s64 m_addrPredRecoveryOps;
-		s64 m_valuePredRecoveryOps;
-		s64 m_partialReadRecoveryOps;
+        // Re-issue consumer ops selectively.
+        int RecoverByRescheduleSelective( OpIterator producerOp, Recovery::From from );
 
-		s64 m_brPredRecoveryCount;
-		s64 m_brPredRecoveryOps;
 
-		s64 m_exceptionRecoveryCount;
-		s64 m_exceptionRecoveryOps;
+    protected:
 
-		int m_brPredRecoveryLatency;
-		int m_exceptionRecoveryLatency;
+        Core*               m_core;
+        Thread*             m_thread;
+        InorderList*        m_inorderList;
+        CheckpointMaster*   m_checkpointMaster;
 
-		// Recover the state of the processor to 'checkpoint'.
-		void RecoverCheckpoint( Checkpoint* checkpoint );
+        s64 m_latPredRecoveryCount;
+        s64 m_addrPredRecoveryCount;
+        s64 m_valuePredRecoveryCount;
+        s64 m_partialReadRecoveryCount;
 
-		// Update recovery statistics
-		void UpdateRecoveryStatistics(
-			int recoveredInsns, 
-			Recovery::Type dataPredType 
-		);
+        s64 m_latPredRecoveryOps;
+        s64 m_addrPredRecoveryOps;
+        s64 m_valuePredRecoveryOps;
+        s64 m_partialReadRecoveryOps;
 
-		// Re-schedule the consumers of a producer.
-		// This is for RecoverByRescheduleSelective().
-		int RescheduleConsumers( OpIterator producer );
+        s64 m_brPredRecoveryCount;
+        s64 m_brPredRecoveryOps;
 
-		// Get an op that starts recovery.
-		OpIterator GetRecoveryStartOp( OpIterator producer, OpIterator consumer, Recovery::From from );
-	};
+        s64 m_exceptionRecoveryCount;
+        s64 m_exceptionRecoveryOps;
+
+        int m_brPredRecoveryLatency;
+        int m_exceptionRecoveryLatency;
+
+        // Recover the state of the processor to 'checkpoint'.
+        void RecoverCheckpoint( Checkpoint* checkpoint );
+
+        // Update recovery statistics
+        void UpdateRecoveryStatistics(
+            int recoveredInsns, 
+            Recovery::Type dataPredType 
+        );
+
+        // Re-schedule the consumers of a producer.
+        // This is for RecoverByRescheduleSelective().
+        int RescheduleConsumers( OpIterator producer );
+
+        // Get an op that starts recovery.
+        OpIterator GetRecoveryStartOp( OpIterator producer, OpIterator consumer, Recovery::From from );
+    };
 }
 
 #endif

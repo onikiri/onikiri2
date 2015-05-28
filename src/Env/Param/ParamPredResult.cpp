@@ -36,7 +36,7 @@ using namespace Onikiri;
 
 ParamPredResult::ParamPredResult()
 {
-	Reset();
+    Reset();
 }
 
 ParamPredResult::~ParamPredResult()
@@ -45,68 +45,68 @@ ParamPredResult::~ParamPredResult()
 
 void ParamPredResult::Hit  ( s64 add )
 {
-	m_hitCount += add;
+    m_hitCount += add;
 }
 
 void ParamPredResult::Miss ( s64 add )
 {
-	m_missCount += add;
+    m_missCount += add;
 }
 
 void ParamPredResult::Add  ( bool hit, s64 add )
 {
-	if(hit){
-		Hit(add);
-	}
-	else{
-		Miss(add);
-	}
+    if(hit){
+        Hit(add);
+    }
+    else{
+        Miss(add);
+    }
 }
 
 void ParamPredResult::Reset()
 {
-	m_hitCount = 0;
-	m_missCount = 0;
+    m_hitCount = 0;
+    m_missCount = 0;
 }
 
 s64 ParamPredResult::GetHitCount() const
 {
-	return m_hitCount;
+    return m_hitCount;
 }
 
 s64 ParamPredResult::GetMissCount() const
 {
-	return m_missCount;
+    return m_missCount;
 }
 
 void ParamPredResult::SetHitCount( s64 hitCount )
 {
-	m_hitCount = hitCount;
+    m_hitCount = hitCount;
 }
 
 void ParamPredResult::SetMissCount( s64 missCount )
 {
-	m_missCount = missCount;
+    m_missCount = missCount;
 }
 
 
 u64 ParamPredResult::GetTotalCount() const
 {
-	return m_hitCount + m_missCount;
+    return m_hitCount + m_missCount;
 }
 
 double ParamPredResult::GetHitRate() const
 {
-	return (double)GetHitCount() / (double)GetTotalCount();
+    return (double)GetHitCount() / (double)GetTotalCount();
 }
 
 void ParamPredResult::SetName( const char* name )
 {
-	m_name = name;
+    m_name = name;
 }
 
 const char* ParamPredResult::GetName()
 {
-	return m_name;
+    return m_name;
 }
 

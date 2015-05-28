@@ -41,182 +41,182 @@
 
 namespace Onikiri
 {
-	namespace EmulatorUtility
-	{
-		template<class TISAInfo>
-		class ExtraOpEmuStateWrapper : public OpStateIF
-		{
-		private:
-			OpEmulationState* m_emuState;
+    namespace EmulatorUtility
+    {
+        template<class TISAInfo>
+        class ExtraOpEmuStateWrapper : public OpStateIF
+        {
+        private:
+            OpEmulationState* m_emuState;
 
-		public:
-			ExtraOpEmuStateWrapper( OpEmulationState* emuState ) : m_emuState(emuState)
-			{
-			}
+        public:
+            ExtraOpEmuStateWrapper( OpEmulationState* emuState ) : m_emuState(emuState)
+            {
+            }
 
-			~ExtraOpEmuStateWrapper()
-			{
-			}
+            ~ExtraOpEmuStateWrapper()
+            {
+            }
 
-			// OpStateIF
-			PC GetPC() const
-			{
-				return Addr( 
-					m_emuState->GetPID(),
-					m_emuState->GetTID(),
-					m_emuState->GetPC() );
-			}
+            // OpStateIF
+            PC GetPC() const
+            {
+                return Addr( 
+                    m_emuState->GetPID(),
+                    m_emuState->GetTID(),
+                    m_emuState->GetPC() );
+            }
 
-			const u64 GetSrc(const int index) const
-			{
-				return m_emuState->GetSrc( index );
-			}
+            const u64 GetSrc(const int index) const
+            {
+                return m_emuState->GetSrc( index );
+            }
 
-			const u64 GetDst(const int index) const
-			{
-				return m_emuState->GetDst( index );
-			}
+            const u64 GetDst(const int index) const
+            {
+                return m_emuState->GetDst( index );
+            }
 
-			void SetDst(const int index, const u64 value)
-			{
-				return m_emuState->SetDst( index, value );
-			}
+            void SetDst(const int index, const u64 value)
+            {
+                return m_emuState->SetDst( index, value );
+            }
 
-			void SetTakenPC(const PC takenPC)
-			{
-				m_emuState->SetTakenPC( takenPC.address );
-			}
+            void SetTakenPC(const PC takenPC)
+            {
+                m_emuState->SetTakenPC( takenPC.address );
+            }
 
-			PC GetTakenPC() const
-			{
-				return Addr( 
-					m_emuState->GetPID(),
-					m_emuState->GetTID(),
-					m_emuState->GetTakenPC() );
-			}
+            PC GetTakenPC() const
+            {
+                return Addr( 
+                    m_emuState->GetPID(),
+                    m_emuState->GetTID(),
+                    m_emuState->GetTakenPC() );
+            }
 
-			void SetTaken(const bool taken)
-			{
-				m_emuState->SetTaken( taken );
-			}
+            void SetTaken(const bool taken)
+            {
+                m_emuState->SetTaken( taken );
+            }
 
-			bool GetTaken() const
-			{
-				return m_emuState->GetTaken();
-			}
+            bool GetTaken() const
+            {
+                return m_emuState->GetTaken();
+            }
 
-			// MemIF
-			void Read( MemAccess* access )
-			{
-				m_emuState->GetOpState()->Read( access );
-			}
+            // MemIF
+            void Read( MemAccess* access )
+            {
+                m_emuState->GetOpState()->Read( access );
+            }
 
-			void Write( MemAccess* access )
-			{
-				m_emuState->GetOpState()->Write( access );
-			}
-		};
+            void Write( MemAccess* access )
+            {
+                m_emuState->GetOpState()->Write( access );
+            }
+        };
 
-		template<class TISAInfo>
-		class ExtraOpInfoWrapper : public CommonOpInfo<TISAInfo> 
-		{
-			ExtraOpInfoIF* m_exOp;
-		public:
-			using CommonOpInfo<TISAInfo>::SetDstRegOpMap;
-			using CommonOpInfo<TISAInfo>::SetSrcRegOpMap;
-			using CommonOpInfo<TISAInfo>::SetDstRegNum;
-			using CommonOpInfo<TISAInfo>::SetSrcRegNum;
-			using CommonOpInfo<TISAInfo>::SetDstReg;
-			using CommonOpInfo<TISAInfo>::SetSrcReg;
-			using CommonOpInfo<TISAInfo>::SetEmulationFunc;
-		
-			ExtraOpInfoWrapper() : 
-				CommonOpInfo<TISAInfo>( OpClass( OpClassCode::UNDEF ) ),
-				m_exOp(0)
-			{
-				SetEmulationFunc( &EmulationFunctionProxy );
-			}
+        template<class TISAInfo>
+        class ExtraOpInfoWrapper : public CommonOpInfo<TISAInfo> 
+        {
+            ExtraOpInfoIF* m_exOp;
+        public:
+            using CommonOpInfo<TISAInfo>::SetDstRegOpMap;
+            using CommonOpInfo<TISAInfo>::SetSrcRegOpMap;
+            using CommonOpInfo<TISAInfo>::SetDstRegNum;
+            using CommonOpInfo<TISAInfo>::SetSrcRegNum;
+            using CommonOpInfo<TISAInfo>::SetDstReg;
+            using CommonOpInfo<TISAInfo>::SetSrcReg;
+            using CommonOpInfo<TISAInfo>::SetEmulationFunc;
+        
+            ExtraOpInfoWrapper() : 
+                CommonOpInfo<TISAInfo>( OpClass( OpClassCode::UNDEF ) ),
+                m_exOp(0)
+            {
+                SetEmulationFunc( &EmulationFunctionProxy );
+            }
 
-			void SetExtraOpInfo( ExtraOpInfoIF* exOp )
-			{
-				m_exOp = exOp;
+            void SetExtraOpInfo( ExtraOpInfoIF* exOp )
+            {
+                m_exOp = exOp;
 
-				// CommonOpInfo ‘¤‚É”½‰f
-				SetDstRegNum( m_exOp->GetDstNum() );
-				SetSrcRegNum( m_exOp->GetSrcNum() );
-				
-				for( int i = 0; i < m_exOp->GetDstNum(); i++ ){
-					SetDstRegOpMap( i, i );
-					SetDstReg( i, m_exOp->GetDstOperand( i ) );
-				}
-				for( int i = 0; i < m_exOp->GetSrcNum(); i++ ){
-					SetSrcRegOpMap( i, i );
-					SetSrcReg( i, m_exOp->GetSrcOperand( i ) );
-				}
-			}
+                // CommonOpInfo ‘¤‚É”½‰f
+                SetDstRegNum( m_exOp->GetDstNum() );
+                SetSrcRegNum( m_exOp->GetSrcNum() );
+                
+                for( int i = 0; i < m_exOp->GetDstNum(); i++ ){
+                    SetDstRegOpMap( i, i );
+                    SetDstReg( i, m_exOp->GetDstOperand( i ) );
+                }
+                for( int i = 0; i < m_exOp->GetSrcNum(); i++ ){
+                    SetSrcRegOpMap( i, i );
+                    SetSrcReg( i, m_exOp->GetSrcOperand( i ) );
+                }
+            }
 
-			ExtraOpInfoIF* GetExtraOpInfo() const
-			{
-				return m_exOp;
-			}
+            ExtraOpInfoIF* GetExtraOpInfo() const
+            {
+                return m_exOp;
+            }
 
-			static void EmulationFunctionProxy( OpEmulationState* emuState )
-			{
-				OpInfo* base = emuState->GetOpInfo();
-				ExtraOpInfoWrapper* wrapper = static_cast<ExtraOpInfoWrapper*>(base);
-				ASSERT( wrapper != 0 );
+            static void EmulationFunctionProxy( OpEmulationState* emuState )
+            {
+                OpInfo* base = emuState->GetOpInfo();
+                ExtraOpInfoWrapper* wrapper = static_cast<ExtraOpInfoWrapper*>(base);
+                ASSERT( wrapper != 0 );
 
-				ExtraOpEmuStateWrapper<TISAInfo> tmpState( emuState );
+                ExtraOpEmuStateWrapper<TISAInfo> tmpState( emuState );
 
-				// ŽÀs
-				ExtraOpInfoIF* exOpInfo = wrapper->GetExtraOpInfo();
-				exOpInfo->Execute( &tmpState );
-			}
+                // ŽÀs
+                ExtraOpInfoIF* exOpInfo = wrapper->GetExtraOpInfo();
+                exOpInfo->Execute( &tmpState );
+            }
 
-			// OpInfo ‚ÌŽÀ‘•
-			const OpClass& GetOpClass() const
-			{
-				ASSERT( m_exOp != 0 );
-				return m_exOp->GetOpClass();
-			}
-			int GetSrcOperand(const int index) const
-			{
-				ASSERT( m_exOp != 0 );
-				return m_exOp->GetSrcOperand(index);
-			}
-			int GetDstOperand(const int index) const
-			{
-				ASSERT( m_exOp != 0 );
-				return m_exOp->GetDstOperand(index);
-			}
-			int GetSrcNum() const
-			{
-				ASSERT( m_exOp != 0 );
-				return m_exOp->GetSrcNum();
-			}
-			int GetDstNum() const
-			{
-				ASSERT( m_exOp != 0 );
-				return m_exOp->GetDstNum();
-			}
-			int GetMicroOpNum() const
-			{
-				ASSERT( m_exOp != 0 );
-				return m_exOp->GetMicroOpNum();
-			}
-			int GetMicroOpIndex() const
-			{
-				ASSERT( m_exOp != 0 );
-				return m_exOp->GetMicroOpIndex();
-			}
-			const char* GetMnemonic() const
-			{
-				ASSERT( m_exOp != 0 );
-				return m_exOp->GetMnemonic();
-			}
-		};
+            // OpInfo ‚ÌŽÀ‘•
+            const OpClass& GetOpClass() const
+            {
+                ASSERT( m_exOp != 0 );
+                return m_exOp->GetOpClass();
+            }
+            int GetSrcOperand(const int index) const
+            {
+                ASSERT( m_exOp != 0 );
+                return m_exOp->GetSrcOperand(index);
+            }
+            int GetDstOperand(const int index) const
+            {
+                ASSERT( m_exOp != 0 );
+                return m_exOp->GetDstOperand(index);
+            }
+            int GetSrcNum() const
+            {
+                ASSERT( m_exOp != 0 );
+                return m_exOp->GetSrcNum();
+            }
+            int GetDstNum() const
+            {
+                ASSERT( m_exOp != 0 );
+                return m_exOp->GetDstNum();
+            }
+            int GetMicroOpNum() const
+            {
+                ASSERT( m_exOp != 0 );
+                return m_exOp->GetMicroOpNum();
+            }
+            int GetMicroOpIndex() const
+            {
+                ASSERT( m_exOp != 0 );
+                return m_exOp->GetMicroOpIndex();
+            }
+            const char* GetMnemonic() const
+            {
+                ASSERT( m_exOp != 0 );
+                return m_exOp->GetMnemonic();
+            }
+        };
 
-	} // namespace EmulatorUtility
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif

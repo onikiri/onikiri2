@@ -47,19 +47,19 @@ EmulatorFactory::~EmulatorFactory()
 
 EmulatorIF* EmulatorFactory::Create(const String& systemName, SystemIF* simSystem)
 {
-	if (systemName == "AlphaLinux") {
-		return new AlphaLinux::AlphaLinuxEmulator( simSystem );
-	}
-	else if (systemName == "PPC64Linux") {
-		return new PPC64Linux::PPC64LinuxEmulator( simSystem );
-	}
-	
-	THROW_RUNTIME_ERROR(
-		"Unknown system name specified.\n"
-		"This parameter must be one of the following strings : \n"
-		"[AlphaLinux,PPC64Linux]"
-	);
+    if (systemName == "AlphaLinux") {
+        return new AlphaLinux::AlphaLinuxEmulator( simSystem );
+    }
+    else if (systemName == "PPC64Linux") {
+        return new PPC64Linux::PPC64LinuxEmulator( simSystem );
+    }
+    
+    THROW_RUNTIME_ERROR(
+        "Unknown system name specified.\n"
+        "This parameter must be one of the following strings : \n"
+        "[AlphaLinux,PPC64Linux]"
+    );
 
-	return 0;
+    return 0;
 }
 

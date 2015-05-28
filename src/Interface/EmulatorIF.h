@@ -44,46 +44,46 @@
 
 namespace Onikiri {
 
-	// エミュレータのインターフェース
-	class EmulatorIF {
+    // エミュレータのインターフェース
+    class EmulatorIF {
 
-	public:
-		EmulatorIF() {}
-		virtual ~EmulatorIF() {}
+    public:
+        EmulatorIF() {}
+        virtual ~EmulatorIF() {}
 
-		// 戻り値の first: pcにある命令を分解して生成された，
-		// OpInfoへのポインタの配列　second: MOpの数
-		virtual std::pair<OpInfo**, int> GetOp(PC pc) = 0;
+        // 戻り値の first: pcにある命令を分解して生成された，
+        // OpInfoへのポインタの配列　second: MOpの数
+        virtual std::pair<OpInfo**, int> GetOp(PC pc) = 0;
 
-		// sim側にメモリのイメージを見せる
-		// ストアキューにデータが無かった時に読み書きするため
-		virtual MemIF* GetMemImage() = 0;
+        // sim側にメモリのイメージを見せる
+        // ストアキューにデータが無かった時に読み書きするため
+        virtual MemIF* GetMemImage() = 0;
 
-		// opInfo の命令を実行する．ソースオペランド等の取得，結果の格納は opStateIF に対して行う
-		virtual void Execute(OpStateIF* opStateIF, OpInfo* opInfo) = 0;
+        // opInfo の命令を実行する．ソースオペランド等の取得，結果の格納は opStateIF に対して行う
+        virtual void Execute(OpStateIF* opStateIF, OpInfo* opInfo) = 0;
 
-		// Commit instructions executed in Execute().
-		// Currently, CRC calculation of pcs for debugging is done in Commit().
-		virtual void Commit(OpStateIF* opStateIF, OpInfo* opInfo) = 0;
+        // Commit instructions executed in Execute().
+        // Currently, CRC calculation of pcs for debugging is done in Commit().
+        virtual void Commit(OpStateIF* opStateIF, OpInfo* opInfo) = 0;
 
-		// 生成されたプロセスの数を取得する
-		virtual int GetProcessCount() const = 0;
+        // 生成されたプロセスの数を取得する
+        virtual int GetProcessCount() const = 0;
 
-		// pid番のプロセスのエントリーポイントを取得する
-		virtual PC GetEntryPoint(int pid) const = 0;
+        // pid番のプロセスのエントリーポイントを取得する
+        virtual PC GetEntryPoint(int pid) const = 0;
 
-		// レジスタの初期値を取得する
-		virtual u64 GetInitialRegValue(int pid, int index) const = 0;
+        // レジスタの初期値を取得する
+        virtual u64 GetInitialRegValue(int pid, int index) const = 0;
 
-		// ISA情報の取得
-		virtual ISAInfoIF* GetISAInfo() = 0;
+        // ISA情報の取得
+        virtual ISAInfoIF* GetISAInfo() = 0;
 
-		// pc から skipCount 命令実行する．実行した後のPCを返す．executedInsnCount, executedOpCountに実際に実行できた命令数とOp数を返す (NULL可)
-		virtual PC Skip(PC pc, u64 skipCount, u64* regArray, u64* executedInsnCount, u64* executedOpCount) = 0;
+        // pc から skipCount 命令実行する．実行した後のPCを返す．executedInsnCount, executedOpCountに実際に実行できた命令数とOp数を返す (NULL可)
+        virtual PC Skip(PC pc, u64 skipCount, u64* regArray, u64* executedInsnCount, u64* executedOpCount) = 0;
 
-		// 外部命令デコーダをセットする
-		virtual void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder ) = 0;
-	};
+        // 外部命令デコーダをセットする
+        virtual void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder ) = 0;
+    };
 
 }; // namespace Onikiri
 

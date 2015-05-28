@@ -42,7 +42,7 @@ GlobalClock::GlobalClock()
 
 GlobalClock::~GlobalClock()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void GlobalClock::Initialize(InitPhase phase)
@@ -51,31 +51,31 @@ void GlobalClock::Initialize(InitPhase phase)
 
 s64  GlobalClock::GetTick() const
 {
-	return m_now; 
+    return m_now; 
 }
 
 void GlobalClock::SetTick(s64 now)
 {
-	m_now = now;  
+    m_now = now;  
 }
 
 void GlobalClock::Tick()         
 {
-	++m_now; 
+    ++m_now; 
 }
 
 void GlobalClock::SetInsnID( u64 id )
 {
-	m_insnID = id;
+    m_insnID = id;
 }
 
 void GlobalClock::AddInsnID( u64 num )
 {
-	m_insnID += num;
+    m_insnID += num;
 }
 
 u64 GlobalClock::GetInsnID()
 {
-	return 	m_insnID;
+    return  m_insnID;
 }
 

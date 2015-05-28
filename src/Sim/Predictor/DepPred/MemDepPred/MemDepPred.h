@@ -37,37 +37,37 @@
 
 namespace Onikiri 
 {
-	class Core;
+    class Core;
 
-	// A proxy class for memory dependency predictor.
-	class MemDepPred : 
-		public MemDepPredIF,
-		public PhysicalResourceNode	
-	{
+    // A proxy class for memory dependency predictor.
+    class MemDepPred : 
+        public MemDepPredIF,
+        public PhysicalResourceNode 
+    {
 
-	public:
-		BEGIN_PARAM_MAP( "" )
-		END_PARAM_MAP()
+    public:
+        BEGIN_PARAM_MAP( "" )
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( MemDepPredIF, "memDepPred", m_pred )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( MemDepPredIF, "memDepPred", m_pred )
+        END_RESOURCE_MAP()
 
-		MemDepPred();
-		virtual ~MemDepPred();
+        MemDepPred();
+        virtual ~MemDepPred();
 
-		virtual void Initialize( InitPhase phase );
+        virtual void Initialize( InitPhase phase );
 
-		virtual void Resolve( OpIterator op );
-		virtual void Allocate( OpIterator op );
-		virtual void Commit( OpIterator op );
-		virtual void Flush( OpIterator op );
-		virtual void OrderConflicted( OpIterator producer, OpIterator consumer );
-		virtual bool CanAllocate( OpIterator* infoArray, int numOp );
-	
-	protected:
-		MemDepPredIF* m_pred;
-	};
+        virtual void Resolve( OpIterator op );
+        virtual void Allocate( OpIterator op );
+        virtual void Commit( OpIterator op );
+        virtual void Flush( OpIterator op );
+        virtual void OrderConflicted( OpIterator producer, OpIterator consumer );
+        virtual bool CanAllocate( OpIterator* infoArray, int numOp );
+    
+    protected:
+        MemDepPredIF* m_pred;
+    };
 
 }; // namespace Onikiri
 

@@ -36,43 +36,43 @@
 
 namespace Onikiri
 {
-	// Resources/events with higher priorities are processed earlier.
-	// Priorities numbers must be continuous.
-	enum ResourcePriority
-	{
-		RP_LOWEST = 0,		// Lowest priority
+    // Resources/events with higher priorities are processed earlier.
+    // Priorities numbers must be continuous.
+    enum ResourcePriority
+    {
+        RP_LOWEST = 0,      // Lowest priority
 
-		// Commit
-		// This priority must be lower than CRP_EXECUTION_FINISH.
-		RP_COMMIT,
+        // Commit
+        // This priority must be lower than CRP_EXECUTION_FINISH.
+        RP_COMMIT,
 
-		// Execution finish.
-		// This priority must be lower than CRP_DETECT_LATPRED_MISS.
-		// (see CRP_DETECT_LATPRED_MISS comment)
-		//
-		// This priority must be lower than and CRP_DEFAULT_UPDATE,
-		// because recovery process in execution finish must be done after
-		// all usual update process..
-		//
-		RP_EXECUTION_FINISH,		
+        // Execution finish.
+        // This priority must be lower than CRP_DETECT_LATPRED_MISS.
+        // (see CRP_DETECT_LATPRED_MISS comment)
+        //
+        // This priority must be lower than and CRP_DEFAULT_UPDATE,
+        // because recovery process in execution finish must be done after
+        // all usual update process..
+        //
+        RP_EXECUTION_FINISH,        
 
-		// Detecting latency miss prediction.
-		// This priority must be higher than that of 
-		// execution finish process (CRP_DETECT_LATPRED_MISS). 
-		RP_DETECT_LATPRED_MISS,		
+        // Detecting latency miss prediction.
+        // This priority must be higher than that of 
+        // execution finish process (CRP_DETECT_LATPRED_MISS). 
+        RP_DETECT_LATPRED_MISS,     
 
-		// Default priorities
-		RP_DEFAULT_UPDATE,
-		RP_DEFAULT_EVENT,
+        // Default priorities
+        RP_DEFAULT_UPDATE,
+        RP_DEFAULT_EVENT,
 
-		// A 'Wakeup' priority must be higher than that of 'Select', which
-		// is done in CRP_DEFAULT_UPDATE.
-		RP_WAKEUP_EVENT,
+        // A 'Wakeup' priority must be higher than that of 'Select', which
+        // is done in CRP_DEFAULT_UPDATE.
+        RP_WAKEUP_EVENT,
 
 
 
-		RP_HIGHEST			// Highest priority
-	};
+        RP_HIGHEST          // Highest priority
+    };
 }
 
 #endif // #define SIM_TIME_WHEEL_CLOCKED_RESOURCE_PRIORITY_H

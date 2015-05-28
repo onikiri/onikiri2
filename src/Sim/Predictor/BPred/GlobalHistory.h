@@ -46,37 +46,37 @@
 
 namespace Onikiri 
 {
-	class CheckpointMaster;
+    class CheckpointMaster;
 
-	class GlobalHistory : public PhysicalResourceNode 
-	{
-	protected:
-		CheckpointMaster* m_checkpointMaster;
-		CheckpointedData<u64> m_globalHistory; // 分岐履歴: 1bitが分岐のTaken/NotTakenに対応
+    class GlobalHistory : public PhysicalResourceNode 
+    {
+    protected:
+        CheckpointMaster* m_checkpointMaster;
+        CheckpointedData<u64> m_globalHistory; // 分岐履歴: 1bitが分岐のTaken/NotTakenに対応
 
-	public:
-		GlobalHistory();
-		virtual ~GlobalHistory();
+    public:
+        GlobalHistory();
+        virtual ~GlobalHistory();
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( CheckpointMaster, "checkpointMaster", m_checkpointMaster )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( CheckpointMaster, "checkpointMaster", m_checkpointMaster )
+        END_RESOURCE_MAP()
 
-		// 初期化
-		void Initialize(InitPhase phase);
+        // 初期化
+        void Initialize(InitPhase phase);
 
-		// dirpred の予測時に予測結果を bpred から教えてもらう
-		void Predicted(bool taken);
-		// 分岐のRetire時にTaken/NotTakenを bpred から教えてもらう
-		void Retired(bool taken);
+        // dirpred の予測時に予測結果を bpred から教えてもらう
+        void Predicted(bool taken);
+        // 分岐のRetire時にTaken/NotTakenを bpred から教えてもらう
+        void Retired(bool taken);
 
-		// 最下位ビット(1番最新のもの)を(強制的に)変更する
-		void SetLeastSignificantBit(bool taken);
+        // 最下位ビット(1番最新のもの)を(強制的に)変更する
+        void SetLeastSignificantBit(bool taken);
 
-		// accessors
-		u64 GetHistory();
+        // accessors
+        u64 GetHistory();
 
-	};
+    };
 
 }; // namespace Onikiri
 

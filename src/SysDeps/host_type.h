@@ -36,11 +36,11 @@
 // ñ{ìñÇÕconfigureçsÇ§
 
 #if defined( __CYGWIN__ )
-#	define HOST_IS_CYGWIN
+#   define HOST_IS_CYGWIN
 #elif defined( _WIN32 )
-#	define HOST_IS_WINDOWS
+#   define HOST_IS_WINDOWS
 #else
-#	define HOST_IS_LINUX
+#   define HOST_IS_LINUX
 #endif
 
 #if defined( HOST_IS_WINDOWS ) || defined(HOST_IS_CYGWIN) 
@@ -51,40 +51,40 @@
 #endif
 
 #if defined( _MSC_VER )
-#	define COMPILER_IS_MSVC
-#	if _MSC_VER < 1800 
-#		error "Visual C++ 2013 or later is required"
+#   define COMPILER_IS_MSVC
+#   if _MSC_VER < 1800 
+#       error "Visual C++ 2013 or later is required"
 #   endif
 #elif defined( __clang__ )
-#	define COMPILER_IS_CLANG
+#   define COMPILER_IS_CLANG
 #elif defined( __GNUC__ )
-#	define COMPILER_IS_GCC
+#   define COMPILER_IS_GCC
 #else
-#	define COMPILER_IS_UNKNOWN
+#   define COMPILER_IS_UNKNOWN
 #endif
 
 #if defined(COMPILER_IS_MSVC)
-#	define HOST_IS_LITTLE_ENDIAN
-#	ifdef _WIN64
-#		define HOST_IS_X86_64
-#	else
-#		define HOST_IS_X86
-#	endif
-#elif defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
-#	if defined(__x86_64__)
-#		define HOST_IS_LITTLE_ENDIAN
-#		define HOST_IS_X86_64
-#	elif defined(__i386__) 
-#		define HOST_IS_LITTLE_ENDIAN
-#		define HOST_IS_X86
-#	elif defined(__powerpc__) 
-#		define HOST_IS_BIG_ENDIAN
-#		define HOST_IS_POWERPC
+#   define HOST_IS_LITTLE_ENDIAN
+#   ifdef _WIN64
+#       define HOST_IS_X86_64
 #   else
-#		error "unknown host architecture"
-#	endif
+#       define HOST_IS_X86
+#   endif
+#elif defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
+#   if defined(__x86_64__)
+#       define HOST_IS_LITTLE_ENDIAN
+#       define HOST_IS_X86_64
+#   elif defined(__i386__) 
+#       define HOST_IS_LITTLE_ENDIAN
+#       define HOST_IS_X86
+#   elif defined(__powerpc__) 
+#       define HOST_IS_BIG_ENDIAN
+#       define HOST_IS_POWERPC
+#   else
+#       error "unknown host architecture"
+#   endif
 #else
-#	error "unknown compiler"
+#   error "unknown compiler"
 #endif
 
 //#define HOST_IS_BIG_ENDIAN

@@ -38,22 +38,22 @@
 
 namespace Onikiri 
 {
-	class Scheduler;
+    class Scheduler;
 
-	class OpDumpCommittableEvent : public EventBase<OpDumpCommittableEvent>
-	{
-	public:
-		OpDumpCommittableEvent( OpIterator op ) : m_op( op )
-		{
-		}
+    class OpDumpCommittableEvent : public EventBase<OpDumpCommittableEvent>
+    {
+    public:
+        OpDumpCommittableEvent( OpIterator op ) : m_op( op )
+        {
+        }
 
-		virtual void Update()
-		{
-			g_dumper.Dump( DS_COMMITTABLE, m_op );
-		}
-	private:
-		OpIterator m_op;
-	};
+        virtual void Update()
+        {
+            g_dumper.Dump( DS_COMMITTABLE, m_op );
+        }
+    private:
+        OpIterator m_op;
+    };
 
 }; // namespace Onikiri
 

@@ -39,28 +39,28 @@ using namespace Onikiri;
 
 void EmulationSystem::Run( SystemContext* context )
 {
-	s64 numInsns     = context->executionInsns;
-	int processCount = context->emulator->GetProcessCount();
+    s64 numInsns     = context->executionInsns;
+    int processCount = context->emulator->GetProcessCount();
 
-	// 論理レジスタの初期値を emulator に教えてもらってセット
-	ArchitectureStateList& archStateList = context->architectureStateList;
+    // 論理レジスタの初期値を emulator に教えてもらってセット
+    ArchitectureStateList& archStateList = context->architectureStateList;
 
-	// 実行
-	vector<s64> totalInsnCount;
-	u64 executeInsns = numInsns / processCount;
-	for( int pid = 0; pid < processCount; pid++ ){
-		u64 insnCount = 0;
-		archStateList[pid].pc = 
-			context->emulator->Skip(
-				archStateList[pid].pc,
-				executeInsns,
-				&archStateList[pid].registerValue[0],
-				&insnCount, 
-				NULL
-			);
-		totalInsnCount.push_back( insnCount );
-	}
+    // 実行
+    vector<s64> totalInsnCount;
+    u64 executeInsns = numInsns / processCount;
+    for( int pid = 0; pid < processCount; pid++ ){
+        u64 insnCount = 0;
+        archStateList[pid].pc = 
+            context->emulator->Skip(
+                archStateList[pid].pc,
+                executeInsns,
+                &archStateList[pid].registerValue[0],
+                &insnCount, 
+                NULL
+            );
+        totalInsnCount.push_back( insnCount );
+    }
 
-	context->executedInsns  = totalInsnCount;
-	context->executedCycles = 0;
+    context->executedInsns  = totalInsnCount;
+    context->executedCycles = 0;
 }

@@ -36,11 +36,11 @@
 #include "Emu/PPC64Linux/PPC64Info.h"
 
 namespace Onikiri {
-	namespace PPC64Linux {
+    namespace PPC64Linux {
 
-		typedef EmulatorUtility::CommonOpInfo<PPC64Info> PPC64OpInfo;
+        typedef EmulatorUtility::CommonOpInfo<PPC64Info> PPC64OpInfo;
 
-	} // namespace PPC64Linux
+    } // namespace PPC64Linux
 } // namespace Onikiri
 
 #endif

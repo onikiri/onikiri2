@@ -39,117 +39,117 @@ using namespace Onikiri;
 
 bool PipelineLatch::FindAndEraseFromLatch( List* latch, OpIterator op )
 {
-	iterator target = 
-		std::find( latch->begin(), latch->end(), op );
+    iterator target = 
+        std::find( latch->begin(), latch->end(), op );
 
-	if( target != latch->end() ){
-		latch->erase( target );
-		return true;
-	}
-	else{
-		return false;
-	}
+    if( target != latch->end() ){
+        latch->erase( target );
+        return true;
+    }
+    else{
+        return false;
+    }
 }
-		
+        
 void PipelineLatch::DumpStallBegin()
 {
-	if( m_enableDumpStall && !m_latchOutIsStalled ){
-		for( iterator i = m_latchOut.begin(); i != m_latchOut.end(); ++i ){
-			g_dumper.DumpStallBegin( *i );
-		}
-		m_latchOutIsStalled = true;
-	}
+    if( m_enableDumpStall && !m_latchOutIsStalled ){
+        for( iterator i = m_latchOut.begin(); i != m_latchOut.end(); ++i ){
+            g_dumper.DumpStallBegin( *i );
+        }
+        m_latchOutIsStalled = true;
+    }
 }
 
 void PipelineLatch::DumpStallEnd()
 {
-	if( m_enableDumpStall && m_latchOutIsStalled ){
-		for( iterator i = m_latchOut.begin(); i != m_latchOut.end(); ++i ){
-			g_dumper.DumpStallEnd( *i );
-		}
-		m_latchOutIsStalled = false;
-	}
+    if( m_enableDumpStall && m_latchOutIsStalled ){
+        for( iterator i = m_latchOut.begin(); i != m_latchOut.end(); ++i ){
+            g_dumper.DumpStallEnd( *i );
+        }
+        m_latchOutIsStalled = false;
+    }
 }
 
 // Update a latch
 void PipelineLatch::UpdateLatch()
 {
-	typedef List::iterator iterator;
-	for( iterator i = m_latchIn.begin(); i != m_latchIn.end(); ){
-		m_latchOut.push_back( *i );
-		i = m_latchIn.erase( i );
-	}
+    typedef List::iterator iterator;
+    for( iterator i = m_latchIn.begin(); i != m_latchIn.end(); ){
+        m_latchOut.push_back( *i );
+        i = m_latchIn.erase( i );
+    }
 }
 
 
 PipelineLatch::PipelineLatch( const char* name ) : 
-	BaseType( name ),
-	m_enableDumpStall( true ),
-	m_latchOutIsStalled( false )
+    BaseType( name ),
+    m_enableDumpStall( true ),
+    m_latchOutIsStalled( false )
 {
 }
 
 void PipelineLatch::Receive( OpIterator op )
 {
-	ASSERT(
-		!IsStalledThisCycle(),
-		"The latch is written on a stalled cycle."
-	);
-	m_latchIn.push_back( op );
+    ASSERT(
+        !IsStalledThisCycle(),
+        "The latch is written on a stalled cycle."
+    );
+    m_latchIn.push_back( op );
 }
 
 // A cycle end handler
 // Update the pipeline latch.
 void PipelineLatch::End()
 {
-	ASSERT( 
-		!( !IsStalledThisCycle() && m_latchOut.size() > 0 ), 
-		"Outputs are not picked on an un-stalled cycle."
-	);
+    ASSERT( 
+        !( !IsStalledThisCycle() && m_latchOut.size() > 0 ), 
+        "Outputs are not picked on an un-stalled cycle."
+    );
 
-	ASSERT( 
-		!( m_latchIn.size() > 0 && m_latchOut.size() > 0 ), 
-		"Data on the pipeline latch is overwritten by a upper pipeline. "
-		"The data has not processed for pipeline stall."
-	);
+    ASSERT( 
+        !( m_latchIn.size() > 0 && m_latchOut.size() > 0 ), 
+        "Data on the pipeline latch is overwritten by a upper pipeline. "
+        "The data has not processed for pipeline stall."
+    );
 
-	UpdateLatch();
-	BaseType::End();
+    UpdateLatch();
+    BaseType::End();
 }
 
 void PipelineLatch::Transition()
 {
-	BaseType::Transition();
-	if( IsStalledThisCycle() ){
-		// BeginStall is only called 
-		DumpStallBegin();
-	}
+    BaseType::Transition();
+    if( IsStalledThisCycle() ){
+        // BeginStall is only called 
+        DumpStallBegin();
+    }
 }
 
 // Stall handlers, which are called in stall begin/end
 void PipelineLatch::BeginStall()
 {
-	BaseType::BeginStall();
-	DumpStallBegin();
+    BaseType::BeginStall();
+    DumpStallBegin();
 }
 
 void PipelineLatch::EndStall()
 {
-	BaseType::EndStall();
-	DumpStallEnd();
+    BaseType::EndStall();
+    DumpStallEnd();
 };
-		
+        
 void PipelineLatch::Delete( OpIterator op )
 {
-	if( FindAndEraseFromLatch( &m_latchIn, op ) ){
-		return;
-	}
-	if( FindAndEraseFromLatch( &m_latchOut, op ) ){
-		return;
-	}
+    if( FindAndEraseFromLatch( &m_latchIn, op ) ){
+        return;
+    }
+    if( FindAndEraseFromLatch( &m_latchOut, op ) ){
+        return;
+    }
 }
 
 void PipelineLatch::EnableDumpStall( bool enable )
 {
-	m_enableDumpStall = enable;
+    m_enableDumpStall = enable;
 }
