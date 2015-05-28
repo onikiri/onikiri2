@@ -56,24 +56,19 @@
 
     #pragma warning(push)
 
-    // Some boost files cause warnings 4244/4245/4819 in MSVC 2013.
+    // Some boost files cause warnings 4244/4245/4267/4819 in MSVC 2013.
     #pragma warning(disable:4244)
     #pragma warning(disable:4245)
     #pragma warning(disable:4819)
+    #pragma warning(disable:4267)
 
 #elif defined COMPILER_IS_GCC
 
     // push & pop is available since gcc 4.6
     #pragma GCC diagnostic push
-
-    // Missing braces in boost/asio/ip/impl/address_v6.ipp and
-    // boost/asio/ip/detail/impl/endpoint.ipp.
-    #pragma GCC diagnostic ignored "-Wmissing-braces"
-
-    // Strict-aliasing rules are broken in
-    // boost/asio/detail/impl/win_iocp_handle_service.ipp
-    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
-
+    
+    #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+    #pragma GCC diagnostic ignored "-Wunused-variable"
 
 #endif
 
@@ -110,6 +105,7 @@
 #include <boost/array.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/static_assert.hpp>
 
 
 // #include <boost/compressed_pair.hpp>
