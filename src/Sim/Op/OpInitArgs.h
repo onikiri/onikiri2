@@ -36,22 +36,22 @@
 
 namespace Onikiri
 {
-	class Core;
-	class Thread;
-	class OpInfo;
+    class Core;
+    class Thread;
+    class OpInfo;
 
-	// Op initialization parameter
-	struct OpInitArgs
-	{
-		PC*		pc;
-		OpInfo* opInfo;
-		int		no;
-		u64		globalSerialID;
-		u64		serialID;
-		u64		retireID;
-		Core*		core;
-		Thread*	thread;
-	};
+    // Op initialization parameter
+    struct OpInitArgs
+    {
+        PC*     pc;
+        OpInfo* opInfo;
+        int     no;
+        u64     globalSerialID;
+        u64     serialID;
+        u64     retireID;
+        Core*       core;
+        Thread* thread;
+    };
 }
 
 #endif // __OP_INIT_ARGS_H

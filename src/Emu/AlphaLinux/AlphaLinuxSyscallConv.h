@@ -38,38 +38,38 @@
 
 namespace Onikiri {
 
-	namespace EmulatorUtility {
-		class ProcessState;
-		class MemorySystem;
-		class OpEmulationState;
-	}
+    namespace EmulatorUtility {
+        class ProcessState;
+        class MemorySystem;
+        class OpEmulationState;
+    }
 
-	namespace AlphaLinux {
+    namespace AlphaLinux {
 
-		class AlphaLinuxSyscallConv : public EmulatorUtility::Linux64SyscallConv
-		{
-		private:
-			AlphaLinuxSyscallConv();
-		public:
-			AlphaLinuxSyscallConv(EmulatorUtility::ProcessState* processState);
-			virtual ~AlphaLinuxSyscallConv();
+        class AlphaLinuxSyscallConv : public EmulatorUtility::Linux64SyscallConv
+        {
+        private:
+            AlphaLinuxSyscallConv();
+        public:
+            AlphaLinuxSyscallConv(EmulatorUtility::ProcessState* processState);
+            virtual ~AlphaLinuxSyscallConv();
 
-			// SetArg によって与えられた引数に従ってシステムコールを行う
-			virtual void Execute(EmulatorUtility::OpEmulationState* opState);
-		private:
-			virtual void syscall_getsysinfo(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_setsysinfo(EmulatorUtility::OpEmulationState* opState);
+            // SetArg によって与えられた引数に従ってシステムコールを行う
+            virtual void Execute(EmulatorUtility::OpEmulationState* opState);
+        private:
+            virtual void syscall_getsysinfo(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_setsysinfo(EmulatorUtility::OpEmulationState* opState);
 
-			// consts / conversion
-			//virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
-			virtual int Get_MAP_ANONYMOUS();
-			virtual int Get_MREMAP_MAYMOVE();
-			virtual int Get_CLK_TCK();
+            // consts / conversion
+            //virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
+            virtual int Get_MAP_ANONYMOUS();
+            virtual int Get_MREMAP_MAYMOVE();
+            virtual int Get_CLK_TCK();
 
-			virtual u32 OpenFlagTargetToHost(u32 flag);
-		};
+            virtual u32 OpenFlagTargetToHost(u32 flag);
+        };
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

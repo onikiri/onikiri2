@@ -37,32 +37,32 @@
 
 namespace Onikiri 
 {
-	// Static information of an op.
-	class OpInfo 
-	{
-	public:
-		virtual ~OpInfo(){}
+    // Static information of an op.
+    class OpInfo 
+    {
+    public:
+        virtual ~OpInfo(){}
 
-		// Op type
-		virtual const OpClass& GetOpClass() const = 0;
+        // Op type
+        virtual const OpClass& GetOpClass() const = 0;
 
-		// Operands
-		virtual int GetSrcOperand(const int index) const = 0;
-		virtual int GetDstOperand(const int index) const = 0;
+        // Operands
+        virtual int GetSrcOperand(const int index) const = 0;
+        virtual int GetDstOperand(const int index) const = 0;
 
-		// The number of operands.
-		virtual int GetSrcNum() const = 0;
-		virtual int GetDstNum() const = 0;
+        // The number of operands.
+        virtual int GetSrcNum() const = 0;
+        virtual int GetDstNum() const = 0;
 
-		// The number of micro-ops for its instruction.
-		virtual int GetMicroOpNum() const = 0;
+        // The number of micro-ops for its instruction.
+        virtual int GetMicroOpNum() const = 0;
 
-		// The position of this micro op in its instruction.
-		virtual int GetMicroOpIndex() const = 0;
+        // The position of this micro op in its instruction.
+        virtual int GetMicroOpIndex() const = 0;
 
-		// Mnemonic for dump.
-		virtual const char* GetMnemonic() const = 0;
-	};
+        // Mnemonic for dump.
+        virtual const char* GetMnemonic() const = 0;
+    };
 
 }; // namespace Onikiri
 

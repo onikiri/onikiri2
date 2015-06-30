@@ -36,16 +36,16 @@
 
 namespace Onikiri 
 {
-	class DebugStub;
+    class DebugStub;
 
-	// A system which can emulate with remote debug.
-	class EmulationDebugSystem : public SystemBase
-	{
-		DebugStub* m_debugStub;
-	public:
-		void Run( SystemContext* context );
-	};
-	
+    // A system which can emulate with remote debug.
+    class EmulationDebugSystem : public SystemBase
+    {
+        DebugStub* m_debugStub;
+    public:
+        void Run( SystemContext* context );
+    };
+    
 }; // namespace Onikiri
 
 #endif // __EMULATION_DEBUG_SYSTEM_H__

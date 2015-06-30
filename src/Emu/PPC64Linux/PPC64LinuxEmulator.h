@@ -36,11 +36,11 @@
 #include "Emu/PPC64Linux/PPC64LinuxTraits.h"
 
 namespace Onikiri {
-	namespace PPC64Linux {
+    namespace PPC64Linux {
 
-		typedef EmulatorUtility::CommonEmulator<PPC64LinuxTraits> PPC64LinuxEmulator;
+        typedef EmulatorUtility::CommonEmulator<PPC64LinuxTraits> PPC64LinuxEmulator;
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

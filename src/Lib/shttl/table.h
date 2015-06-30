@@ -39,63 +39,63 @@
 
 namespace shttl
 {
-	//
-	// A simple table with a replacement function.
-	//
-	template < typename type, typename replacer = lru<size_t> > 
-	class table
-	{
-	public:
-		typedef std::vector<type> array_type;
-		typedef typename array_type::reference reference;
-		typedef typename array_type::const_reference const_reference;
+    //
+    // A simple table with a replacement function.
+    //
+    template < typename type, typename replacer = lru<size_t> > 
+    class table
+    {
+    public:
+        typedef std::vector<type> array_type;
+        typedef typename array_type::reference reference;
+        typedef typename array_type::const_reference const_reference;
 
-		table()
-		{
-		}
+        table()
+        {
+        }
 
-		table( const size_t size, const type& value = type() )
-		{
-			construct( size ,value );
-		}
+        table( const size_t size, const type& value = type() )
+        {
+            construct( size ,value );
+        }
 
-		void construct( const size_t size, const type& value = type() )
-		{
-			m_body.resize( size, value );
-			m_replacement.construct( 1, size );
-		}
+        void construct( const size_t size, const type& value = type() )
+        {
+            m_body.resize( size, value );
+            m_replacement.construct( 1, size );
+        }
 
-		size_t replacement_target()
-		{
-			return m_replacement.target( 0 );
-		}
+        size_t replacement_target()
+        {
+            return m_replacement.target( 0 );
+        }
 
-		void touch( const size_t index )
-		{
-			m_replacement.touch( 0, index, index/*key_type*/ );
-		}
+        void touch( const size_t index )
+        {
+            m_replacement.touch( 0, index, index/*key_type*/ );
+        }
 
-		size_t size() const
-		{
-			return m_body.size();
-		}
+        size_t size() const
+        {
+            return m_body.size();
+        }
 
-		reference operator[]( const size_t index )
-		{
-			return m_body[ index ];
-		}
+        reference operator[]( const size_t index )
+        {
+            return m_body[ index ];
+        }
 
-		const_reference operator[]( const size_t index ) const
-		{
-			return m_body[ index ];
-		}
+        const_reference operator[]( const size_t index ) const
+        {
+            return m_body[ index ];
+        }
 
-	protected:
-		array_type  m_body;
-		replacer m_replacement;
+    protected:
+        array_type  m_body;
+        replacer m_replacement;
 
-	};
+    };
 
-}	// namespace shttl
+}   // namespace shttl
 
 #endif // #ifdef SHTTL_TABLE_H

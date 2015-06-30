@@ -49,59 +49,59 @@ RegDepPredBase::~RegDepPredBase()
 // どう解決するかはResolveRegの実装
 void RegDepPredBase::Resolve(OpIterator op)
 {
-	OpInfo* opInfo = op->GetOpInfo();
-	int srcNum = opInfo->GetSrcNum();
-	for(int i = 0; i < srcNum; ++i) {
-		int operand = opInfo->GetSrcOperand(i);
-		
-		if( operand == -1 ) {
-			continue;
-		}
+    OpInfo* opInfo = op->GetOpInfo();
+    int srcNum = opInfo->GetSrcNum();
+    for(int i = 0; i < srcNum; ++i) {
+        int operand = opInfo->GetSrcOperand(i);
+        
+        if( operand == -1 ) {
+            continue;
+        }
 
-		int phyRegNo = ResolveReg(operand);
-		op->SetSrcReg(i, phyRegNo);
-	}
+        int phyRegNo = ResolveReg(operand);
+        op->SetSrcReg(i, phyRegNo);
+    }
 }
 
 // 新しいレジスタのインスタンスを割り当てて、opにセット
 // resolve のために割り当てを記憶しておくのは AllocateReg の実装
 void RegDepPredBase::Allocate(OpIterator op)
 {
-	OpInfo* opInfo = op->GetOpInfo();
-	int dstNum = opInfo->GetDstNum();
-	for(int i = 0; i < dstNum; ++i) {
-		int operand = opInfo->GetDstOperand(i);
-		
-		if( operand == -1 ) {
-			continue;
-		}
+    OpInfo* opInfo = op->GetOpInfo();
+    int dstNum = opInfo->GetDstNum();
+    for(int i = 0; i < dstNum; ++i) {
+        int operand = opInfo->GetDstOperand(i);
+        
+        if( operand == -1 ) {
+            continue;
+        }
 
-		int phyRegNo = AllocateReg(op,operand);
-		op->SetDstReg(i, phyRegNo);
-	}
+        int phyRegNo = AllocateReg(op,operand);
+        op->SetDstReg(i, phyRegNo);
+    }
 }
 
 // Commit時、同じ論理レジスタ番号に書き込む直前の命令のデスティネーション・レジスタを解放
 void RegDepPredBase::Commit(OpIterator op)
 {
-	OpInfo* opInfo = op->GetOpInfo();
-	int dstNum = opInfo->GetDstNum();
-	for(int i = 0; i < dstNum; ++i) {
-		int operand = opInfo->GetDstOperand(i);
-		ReleaseReg(op, operand, op->GetDstReg(i));
-	}
+    OpInfo* opInfo = op->GetOpInfo();
+    int dstNum = opInfo->GetDstNum();
+    for(int i = 0; i < dstNum; ++i) {
+        int operand = opInfo->GetDstOperand(i);
+        ReleaseReg(op, operand, op->GetDstReg(i));
+    }
 }
 
 // OpがフラッシュされたのでOp自身のデスティネーション・レジスタを解放
 void RegDepPredBase::Flush(OpIterator op)
 {
-	if( op->GetStatus() == OpStatus::OS_FETCH ){
-		return;
-	}
-	OpInfo* opInfo = op->GetOpInfo();
-	int dstNum = opInfo->GetDstNum();
-	for(int i = 0; i < dstNum; ++i) {
-		int operand = opInfo->GetDstOperand(i);
-		DeallocateReg(op, operand, op->GetDstReg(i));
-	}
+    if( op->GetStatus() == OpStatus::OS_FETCH ){
+        return;
+    }
+    OpInfo* opInfo = op->GetOpInfo();
+    int dstNum = opInfo->GetDstNum();
+    for(int i = 0; i < dstNum; ++i) {
+        int operand = opInfo->GetDstOperand(i);
+        DeallocateReg(op, operand, op->GetDstReg(i));
+    }
 }

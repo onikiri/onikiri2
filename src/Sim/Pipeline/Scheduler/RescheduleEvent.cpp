@@ -38,13 +38,13 @@
 using namespace Onikiri;
 
 OpRescheduleEvent::OpRescheduleEvent( const OpIterator& op ) :
-	m_op(op)
+    m_op(op)
 {
-	// A 'Wakeup' priority must be higher than that of 'Select'. 
-	SetPriority( RP_WAKEUP_EVENT );
+    // A 'Wakeup' priority must be higher than that of 'Select'. 
+    SetPriority( RP_WAKEUP_EVENT );
 }
 
 void OpRescheduleEvent::Update()
 {
-	m_op->GetScheduler()->Reschedule( m_op );
+    m_op->GetScheduler()->Reschedule( m_op );
 }

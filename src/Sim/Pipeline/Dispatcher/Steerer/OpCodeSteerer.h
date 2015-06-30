@@ -38,30 +38,30 @@
 
 namespace Onikiri
 {
-	class Core;
-	class Scheduler;
+    class Core;
+    class Scheduler;
 
-	// OpCode ÇæÇØÇå©ÇƒSteeringÇçsÇ§Steerer
-	class OpCodeDispatchSteerer :
-		public DispatchSteererIF,
-		public PhysicalResourceNode
-	{
-	private:
-		Core* m_core;
-		// OpCode Ç©ÇÁ Scheduler ÇÇ–ÇØÇÈ map
-		std::vector<Scheduler*> m_schedulerMap;
-	public:
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core, "core", m_core )
-		END_RESOURCE_MAP()
+    // OpCode ÇæÇØÇå©ÇƒSteeringÇçsÇ§Steerer
+    class OpCodeDispatchSteerer :
+        public DispatchSteererIF,
+        public PhysicalResourceNode
+    {
+    private:
+        Core* m_core;
+        // OpCode Ç©ÇÁ Scheduler ÇÇ–ÇØÇÈ map
+        std::vector<Scheduler*> m_schedulerMap;
+    public:
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core, "core", m_core )
+        END_RESOURCE_MAP()
 
-		OpCodeDispatchSteerer();
-		virtual ~OpCodeDispatchSteerer();
-		void Initialize(InitPhase phase);
+        OpCodeDispatchSteerer();
+        virtual ~OpCodeDispatchSteerer();
+        void Initialize(InitPhase phase);
 
-		// SteererIF
-		virtual Scheduler* Steer(OpIterator opIterator);
-	};
+        // SteererIF
+        virtual Scheduler* Steer(OpIterator opIterator);
+    };
 
 }; // namespace Onikiri
 

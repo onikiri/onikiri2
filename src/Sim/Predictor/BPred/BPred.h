@@ -45,98 +45,98 @@
 
 namespace Onikiri
 {
-	class Core;
-	class Thread;
-	class DirPredIF;
-	class GlobalHistory;
-	class RAS;
-	class ForwardEmulator;
+    class Core;
+    class Thread;
+    class DirPredIF;
+    class GlobalHistory;
+    class RAS;
+    class ForwardEmulator;
 
-	// ï™äÚó\ë™ëSëÃÇíSìñÇ∑ÇÈÉNÉâÉX
-	// FetcherÇ…nextPCÇï‘Ç∑
-	class BPred : public PhysicalResourceNode
-	{
-	public:
+    // ï™äÚó\ë™ëSëÃÇíSìñÇ∑ÇÈÉNÉâÉX
+    // FetcherÇ…nextPCÇï‘Ç∑
+    class BPred : public PhysicalResourceNode
+    {
+    public:
 
-		BEGIN_PARAM_MAP( "" )
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY( "@Perfect", m_perfect )
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( GetResultPath() )
-				CHAIN_PARAM_MAP( "Statistics", m_totalStatistics )
-				CHAIN_PARAM_MAP( "Statistics/Entry", m_statistics )
-			END_PARAM_PATH()
-		END_PARAM_MAP()
+        BEGIN_PARAM_MAP( "" )
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY( "@Perfect", m_perfect )
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+                CHAIN_PARAM_MAP( "Statistics", m_totalStatistics )
+                CHAIN_PARAM_MAP( "Statistics/Entry", m_statistics )
+            END_PARAM_PATH()
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core, "core", m_core )
-			RESOURCE_ENTRY( BTB,  "btb",  m_btb )
-			RESOURCE_ENTRY( RAS,  "ras",  m_ras )
-			RESOURCE_ENTRY( DirPredIF, "dirPred", m_dirPred )
-			RESOURCE_ENTRY( ForwardEmulator, "forwardEmulator", m_fwdEmulator )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core, "core", m_core )
+            RESOURCE_ENTRY( BTB,  "btb",  m_btb )
+            RESOURCE_ENTRY( RAS,  "ras",  m_ras )
+            RESOURCE_ENTRY( DirPredIF, "dirPred", m_dirPred )
+            RESOURCE_ENTRY( ForwardEmulator, "forwardEmulator", m_fwdEmulator )
+        END_RESOURCE_MAP()
 
-		BPred();
-		virtual ~BPred();
+        BPred();
+        virtual ~BPred();
 
-		void Initialize( InitPhase phase );
+        void Initialize( InitPhase phase );
 
-		// opÇÃï™äÚÇ…ëŒÇµÇƒï™äÚó\ë™ÇçsÇ¢ÅCó\ë™Ç≥ÇÍÇΩï™äÚêÊÇï‘Ç∑
-		//   predIndexPC : ï™äÚó\ë™Ç…ópÇ¢ÇÈPCÅDí èÌFetch GroupÇÃPC
-		PC Predict( OpIterator op, PC predIndexPC );
-		void Finished( OpIterator op );
-		void Commit( OpIterator op );
+        // opÇÃï™äÚÇ…ëŒÇµÇƒï™äÚó\ë™ÇçsÇ¢ÅCó\ë™Ç≥ÇÍÇΩï™äÚêÊÇï‘Ç∑
+        //   predIndexPC : ï™äÚó\ë™Ç…ópÇ¢ÇÈPCÅDí èÌFetch GroupÇÃPC
+        PC Predict( OpIterator op, PC predIndexPC );
+        void Finished( OpIterator op );
+        void Commit( OpIterator op );
 
-		// Is in a perfect prediction mode or not.
-		bool IsPerfect() const { return m_perfect; }
+        // Is in a perfect prediction mode or not.
+        bool IsPerfect() const { return m_perfect; }
 
-		// --- PhysicalResourceNode
-		virtual void ChangeSimulationMode( SimulationMode mode ){ m_mode = mode; };
+        // --- PhysicalResourceNode
+        virtual void ChangeSimulationMode( SimulationMode mode ){ m_mode = mode; };
 
-		static HookPoint<BPred> s_branchPredictionMissHook;
+        static HookPoint<BPred> s_branchPredictionMissHook;
 
-	protected:
+    protected:
 
-		DirPredIF*					m_dirPred;		// ï˚å¸ó\ë™äÌ
-		BTB*						m_btb;			// BTB
-		PhysicalResourceArray<RAS>  m_ras;			// RAS
-		Core*						m_core;
-		ForwardEmulator*			m_fwdEmulator;
-		
-		// Simulation mode.
-		SimulationMode m_mode;
-		
-		// Enable perfect branch prediction.
-		bool m_perfect;	
+        DirPredIF*                  m_dirPred;      // ï˚å¸ó\ë™äÌ
+        BTB*                        m_btb;          // BTB
+        PhysicalResourceArray<RAS>  m_ras;          // RAS
+        Core*                       m_core;
+        ForwardEmulator*            m_fwdEmulator;
+        
+        // Simulation mode.
+        SimulationMode m_mode;
+        
+        // Enable perfect branch prediction.
+        bool m_perfect; 
 
-		OpExtraStateTable<BTBPredict> m_btbPredTable;
+        OpExtraStateTable<BTBPredict> m_btbPredTable;
 
-		// Result
-		struct Statistics : public ParamExchangeChild
-		{
-		public:
-		
-			BEGIN_PARAM_MAP("")
-				PARAM_ENTRY("@Name",		name)
-				PARAM_ENTRY("@NumHit",		numHit)
-				PARAM_ENTRY("@NumMiss",		numMiss)
-				RESULT_RATE_SUM_ENTRY("@HitRate", numHit, numHit, numMiss)
-			END_PARAM_MAP()
+        // Result
+        struct Statistics : public ParamExchangeChild
+        {
+        public:
+        
+            BEGIN_PARAM_MAP("")
+                PARAM_ENTRY("@Name",        name)
+                PARAM_ENTRY("@NumHit",      numHit)
+                PARAM_ENTRY("@NumMiss",     numMiss)
+                RESULT_RATE_SUM_ENTRY("@HitRate", numHit, numHit, numMiss)
+            END_PARAM_MAP()
 
-			Statistics();
-			void SetName( const String& name );
+            Statistics();
+            void SetName( const String& name );
 
-			String name;
-			u64 numHit;
-			u64 numMiss;
-		};
+            String name;
+            u64 numHit;
+            u64 numMiss;
+        };
 
-		std::vector<Statistics> m_statistics;
-		Statistics m_totalStatistics;
+        std::vector<Statistics> m_statistics;
+        Statistics m_totalStatistics;
 
-		// Detect branch miss prediction and recovery if prediction is incorrect.
-		void RecoveryFromBPredMiss( OpIterator branch );
-	};
+        // Detect branch miss prediction and recovery if prediction is incorrect.
+        void RecoveryFromBPredMiss( OpIterator branch );
+    };
 
 }; // namespace Onikiri
 

@@ -40,198 +40,198 @@ using namespace Onikiri;
 
 String StridePrefetcher::Stream::ToString() const
 {
-	String str;
+    String str;
 
-	// Status
-	str += "status: ";
-	switch( status ){
-	default:
-	case SS_INVALID:
-		str += "INVALID ";
-		break;
-	case SS_ALLOCATED:
-		str += "ALLOCATED ";
-		break;
-	}
+    // Status
+    str += "status: ";
+    switch( status ){
+    default:
+    case SS_INVALID:
+        str += "INVALID ";
+        break;
+    case SS_ALLOCATED:
+        str += "ALLOCATED ";
+        break;
+    }
 
-	// Window
-	str += "  pc: ";
-	str += pc.ToString();
-	str += "  addr: ";
-	str += addr.ToString();
-	str += "  stride: ";
-	str += String().format( "%llx", stride );
-	
-	// Count
-	str += "  count: ";
-	str += String().format( "%d", count );
-	str += "  conf: ";
-	str += String().format( "%d", (int)confidence );
-	return str;
+    // Window
+    str += "  pc: ";
+    str += pc.ToString();
+    str += "  addr: ";
+    str += addr.ToString();
+    str += "  stride: ";
+    str += String().format( "%llx", stride );
+    
+    // Count
+    str += "  count: ";
+    str += String().format( "%d", count );
+    str += "  conf: ";
+    str += String().format( "%d", (int)confidence );
+    return str;
 
 }
 
 
 StridePrefetcher::StridePrefetcher()
 {
-	m_distance = 0;
-	m_degree = 0;
-	m_streamTableSize = 0;
+    m_distance = 0;
+    m_degree = 0;
+    m_streamTableSize = 0;
 
-	m_numPrefetchingStream = 0;
-	m_numAvgPrefetchStreamLength = 0.0;
+    m_numPrefetchingStream = 0;
+    m_numAvgPrefetchStreamLength = 0.0;
 }
 
 
 StridePrefetcher::~StridePrefetcher()
 {
-	if( m_numPrefetchingStream ){
-		m_numAvgPrefetchStreamLength = 
-			(double)m_numPrefetch / (double)m_numPrefetchingStream;
-	}
+    if( m_numPrefetchingStream ){
+        m_numAvgPrefetchStreamLength = 
+            (double)m_numPrefetch / (double)m_numPrefetchingStream;
+    }
 
-	ReleaseParam();
+    ReleaseParam();
 }
 
 
 // --- PhysicalResourceNode
 void StridePrefetcher::Initialize(InitPhase phase)
 {
-	PrefetcherBase::Initialize( phase );
+    PrefetcherBase::Initialize( phase );
 
-	if(phase == INIT_PRE_CONNECTION){
-		
-		LoadParam();
-		m_streamTable.construct( m_streamTableSize );
-	}
-	else if(phase == INIT_POST_CONNECTION){
-	
-	}
+    if(phase == INIT_PRE_CONNECTION){
+        
+        LoadParam();
+        m_streamTable.construct( m_streamTableSize );
+    }
+    else if(phase == INIT_POST_CONNECTION){
+    
+    }
 }
 
 
 // This method is called by any cache accesses occurred in a connected cache.
 void StridePrefetcher::OnCacheAccess( 
-	Cache* cache, 
-	const CacheAccess& access,
-	bool hit
+    Cache* cache, 
+    const CacheAccess& access,
+    bool hit
 ){
-	if( !m_enabled ){
-		return;
-	}
+    if( !m_enabled ){
+        return;
+    }
 
-	OpIterator op = access.op;
-	if( op.IsNull() ){
-		return;
-	}
+    OpIterator op = access.op;
+    if( op.IsNull() ){
+        return;
+    }
 
-	Addr pc = op->GetPC();
-	Addr missAddr = op->GetMemAccess().address;//access.address;
-	//missAddr.address = MaskLineOffset( missAddr.address );
+    Addr pc = op->GetPC();
+    Addr missAddr = op->GetMemAccess().address;//access.address;
+    //missAddr.address = MaskLineOffset( missAddr.address );
 
 #ifdef STRIDE_PREFETCHER_DEBUG
-	g_env.Print(
-		String( "access\t" ) + 
-		"pc: " + pc.ToString() + 
-		"  addr: " + missAddr.ToString() + 
-		( hit ? " hit" : " miss" ) + 
-		"\n" 
-	);
+    g_env.Print(
+        String( "access\t" ) + 
+        "pc: " + pc.ToString() + 
+        "  addr: " + missAddr.ToString() + 
+        ( hit ? " hit" : " miss" ) + 
+        "\n" 
+    );
 #endif
 
 
-//	bool streamHit = false;
+//  bool streamHit = false;
 
-	for( size_t i = 0; i < m_streamTable.size(); i++ ){
-		Stream* stream = &m_streamTable[i];
-		if( stream->status == SS_INVALID )
-			continue;
-		
-		if( stream->pc != pc )
-			continue;
+    for( size_t i = 0; i < m_streamTable.size(); i++ ){
+        Stream* stream = &m_streamTable[i];
+        if( stream->status == SS_INVALID )
+            continue;
+        
+        if( stream->pc != pc )
+            continue;
 
-		m_streamTable.touch( i );
-//		streamHit = true;
-		stream->count++;
-
-#ifdef STRIDE_PREFETCHER_DEBUG
-		g_env.Print( String( "  stream\t" ) + stream->ToString() + "\n" );
-#endif
-
-		if( stream->addr.address + stream->stride == missAddr.address ){
-
-			if( stream->confidence.above_threshold() ){
-
-				for( int d = 0; d < m_degree; d++ ){
-					CacheAccess prefetch;
-					prefetch.op = op;
-					prefetch.type = CacheAccess::OT_PREFETCH;
-
-					// Prefetch 'end' point of a window.
-					prefetch.address = missAddr;
-					prefetch.address.address += 
-						stream->stride * (m_distance + d);
-
-					PrefetcherBase::Prefetch( prefetch );
-					//m_prefetchTarget->Read( prefetch, NULL );
+        m_streamTable.touch( i );
+//      streamHit = true;
+        stream->count++;
 
 #ifdef STRIDE_PREFETCHER_DEBUG
-					g_env.Print( 
-						String( "  prefetch\t" ) + 
-						prefetch.address.ToString() + 
-						"\n" 
-					);
+        g_env.Print( String( "  stream\t" ) + stream->ToString() + "\n" );
 #endif
-				}
 
-				IncrementPrefetchNum();
-				if( stream->status != SS_PREFETCHING ){
-					m_numPrefetchingStream++;
-				}
-				stream->status = SS_PREFETCHING;	
-			}
+        if( stream->addr.address + stream->stride == missAddr.address ){
 
-			stream->confidence.inc();
-			stream->streamLength++;
-		}
-		else{
-			stream->confidence.dec();
-		}
+            if( stream->confidence.above_threshold() ){
 
-		stream->stride = 
-			(s64)missAddr.address - (s64)stream->addr.address;
-		stream->addr.address = missAddr.address;
+                for( int d = 0; d < m_degree; d++ ){
+                    CacheAccess prefetch;
+                    prefetch.op = op;
+                    prefetch.type = CacheAccess::OT_PREFETCH;
 
-		if( stream->stride == 0 ){
-			stream->status = SS_INVALID;
-		}
-		return;
-	}
+                    // Prefetch 'end' point of a window.
+                    prefetch.address = missAddr;
+                    prefetch.address.address += 
+                        stream->stride * (m_distance + d);
 
-	if( hit )
-		return;
-
-	// Allocate a new stride stream.
-	Stream stream;
-	stream.Reset();
-	stream.pc   = pc;
-	stream.addr = missAddr;
-	stream.orig = missAddr;
-	stream.stride = m_lineSize;
-	stream.status = SS_ALLOCATED;
-
-	int target = (int)m_streamTable.replacement_target();
-	m_streamTable[ target ] = stream;
-	m_streamTable.touch( target );
+                    PrefetcherBase::Prefetch( prefetch );
+                    //m_prefetchTarget->Read( prefetch, NULL );
 
 #ifdef STRIDE_PREFETCHER_DEBUG
-	g_env.Print( 
-		String( "  alloc\t" ) + 
-		missAddr.ToString() + " " + 
-		stream.ToString() + "\n" 
-	);
+                    g_env.Print( 
+                        String( "  prefetch\t" ) + 
+                        prefetch.address.ToString() + 
+                        "\n" 
+                    );
+#endif
+                }
+
+                IncrementPrefetchNum();
+                if( stream->status != SS_PREFETCHING ){
+                    m_numPrefetchingStream++;
+                }
+                stream->status = SS_PREFETCHING;    
+            }
+
+            stream->confidence.inc();
+            stream->streamLength++;
+        }
+        else{
+            stream->confidence.dec();
+        }
+
+        stream->stride = 
+            (s64)missAddr.address - (s64)stream->addr.address;
+        stream->addr.address = missAddr.address;
+
+        if( stream->stride == 0 ){
+            stream->status = SS_INVALID;
+        }
+        return;
+    }
+
+    if( hit )
+        return;
+
+    // Allocate a new stride stream.
+    Stream stream;
+    stream.Reset();
+    stream.pc   = pc;
+    stream.addr = missAddr;
+    stream.orig = missAddr;
+    stream.stride = m_lineSize;
+    stream.status = SS_ALLOCATED;
+
+    int target = (int)m_streamTable.replacement_target();
+    m_streamTable[ target ] = stream;
+    m_streamTable.touch( target );
+
+#ifdef STRIDE_PREFETCHER_DEBUG
+    g_env.Print( 
+        String( "  alloc\t" ) + 
+        missAddr.ToString() + " " + 
+        stream.ToString() + "\n" 
+    );
 #endif
 
-//	m_numAllocatedStream++;
+//  m_numAllocatedStream++;
 }
 

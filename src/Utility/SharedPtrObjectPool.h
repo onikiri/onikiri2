@@ -35,139 +35,139 @@
 namespace Onikiri
 {
 
-	template<typename T> 
-	class SharedPtrObjectPool
-	{
-		struct SharedPtrObjectPoolTag
-		{
-		};
+    template<typename T> 
+    class SharedPtrObjectPool
+    {
+        struct SharedPtrObjectPoolTag
+        {
+        };
 
-		typedef boost::singleton_pool<
-			SharedPtrObjectPoolTag, 
-			sizeof(T)
-		> Pool;
+        typedef boost::singleton_pool<
+            SharedPtrObjectPoolTag, 
+            sizeof(T)
+        > Pool;
 
-		struct SharedPtrObjectPoolDeleter
-		{
-			void operator()(T* ptr)
-			{
-				ptr->~T();
-				Pool::free(ptr);
-			};
-		};
-	public:
+        struct SharedPtrObjectPoolDeleter
+        {
+            void operator()(T* ptr)
+            {
+                ptr->~T();
+                Pool::free(ptr);
+            };
+        };
+    public:
 
-		boost::shared_ptr<T> construct()
-		{
-			T* const ret = (T*)Pool::malloc();
-			if(ret == 0)
-				return boost::shared_ptr<T>( ret );
-			try { new (ret) T(); }
-			catch (...) { Pool::free(ret); throw; }
+        boost::shared_ptr<T> construct()
+        {
+            T* const ret = (T*)Pool::malloc();
+            if(ret == 0)
+                return boost::shared_ptr<T>( ret );
+            try { new (ret) T(); }
+            catch (...) { Pool::free(ret); throw; }
 
-			return boost::shared_ptr<T>(
-					ret, 
-					SharedPtrObjectPoolDeleter() );
-		};
+            return boost::shared_ptr<T>(
+                    ret, 
+                    SharedPtrObjectPoolDeleter() );
+        };
 
-		template <typename Arg0>
-		boost::shared_ptr<T> construct(const Arg0& a0)
-		{
-			T* const ret = (T*)Pool::malloc();
-			if(ret == 0)
-				return boost::shared_ptr<T>( ret );
-			try { new (ret) T(a0); }
-			catch (...) { Pool::free(ret); throw; }
+        template <typename Arg0>
+        boost::shared_ptr<T> construct(const Arg0& a0)
+        {
+            T* const ret = (T*)Pool::malloc();
+            if(ret == 0)
+                return boost::shared_ptr<T>( ret );
+            try { new (ret) T(a0); }
+            catch (...) { Pool::free(ret); throw; }
 
-			return boost::shared_ptr<T>(
-					ret, 
-					SharedPtrObjectPoolDeleter() );
-		};
+            return boost::shared_ptr<T>(
+                    ret, 
+                    SharedPtrObjectPoolDeleter() );
+        };
 
-		template <typename Arg0, typename Arg1>
-		boost::shared_ptr<T> construct(const Arg0& a0, const Arg1& a1)
-		{
-			T* const ret = (T*)Pool::malloc();
-			if(ret == 0)
-				return boost::shared_ptr<T>( ret );
-			try { new (ret) T(a0, a1); }
-			catch (...) { Pool::free(ret); throw; }
+        template <typename Arg0, typename Arg1>
+        boost::shared_ptr<T> construct(const Arg0& a0, const Arg1& a1)
+        {
+            T* const ret = (T*)Pool::malloc();
+            if(ret == 0)
+                return boost::shared_ptr<T>( ret );
+            try { new (ret) T(a0, a1); }
+            catch (...) { Pool::free(ret); throw; }
 
-			return boost::shared_ptr<T>(
-					ret, 
-					SharedPtrObjectPoolDeleter() );
-		};
+            return boost::shared_ptr<T>(
+                    ret, 
+                    SharedPtrObjectPoolDeleter() );
+        };
 
-		template <typename Arg0, typename Arg1, typename Arg2>
-		boost::shared_ptr<T> construct(const Arg0& a0, const Arg1& a1, const Arg2& a2)
-		{
-			T* const ret = (T*)Pool::malloc();
-			if(ret == 0)
-				return boost::shared_ptr<T>( ret );
-			try { new (ret) T(a0, a1, a2); }
-			catch (...) { Pool::free(ret); throw; }
+        template <typename Arg0, typename Arg1, typename Arg2>
+        boost::shared_ptr<T> construct(const Arg0& a0, const Arg1& a1, const Arg2& a2)
+        {
+            T* const ret = (T*)Pool::malloc();
+            if(ret == 0)
+                return boost::shared_ptr<T>( ret );
+            try { new (ret) T(a0, a1, a2); }
+            catch (...) { Pool::free(ret); throw; }
 
-			return boost::shared_ptr<T>(
-					ret, 
-					SharedPtrObjectPoolDeleter() );
-		};
+            return boost::shared_ptr<T>(
+                    ret, 
+                    SharedPtrObjectPoolDeleter() );
+        };
 
-		template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-		boost::shared_ptr<T> construct(
-			const Arg0& a0, const Arg1& a1, const Arg2& a2, const Arg3& a3)
-		{
-			T* const ret = (T*)Pool::malloc();
-			if(ret == 0)
-				return boost::shared_ptr<T>( ret );
-			try { new (ret) T(a0, a1, a2, a3); }
-			catch (...) { Pool::free(ret); throw; }
+        template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+        boost::shared_ptr<T> construct(
+            const Arg0& a0, const Arg1& a1, const Arg2& a2, const Arg3& a3)
+        {
+            T* const ret = (T*)Pool::malloc();
+            if(ret == 0)
+                return boost::shared_ptr<T>( ret );
+            try { new (ret) T(a0, a1, a2, a3); }
+            catch (...) { Pool::free(ret); throw; }
 
-			return boost::shared_ptr<T>(
-					ret, 
-					SharedPtrObjectPoolDeleter() );
-		};
-	};
+            return boost::shared_ptr<T>(
+                    ret, 
+                    SharedPtrObjectPoolDeleter() );
+        };
+    };
 
-	template<typename T> 
-	class PooledSharedPtrObject
-	{
-		static SharedPtrObjectPool<T>& GetPool()
-		{
-			static SharedPtrObjectPool<T> pool;
-			return pool;
-		}
-	public:
-		static boost::shared_ptr<T> Construct()
-		{
-			return GetPool().construct();
-		};
+    template<typename T> 
+    class PooledSharedPtrObject
+    {
+        static SharedPtrObjectPool<T>& GetPool()
+        {
+            static SharedPtrObjectPool<T> pool;
+            return pool;
+        }
+    public:
+        static boost::shared_ptr<T> Construct()
+        {
+            return GetPool().construct();
+        };
 
-		template <typename Arg0>
-		static boost::shared_ptr<T> Construct(const Arg0& a0)
-		{
-			return GetPool().construct(a0);
-		};
+        template <typename Arg0>
+        static boost::shared_ptr<T> Construct(const Arg0& a0)
+        {
+            return GetPool().construct(a0);
+        };
 
-		template <typename Arg0, typename Arg1>
-		static boost::shared_ptr<T> Construct(const Arg0& a0, const Arg1& a1)
-		{
-			return GetPool().construct(a0, a1);
-		};
+        template <typename Arg0, typename Arg1>
+        static boost::shared_ptr<T> Construct(const Arg0& a0, const Arg1& a1)
+        {
+            return GetPool().construct(a0, a1);
+        };
 
-		template <typename Arg0, typename Arg1, typename Arg2>
-		static boost::shared_ptr<T> Construct(const Arg0& a0, const Arg1& a1, const Arg2& a2)
-		{
-			return GetPool().construct(a0, a1, a2);
-		};
+        template <typename Arg0, typename Arg1, typename Arg2>
+        static boost::shared_ptr<T> Construct(const Arg0& a0, const Arg1& a1, const Arg2& a2)
+        {
+            return GetPool().construct(a0, a1, a2);
+        };
 
-		template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-		static boost::shared_ptr<T> Construct(
-			const Arg0& a0, const Arg1& a1, const Arg2& a2, const Arg3& a3)
-		{
-			return GetPool().construct(a0, a1, a2, a3);
-		};
+        template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+        static boost::shared_ptr<T> Construct(
+            const Arg0& a0, const Arg1& a1, const Arg2& a2, const Arg3& a3)
+        {
+            return GetPool().construct(a0, a1, a2, a3);
+        };
 
-	};	// template<typename T>	class PooledSharedPtrObject
+    };  // template<typename T> class PooledSharedPtrObject
 
 } //namespace Onikiri
 

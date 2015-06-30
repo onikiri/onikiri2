@@ -38,27 +38,27 @@
 
 namespace Onikiri 
 {
-	class Scheduler;
+    class Scheduler;
 
-	class OpDumpSchedulingEvent : public EventBase<OpDumpSchedulingEvent>
-	{
-	public:
-		OpDumpSchedulingEvent( OpIterator op ) : m_op( op )
-		{
-		}
+    class OpDumpSchedulingEvent : public EventBase<OpDumpSchedulingEvent>
+    {
+    public:
+        OpDumpSchedulingEvent( OpIterator op ) : m_op( op )
+        {
+        }
 
-		virtual void Update()
-		{
-			if( m_op->IsSrcReady( m_op->GetScheduler()->GetIndex() ) ){
-				g_dumper.Dump( DS_SCHEDULE_R, m_op );
-			}
-			else {
-				g_dumper.Dump( DS_SCHEDULE_W, m_op );
-			}
-		}
-	private:
-		OpIterator m_op;
-	};
+        virtual void Update()
+        {
+            if( m_op->IsSrcReady( m_op->GetScheduler()->GetIndex() ) ){
+                g_dumper.Dump( DS_SCHEDULE_R, m_op );
+            }
+            else {
+                g_dumper.Dump( DS_SCHEDULE_W, m_op );
+            }
+        }
+    private:
+        OpIterator m_op;
+    };
 
 }; // namespace Onikiri
 

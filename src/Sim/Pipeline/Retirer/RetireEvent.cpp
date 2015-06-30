@@ -39,13 +39,13 @@
 using namespace Onikiri;
 
 OpRetireEvent::OpRetireEvent( OpIterator op, Retirer* retirer ) : 
-	m_op( op ),
-	m_retirer( retirer )
+    m_op( op ),
+    m_retirer( retirer )
 {
 }
-	
+    
 void OpRetireEvent::Update()
 {
-	m_retirer->Retire( m_op );
+    m_retirer->Retire( m_op );
 }
 

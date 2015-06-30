@@ -36,85 +36,85 @@
 
 namespace Onikiri 
 {
-	class HitMissPredIF;
+    class HitMissPredIF;
 
-	// Result of latency prediction
-	class LatPredResult
-	{
-	public:
-		
-		static const int MAX_COUNT = 6;
+    // Result of latency prediction
+    class LatPredResult
+    {
+    public:
+        
+        static const int MAX_COUNT = 6;
 
-		// A result of latency prediction is returned as a list of 'Scheduling' objects.
-		// The following examples are the case of a 3-level memory hierarchy,
-		// L1(3cycles) / L2(5cycles) / Mem(8cycles).
-		//
-		// ( [latency, wakeup] )
-		// L1 hit/L2 hit, predicted as
-		//   0: [3,    true ]
-		//   1: [3+5,  true ]
-		//   2: [3+5+8,true ]
-		//
-		// L1 miss/L2 hit, predicted as
-		//   0: [3,    false]
-		//   1: [3+5,  true ]
-		//   2: [3+5+8,true ]
-		//
-		// L1 miss/L2 miss, predicted as
-		//   0: [3,    false]
-		//   1: [3+5,  false]
-		//   2: [3+5+8,false]
+        // A result of latency prediction is returned as a list of 'Scheduling' objects.
+        // The following examples are the case of a 3-level memory hierarchy,
+        // L1(3cycles) / L2(5cycles) / Mem(8cycles).
+        //
+        // ( [latency, wakeup] )
+        // L1 hit/L2 hit, predicted as
+        //   0: [3,    true ]
+        //   1: [3+5,  true ]
+        //   2: [3+5+8,true ]
+        //
+        // L1 miss/L2 hit, predicted as
+        //   0: [3,    false]
+        //   1: [3+5,  true ]
+        //   2: [3+5+8,true ]
+        //
+        // L1 miss/L2 miss, predicted as
+        //   0: [3,    false]
+        //   1: [3+5,  false]
+        //   2: [3+5+8,false]
 
-		struct Scheduling
-		{
-			int  latency;	// A total latency of this level.
-			bool wakeup;	// Consumers are woke up or not at this latency
-			
-			Scheduling( int l = -1, bool w = false ) :
-				latency( l ),
-				wakeup ( w )
-			{
-			}
-		};
+        struct Scheduling
+        {
+            int  latency;   // A total latency of this level.
+            bool wakeup;    // Consumers are woke up or not at this latency
+            
+            Scheduling( int l = -1, bool w = false ) :
+                latency( l ),
+                wakeup ( w )
+            {
+            }
+        };
 
-		LatPredResult() : 
-			m_scheduling(),
-			m_schedulingCount(-1)
-		{
-		}
+        LatPredResult() : 
+            m_scheduling(),
+            m_schedulingCount(-1)
+        {
+        }
 
-		const Scheduling& Get( int index = 0 ) const
-		{
-			ASSERT( index < m_schedulingCount );
-			return m_scheduling[ index ];
-		}
+        const Scheduling& Get( int index = 0 ) const
+        {
+            ASSERT( index < m_schedulingCount );
+            return m_scheduling[ index ];
+        }
 
-		void Set( int index, const Scheduling& scheduling )
-		{
-			ASSERT( index < MAX_COUNT );
-			m_scheduling[ index ] = scheduling;
-		}
+        void Set( int index, const Scheduling& scheduling )
+        {
+            ASSERT( index < MAX_COUNT );
+            m_scheduling[ index ] = scheduling;
+        }
 
-		void Set( int index, int latency, bool wakeup )
-		{
-			Set( index, Scheduling( latency, wakeup ) );
-		}
+        void Set( int index, int latency, bool wakeup )
+        {
+            Set( index, Scheduling( latency, wakeup ) );
+        }
 
-		void SetCount( int count )
-		{
-			ASSERT( count < MAX_COUNT );
-			m_schedulingCount = count;
-		}
+        void SetCount( int count )
+        {
+            ASSERT( count < MAX_COUNT );
+            m_schedulingCount = count;
+        }
 
-		int GetCount() const
-		{
-			return m_schedulingCount;
-		}
+        int GetCount() const
+        {
+            return m_schedulingCount;
+        }
 
-	protected:
-		boost::array< Scheduling, MAX_COUNT > m_scheduling;
-		int m_schedulingCount;
-	};
+    protected:
+        boost::array< Scheduling, MAX_COUNT > m_scheduling;
+        int m_schedulingCount;
+    };
 
 
 }; // namespace Onikiri

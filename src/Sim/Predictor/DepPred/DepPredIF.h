@@ -37,21 +37,21 @@
 namespace Onikiri
 {
 
-	// 依存関係予測器のインターフェース 
-	class DepPredIF
-	{
-	public:
-		virtual ~DepPredIF(){};
+    // 依存関係予測器のインターフェース 
+    class DepPredIF
+    {
+    public:
+        virtual ~DepPredIF(){};
 
-		virtual void Resolve(OpIterator op) = 0;	// opがconsumer
-		virtual void Allocate(OpIterator op) = 0;	// opがproducer
+        virtual void Resolve(OpIterator op) = 0;    // opがconsumer
+        virtual void Allocate(OpIterator op) = 0;   // opがproducer
 
-		virtual void Commit(OpIterator op) = 0;
-		virtual void Flush(OpIterator op) = 0;
+        virtual void Commit(OpIterator op) = 0;
+        virtual void Flush(OpIterator op) = 0;
 
-		// この数だけ解決できるかを返す
-		virtual bool CanAllocate(OpIterator* infoArray, int numOp) = 0;
-	};
+        // この数だけ解決できるかを返す
+        virtual bool CanAllocate(OpIterator* infoArray, int numOp) = 0;
+    };
 
 }; // namespace Onikiri
 

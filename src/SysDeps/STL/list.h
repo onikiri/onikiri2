@@ -36,13 +36,13 @@
 #include "SysDeps/host_type.h"
 
 #ifdef COMPILER_IS_MSVC
-	// 'warning 4555' is disabled for avoiding a bug of 'list' in MSVC.
-	#pragma warning(push)
-	#pragma warning(disable:4555)
-	#include <list>
-	#pragma warning(pop)
+    // 'warning 4555' is disabled for avoiding a bug of 'list' in MSVC.
+    #pragma warning(push)
+    #pragma warning(disable:4555)
+    #include <list>
+    #pragma warning(pop)
 #else
-	#include <list>
+    #include <list>
 #endif
 
 

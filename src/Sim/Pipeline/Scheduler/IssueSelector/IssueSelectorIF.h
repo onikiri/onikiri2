@@ -35,16 +35,16 @@
 
 namespace Onikiri
 {
-	class Scheduler;
+    class Scheduler;
 
-	class IssueSelectorIF
-	{
-	public:
-		virtual ~IssueSelectorIF(){}
-		virtual void EvaluateSelect( Scheduler* scheduler ) = 0;
-	};
+    class IssueSelectorIF
+    {
+    public:
+        virtual ~IssueSelectorIF(){}
+        virtual void EvaluateSelect( Scheduler* scheduler ) = 0;
+    };
 }
 
-#endif	// SIM_PIPELINE_SCHEDULER_SELECTOR_ISSUE_SELECTOR_IF_H
+#endif  // SIM_PIPELINE_SCHEDULER_SELECTOR_ISSUE_SELECTOR_IF_H
 
 

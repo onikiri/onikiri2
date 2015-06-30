@@ -45,41 +45,41 @@
 
 namespace Onikiri
 {
-	class CounterBasedHitMissPred : 
-		public HitMissPredIF,
-		public PhysicalResourceNode
-	{
-	public:
-		BEGIN_PARAM_MAP( GetParamPath() )
-			PARAM_ENTRY("@CounterBits",	m_counterBits)
-			PARAM_ENTRY("@EntryBits",	m_entryBits)
-			PARAM_ENTRY("@AddressXORConvolute", m_addrXORConvolute)
-		END_PARAM_MAP()
+    class CounterBasedHitMissPred : 
+        public HitMissPredIF,
+        public PhysicalResourceNode
+    {
+    public:
+        BEGIN_PARAM_MAP( GetParamPath() )
+            PARAM_ENTRY("@CounterBits", m_counterBits)
+            PARAM_ENTRY("@EntryBits",   m_entryBits)
+            PARAM_ENTRY("@AddressXORConvolute", m_addrXORConvolute)
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
 
-		CounterBasedHitMissPred();
-		~CounterBasedHitMissPred();
+        CounterBasedHitMissPred();
+        ~CounterBasedHitMissPred();
 
-		void Initialize(InitPhase phase);
+        void Initialize(InitPhase phase);
 
-		virtual bool Predict( OpIterator op );
-		virtual void Finished( OpIterator op, bool hit ){};
-		virtual void Commit( OpIterator op, bool hit );
+        virtual bool Predict( OpIterator op );
+        virtual void Finished( OpIterator op, bool hit ){};
+        virtual void Commit( OpIterator op, bool hit );
 
-	private:
-		int m_counterBits;
-		int m_entryBits;
-		bool m_addrXORConvolute;
-		shttl::counter_array<u8> m_table;
+    private:
+        int m_counterBits;
+        int m_entryBits;
+        bool m_addrXORConvolute;
+        shttl::counter_array<u8> m_table;
 
-		u64 ConvolutePCToArrayIndex(PC pc);
-		u64 MaskPCToArrayIndex(PC pc);
-		u64 GetArrayIndex(PC pc);
-	};
+        u64 ConvolutePCToArrayIndex(PC pc);
+        u64 MaskPCToArrayIndex(PC pc);
+        u64 GetArrayIndex(PC pc);
+    };
 
 } // namespace Onikiri
 
-#endif	// SIM_PREDICTOR_HIT_MISS_PRED_COUNTER_BASED_HIT_MISS_PRED_H
+#endif  // SIM_PREDICTOR_HIT_MISS_PRED_COUNTER_BASED_HIT_MISS_PRED_H
 

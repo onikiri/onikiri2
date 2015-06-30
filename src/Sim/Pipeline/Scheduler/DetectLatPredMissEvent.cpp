@@ -44,19 +44,19 @@
 using namespace Onikiri;
 
 OpDetectLatPredMissEvent::OpDetectLatPredMissEvent(
-	const OpIterator& op, 
-	int level,
-	int predicted,
-	int latency
+    const OpIterator& op, 
+    int level,
+    int predicted,
+    int latency
 ) :
-	m_op(op),
-	m_level(level),
-	m_predicted(predicted),
-	m_latency(latency)
+    m_op(op),
+    m_level(level),
+    m_predicted(predicted),
+    m_latency(latency)
 {
-	// Detecting latency miss prediction.
-	// This priority must be higher than that of execution finish process. 
-	SetPriority( RP_DETECT_LATPRED_MISS );
+    // Detecting latency miss prediction.
+    // This priority must be higher than that of execution finish process. 
+    SetPriority( RP_DETECT_LATPRED_MISS );
 }
 
 OpDetectLatPredMissEvent::~OpDetectLatPredMissEvent()
@@ -66,21 +66,21 @@ OpDetectLatPredMissEvent::~OpDetectLatPredMissEvent()
 
 void OpDetectLatPredMissEvent::Update()
 {
-	OpIterator op = m_op;
-	Scheduler* scheduler = m_op->GetScheduler();
-	if( m_predicted < m_latency ){
+    OpIterator op = m_op;
+    Scheduler* scheduler = m_op->GetScheduler();
+    if( m_predicted < m_latency ){
 
-		if( op->IsSrcReady( scheduler->GetIndex() ) ){
-			// Re-scheduling wakeup of consumers
-			Recoverer* recoverer = op->GetThread()->GetRecoverer();
-			recoverer->RecoverDataPredMiss( 
-				op,
-				op->GetFirstConsumer(), 
-				DataPredMissRecovery::TYPE_LATENCY 
-			);
-			g_dumper.Dump( DS_LATENCY_PREDICTION_MISS, op );
-		}
-	}
+        if( op->IsSrcReady( scheduler->GetIndex() ) ){
+            // Re-scheduling wakeup of consumers
+            Recoverer* recoverer = op->GetThread()->GetRecoverer();
+            recoverer->RecoverDataPredMiss( 
+                op,
+                op->GetFirstConsumer(), 
+                DataPredMissRecovery::TYPE_LATENCY 
+            );
+            g_dumper.Dump( DS_LATENCY_PREDICTION_MISS, op );
+        }
+    }
 
 }
 

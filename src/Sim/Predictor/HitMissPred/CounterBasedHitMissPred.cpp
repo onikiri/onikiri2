@@ -41,72 +41,72 @@
 using namespace Onikiri;
 
 CounterBasedHitMissPred::CounterBasedHitMissPred() :
-	m_counterBits(0), 
-	m_entryBits(0)
+    m_counterBits(0), 
+    m_entryBits(0)
 {
 }
-	
+    
 CounterBasedHitMissPred::~CounterBasedHitMissPred()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void CounterBasedHitMissPred::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
 
-		u8 max = (1 << m_counterBits) - 1;
-		m_table.construct(
-			1 << m_entryBits,	// size
-			(max + 1) / 2,		// init
-			0,					// min
-			max,				// max
-			1,					// add
-			2,					// sub
-			(max + 1) / 2		// threshold
-		);
-	}
+        u8 max = (1 << m_counterBits) - 1;
+        m_table.construct(
+            1 << m_entryBits,   // size
+            (max + 1) / 2,      // init
+            0,                  // min
+            max,                // max
+            1,                  // add
+            2,                  // sub
+            (max + 1) / 2       // threshold
+        );
+    }
 }
 
 u64 CounterBasedHitMissPred::ConvolutePCToArrayIndex(PC pc)
 {
-	int shift = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
-	u64 p = pc.address >> shift;
-	p ^= pc.tid;
-	return shttl::xor_convolute(p, m_entryBits);
-	//return mask(pc.address, m_entryBits);
+    int shift = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
+    u64 p = pc.address >> shift;
+    p ^= pc.tid;
+    return shttl::xor_convolute(p, m_entryBits);
+    //return mask(pc.address, m_entryBits);
 }
 
 u64 CounterBasedHitMissPred::MaskPCToArrayIndex(PC pc)
 {
-	int shift = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
-	u64 p = pc.address >> shift;
-	p ^= pc.tid;
-	return shttl::mask(0, m_entryBits) & p;	
+    int shift = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
+    u64 p = pc.address >> shift;
+    p ^= pc.tid;
+    return shttl::mask(0, m_entryBits) & p; 
 }
 
 u64 CounterBasedHitMissPred::GetArrayIndex(PC pc)
 {
-	if( m_addrXORConvolute ) {
-		return ConvolutePCToArrayIndex(pc);
-	}else {
-		return MaskPCToArrayIndex(pc); 
-	}
+    if( m_addrXORConvolute ) {
+        return ConvolutePCToArrayIndex(pc);
+    }else {
+        return MaskPCToArrayIndex(pc); 
+    }
 }
 
 void CounterBasedHitMissPred::Commit( OpIterator op, bool hit )
 {
-	size_t index = (size_t)GetArrayIndex( op->GetPC() );
-	if(hit)
-		m_table[index].inc();
-	else
-		m_table[index].dec();
+    size_t index = (size_t)GetArrayIndex( op->GetPC() );
+    if(hit)
+        m_table[index].inc();
+    else
+        m_table[index].dec();
 }
 
 bool CounterBasedHitMissPred::Predict( OpIterator op )
 {
-	size_t index = (size_t)GetArrayIndex( op->GetPC() );
-	return m_table[index].above_threshold();
+    size_t index = (size_t)GetArrayIndex( op->GetPC() );
+    return m_table[index].above_threshold();
 }
 

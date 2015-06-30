@@ -39,40 +39,40 @@
 namespace Onikiri {
 
 
-	// Pattern History Table
-	class PHT :	public PhysicalResourceNode
-	{
-	private:
-		int m_counterBits;
-		int m_entryBits;
-		shttl::counter_array<u8> m_table;
-		
-	public:
-		BEGIN_PARAM_MAP( GetParamPath() )
-			PARAM_ENTRY("@CounterBits",	m_counterBits)
-			PARAM_ENTRY("@EntryBits",	m_entryBits)
-		END_PARAM_MAP()
+    // Pattern History Table
+    class PHT : public PhysicalResourceNode
+    {
+    private:
+        int m_counterBits;
+        int m_entryBits;
+        shttl::counter_array<u8> m_table;
+        
+    public:
+        BEGIN_PARAM_MAP( GetParamPath() )
+            PARAM_ENTRY("@CounterBits", m_counterBits)
+            PARAM_ENTRY("@EntryBits",   m_entryBits)
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
 
-		PHT();
-		~PHT();
+        PHT();
+        ~PHT();
 
-		void Initialize(InitPhase phase);
+        void Initialize(InitPhase phase);
 
-		// PHT‚Ìindex‚ªTaken/NotTaken‚¾‚Á‚½‚±‚Æ‚ðUpdate‚·‚é
-		void Update(int index, bool taken);
+        // PHT‚Ìindex‚ªTaken/NotTaken‚¾‚Á‚½‚±‚Æ‚ðUpdate‚·‚é
+        void Update(int index, bool taken);
 
-		// PHT‚ÌindexƒGƒ“ƒgƒŠ‚Ì—\‘ªŒ‹‰Ê‚ð•Ô‚·
-		bool Predict(int index);
+        // PHT‚ÌindexƒGƒ“ƒgƒŠ‚Ì—\‘ªŒ‹‰Ê‚ð•Ô‚·
+        bool Predict(int index);
 
-		int GetIndexBitSize()
-		{
-			return m_entryBits;
-		}
+        int GetIndexBitSize()
+        {
+            return m_entryBits;
+        }
 
-	};
+    };
 
 }; // namespace Onikiri
 

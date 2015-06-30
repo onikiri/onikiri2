@@ -37,28 +37,28 @@
 
 namespace Onikiri {
 
-	class SkipOp : public OpStateIF
-	{
-	private:
-		MemIF* m_mainMem;
-	public:
-		SkipOp(MemIF* mainMem);
-		virtual ~SkipOp();
+    class SkipOp : public OpStateIF
+    {
+    private:
+        MemIF* m_mainMem;
+    public:
+        SkipOp(MemIF* mainMem);
+        virtual ~SkipOp();
 
-		// OpStateIF
-		virtual PC GetPC() const;
-		virtual const u64 GetSrc(const int index) const;
-		virtual void SetDst(const int index, const u64 value);
-		virtual const u64 GetDst(const int index) const;
-		virtual void SetTakenPC(const PC takenPC);
-		virtual PC GetTakenPC() const;
-		virtual void SetTaken(const bool taken);
-		virtual bool GetTaken() const;
+        // OpStateIF
+        virtual PC GetPC() const;
+        virtual const u64 GetSrc(const int index) const;
+        virtual void SetDst(const int index, const u64 value);
+        virtual const u64 GetDst(const int index) const;
+        virtual void SetTakenPC(const PC takenPC);
+        virtual PC GetTakenPC() const;
+        virtual void SetTaken(const bool taken);
+        virtual bool GetTaken() const;
 
-		// MemIF
-		virtual void Read( MemAccess* access );
-		virtual void Write( MemAccess* access );
-	};
+        // MemIF
+        virtual void Read( MemAccess* access );
+        virtual void Write( MemAccess* access );
+    };
 
 } // namespace Onikiri
 

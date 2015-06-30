@@ -39,42 +39,42 @@
 
 namespace Onikiri 
 {
-	class ForwardEmulator;
-	class InorderList;
+    class ForwardEmulator;
+    class InorderList;
 
-	// A perfect memory dependency predictor.
-	class PerfectMemDepPred : 
-		public MemDepPredIF,
-		public PhysicalResourceNode	
-	{
+    // A perfect memory dependency predictor.
+    class PerfectMemDepPred : 
+        public MemDepPredIF,
+        public PhysicalResourceNode 
+    {
 
-	public:
-		BEGIN_PARAM_MAP( "" )
-		END_PARAM_MAP()
+    public:
+        BEGIN_PARAM_MAP( "" )
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( ForwardEmulator,	"forwardEmulator",	m_fwdEmulator )
-			RESOURCE_ENTRY( InorderList,		"inorderList",		m_inorderList )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( ForwardEmulator,    "forwardEmulator",  m_fwdEmulator )
+            RESOURCE_ENTRY( InorderList,        "inorderList",      m_inorderList )
+        END_RESOURCE_MAP()
 
-		PerfectMemDepPred();
-		virtual ~PerfectMemDepPred();
+        PerfectMemDepPred();
+        virtual ~PerfectMemDepPred();
 
-		virtual void Initialize( InitPhase phase );
+        virtual void Initialize( InitPhase phase );
 
-		virtual void Resolve( OpIterator op );
-		virtual void Allocate( OpIterator op );
-		virtual void Commit( OpIterator op );
-		virtual void Flush( OpIterator op );
-		virtual void OrderConflicted( OpIterator producer, OpIterator consumer );
-		virtual bool CanAllocate( OpIterator* infoArray, int numOp );
-	
-	protected:
-		ForwardEmulator*	m_fwdEmulator;
-		InorderList*		m_inorderList;
-		MemOrderOperations	m_memOperations;
-		SharedPtrObjectPool<MemDependency> m_memDepPool;
-	};
+        virtual void Resolve( OpIterator op );
+        virtual void Allocate( OpIterator op );
+        virtual void Commit( OpIterator op );
+        virtual void Flush( OpIterator op );
+        virtual void OrderConflicted( OpIterator producer, OpIterator consumer );
+        virtual bool CanAllocate( OpIterator* infoArray, int numOp );
+    
+    protected:
+        ForwardEmulator*    m_fwdEmulator;
+        InorderList*        m_inorderList;
+        MemOrderOperations  m_memOperations;
+        SharedPtrObjectPool<MemDependency> m_memDepPool;
+    };
 
 }; // namespace Onikiri
 

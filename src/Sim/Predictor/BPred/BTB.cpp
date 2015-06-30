@@ -39,92 +39,92 @@ using namespace std;
 
 BTB::BTB()
 {
-	m_numEntryBits	= 0;
-	m_numWays		= 0;
+    m_numEntryBits  = 0;
+    m_numWays       = 0;
 
-	m_numPred		= 0;
-	m_numTableHit	= 0;
-	m_numTableMiss	= 0;
-	m_numUpdate		= 0;
-	m_numEntries	= 0;
-	m_numHit        = 0;
-	m_numMiss       = 0;
-	m_table         = 0;
+    m_numPred       = 0;
+    m_numTableHit   = 0;
+    m_numTableMiss  = 0;
+    m_numUpdate     = 0;
+    m_numEntries    = 0;
+    m_numHit        = 0;
+    m_numMiss       = 0;
+    m_table         = 0;
 }
 
 BTB::~BTB()
 {
-	if(m_table != 0)
-		delete m_table;
+    if(m_table != 0)
+        delete m_table;
 
-	m_numEntries    = (1 << m_numEntryBits); // entry count
-	ReleaseParam();
+    m_numEntries    = (1 << m_numEntryBits); // entry count
+    ReleaseParam();
 }
 
 void BTB::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
-		m_table = 
-			new SetAssocTableType( HasherType(m_numEntryBits), m_numWays);
-	}
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
+        m_table = 
+            new SetAssocTableType( HasherType(m_numEntryBits), m_numWays);
+    }
 }
 
 // lookup BTB
 BTBPredict BTB::Predict(const PC& pc)
 {
-	BTBPredict pred = {pc, pc, BT_NON ,false};
-	++m_numPred;
+    BTBPredict pred = {pc, pc, BT_NON ,false};
+    ++m_numPred;
 
-	// BTBPredict::hit is determined by a result of reading the table.
-	// Cannot use a result of reading the table.
-	pred.hit = m_table->read( pc.address, &pred ) != m_table->end();
-	if( pred.hit ){
-		m_numTableHit++;
-	}
-	else{
-		m_numTableMiss++;
-	}
+    // BTBPredict::hit is determined by a result of reading the table.
+    // Cannot use a result of reading the table.
+    pred.hit = m_table->read( pc.address, &pred ) != m_table->end();
+    if( pred.hit ){
+        m_numTableHit++;
+    }
+    else{
+        m_numTableMiss++;
+    }
 
-	return pred;
+    return pred;
 }
 
 // update BTB
 void BTB::Update(const OpIterator& op, const BTBPredict& predict)
 {
-	if(!op->GetTaken())
-		return;
+    if(!op->GetTaken())
+        return;
 
 
-	const OpClass& opClass = op->GetOpClass();
-	bool conditinal = opClass.IsConditionalBranch();
-	BranchTypeUtility util;
+    const OpClass& opClass = op->GetOpClass();
+    bool conditinal = opClass.IsConditionalBranch();
+    BranchTypeUtility util;
 
-	// Branch result
-	BTBPredict result;
-	result.predIndexPC = predict.predIndexPC;
-	result.hit         = true;
-	result.target      = op->GetTakenPC();
-	result.dirPredict  = conditinal;
-	result.type        = util.OpClassToBranchType( opClass );
+    // Branch result
+    BTBPredict result;
+    result.predIndexPC = predict.predIndexPC;
+    result.hit         = true;
+    result.target      = op->GetTakenPC();
+    result.dirPredict  = conditinal;
+    result.type        = util.OpClassToBranchType( opClass );
 
-	ASSERT( result.type != BT_NON, "BTB must be updated by branch op." );
+    ASSERT( result.type != BT_NON, "BTB must be updated by branch op." );
 
-	//
-	// Update table if 'op' is branch and branch is taken.
-	// (Unconditional branch is always 'taken'.
-	//
-	m_table->write(result.predIndexPC.address, result);
-	++m_numUpdate;
+    //
+    // Update table if 'op' is branch and branch is taken.
+    // (Unconditional branch is always 'taken'.
+    //
+    m_table->write(result.predIndexPC.address, result);
+    ++m_numUpdate;
 
-	// 
-	// BTB hit rate calculated from :
-	// total : count of updating BTB
-	// hit   : count of predicting correct target address
-	//
-	if(predict.hit && result.target == predict.target)
-		++m_numHit;
-	else
-		++m_numMiss;
-	
+    // 
+    // BTB hit rate calculated from :
+    // total : count of updating BTB
+    // hit   : count of predicting correct target address
+    //
+    if(predict.hit && result.target == predict.target)
+        ++m_numHit;
+    else
+        ++m_numMiss;
+    
 }

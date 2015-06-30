@@ -41,67 +41,67 @@
 namespace shttl 
 {
 
-	template<class T = int>
-	class simple_hasher : public hasher<T> 
-	{
-	public:
+    template<class T = int>
+    class simple_hasher : public hasher<T> 
+    {
+    public:
 
-		// Types
-		typedef simple_hasher<T>    this_type;
-		typedef hasher<T>			base_type;
+        // Types
+        typedef simple_hasher<T>    this_type;
+        typedef hasher<T>           base_type;
 
-		typedef typename base_type::size_type  size_type;
-		typedef T                              value_type;
+        typedef typename base_type::size_type  size_type;
+        typedef T                              value_type;
 
-		static std::numeric_limits<value_type> value_info;
+        static std::numeric_limits<value_type> value_info;
 
-		// Accessors
-		size_type size() const  { return m_idx_mask + 1; }
+        // Accessors
+        size_type size() const  { return m_idx_mask + 1; }
 
-		// Constructors
-		explicit simple_hasher(const size_type s) :
-			m_idx_bit ( s ), 
-			m_idx_mask( (size_type)mask(0, s) )
-		{
-			if( s <= 0 || (u64)value_info.max() < (u64)s ){
-				throw std::invalid_argument("simple_hasher::simple_hasher");
-			}
-		} 
+        // Constructors
+        explicit simple_hasher(const size_type s) :
+            m_idx_bit ( s ), 
+            m_idx_mask( (size_type)mask(0, s) )
+        {
+            if( s <= 0 || (u64)value_info.max() < (u64)s ){
+                throw std::invalid_argument("simple_hasher::simple_hasher");
+            }
+        } 
 
-		// Member Functions
-		size_type index(const T& t) const
-		{  
-			return static_cast<size_type>(t) & m_idx_mask;
-		}
+        // Member Functions
+        size_type index(const T& t) const
+        {  
+            return static_cast<size_type>(t) & m_idx_mask;
+        }
 
-		// tag (‚Ó‚Â‚¤ãˆÊbit)
-		T tag(const T& key) const
-		{
-			return key >> m_idx_bit;
-		}
-		
-		// index‚Ætag‚©‚çkey‚ð•œŒ³‚·‚é
-		T rebuild(const T& tag, size_type index) const
-		{
-			return (T)((tag << m_idx_bit) | index);
-		}
+        // tag (‚Ó‚Â‚¤ãˆÊbit)
+        T tag(const T& key) const
+        {
+            return key >> m_idx_bit;
+        }
+        
+        // index‚Ætag‚©‚çkey‚ð•œŒ³‚·‚é
+        T rebuild(const T& tag, size_type index) const
+        {
+            return (T)((tag << m_idx_bit) | index);
+        }
 
-		bool match( const T& lhs, const T& rhs ) const
-		{
-		#ifdef SHTTL_DEBUG
-			if( size() < (size_type)lhs || size() < (size_type)rhs ){
-				throw std::range_error("simple_hasher::match");
-			}
-		#endif
-			return lhs == rhs;
-		}
+        bool match( const T& lhs, const T& rhs ) const
+        {
+        #ifdef SHTTL_DEBUG
+            if( size() < (size_type)lhs || size() < (size_type)rhs ){
+                throw std::range_error("simple_hasher::match");
+            }
+        #endif
+            return lhs == rhs;
+        }
 
-	protected:
+    protected:
 
-		size_type  m_idx_bit;
-		size_type  m_idx_mask;
+        size_type  m_idx_bit;
+        size_type  m_idx_mask;
 
-	};
+    };
 
 } // namespace shttl
 

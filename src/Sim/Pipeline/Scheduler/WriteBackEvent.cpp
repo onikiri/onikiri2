@@ -40,23 +40,23 @@
 using namespace Onikiri;
 
 OpWriteBackEvent::OpWriteBackEvent(
-	OpIterator op,
-	Scheduler* scheduler,
-	bool wbBegin
+    OpIterator op,
+    Scheduler* scheduler,
+    bool wbBegin
 ) :
-	m_op( op ),
-	m_scheduler( scheduler ),
-	m_wbBegin( wbBegin )
+    m_op( op ),
+    m_scheduler( scheduler ),
+    m_wbBegin( wbBegin )
 {
 }
 
 void OpWriteBackEvent::Update()
 {
-	if( m_wbBegin ){
-		m_scheduler->WriteBackBegin( m_op );
-	}
-	else{
-		m_scheduler->WriteBackEnd( m_op );
-	}
+    if( m_wbBegin ){
+        m_scheduler->WriteBackBegin( m_op );
+    }
+    else{
+        m_scheduler->WriteBackEnd( m_op );
+    }
 }
 

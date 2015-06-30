@@ -48,15 +48,15 @@
 #define ONIKIRI_MSVC_CUTF Microsoft::VisualStudio::CppUnitTestFramework
 
 #define ONIKIRI_TEST_IS_TRUE( cond, msg ) \
-	ONIKIRI_MSVC_CUTF::Assert::IsTrue( cond, ONIKIRI_MSVC_CUTF::ToString(msg).c_str(), LINE_INFO() )
+    ONIKIRI_MSVC_CUTF::Assert::IsTrue( cond, ONIKIRI_MSVC_CUTF::ToString(msg).c_str(), LINE_INFO() )
 
 #define ONIKIRI_TEST_ARE_EQUAL( expected, actual, msg ) \
-	ONIKIRI_MSVC_CUTF::Assert::AreEqual( expected, actual, ONIKIRI_MSVC_CUTF::ToString(msg).c_str(), LINE_INFO() )
+    ONIKIRI_MSVC_CUTF::Assert::AreEqual( expected, actual, ONIKIRI_MSVC_CUTF::ToString(msg).c_str(), LINE_INFO() )
 
 
 
 #else
-	#error "Currently, unit tests are supported only in MSVC."
+    #error "Currently, unit tests are supported only in MSVC."
 #endif
 
 

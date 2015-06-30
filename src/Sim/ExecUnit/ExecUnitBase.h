@@ -39,97 +39,97 @@
 
 namespace Onikiri 
 {
-	class ExecLatencyInfo;
-	class Scheduler;
-	class Core;
-	struct IssueState;
+    class ExecLatencyInfo;
+    class Scheduler;
+    class Core;
+    struct IssueState;
 
-	// 演算器に共通する実装
-	class ExecUnitBase :
-		public PhysicalResourceNode,
-		public ExecUnitIF 
-	{
-	public:
-		BEGIN_PARAM_MAP("")
-			
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY( "@Name",	m_name )
-				PARAM_ENTRY( "@Port",	m_numPorts )
-				PARAM_ENTRY( "@Code",	m_codeStr )
-			END_PARAM_PATH()
-			
-			BEGIN_PARAM_PATH( GetResultPath() )
-				PARAM_ENTRY( "@Name",		m_name )
-				PARAM_ENTRY( "@NumUsed",	m_numUsed )
-				PARAM_ENTRY( "@NumUsable",	m_numUsable )
-				RESULT_RATE_SUM_ENTRY("@UseRate", \
-					m_numUsed, m_numUsed, m_numUsable
-				)
-			END_PARAM_PATH()
+    // 演算器に共通する実装
+    class ExecUnitBase :
+        public PhysicalResourceNode,
+        public ExecUnitIF 
+    {
+    public:
+        BEGIN_PARAM_MAP("")
+            
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY( "@Name",   m_name )
+                PARAM_ENTRY( "@Port",   m_numPorts )
+                PARAM_ENTRY( "@Code",   m_codeStr )
+            END_PARAM_PATH()
+            
+            BEGIN_PARAM_PATH( GetResultPath() )
+                PARAM_ENTRY( "@Name",       m_name )
+                PARAM_ENTRY( "@NumUsed",    m_numUsed )
+                PARAM_ENTRY( "@NumUsable",  m_numUsable )
+                RESULT_RATE_SUM_ENTRY("@UseRate", \
+                    m_numUsed, m_numUsed, m_numUsable
+                )
+            END_PARAM_PATH()
 
-		END_PARAM_MAP()
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( ExecLatencyInfo,	"execLatencyInfo",	m_execLatencyInfo )
-			RESOURCE_ENTRY( Core,				"core",				m_core )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( ExecLatencyInfo,    "execLatencyInfo",  m_execLatencyInfo )
+            RESOURCE_ENTRY( Core,               "core",             m_core )
+        END_RESOURCE_MAP()
 
 
-		ExecUnitBase();
-		virtual ~ExecUnitBase();
-		virtual void Initialize( InitPhase phase );
-		virtual void Finalize();
+        ExecUnitBase();
+        virtual ~ExecUnitBase();
+        virtual void Initialize( InitPhase phase );
+        virtual void Finalize();
 
-		virtual int GetMappedCode(int index);
-		virtual int GetMappedCodeCount();
+        virtual int GetMappedCode(int index);
+        virtual int GetMappedCodeCount();
 
-		// 実行レイテンシ後に FinishEvent を登録する
-		virtual void Execute( OpIterator op );
+        // 実行レイテンシ後に FinishEvent を登録する
+        virtual void Execute( OpIterator op );
 
-		// OpCode から取りうるレイテンシの種類の数を返す
-		virtual int GetLatencyCount( const OpClass& opClass );
+        // OpCode から取りうるレイテンシの種類の数を返す
+        virtual int GetLatencyCount( const OpClass& opClass );
 
-		// OpCode とインデクスからレイテンシを返す
-		virtual int GetLatency( const OpClass& opClass, int index );
+        // OpCode とインデクスからレイテンシを返す
+        virtual int GetLatency( const OpClass& opClass, int index );
 
-		// 毎サイクル呼ばれる
-		virtual void Begin();
+        // 毎サイクル呼ばれる
+        virtual void Begin();
 
-		// Called in Update phase.
-		virtual void Update();
+        // Called in Update phase.
+        virtual void Update();
 
-		// accessors
-		ExecLatencyInfo* GetExecLatencyInfo()
-		{
-			return m_execLatencyInfo;
-		}
+        // accessors
+        ExecLatencyInfo* GetExecLatencyInfo()
+        {
+            return m_execLatencyInfo;
+        }
 
-		virtual ExecUnitReserver* GetReserver()  
-		{
-			return &m_reserver;
-		}
+        virtual ExecUnitReserver* GetReserver()  
+        {
+            return &m_reserver;
+        }
 
-	protected:
-		std::string m_name;
-		int			m_numPorts;		// ExecUnitが発行可能なポート数
+    protected:
+        std::string m_name;
+        int         m_numPorts;     // ExecUnitが発行可能なポート数
 
-		// statistics
-		u64 m_numUsed;
-		u64 m_numUsable;
+        // statistics
+        u64 m_numUsed;
+        u64 m_numUsable;
 
-		// Latency の情報
-		ExecLatencyInfo* m_execLatencyInfo;
-		Core*			 m_core;
-		ExecUnitReserver m_reserver;
+        // Latency の情報
+        ExecLatencyInfo* m_execLatencyInfo;
+        Core*            m_core;
+        ExecUnitReserver m_reserver;
 
-		void RegisterEvents( OpIterator op, const int latency );
-		void RegisterFinishEvent( OpIterator op, const int latency );
-		void RegisterRescheduleEvent( OpIterator op, const int latency, IssueState* issueState );
-		void RegisterDetectEvent( OpIterator op, const int latency );
+        void RegisterEvents( OpIterator op, const int latency );
+        void RegisterFinishEvent( OpIterator op, const int latency );
+        void RegisterRescheduleEvent( OpIterator op, const int latency, IssueState* issueState );
+        void RegisterDetectEvent( OpIterator op, const int latency );
 
-		std::vector<String> m_codeStr;
-		std::vector<int>    m_code;
-	};
+        std::vector<String> m_codeStr;
+        std::vector<int>    m_code;
+    };
 
 }; // namespace Onikiri
 

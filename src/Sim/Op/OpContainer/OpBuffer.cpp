@@ -41,7 +41,7 @@ OpBuffer::OpBuffer()
 }
 
 OpBuffer::OpBuffer( const OpArray& opArray ) : 
-	OpList( opArray )
+    OpList( opArray )
 {
 }
 
@@ -53,17 +53,17 @@ OpBuffer::~OpBuffer()
 // Dump stall information of containing ops.
 void OpBuffer::BeginStall()
 {
-//	m_inDumpStall = true;
-	for( iterator i = begin(); i != end(); ++i ){
-		g_dumper.DumpStallBegin( *i );
-	}
+//  m_inDumpStall = true;
+    for( iterator i = begin(); i != end(); ++i ){
+        g_dumper.DumpStallBegin( *i );
+    }
 }
 
 void OpBuffer::EndStall()
 {
-//	m_inDumpStall = false;
-	for( iterator i = begin(); i != end(); ++i ){
-		g_dumper.DumpStallEnd( *i );
-	}
+//  m_inDumpStall = false;
+    for( iterator i = begin(); i != end(); ++i ){
+        g_dumper.DumpStallEnd( *i );
+    }
 }
 

@@ -35,29 +35,29 @@
 
 namespace Onikiri
 {
-	class Cache;
-	struct CacheHookParam;
+    class Cache;
+    struct CacheHookParam;
 
-	class PrefetcherIF
-	{
-	public:
-		
-		virtual ~PrefetcherIF(){};
+    class PrefetcherIF
+    {
+    public:
+        
+        virtual ~PrefetcherIF(){};
 
-		// Cache read
-		// This method is called by all cache read accesses.
-		virtual void OnCacheRead( Cache* cache, CacheHookParam* param ) = 0;
+        // Cache read
+        // This method is called by all cache read accesses.
+        virtual void OnCacheRead( Cache* cache, CacheHookParam* param ) = 0;
 
-		// Cache write
-		// This method is called by all cache write accesses.
-		virtual void OnCacheWrite( Cache* cache, CacheHookParam* param ) = 0;
+        // Cache write
+        // This method is called by all cache write accesses.
+        virtual void OnCacheWrite( Cache* cache, CacheHookParam* param ) = 0;
 
-		// Invalidate line
-		virtual void OnCacheInvalidation( Cache* cache, CacheHookParam* param ) = 0;
+        // Invalidate line
+        virtual void OnCacheInvalidation( Cache* cache, CacheHookParam* param ) = 0;
 
-		// Write an access to the cache table.
-		virtual void OnCacheTableUpdate( Cache* cache, CacheHookParam* param ) = 0;
-	};
+        // Write an access to the cache table.
+        virtual void OnCacheTableUpdate( Cache* cache, CacheHookParam* param ) = 0;
+    };
 
 
 }; // namespace Onikiri

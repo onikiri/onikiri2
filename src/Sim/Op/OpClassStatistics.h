@@ -41,38 +41,38 @@
 
 namespace Onikiri
 {
-	class OpClassStatistics : public ParamExchangeChild
-	{
-	public:
-		BEGIN_PARAM_MAP("")
-			RESULT_ENTRY("@NumOpCode", m_numOps)
-			RESULT_ENTRY("@NameOpCode", m_names)
-			RESULT_ENTRY("@NumIntSrcOperands", m_numIntSrcOperands)
-			RESULT_ENTRY("@NumIntDstOperands", m_numIntDstOperands)
-			RESULT_ENTRY("@NumFpSrcOperands", m_numFpSrcOperands)
-			RESULT_ENTRY("@NumFpDstOperands", m_numFpDstOperands)
-		END_PARAM_MAP()
+    class OpClassStatistics : public ParamExchangeChild
+    {
+    public:
+        BEGIN_PARAM_MAP("")
+            RESULT_ENTRY("@NumOpCode", m_numOps)
+            RESULT_ENTRY("@NameOpCode", m_names)
+            RESULT_ENTRY("@NumIntSrcOperands", m_numIntSrcOperands)
+            RESULT_ENTRY("@NumIntDstOperands", m_numIntDstOperands)
+            RESULT_ENTRY("@NumFpSrcOperands", m_numFpSrcOperands)
+            RESULT_ENTRY("@NumFpDstOperands", m_numFpDstOperands)
+        END_PARAM_MAP()
 
-		// Constructor.
-		OpClassStatistics();
+        // Constructor.
+        OpClassStatistics();
 
-		// Increment a counter corresponding to 'op'.
-		void Increment(OpIterator op);
+        // Increment a counter corresponding to 'op'.
+        void Increment(OpIterator op);
 
-		// Reset statistics counters.
-		void Reset();
+        // Reset statistics counters.
+        void Reset();
 
-	private:
-		std::vector<s64> m_numOps;
-		std::vector<const char*> m_names;
+    private:
+        std::vector<s64> m_numOps;
+        std::vector<const char*> m_names;
 
-		s64 m_numIntSrcOperands;
-		s64 m_numIntDstOperands;
-		s64 m_numFpSrcOperands;
-		s64 m_numFpDstOperands;
-	};
+        s64 m_numIntSrcOperands;
+        s64 m_numIntDstOperands;
+        s64 m_numFpSrcOperands;
+        s64 m_numFpDstOperands;
+    };
 
-	
+    
 
 }; // namespace Onikiri
 

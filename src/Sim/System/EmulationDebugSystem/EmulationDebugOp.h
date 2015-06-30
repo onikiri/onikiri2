@@ -36,22 +36,22 @@
 
 namespace Onikiri {
 
-	class EmulationDebugOp : public EmulationOp {
-	private:
+    class EmulationDebugOp : public EmulationOp {
+    private:
 
-		// メモリアクセス
-		MemAccess m_access;
-	public:
-		EmulationDebugOp(MemIF* mainMem);
-		virtual ~EmulationDebugOp(){}
-		
-		void SetMemAccess(const MemAccess& memAccess) { m_access = memAccess; }
-		const MemAccess& GetMemAccess() const         { return m_access;      }
-		// MemIF
-		virtual void Read(  MemAccess* access );
-		virtual void Write( MemAccess* access );
-		
-	};
+        // メモリアクセス
+        MemAccess m_access;
+    public:
+        EmulationDebugOp(MemIF* mainMem);
+        virtual ~EmulationDebugOp(){}
+        
+        void SetMemAccess(const MemAccess& memAccess) { m_access = memAccess; }
+        const MemAccess& GetMemAccess() const         { return m_access;      }
+        // MemIF
+        virtual void Read(  MemAccess* access );
+        virtual void Write( MemAccess* access );
+        
+    };
 
 } // namespace Onikiri
 

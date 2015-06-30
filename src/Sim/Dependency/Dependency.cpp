@@ -56,33 +56,33 @@ Dependency::~Dependency()
 
 void Dependency::AddConsumer(OpIterator op)
 {
-	// Šù‚É consumer ‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î“o˜^
-	Dependency::ConsumerListType::iterator i = find(m_consumer.begin(), m_consumer.end(), op);
-	if( i == m_consumer.end() ) {
-		m_consumer.push_back(op);
-	}
+    // Šù‚É consumer ‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î“o˜^
+    Dependency::ConsumerListType::iterator i = find(m_consumer.begin(), m_consumer.end(), op);
+    if( i == m_consumer.end() ) {
+        m_consumer.push_back(op);
+    }
 }
 
 void Dependency::RemoveConsumer(OpIterator op)
 {
-	Dependency::ConsumerListType::iterator i = find(m_consumer.begin(), m_consumer.end(), op);
-	if( i != m_consumer.end() ) {
-		m_consumer.erase(i);
-	}
+    Dependency::ConsumerListType::iterator i = find(m_consumer.begin(), m_consumer.end(), op);
+    if( i != m_consumer.end() ) {
+        m_consumer.erase(i);
+    }
 }
 
 void Dependency::Set()
 {
-	m_readiness.set();
+    m_readiness.set();
 }
 
 void Dependency::Reset()
 {
-	m_readiness.reset();
+    m_readiness.reset();
 }
 
 void Dependency::Clear()
 {
-	m_readiness.reset();
-	m_consumer.clear();
+    m_readiness.reset();
+    m_consumer.clear();
 }

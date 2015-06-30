@@ -36,20 +36,20 @@
 
 
 namespace Onikiri {
-	namespace AlphaLinux {
-		// AlphaLinux ELF 用のローダー
-		class AlphaLinuxLoader : public EmulatorUtility::Linux64Loader
-		{
-		public:
-			AlphaLinuxLoader();
-			virtual ~AlphaLinuxLoader();
+    namespace AlphaLinux {
+        // AlphaLinux ELF 用のローダー
+        class AlphaLinuxLoader : public EmulatorUtility::Linux64Loader
+        {
+        public:
+            AlphaLinuxLoader();
+            virtual ~AlphaLinuxLoader();
 
-			// LoaderIF の実装
-			virtual u64 GetInitialRegValue(int index) const;
-		private:
-		};
+            // LoaderIF の実装
+            virtual u64 GetInitialRegValue(int index) const;
+        private:
+        };
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

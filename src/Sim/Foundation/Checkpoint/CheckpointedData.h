@@ -39,142 +39,142 @@
 
 namespace Onikiri 
 {
-	// Implementation of check pointing 'DataType'.
-	template <typename DataType>
-	class CheckpointedData : public CheckpointedDataBase
-	{
+    // Implementation of check pointing 'DataType'.
+    template <typename DataType>
+    class CheckpointedData : public CheckpointedDataBase
+    {
 
-	public:
-		CheckpointedData() : m_master(0)
-		{
-		}
+    public:
+        CheckpointedData() : m_master(0)
+        {
+        }
 
-		virtual ~CheckpointedData()
-		{
-			for( BackupIterator i = m_list.begin(); i != m_list.end(); ++i ){
-				DataType* ptr = GetData(i);
-				Destroy( ptr );
-			}
-			m_list.clear();
-		}
+        virtual ~CheckpointedData()
+        {
+            for( BackupIterator i = m_list.begin(); i != m_list.end(); ++i ){
+                DataType* ptr = GetData(i);
+                Destroy( ptr );
+            }
+            m_list.clear();
+        }
 
-		// This data is registered to 'master' and it is check pointed on 'slot' timing.
-		virtual void Initialize( CheckpointMaster* master, CheckpointMaster::Slot slot )
-		{
-			m_master = master;
-			CheckpointedDataHandle handle = master->Register( this, slot );
-			SetHandle( handle );
-		}
+        // This data is registered to 'master' and it is check pointed on 'slot' timing.
+        virtual void Initialize( CheckpointMaster* master, CheckpointMaster::Slot slot )
+        {
+            m_master = master;
+            CheckpointedDataHandle handle = master->Register( this, slot );
+            SetHandle( handle );
+        }
 
-		// Allocate an entry for copying and set the entry to 'checkpoint'.
-		virtual void Allocate( Checkpoint* checkpoint )
-		{
-			// Assign memory for copying.
-			BackupEntry entry;
-			entry.data = Construct();
-			entry.valid = false;
+        // Allocate an entry for copying and set the entry to 'checkpoint'.
+        virtual void Allocate( Checkpoint* checkpoint )
+        {
+            // Assign memory for copying.
+            BackupEntry entry;
+            entry.data = Construct();
+            entry.valid = false;
 
-			// Add an allocated entry to the list.
-			m_list.push_back( entry );
-			BackupIterator i = m_list.end();
-			--i;
-			
-			// Register the iterator of the entry to a checkpoint.
-			checkpoint->SetIterator( GetHandle(), i );
-		}
+            // Add an allocated entry to the list.
+            m_list.push_back( entry );
+            BackupIterator i = m_list.end();
+            --i;
+            
+            // Register the iterator of the entry to a checkpoint.
+            checkpoint->SetIterator( GetHandle(), i );
+        }
 
-		// Current data is backed up to a checkpoint.
-		virtual void Backup( Checkpoint* checkpoint )
-		{
-			BackupIterator entry = GetIterator( checkpoint );
-			entry->valid = true;
-			*GetData( entry ) = GetCurrent();
-		}
+        // Current data is backed up to a checkpoint.
+        virtual void Backup( Checkpoint* checkpoint )
+        {
+            BackupIterator entry = GetIterator( checkpoint );
+            entry->valid = true;
+            *GetData( entry ) = GetCurrent();
+        }
 
-		// Current data is recovered from check pointed data.
-		virtual void Recover( Checkpoint* checkpoint )
-		{
-			BackupIterator entry = GetIterator( checkpoint );
-			if( entry->valid ){
-				// When an entry is invalid, a check point is already allocated but copying 
-				// is not done yet. This occurs when an op between fetch and renaming stages
-				// is recovered. The op in the stages 'Backup's resources in fetch stages (ex. PC),
-				// but resources in renaming stages (ex. RMT) are not backed up yet.
-				GetCurrent() = *GetData( entry );
-			}
-		}
+        // Current data is recovered from check pointed data.
+        virtual void Recover( Checkpoint* checkpoint )
+        {
+            BackupIterator entry = GetIterator( checkpoint );
+            if( entry->valid ){
+                // When an entry is invalid, a check point is already allocated but copying 
+                // is not done yet. This occurs when an op between fetch and renaming stages
+                // is recovered. The op in the stages 'Backup's resources in fetch stages (ex. PC),
+                // but resources in renaming stages (ex. RMT) are not backed up yet.
+                GetCurrent() = *GetData( entry );
+            }
+        }
 
-		// Erase data assigned for 'checkpoint'.
-		virtual void Erase( Checkpoint* checkpoint )
-		{
-			BackupIterator i;
-			if( GetIterator( checkpoint, &i ) ){
-				DataType* ptr = GetData(i);
-				if( ptr ){
-					Destroy( ptr );
-				}
-				m_list.erase( i );
-			}
-		}
-		
-		// Accessors returns actual current data.
-		DataType&		GetCurrent() 		{ return m_current;		}
-		const DataType& GetCurrent() const	{ return m_current;		}
-		DataType&		operator*()			{ return GetCurrent();	}
-		const DataType& operator*() const	{ return GetCurrent();	}
-		DataType*		operator->() 		{ return &GetCurrent();	}
-		const DataType* operator->() const	{ return &GetCurrent();	}
+        // Erase data assigned for 'checkpoint'.
+        virtual void Erase( Checkpoint* checkpoint )
+        {
+            BackupIterator i;
+            if( GetIterator( checkpoint, &i ) ){
+                DataType* ptr = GetData(i);
+                if( ptr ){
+                    Destroy( ptr );
+                }
+                m_list.erase( i );
+            }
+        }
+        
+        // Accessors returns actual current data.
+        DataType&       GetCurrent()        { return m_current;     }
+        const DataType& GetCurrent() const  { return m_current;     }
+        DataType&       operator*()         { return GetCurrent();  }
+        const DataType& operator*() const   { return GetCurrent();  }
+        DataType*       operator->()        { return &GetCurrent(); }
+        const DataType* operator->() const  { return &GetCurrent(); }
 
-	private:
+    private:
 
-		DataType   m_current;	// Current data.
-		BackupList m_list;		// Check pointed data.
+        DataType   m_current;   // Current data.
+        BackupList m_list;      // Check pointed data.
 
-		CheckpointMaster* m_master;
+        CheckpointMaster* m_master;
 
-		// An object pool for Check pointed data.
-		boost::object_pool<DataType> m_pool;
-		void Destroy( DataType* data )
-		{
-			m_pool.destroy( data );
-		}
-		DataType* Construct()
-		{
-			DataType* ptr = m_pool.construct();
-			ASSERT( ptr != NULL, "Memory allocation failed." );
-			return ptr;
-		}
+        // An object pool for Check pointed data.
+        boost::object_pool<DataType> m_pool;
+        void Destroy( DataType* data )
+        {
+            m_pool.destroy( data );
+        }
+        DataType* Construct()
+        {
+            DataType* ptr = m_pool.construct();
+            ASSERT( ptr != NULL, "Memory allocation failed." );
+            return ptr;
+        }
 
-		// Access methods
-		bool GetIterator( const Checkpoint* checkpoint, BackupIterator* iterator ) const
-		{
-			return checkpoint->GetIterator( GetHandle(), iterator );
-		}
+        // Access methods
+        bool GetIterator( const Checkpoint* checkpoint, BackupIterator* iterator ) const
+        {
+            return checkpoint->GetIterator( GetHandle(), iterator );
+        }
 
-		BackupIterator GetIterator( const Checkpoint* checkpoint ) const
-		{
-			BackupIterator iterator;
+        BackupIterator GetIterator( const Checkpoint* checkpoint ) const
+        {
+            BackupIterator iterator;
 #if ONIKIRI_DEBUG
-			bool success = checkpoint->GetIterator( GetHandle(), &iterator );
-			ASSERT( success, "GetIterator() failed." );
+            bool success = checkpoint->GetIterator( GetHandle(), &iterator );
+            ASSERT( success, "GetIterator() failed." );
 #else
-			checkpoint->GetIterator( GetHandle(), &iterator );
+            checkpoint->GetIterator( GetHandle(), &iterator );
 #endif
-			return iterator;
-		}
+            return iterator;
+        }
 
-		DataType* GetData( BackupIterator i ) const
-		{
-			BackupEntry backup = *i;
-			return (DataType*)(backup.data);
-		}
+        DataType* GetData( BackupIterator i ) const
+        {
+            BackupEntry backup = *i;
+            return (DataType*)(backup.data);
+        }
 
-		DataType* GetData( const Checkpoint* checkpoint ) const
-		{
-			const BackupIterator& i = GetIterator( checkpoint );
-			return GetData(i);
-		}
-	};
+        DataType* GetData( const Checkpoint* checkpoint ) const
+        {
+            const BackupIterator& i = GetIterator( checkpoint );
+            return GetData(i);
+        }
+    };
 
 }; // namespace Onikiri
 

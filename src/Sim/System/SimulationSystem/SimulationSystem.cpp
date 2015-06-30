@@ -47,13 +47,13 @@
 
 namespace Onikiri
 {
-	HookPoint<SimulationSystem> SimulationSystem::s_systemInitHook;
+    HookPoint<SimulationSystem> SimulationSystem::s_systemInitHook;
 
-	HookPoint<SimulationSystem> SimulationSystem::s_cycleBeginHook;
-	HookPoint<SimulationSystem> SimulationSystem::s_cycleEvaluateHook;
-	HookPoint<SimulationSystem> SimulationSystem::s_cycleTransitionHook;
-	HookPoint<SimulationSystem> SimulationSystem::s_cycleUpdateHook;
-	HookPoint<SimulationSystem> SimulationSystem::s_cycleEndHook;
+    HookPoint<SimulationSystem> SimulationSystem::s_cycleBeginHook;
+    HookPoint<SimulationSystem> SimulationSystem::s_cycleEvaluateHook;
+    HookPoint<SimulationSystem> SimulationSystem::s_cycleTransitionHook;
+    HookPoint<SimulationSystem> SimulationSystem::s_cycleUpdateHook;
+    HookPoint<SimulationSystem> SimulationSystem::s_cycleEndHook;
 }
 
 using namespace std;
@@ -62,243 +62,243 @@ using namespace Onikiri;
 
 SimulationSystem::SimulationSystem()
 {
-	m_context = NULL;
+    m_context = NULL;
 }
 
 void SimulationSystem::Run( SystemContext* context )
 {
-	try{
-		m_context = context;
-		InitializeResources();
+    try{
+        m_context = context;
+        InitializeResources();
 
-		context->executedCycles = 1;
-		s64 numInsns  = context->executionInsns;
-		s64 numCycles = context->executionCycles;
+        context->executedCycles = 1;
+        s64 numInsns  = context->executionInsns;
+        s64 numCycles = context->executionCycles;
 
-		while(true){
-			context->globalClock->Tick();
+        while(true){
+            context->globalClock->Tick();
 
-			for( int i = 0; i < context->threads.GetSize(); i++ ){
-				Thread* thread = context->threads[i];
-				g_dumper.SetCurrentInsnCount( thread, thread->GetCore()->GetRetirer()->GetNumRetiredInsns() );
-				g_dumper.SetCurrentCycle( thread, context->executedCycles );
-			}
+            for( int i = 0; i < context->threads.GetSize(); i++ ){
+                Thread* thread = context->threads[i];
+                g_dumper.SetCurrentInsnCount( thread, thread->GetCore()->GetRetirer()->GetNumRetiredInsns() );
+                g_dumper.SetCurrentCycle( thread, context->executedCycles );
+            }
 
-			SimulateCycle();
+            SimulateCycle();
 
-			bool exitSimulation = true;
-			s64 retiredInsns = 0;
-			for( int i = 0; i < context->cores.GetSize(); i++ ){
-				Core* core = context->cores[i];
-				if( !core->GetRetirer()->IsEndOfProgram() ){
-					// Next PC が 0 になる分岐命令がリタイアしていたら終了
-					exitSimulation = false;
-				}
-				retiredInsns += core->GetRetirer()->GetNumRetiredInsns();
-			}
+            bool exitSimulation = true;
+            s64 retiredInsns = 0;
+            for( int i = 0; i < context->cores.GetSize(); i++ ){
+                Core* core = context->cores[i];
+                if( !core->GetRetirer()->IsEndOfProgram() ){
+                    // Next PC が 0 になる分岐命令がリタイアしていたら終了
+                    exitSimulation = false;
+                }
+                retiredInsns += core->GetRetirer()->GetNumRetiredInsns();
+            }
 
-			// 終了条件
-			if(exitSimulation){
-				break;
-			}
-			else if( numCycles > 0 ){
-				// 実行サイクル数を指定した場合
-				if( context->executedCycles >= numCycles ) 
-					break;
-			}
-			else{
-				// 実行命令数を指定した場合
-				if( retiredInsns >= numInsns )
-					break;
-			}
+            // 終了条件
+            if(exitSimulation){
+                break;
+            }
+            else if( numCycles > 0 ){
+                // 実行サイクル数を指定した場合
+                if( context->executedCycles >= numCycles ) 
+                    break;
+            }
+            else{
+                // 実行命令数を指定した場合
+                if( retiredInsns >= numInsns )
+                    break;
+            }
 
-			++context->executedCycles;
-		}
+            ++context->executedCycles;
+        }
 
-		// リタイアした命令数をupdate
-		context->executedInsns.clear();
-		for( int i = 0; i < context->threads.GetSize(); i++ ){
-			context->executedInsns.push_back( context->threads[i]->GetInorderList()->GetRetiredInsns() );
-		}
-	}
-	catch( std::runtime_error& error ){
-		String msg;
-		msg.format(
-			"%s\n"
-			"Last simulated cycle: %lld\n" ,
-			error.what(),
-			m_context->executedCycles
-		);
+        // リタイアした命令数をupdate
+        context->executedInsns.clear();
+        for( int i = 0; i < context->threads.GetSize(); i++ ){
+            context->executedInsns.push_back( context->threads[i]->GetInorderList()->GetRetiredInsns() );
+        }
+    }
+    catch( std::runtime_error& error ){
+        String msg;
+        msg.format(
+            "%s\n"
+            "Last simulated cycle: %lld\n" ,
+            error.what(),
+            m_context->executedCycles
+        );
 
-		throw std::runtime_error( msg.c_str() );
-	}
+        throw std::runtime_error( msg.c_str() );
+    }
 }
 
 // Initialize all physical resources (method entry point)
 void SimulationSystem::InitializeResources()
 {
-	s_systemInitHook.Trigger( this, this, HookType::HOOK_BEFORE );
-	if( !s_systemInitHook.HasAround() ){
-		InitializeResourcesBody();
-		s_systemInitHook.Trigger( this, this, HookType::HOOK_AFTER );
-	}
-	else{
-		s_systemInitHook.Trigger( this, this, HookType::HOOK_AROUND );
-	}
+    s_systemInitHook.Trigger( this, this, HookType::HOOK_BEFORE );
+    if( !s_systemInitHook.HasAround() ){
+        InitializeResourcesBody();
+        s_systemInitHook.Trigger( this, this, HookType::HOOK_AFTER );
+    }
+    else{
+        s_systemInitHook.Trigger( this, this, HookType::HOOK_AROUND );
+    }
 }
 
 // Initialize all physical resources (method body)
 void SimulationSystem::InitializeResourcesBody()
 {
-	PhysicalResourceArray<Core>&   core   = m_context->cores;
-	PhysicalResourceArray<Thread>& thread = m_context->threads;
-	PhysicalResourceArray<Cache>&  caches = m_context->caches;
+    PhysicalResourceArray<Core>&   core   = m_context->cores;
+    PhysicalResourceArray<Thread>& thread = m_context->threads;
+    PhysicalResourceArray<Cache>&  caches = m_context->caches;
 
-	m_coreResources.resize( core.GetSize() );
-	m_threadResources.resize( thread.GetSize() );
-	m_memResources.resize( caches.GetSize() );
+    m_coreResources.resize( core.GetSize() );
+    m_threadResources.resize( thread.GetSize() );
+    m_memResources.resize( caches.GetSize() );
 
-	for( int i = 0; i < thread.GetSize(); i++ ){
-		ThreadResources& res = m_threadResources[i];
-		res.memOrderManager = thread[i]->GetMemOrderManager();
-	}
+    for( int i = 0; i < thread.GetSize(); i++ ){
+        ThreadResources& res = m_threadResources[i];
+        res.memOrderManager = thread[i]->GetMemOrderManager();
+    }
 
-	//
-	// Register clocked resources
-	//
-	for( int i = 0; i < caches.GetSize(); i++ ){
-		m_clockedResources.push_back( caches[i] );
-	}
+    //
+    // Register clocked resources
+    //
+    for( int i = 0; i < caches.GetSize(); i++ ){
+        m_clockedResources.push_back( caches[i] );
+    }
 
-	for( int i = 0; i < core.GetSize(); i++ ){
-		CoreResources& res = m_coreResources[i];
+    for( int i = 0; i < core.GetSize(); i++ ){
+        CoreResources& res = m_coreResources[i];
 
-		res.core = core[i];
-		m_clockedResources.push_back( core[i]->GetRetirer() );
+        res.core = core[i];
+        m_clockedResources.push_back( core[i]->GetRetirer() );
 
-		for( int j = 0; j < core[i]->GetNumScheduler(); j++ ){
-			Scheduler* scheduler = core[i]->GetScheduler( j );
-			m_clockedResources.push_back( scheduler );
-		}
+        for( int j = 0; j < core[i]->GetNumScheduler(); j++ ){
+            Scheduler* scheduler = core[i]->GetScheduler( j );
+            m_clockedResources.push_back( scheduler );
+        }
 
-		m_clockedResources.push_back( core[i]->GetDispatcher() );
-		m_clockedResources.push_back( core[i]->GetRenamer() );
-		m_clockedResources.push_back( core[i]->GetFetcher() );
+        m_clockedResources.push_back( core[i]->GetDispatcher() );
+        m_clockedResources.push_back( core[i]->GetRenamer() );
+        m_clockedResources.push_back( core[i]->GetFetcher() );
 
-		m_clockedResources.push_back( core[i] );
-	}
+        m_clockedResources.push_back( core[i] );
+    }
 
-	sort(
-		m_clockedResources.begin(), 
-		m_clockedResources.end(), 
-		ClockedResourceBase::ComparePriority() 
-	);
+    sort(
+        m_clockedResources.begin(), 
+        m_clockedResources.end(), 
+        ClockedResourceBase::ComparePriority() 
+    );
 
-	//
-	// Register time wheels 
-	//
-	for( int i = 0; i < caches.GetSize(); i++ ){
-		m_timeWheels.push_back( caches[i]->GetLowerPipeline() );
-	}
+    //
+    // Register time wheels 
+    //
+    for( int i = 0; i < caches.GetSize(); i++ ){
+        m_timeWheels.push_back( caches[i]->GetLowerPipeline() );
+    }
 
-	for( int i = 0; i < core.GetSize(); i++ ){
-		CoreResources& res = m_coreResources[i];
+    for( int i = 0; i < core.GetSize(); i++ ){
+        CoreResources& res = m_coreResources[i];
 
-		res.core = core[i];
-		m_timeWheels.push_back( core[i]->GetRetirer()->GetLowerPipeline() );
+        res.core = core[i];
+        m_timeWheels.push_back( core[i]->GetRetirer()->GetLowerPipeline() );
 
-		for( int j = 0; j < core[i]->GetNumScheduler(); j++ ){
-			Scheduler* scheduler = core[i]->GetScheduler( j );
-			m_timeWheels.push_back( scheduler->GetLowerPipeline() );
-		}
+        for( int j = 0; j < core[i]->GetNumScheduler(); j++ ){
+            Scheduler* scheduler = core[i]->GetScheduler( j );
+            m_timeWheels.push_back( scheduler->GetLowerPipeline() );
+        }
 
-		m_timeWheels.push_back( core[i]->GetDispatcher()->GetLowerPipeline() );
-		m_timeWheels.push_back( core[i]->GetRenamer()->GetLowerPipeline() );
-		m_timeWheels.push_back( core[i]->GetFetcher()->GetLowerPipeline() );
-	}
+        m_timeWheels.push_back( core[i]->GetDispatcher()->GetLowerPipeline() );
+        m_timeWheels.push_back( core[i]->GetRenamer()->GetLowerPipeline() );
+        m_timeWheels.push_back( core[i]->GetFetcher()->GetLowerPipeline() );
+    }
 
 
 }
 
 SimulationSystem::SystemContext* SimulationSystem::GetContext()
 {
-	return m_context;
+    return m_context;
 }
 
 void SimulationSystem::CycleBegin()
 {
-	ClockedResourceList::iterator end = m_clockedResources.end();
-	for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
-		(*i)->Begin();
-	}
+    ClockedResourceList::iterator end = m_clockedResources.end();
+    for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
+        (*i)->Begin();
+    }
 }
 
 void SimulationSystem::CycleEvaluate()
 {
-	m_priorityEventList.ExtractEvent( &m_timeWheels );
+    m_priorityEventList.ExtractEvent( &m_timeWheels );
 
-	m_priorityEventList.BeginEvaluate();
+    m_priorityEventList.BeginEvaluate();
 
-	ClockedResourceList::iterator end = m_clockedResources.end();
-	for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
-		ClockedResourceIF* res = *i;
-		m_priorityEventList.TriggerEvaluate( res->GetPriority() );
-		res->Evaluate();
-	}
+    ClockedResourceList::iterator end = m_clockedResources.end();
+    for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
+        ClockedResourceIF* res = *i;
+        m_priorityEventList.TriggerEvaluate( res->GetPriority() );
+        res->Evaluate();
+    }
 
-	m_priorityEventList.EndEvaluate();
+    m_priorityEventList.EndEvaluate();
 }
 
 void SimulationSystem::CycleTransition()
 {
-	ClockedResourceList::iterator end = m_clockedResources.end();
-	for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
-		(*i)->Transition();
-	}
+    ClockedResourceList::iterator end = m_clockedResources.end();
+    for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
+        (*i)->Transition();
+    }
 }
 
 void SimulationSystem::CycleUpdate()
-{	
-	m_priorityEventList.BeginUpdate();
+{   
+    m_priorityEventList.BeginUpdate();
 
-	ClockedResourceList::iterator end = m_clockedResources.end();
-	for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
-		ClockedResourceIF* res = *i;
-		m_priorityEventList.TriggerUpdate( res->GetPriority() );
-		res->TriggerUpdate();
-	}
+    ClockedResourceList::iterator end = m_clockedResources.end();
+    for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
+        ClockedResourceIF* res = *i;
+        m_priorityEventList.TriggerUpdate( res->GetPriority() );
+        res->TriggerUpdate();
+    }
 
-	m_priorityEventList.EndUpdate();
+    m_priorityEventList.EndUpdate();
 }
 
 void SimulationSystem::CycleEnd()
 {
-	ClockedResourceList::iterator end = m_clockedResources.end();
-	for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
-		(*i)->End();
-	}
+    ClockedResourceList::iterator end = m_clockedResources.end();
+    for( ClockedResourceList::iterator i = m_clockedResources.begin(); i != end; ++i ){
+        (*i)->End();
+    }
 }
 
 void SimulationSystem::SimulateCycle()
 {
-	if( s_cycleBeginHook.IsAnyHookRegistered()   || 
-		s_cycleEvaluateHook.IsAnyHookRegistered() ||
-		s_cycleTransitionHook.IsAnyHookRegistered() ||
-		s_cycleUpdateHook.IsAnyHookRegistered()	||
-		s_cycleEndHook.IsAnyHookRegistered()
-	){
-		HookEntry( this, &SimulationSystem::CycleBegin,      &s_cycleBeginHook );
-		HookEntry( this, &SimulationSystem::CycleEvaluate,   &s_cycleEvaluateHook );
-		HookEntry( this, &SimulationSystem::CycleTransition, &s_cycleTransitionHook );
-		HookEntry( this, &SimulationSystem::CycleUpdate,     &s_cycleUpdateHook );
-		HookEntry( this, &SimulationSystem::CycleEnd,        &s_cycleEndHook );
-	}
-	else{
-		CycleBegin();
-		CycleEvaluate();
-		CycleTransition();
-		CycleUpdate();
-		CycleEnd();
-	}
+    if( s_cycleBeginHook.IsAnyHookRegistered()   || 
+        s_cycleEvaluateHook.IsAnyHookRegistered() ||
+        s_cycleTransitionHook.IsAnyHookRegistered() ||
+        s_cycleUpdateHook.IsAnyHookRegistered() ||
+        s_cycleEndHook.IsAnyHookRegistered()
+    ){
+        HookEntry( this, &SimulationSystem::CycleBegin,      &s_cycleBeginHook );
+        HookEntry( this, &SimulationSystem::CycleEvaluate,   &s_cycleEvaluateHook );
+        HookEntry( this, &SimulationSystem::CycleTransition, &s_cycleTransitionHook );
+        HookEntry( this, &SimulationSystem::CycleUpdate,     &s_cycleUpdateHook );
+        HookEntry( this, &SimulationSystem::CycleEnd,        &s_cycleEndHook );
+    }
+    else{
+        CycleBegin();
+        CycleEvaluate();
+        CycleTransition();
+        CycleUpdate();
+        CycleEnd();
+    }
 
 }

@@ -45,47 +45,47 @@
 
 namespace Onikiri
 {
-	template <bool t_hit>
-	class StaticHitMissPred : 
-		public HitMissPredIF,
-		public PhysicalResourceNode
-	{
-	public:
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
+    template <bool t_hit>
+    class StaticHitMissPred : 
+        public HitMissPredIF,
+        public PhysicalResourceNode
+    {
+    public:
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
 
-		StaticHitMissPred()
-		{
-		};
+        StaticHitMissPred()
+        {
+        };
 
-		virtual ~StaticHitMissPred()
-		{
-			ReleaseParam();
-		}
+        virtual ~StaticHitMissPred()
+        {
+            ReleaseParam();
+        }
 
-		virtual void Initialize(InitPhase phase)
-		{
-		}
+        virtual void Initialize(InitPhase phase)
+        {
+        }
 
-		virtual bool Predict( OpIterator op )
-		{
-			return t_hit;
-		}
+        virtual bool Predict( OpIterator op )
+        {
+            return t_hit;
+        }
 
-		virtual void Finished( OpIterator op, bool hit )
-		{
-		}
+        virtual void Finished( OpIterator op, bool hit )
+        {
+        }
 
-		virtual void Commit( OpIterator op, bool hit )
-		{
-		}
+        virtual void Commit( OpIterator op, bool hit )
+        {
+        }
 
-	};
+    };
 
-	typedef StaticHitMissPred<true>  OptimisticHitMissPred;
-	typedef StaticHitMissPred<false> PessimisticHitMissPred;
+    typedef StaticHitMissPred<true>  OptimisticHitMissPred;
+    typedef StaticHitMissPred<false> PessimisticHitMissPred;
 
 } // namespace Onikiri
 
-#endif	// SIM_PREDICTOR_HIT_MISS_PRED_STATIC_HIT_MISS_PRED_H
+#endif  // SIM_PREDICTOR_HIT_MISS_PRED_STATIC_HIT_MISS_PRED_H
 

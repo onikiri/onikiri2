@@ -42,185 +42,185 @@
 
 namespace Onikiri
 {
-	class ParamXMLPrinter : public TiXmlVisitor
-	{
+    class ParamXMLPrinter : public TiXmlVisitor
+    {
 
-	public:
+    public:
 
-		ParamXMLPrinter()
-		{
-			m_simpleTextPrint = false;
-			m_indetStr = "  ";
-			m_depth = 0;
-		}
+        ParamXMLPrinter()
+        {
+            m_simpleTextPrint = false;
+            m_indetStr = "  ";
+            m_depth = 0;
+        }
 
-		const char* CStr() const
-		{
-			return m_buffer.c_str();
-		}
+        const char* CStr() const
+        {
+            return m_buffer.c_str();
+        }
 
-		void IncDepth()
-		{
-			m_depth++;
-		}
+        void IncDepth()
+        {
+            m_depth++;
+        }
 
-		void DecDepth()
-		{
-			m_depth--;
-		}
+        void DecDepth()
+        {
+            m_depth--;
+        }
 
-		void Indent()
-		{
-			for( int i = 0; i < m_depth; i++ ){
-				m_buffer += m_indetStr;
-			}
-		}
+        void Indent()
+        {
+            for( int i = 0; i < m_depth; i++ ){
+                m_buffer += m_indetStr;
+            }
+        }
 
-		void LineBreak()
-		{
-			m_buffer += "\n";
-		}
+        void LineBreak()
+        {
+            m_buffer += "\n";
+        }
 
-		bool VisitEnter( const TiXmlDocument& )
-		{
-			return true;
-		}
+        bool VisitEnter( const TiXmlDocument& )
+        {
+            return true;
+        }
 
-		bool VisitExit( const TiXmlDocument& )
-		{
-			return true;
-		}
+        bool VisitExit( const TiXmlDocument& )
+        {
+            return true;
+        }
 
-		bool VisitEnter( const TiXmlElement& element, const TiXmlAttribute* firstAttribute )
-		{
-			Indent();
-			m_buffer += "<";
-			m_buffer += element.Value();
+        bool VisitEnter( const TiXmlElement& element, const TiXmlAttribute* firstAttribute )
+        {
+            Indent();
+            m_buffer += "<";
+            m_buffer += element.Value();
 #if 0
-			for( const TiXmlAttribute* attrib = firstAttribute; attrib; attrib = attrib->Next() ){
-				m_buffer += " ";
-				attrib->Print( 0, 0, &m_buffer );
-			}
+            for( const TiXmlAttribute* attrib = firstAttribute; attrib; attrib = attrib->Next() ){
+                m_buffer += " ";
+                attrib->Print( 0, 0, &m_buffer );
+            }
 #else
-			IncDepth();	
-			for( const TiXmlAttribute* attrib = firstAttribute; attrib; attrib = attrib->Next() ){
-				LineBreak();
-				Indent();
-				attrib->Print( 0, 0, &m_buffer );
-			}
-			DecDepth();	
-			if( firstAttribute ){
-				LineBreak();
-				Indent();
-			}
+            IncDepth(); 
+            for( const TiXmlAttribute* attrib = firstAttribute; attrib; attrib = attrib->Next() ){
+                LineBreak();
+                Indent();
+                attrib->Print( 0, 0, &m_buffer );
+            }
+            DecDepth(); 
+            if( firstAttribute ){
+                LineBreak();
+                Indent();
+            }
 #endif
-			if( !element.FirstChild() ){
-				m_buffer += " />";
-				LineBreak();
-			}
-			else{
-				m_buffer += ">";
-				if( element.FirstChild()->ToText() &&
-					element.LastChild() == element.FirstChild() && 
-					element.FirstChild()->ToText()->CDATA() == false 
-				){
-						m_simpleTextPrint = true;
-				}
-				else{
-					LineBreak();
-				}
-			}
-			IncDepth();	
-			return true;
-		}
+            if( !element.FirstChild() ){
+                m_buffer += " />";
+                LineBreak();
+            }
+            else{
+                m_buffer += ">";
+                if( element.FirstChild()->ToText() &&
+                    element.LastChild() == element.FirstChild() && 
+                    element.FirstChild()->ToText()->CDATA() == false 
+                ){
+                        m_simpleTextPrint = true;
+                }
+                else{
+                    LineBreak();
+                }
+            }
+            IncDepth(); 
+            return true;
+        }
 
 
-		bool VisitExit( const TiXmlElement& element )
-		{
-			DecDepth();
-			if( !element.FirstChild() ){
-				// nothing.
-			}
-			else{
-				if( m_simpleTextPrint ){
-					m_simpleTextPrint = false;
-				}
-				else{
-					Indent();
-				}
-				m_buffer += "</";
-				m_buffer += element.Value();
-				m_buffer += ">";
-				LineBreak();
-			}
-			return true;
-		}
+        bool VisitExit( const TiXmlElement& element )
+        {
+            DecDepth();
+            if( !element.FirstChild() ){
+                // nothing.
+            }
+            else{
+                if( m_simpleTextPrint ){
+                    m_simpleTextPrint = false;
+                }
+                else{
+                    Indent();
+                }
+                m_buffer += "</";
+                m_buffer += element.Value();
+                m_buffer += ">";
+                LineBreak();
+            }
+            return true;
+        }
 
 
-		bool Visit( const TiXmlText& text )
-		{
-			if( text.CDATA() ){
-				Indent();
-				m_buffer += "<![CDATA[";
-				m_buffer += text.Value();
-				m_buffer += "]]>";
-				LineBreak();
-			}
-			else if( m_simpleTextPrint ){
-				//TIXML_STRING str;
-				//TiXmlBase::EncodeString( text.ValueTStr(), &str );
+        bool Visit( const TiXmlText& text )
+        {
+            if( text.CDATA() ){
+                Indent();
+                m_buffer += "<![CDATA[";
+                m_buffer += text.Value();
+                m_buffer += "]]>";
+                LineBreak();
+            }
+            else if( m_simpleTextPrint ){
+                //TIXML_STRING str;
+                //TiXmlBase::EncodeString( text.ValueTStr(), &str );
 
-				// Text data is output as raw data.
-				m_buffer += text.ValueTStr();
-			}
-			else{
-				Indent();
-				TIXML_STRING str;
-				TiXmlBase::EncodeString( text.ValueTStr(), &str );
-				m_buffer += str;
-				LineBreak();
-			}
-			return true;
-		}
-
-
-		bool Visit( const TiXmlDeclaration& declaration )
-		{
-			Indent();
-			declaration.Print( 0, 0, &m_buffer );
-			LineBreak();
-			return true;
-		}
+                // Text data is output as raw data.
+                m_buffer += text.ValueTStr();
+            }
+            else{
+                Indent();
+                TIXML_STRING str;
+                TiXmlBase::EncodeString( text.ValueTStr(), &str );
+                m_buffer += str;
+                LineBreak();
+            }
+            return true;
+        }
 
 
-		bool Visit( const TiXmlComment& comment )
-		{
-			Indent();
-			m_buffer += "<!--";
-			m_buffer += comment.Value();
-			m_buffer += "-->";
-			LineBreak();
-			return true;
-		}
+        bool Visit( const TiXmlDeclaration& declaration )
+        {
+            Indent();
+            declaration.Print( 0, 0, &m_buffer );
+            LineBreak();
+            return true;
+        }
 
 
-		bool Visit( const TiXmlUnknown& unknown )
-		{
-			Indent();
-			m_buffer += "<";
-			m_buffer += unknown.Value();
-			m_buffer += ">";
-			LineBreak();
-			return true;
-		}
+        bool Visit( const TiXmlComment& comment )
+        {
+            Indent();
+            m_buffer += "<!--";
+            m_buffer += comment.Value();
+            m_buffer += "-->";
+            LineBreak();
+            return true;
+        }
 
-	protected:
-		TIXML_STRING m_buffer;
-		TIXML_STRING m_indetStr;
-		int m_depth;
-		bool m_simpleTextPrint;
 
-	};
+        bool Visit( const TiXmlUnknown& unknown )
+        {
+            Indent();
+            m_buffer += "<";
+            m_buffer += unknown.Value();
+            m_buffer += ">";
+            LineBreak();
+            return true;
+        }
+
+    protected:
+        TIXML_STRING m_buffer;
+        TIXML_STRING m_indetStr;
+        int m_depth;
+        bool m_simpleTextPrint;
+
+    };
 };
 
 #endif

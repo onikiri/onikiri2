@@ -44,128 +44,128 @@
 
 namespace Onikiri 
 {
-	class Thread;
-	
-	// An emulator that executes ops on instruction fetch.
-	// Execution is done in-order and results are used for validation.
-	class ForwardEmulator :
-		public PhysicalResourceNode,
-		public MemIF
-	{
-	public:
-		ForwardEmulator();
-		virtual ~ForwardEmulator();
+    class Thread;
+    
+    // An emulator that executes ops on instruction fetch.
+    // Execution is done in-order and results are used for validation.
+    class ForwardEmulator :
+        public PhysicalResourceNode,
+        public MemIF
+    {
+    public:
+        ForwardEmulator();
+        virtual ~ForwardEmulator();
 
-		void Initialize( InitPhase phase );
-		void Finalize();
-		void SetContext( const ArchitectureStateList& context );
+        void Initialize( InitPhase phase );
+        void Finalize();
+        void SetContext( const ArchitectureStateList& context );
 
-		void OnFetch( OpIterator op );
-		void OnBranchPrediction( PC* predPC );
-		void OnCommit( OpIterator op );
+        void OnFetch( OpIterator op );
+        void OnBranchPrediction( PC* predPC );
+        void OnCommit( OpIterator op );
 
-		// Get a pre-executed result corresponding to 'op'.
-		const OpStateIF* GetExecutionResult( OpIterator op );
-		const MemAccess* GetMemoryAccessResult( OpIterator op );
+        // Get a pre-executed result corresponding to 'op'.
+        const OpStateIF* GetExecutionResult( OpIterator op );
+        const MemAccess* GetMemoryAccessResult( OpIterator op );
 
-		// Returns whether 'op' is in miss predicted path or not.
-		bool IsInMissPredictedPath( OpIterator op );
+        // Returns whether 'op' is in miss predicted path or not.
+        bool IsInMissPredictedPath( OpIterator op );
 
-		//
-		// MemIF
-		//
-		virtual void Read( MemAccess* access );
-		virtual void Write( MemAccess* access );
+        //
+        // MemIF
+        //
+        virtual void Read( MemAccess* access );
+        virtual void Write( MemAccess* access );
 
-		// Accessors
-		EmulatorIF* GetEmulator() const { return m_emulator; };
-		bool IsEnabled() const { return m_enable; }
+        // Accessors
+        EmulatorIF* GetEmulator() const { return m_emulator; };
+        bool IsEnabled() const { return m_enable; }
 
-		//
-		// PhysicalResouceNode
-		//
-		BEGIN_PARAM_MAP("")
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY( "@Enable",	m_enable );
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( GetResultPath() )
-			END_PARAM_PATH()
-		END_PARAM_MAP()
+        //
+        // PhysicalResouceNode
+        //
+        BEGIN_PARAM_MAP("")
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY( "@Enable", m_enable );
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+            END_PARAM_PATH()
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( EmulatorIF,	"emulator", m_emulator )
-			RESOURCE_ENTRY( Thread,	"thread",	m_threads )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( EmulatorIF, "emulator", m_emulator )
+            RESOURCE_ENTRY( Thread, "thread",   m_threads )
+        END_RESOURCE_MAP()
 
 
 
-	protected:
+    protected:
 
-		PhysicalResourceArray<Thread> m_threads;
-		EmulatorIF* m_emulator;
-		ArchitectureStateList m_context;
-		MemOrderOperations m_memOperations;
-		
-		// Additional contexts for a forward emulator.
-		struct ThreadContext
-		{
-			// Branch prediction is correctly done to these retirement id/PC.
-			// These are used for detecting whether an op is in miss predicted path or not.
-			u64 nextFixedRetireID;
-			PC  nextFixedPC;
+        PhysicalResourceArray<Thread> m_threads;
+        EmulatorIF* m_emulator;
+        ArchitectureStateList m_context;
+        MemOrderOperations m_memOperations;
+        
+        // Additional contexts for a forward emulator.
+        struct ThreadContext
+        {
+            // Branch prediction is correctly done to these retirement id/PC.
+            // These are used for detecting whether an op is in miss predicted path or not.
+            u64 nextFixedRetireID;
+            PC  nextFixedPC;
 
-			ThreadContext() :
-				nextFixedRetireID(0)
-			{
-			}
-		};
+            ThreadContext() :
+                nextFixedRetireID(0)
+            {
+            }
+        };
 
-		struct InflightOp
-		{
-			EmulationOp emuOp;
-			OpIterator  simOp;
-			MemAccess   memAccess;
-			u64         retireId;
-			bool        updatePC;
-			bool        updateMicroOpIndex;
-			bool		isStore;
+        struct InflightOp
+        {
+            EmulationOp emuOp;
+            OpIterator  simOp;
+            MemAccess   memAccess;
+            u64         retireId;
+            bool        updatePC;
+            bool        updateMicroOpIndex;
+            bool        isStore;
 
-			InflightOp() : 
-				retireId( 0 ),
-				updatePC( 0 ),
-				updateMicroOpIndex( 0 ),
-				isStore( false )
-			{
-			}
-		};
+            InflightOp() : 
+                retireId( 0 ),
+                updatePC( 0 ),
+                updateMicroOpIndex( 0 ),
+                isStore( false )
+            {
+            }
+        };
 
-		typedef pool_list< InflightOp > InflightOpList;
-		std::vector< InflightOpList >	m_inflightOps;
-		std::vector< ThreadContext >	m_threadContext;
+        typedef pool_list< InflightOp > InflightOpList;
+        std::vector< InflightOpList >   m_inflightOps;
+        std::vector< ThreadContext >    m_threadContext;
 
-		bool m_enable;
-		static const s64 MAX_RID_DIFFERENCE = 1024;
+        bool m_enable;
+        static const s64 MAX_RID_DIFFERENCE = 1024;
 
-		// Update architecture state.
-		void UpdateArchContext( 
-			ArchitectureState* context, 
-			OpStateIF* state, 
-			OpInfo* info, 
-			bool updatePC, 
-			bool updateMicroOpIndex
-		);
+        // Update architecture state.
+        void UpdateArchContext( 
+            ArchitectureState* context, 
+            OpStateIF* state, 
+            OpInfo* info, 
+            bool updatePC, 
+            bool updateMicroOpIndex
+        );
 
-		// When 'reverse' is true, an in-flight op is searched from the back of 'inflightOps'.
-		InflightOp* GetInflightOp( OpIterator op, bool reverse = true );
+        // When 'reverse' is true, an in-flight op is searched from the back of 'inflightOps'.
+        InflightOp* GetInflightOp( OpIterator op, bool reverse = true );
 
-		InflightOp* GetProducerStore( const InflightOp& consumerLoad );
+        InflightOp* GetProducerStore( const InflightOp& consumerLoad );
 
-		// Calculate a next PC from the executed state of an op.
-		PC GetExecutedNextPC( PC current, OpStateIF* state ) const;
+        // Calculate a next PC from the executed state of an op.
+        PC GetExecutedNextPC( PC current, OpStateIF* state ) const;
 
-		// Update fixed pc/retirement id with execution results.
-		void UpdateFixedPath( OpIterator simOp );
-	};
+        // Update fixed pc/retirement id with execution results.
+        void UpdateFixedPath( OpIterator simOp );
+    };
 
 }; // namespace Onikiri
 

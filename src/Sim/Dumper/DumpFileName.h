@@ -34,25 +34,25 @@
 
 namespace Onikiri
 {
-	static String MakeDumpFileName( const String& baseName, const String& coreIDSuffix, bool enableZGip )
-	{
-		String fileName = baseName;
-		if( coreIDSuffix != "" ){
-			size_t dotPos = fileName.rfind(".");
-			if( dotPos == fileName.npos ){
-				fileName += "." + coreIDSuffix + ".txt";
-			}
-			else{
-				fileName.replace( dotPos, 1, String(".") + coreIDSuffix + "." );
-			}
-		}
+    static String MakeDumpFileName( const String& baseName, const String& coreIDSuffix, bool enableZGip )
+    {
+        String fileName = baseName;
+        if( coreIDSuffix != "" ){
+            size_t dotPos = fileName.rfind(".");
+            if( dotPos == fileName.npos ){
+                fileName += "." + coreIDSuffix + ".txt";
+            }
+            else{
+                fileName.replace( dotPos, 1, String(".") + coreIDSuffix + "." );
+            }
+        }
 
-		if( enableZGip && fileName.length() > 3 && fileName.rfind(".gz") != fileName.length() - 3 ){
-			fileName += ".gz";
-		}
+        if( enableZGip && fileName.length() > 3 && fileName.rfind(".gz") != fileName.length() - 3 ){
+            fileName += ".gz";
+        }
 
-		return fileName;
-	}
+        return fileName;
+    }
 }
 
 #endif

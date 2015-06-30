@@ -44,72 +44,72 @@
 
 namespace Onikiri 
 {
-	// Prediction result of BTB
-	struct BTBPredict
-	{
-		PC            predIndexPC;
-		PC            target;
-		BranchType    type;
-		bool          hit;
-		bool		  dirPredict;
-	};
+    // Prediction result of BTB
+    struct BTBPredict
+    {
+        PC            predIndexPC;
+        PC            target;
+        BranchType    type;
+        bool          hit;
+        bool          dirPredict;
+    };
 
-	class BTB : public PhysicalResourceNode
-	{
-	private:
-		static const int WORD_BITS = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
-		typedef shttl::static_off_hasher<u64, WORD_BITS> HasherType;
-		typedef shttl::setassoc_table< std::pair<u64, BTBPredict>, HasherType> SetAssocTableType;
-		SetAssocTableType* m_table;
+    class BTB : public PhysicalResourceNode
+    {
+    private:
+        static const int WORD_BITS = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
+        typedef shttl::static_off_hasher<u64, WORD_BITS> HasherType;
+        typedef shttl::setassoc_table< std::pair<u64, BTBPredict>, HasherType> SetAssocTableType;
+        SetAssocTableType* m_table;
 
-		int m_numEntryBits;
-		int m_numWays;
+        int m_numEntryBits;
+        int m_numWays;
 
-		// statistical information
-		s64		m_numPred;			// fetch時に予測した回数
-		s64		m_numTableHit;		// テーブルにヒットした回数
-		s64		m_numTableMiss;		// テーブルにミスした回数
-		s64		m_numHit;			// ターゲットがヒットした回数
-		s64		m_numMiss;			// ターゲットがミスした回数
-		s64		m_numUpdate;		// Updateした命令数
-		int		m_numEntries;		// エントリ数
+        // statistical information
+        s64     m_numPred;          // fetch時に予測した回数
+        s64     m_numTableHit;      // テーブルにヒットした回数
+        s64     m_numTableMiss;     // テーブルにミスした回数
+        s64     m_numHit;           // ターゲットがヒットした回数
+        s64     m_numMiss;          // ターゲットがミスした回数
+        s64     m_numUpdate;        // Updateした命令数
+        int     m_numEntries;       // エントリ数
 
-	public:
-		BEGIN_PARAM_MAP("")
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY("@EntryBits",	m_numEntryBits)
-				PARAM_ENTRY("@Ways",		m_numWays)
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( GetResultPath() )
-				PARAM_ENTRY( "@NumPred",		  m_numPred)
-				PARAM_ENTRY( "@NumUpdate",	  m_numUpdate)
-				PARAM_ENTRY( "@NumTableHit",	  m_numTableHit)
-				PARAM_ENTRY( "@NumTableMiss",  m_numTableMiss)
-				PARAM_ENTRY( "@NumHit",        m_numHit)
-				PARAM_ENTRY( "@NumMiss",       m_numMiss)
-				PARAM_ENTRY( "@NumEntries",	  m_numEntries)
-				RESULT_RATE_SUM_ENTRY( "@TableHitRate", m_numTableHit, m_numTableHit, m_numTableMiss )
-				RESULT_RATE_SUM_ENTRY( "@HitRate", m_numHit, m_numHit, m_numMiss )
-			END_PARAM_PATH()
-		END_PARAM_MAP()
-		
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
+    public:
+        BEGIN_PARAM_MAP("")
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY("@EntryBits",   m_numEntryBits)
+                PARAM_ENTRY("@Ways",        m_numWays)
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+                PARAM_ENTRY( "@NumPred",          m_numPred)
+                PARAM_ENTRY( "@NumUpdate",    m_numUpdate)
+                PARAM_ENTRY( "@NumTableHit",      m_numTableHit)
+                PARAM_ENTRY( "@NumTableMiss",  m_numTableMiss)
+                PARAM_ENTRY( "@NumHit",        m_numHit)
+                PARAM_ENTRY( "@NumMiss",       m_numMiss)
+                PARAM_ENTRY( "@NumEntries",   m_numEntries)
+                RESULT_RATE_SUM_ENTRY( "@TableHitRate", m_numTableHit, m_numTableHit, m_numTableMiss )
+                RESULT_RATE_SUM_ENTRY( "@HitRate", m_numHit, m_numHit, m_numMiss )
+            END_PARAM_PATH()
+        END_PARAM_MAP()
+        
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
 
-		using PhysicalResourceNode::LoadParam;
-		using PhysicalResourceNode::ReleaseParam;
+        using PhysicalResourceNode::LoadParam;
+        using PhysicalResourceNode::ReleaseParam;
 
-		BTB();
-		virtual ~BTB();
+        BTB();
+        virtual ~BTB();
 
-		void Initialize(InitPhase phase);
+        void Initialize(InitPhase phase);
 
-		// PCから次のPCを予測して返す
-		BTBPredict Predict(const PC& pc);
+        // PCから次のPCを予測して返す
+        BTBPredict Predict(const PC& pc);
 
-		// BTBをupdateする
-		void Update(const OpIterator& op, const BTBPredict& predict);
-	};
+        // BTBをupdateする
+        void Update(const OpIterator& op, const BTBPredict& predict);
+    };
 
 }; // namespace Onikiri
 

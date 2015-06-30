@@ -37,22 +37,22 @@
 
 namespace Onikiri
 {
-	struct ArchitectureState
-	{
-		PC  pc;
-		int microOpIndex;
-		std::vector<u64> registerValue;
+    struct ArchitectureState
+    {
+        PC  pc;
+        int microOpIndex;
+        std::vector<u64> registerValue;
 
-		ArchitectureState() : microOpIndex(0)
-		{
-		}
-	};
+        ArchitectureState() : microOpIndex(0)
+        {
+        }
+    };
 
-	typedef std::vector<ArchitectureState> ArchitectureStateList;
+    typedef std::vector<ArchitectureState> ArchitectureStateList;
 
-}	//	namespace Onikiri
+}   //  namespace Onikiri
 
 
-#endif	// #ifndef SIM_SYSTEM_ARCHITECTURE_STATE_H
+#endif  // #ifndef SIM_SYSTEM_ARCHITECTURE_STATE_H
 
 

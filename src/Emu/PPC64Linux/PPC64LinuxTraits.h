@@ -39,19 +39,19 @@
 #include "Emu/PPC64Linux/PPC64OpInfo.h"
 
 namespace Onikiri {
-	namespace PPC64Linux {
+    namespace PPC64Linux {
 
-		struct PPC64LinuxTraits {
-			typedef PPC64Info ISAInfoType;
-			typedef PPC64OpInfo OpInfoType;
-			typedef PPC64Converter ConverterType;
-			typedef PPC64LinuxLoader LoaderType;
-			typedef PPC64LinuxSyscallConv SyscallConvType;
+        struct PPC64LinuxTraits {
+            typedef PPC64Info ISAInfoType;
+            typedef PPC64OpInfo OpInfoType;
+            typedef PPC64Converter ConverterType;
+            typedef PPC64LinuxLoader LoaderType;
+            typedef PPC64LinuxSyscallConv SyscallConvType;
 
-			static const bool IsBigEndian = true;
-		};
+            static const bool IsBigEndian = true;
+        };
 
-	} // namespace PPC64Linux
+    } // namespace PPC64Linux
 } // namespace Onikiri
 
 #endif

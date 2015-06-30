@@ -38,28 +38,28 @@
 namespace Onikiri 
 {
 
-	// レジスタの依存関係予測器のベースクラス．
-	// DepPredIF 関連のメソッドはこのクラスで実装されており，
-	// それらからレジスタ依存解析のメソッドが呼ばれる
-	class RegDepPredBase : public RegDepPredIF 
-	{
-		SharedPtrObjectPool<PhyReg> m_phyRegPool;
-	public:
+    // レジスタの依存関係予測器のベースクラス．
+    // DepPredIF 関連のメソッドはこのクラスで実装されており，
+    // それらからレジスタ依存解析のメソッドが呼ばれる
+    class RegDepPredBase : public RegDepPredIF 
+    {
+        SharedPtrObjectPool<PhyReg> m_phyRegPool;
+    public:
 
-		RegDepPredBase();
-		virtual ~RegDepPredBase();
+        RegDepPredBase();
+        virtual ~RegDepPredBase();
 
-		// -- DepPredIF 
-		
-		// opがConsumer
-		virtual void Resolve(OpIterator op);
-		// opがProducer
-		virtual void Allocate(OpIterator op);
-		// Commit時、同じ論理レジスタ番号に書き込む直前の命令のデスティネーション・レジスタを解放
-		virtual void Commit(OpIterator op);
-		// Flush時、自分のデスティネーション・レジスタを解放
-		virtual void Flush(OpIterator op);
-	};
+        // -- DepPredIF 
+        
+        // opがConsumer
+        virtual void Resolve(OpIterator op);
+        // opがProducer
+        virtual void Allocate(OpIterator op);
+        // Commit時、同じ論理レジスタ番号に書き込む直前の命令のデスティネーション・レジスタを解放
+        virtual void Commit(OpIterator op);
+        // Flush時、自分のデスティネーション・レジスタを解放
+        virtual void Flush(OpIterator op);
+    };
 
 }; // namespace Onikiri
 

@@ -38,55 +38,55 @@ using namespace Onikiri;
 
 
 MemDepPred::MemDepPred() :
-	m_pred( NULL )
+    m_pred( NULL )
 {
 
 }
 
 MemDepPred::~MemDepPred()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void MemDepPred::Initialize( InitPhase phase )
 {
-	// Do not call "Initialize()" of a proxy target object,
-	// because the "Initialize()" is called by the resource system.
+    // Do not call "Initialize()" of a proxy target object,
+    // because the "Initialize()" is called by the resource system.
 
-	if( phase == INIT_PRE_CONNECTION ){
-		LoadParam();
-	}
-	else if( phase == INIT_POST_CONNECTION ){
-		CheckNodeInitialized( "memDepPred", m_pred );
-	}
+    if( phase == INIT_PRE_CONNECTION ){
+        LoadParam();
+    }
+    else if( phase == INIT_POST_CONNECTION ){
+        CheckNodeInitialized( "memDepPred", m_pred );
+    }
 }
 
 void MemDepPred::Resolve( OpIterator op )
 {
-	m_pred->Resolve( op );
+    m_pred->Resolve( op );
 }
 
 void MemDepPred::Allocate( OpIterator op )
 {
-	m_pred->Allocate( op );
+    m_pred->Allocate( op );
 }
 
 void MemDepPred::Commit( OpIterator op )
 {
-	m_pred->Commit( op );
+    m_pred->Commit( op );
 }
 
 void MemDepPred::Flush( OpIterator op )
 {
-	m_pred->Flush( op );
+    m_pred->Flush( op );
 }
 
 void MemDepPred::OrderConflicted( OpIterator producer, OpIterator consumer )
 {
-	m_pred->OrderConflicted( producer, consumer );
+    m_pred->OrderConflicted( producer, consumer );
 }
 
 bool MemDepPred::CanAllocate( OpIterator* infoArray, int numOp )
 {
-	return m_pred->CanAllocate( infoArray, numOp );
+    return m_pred->CanAllocate( infoArray, numOp );
 }

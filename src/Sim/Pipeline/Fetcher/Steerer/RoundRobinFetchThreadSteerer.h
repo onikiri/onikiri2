@@ -39,26 +39,26 @@
 namespace Onikiri
 {
 
-	class Thread;
+    class Thread;
 
-	class RoundRobinFetchThreadSteerer :
-		public FetchThreadSteererIF,
-		public PhysicalResourceNode
-	{
-		PhysicalResourceArray<Thread> m_thread;
-		int m_nextThread;
-	public:
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Thread, "thread", m_thread )
-		END_RESOURCE_MAP()
+    class RoundRobinFetchThreadSteerer :
+        public FetchThreadSteererIF,
+        public PhysicalResourceNode
+    {
+        PhysicalResourceArray<Thread> m_thread;
+        int m_nextThread;
+    public:
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Thread, "thread", m_thread )
+        END_RESOURCE_MAP()
 
-		RoundRobinFetchThreadSteerer();
-		virtual ~RoundRobinFetchThreadSteerer();
-		virtual void Initialize(InitPhase phase);
-		virtual void Finalize();
+        RoundRobinFetchThreadSteerer();
+        virtual ~RoundRobinFetchThreadSteerer();
+        virtual void Initialize(InitPhase phase);
+        virtual void Finalize();
 
-		virtual Thread* SteerThread(bool update);
-	};
+        virtual Thread* SteerThread(bool update);
+    };
 
 }; // namespace Onikiri
 

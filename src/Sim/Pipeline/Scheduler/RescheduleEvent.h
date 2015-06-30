@@ -38,19 +38,19 @@
 namespace Onikiri 
 {
 
-	// レイテンシ予測を行った結果、書き込みポートの確保ができないと予測され
-	// 後続の命令(consumer)を wake up しない場合に、レイテンシ予測を行った
-	// 命令(producer)を再度発行してポートの確保、consumer の wake up を行う
-	// ためのイベント
-	// 一般のデータ予測ミスでは使用しないこと
-	class OpRescheduleEvent : public EventBase<OpRescheduleEvent>
-	{
-	public:
-		OpRescheduleEvent( const OpIterator& op );
-		virtual void Update();
-	private:
-		OpIterator m_op;
-	};
+    // レイテンシ予測を行った結果、書き込みポートの確保ができないと予測され
+    // 後続の命令(consumer)を wake up しない場合に、レイテンシ予測を行った
+    // 命令(producer)を再度発行してポートの確保、consumer の wake up を行う
+    // ためのイベント
+    // 一般のデータ予測ミスでは使用しないこと
+    class OpRescheduleEvent : public EventBase<OpRescheduleEvent>
+    {
+    public:
+        OpRescheduleEvent( const OpIterator& op );
+        virtual void Update();
+    private:
+        OpIterator m_op;
+    };
 
 }; // namespace Onikiri
 

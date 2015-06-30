@@ -37,21 +37,21 @@ using namespace Onikiri;
 
 EmulationDebugOp::EmulationDebugOp(MemIF* mainMem) : EmulationOp(mainMem)
 {
-	m_access.address = Addr();
-	m_access.size    = 0;
-	m_access.sign    = false;
-	m_access.value   = 0;
-	m_access.result  = MemAccess::MAR_READ_INVALID_ADDRESS;
+    m_access.address = Addr();
+    m_access.size    = 0;
+    m_access.sign    = false;
+    m_access.value   = 0;
+    m_access.result  = MemAccess::MAR_READ_INVALID_ADDRESS;
 }
 
 void EmulationDebugOp::Read(  MemAccess* access )
 {
-	SetMemAccess(*access);
-	EmulationOp::Read( access );
+    SetMemAccess(*access);
+    EmulationOp::Read( access );
 }
 
 void EmulationDebugOp::Write( MemAccess* access )
 {
-	SetMemAccess(*access);
-	EmulationOp::Write( access );
+    SetMemAccess(*access);
+    EmulationOp::Write( access );
 }

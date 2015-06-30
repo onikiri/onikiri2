@@ -36,14 +36,14 @@
 using namespace Onikiri;
 
 OptimisticMemDepPred::OptimisticMemDepPred() : 
-	m_core(0),
-	m_numAccessOrderViolated(0)
+    m_core(0),
+    m_numAccessOrderViolated(0)
 {
 }
 
 OptimisticMemDepPred::~OptimisticMemDepPred()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void OptimisticMemDepPred::Initialize(InitPhase phase)
@@ -75,12 +75,12 @@ void OptimisticMemDepPred::Flush(OpIterator op)
 // OptimisticMemDepPredでは何もしない
 void OptimisticMemDepPred::OrderConflicted(OpIterator producer, OpIterator consumer)
 {
-	m_numAccessOrderViolated++;
+    m_numAccessOrderViolated++;
 }
 
 // 実際にはPhyRegでは無くメモリ上の依存であるため、PhyRegへの割り当ては行われない
 // そのため、必ずtrueを返す
 bool OptimisticMemDepPred::CanAllocate(OpIterator* infoArray, int numOp)
 {
-	return true;
+    return true;
 }

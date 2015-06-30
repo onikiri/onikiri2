@@ -39,38 +39,38 @@ namespace shttl
 {
 
 
-	template<typename T>
-	class hasher 
-	{
-	public:
+    template<typename T>
+    class hasher 
+    {
+    public:
 
-		// Types
-		typedef size_t size_type;
+        // Types
+        typedef size_t size_type;
 
-	#ifdef SHTTL_DEBUG
-	
-		virtual ~hasher() {}
+    #ifdef SHTTL_DEBUG
+    
+        virtual ~hasher() {}
 
-		// Member Functions
+        // Member Functions
 
-		// index‚Ì”([0, N-1]‚ÌN)‚ğ•Ô‚·
-		virtual size_type size() const = 0;
-		
-		// index (‚Ó‚Â‚¤‰ºˆÊbit)
-		virtual size_type index(const T& key) const = 0;
-		
-		// tag (‚Ó‚Â‚¤ãˆÊbit)
-		virtual T tag(const T& key) const = 0;
-		
-		// index‚Ætag‚©‚çkey‚ğ•œŒ³‚·‚é
-		virtual T rebuild(const T& tag, size_type index) const = 0;
+        // index‚Ì”([0, N-1]‚ÌN)‚ğ•Ô‚·
+        virtual size_type size() const = 0;
+        
+        // index (‚Ó‚Â‚¤‰ºˆÊbit)
+        virtual size_type index(const T& key) const = 0;
+        
+        // tag (‚Ó‚Â‚¤ãˆÊbit)
+        virtual T tag(const T& key) const = 0;
+        
+        // index‚Ætag‚©‚çkey‚ğ•œŒ³‚·‚é
+        virtual T rebuild(const T& tag, size_type index) const = 0;
 
-		// lhs‚Ærhs‚ªˆê’v‚·‚é‚©
-		virtual bool match(const T& lhs, const T&rhs) const = 0;
+        // lhs‚Ærhs‚ªˆê’v‚·‚é‚©
+        virtual bool match(const T& lhs, const T&rhs) const = 0;
 
-	#endif
+    #endif
 
-	};
+    };
 
 } // namespace shttl
 

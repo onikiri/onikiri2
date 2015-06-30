@@ -39,19 +39,19 @@
 #include "Emu/AlphaLinux/Alpha64OpInfo.h"
 
 namespace Onikiri {
-	namespace AlphaLinux {
+    namespace AlphaLinux {
 
-		struct AlphaLinuxTraits {
-			typedef Alpha64Info ISAInfoType;
-			typedef Alpha64OpInfo OpInfoType;
-			typedef Alpha64Converter ConverterType;
-			typedef AlphaLinuxLoader LoaderType;
-			typedef AlphaLinuxSyscallConv SyscallConvType;
+        struct AlphaLinuxTraits {
+            typedef Alpha64Info ISAInfoType;
+            typedef Alpha64OpInfo OpInfoType;
+            typedef Alpha64Converter ConverterType;
+            typedef AlphaLinuxLoader LoaderType;
+            typedef AlphaLinuxSyscallConv SyscallConvType;
 
-			static const bool IsBigEndian = false;
-		};
+            static const bool IsBigEndian = false;
+        };
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

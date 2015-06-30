@@ -41,94 +41,94 @@
 namespace Onikiri
 {
 
-	class ParamXMLTree
-	{
-	public:
-		struct NodeStatus
-		{
-			bool stReadOnly;
-			bool stArray;
-			bool stRequireDefault;
-			bool stDefault;
-			bool stAttribute;
-		};
+    class ParamXMLTree
+    {
+    public:
+        struct NodeStatus
+        {
+            bool stReadOnly;
+            bool stArray;
+            bool stRequireDefault;
+            bool stDefault;
+            bool stAttribute;
+        };
 
-		class StringHash
-		{
-		public:
-			size_t operator()(const String& value) const;
-		};
+        class StringHash
+        {
+        public:
+            size_t operator()(const String& value) const;
+        };
 
-		struct Node;
-		typedef boost::shared_ptr<Node>    NodePtr;
-		typedef std::vector<NodePtr>	   NodeArray;
-		typedef unordered_map<String, NodeArray, StringHash> ChildMap;
-		typedef unordered_map<String, NodePtr,  StringHash>  AttributeMap;
-		typedef unordered_map<String, NodePtr,  StringHash>  ArrayPlaceMap;
+        struct Node;
+        typedef boost::shared_ptr<Node>    NodePtr;
+        typedef std::vector<NodePtr>       NodeArray;
+        typedef unordered_map<String, NodeArray, StringHash> ChildMap;
+        typedef unordered_map<String, NodePtr,  StringHash>  AttributeMap;
+        typedef unordered_map<String, NodePtr,  StringHash>  ArrayPlaceMap;
 
-		struct Node
-		{
-			Node();
-			String        name;
-			String        value;
-			ChildMap      children;
-			AttributeMap  attributes;
-			ArrayPlaceMap arrayPlace;	// for PDB_Array palce holder
-			NodeStatus	  status;
-			int           inputIndex;
-			bool		  accessed;
-		};
+        struct Node
+        {
+            Node();
+            String        name;
+            String        value;
+            ChildMap      children;
+            AttributeMap  attributes;
+            ArrayPlaceMap arrayPlace;   // for PDB_Array palce holder
+            NodeStatus    status;
+            int           inputIndex;
+            bool          accessed;
+        };
 
-		struct InputInfo
-		{
-			enum Type
-			{
-				IT_FILE,
-				IT_STRING,
-				IT_CMD
-			};
-			Type   type;
-			String fileName;
-		};
+        struct InputInfo
+        {
+            enum Type
+            {
+                IT_FILE,
+                IT_STRING,
+                IT_CMD
+            };
+            Type   type;
+            String fileName;
+        };
 
-		ParamXMLTree();
-		virtual ~ParamXMLTree();
+        ParamXMLTree();
+        virtual ~ParamXMLTree();
 
-		void LoadXMLFile( const String& fileName, bool isDefault );
-		void LoadString( const String& str, bool isDefault, const String& signature );
-		void LoadValue( const ParamXMLPath& path, const String& value );
+        void LoadXMLFile( const String& fileName, bool isDefault );
+        void LoadString( const String& str, bool isDefault, const String& signature );
+        void LoadValue( const ParamXMLPath& path, const String& value );
 
-		void ToXMLDoc(TiXmlDocument& doc);
-		String ToXMLString();
+        void ToXMLDoc(TiXmlDocument& doc);
+        String ToXMLString();
 
-		void Set( const ParamXMLPath& path, const String& value, bool forceOverWrite = false);
-		bool Get( const ParamXMLPath& path,       String* value, NodeStatus* status = NULL );
-		NodePtr GetNode( const ParamXMLPath& path, bool addNewNode = false );
+        void Set( const ParamXMLPath& path, const String& value, bool forceOverWrite = false);
+        bool Get( const ParamXMLPath& path,       String* value, NodeStatus* status = NULL );
+        NodePtr GetNode( const ParamXMLPath& path, bool addNewNode = false );
 
-		NodeArray* GetNodeArray( const ParamXMLPath& path, bool addNewNode = false );
-		NodeArray* GetNodeArray( NodePtr parentNode, const String& childName, bool addNewNode = false );
-		NodePtr    GetAttribute( NodePtr parentNode, const String& attributeName, bool addNewNode = false );
+        NodeArray* GetNodeArray( const ParamXMLPath& path, bool addNewNode = false );
+        NodeArray* GetNodeArray( NodePtr parentNode, const String& childName, bool addNewNode = false );
+        NodePtr    GetAttribute( NodePtr parentNode, const String& attributeName, bool addNewNode = false );
 
-		NodePtr CreateNewNode( const String& name = "" );
+        NodePtr CreateNewNode( const String& name = "" );
 
-		const std::vector<InputInfo>& GetInputList();
-		bool GetSourceXMLFile( const ParamXMLPath& path, String& fileName );
+        const std::vector<InputInfo>& GetInputList();
+        bool GetSourceXMLFile( const ParamXMLPath& path, String& fileName );
 
-	protected:
-		NodePtr m_root;
-		std::vector<InputInfo> m_inputList;
+    protected:
+        NodePtr m_root;
+        std::vector<InputInfo> m_inputList;
 
-		void CheckXMLParseError( TiXmlDocument& doc, const String& from );
-		void LoadXMLToTiXMLDoc( const String& fileName, TiXmlDocument& doc );
+        void CheckXMLParseError( TiXmlDocument& doc, const String& from );
+        void LoadXMLToTiXMLDoc( const String& fileName, TiXmlDocument& doc );
 
-		void ConvertXMLToMap( NodePtr mapParent, TiXmlNode* xmlParent, int inputIndex, bool stDefault );
-		void ConvertMapToXML( TiXmlNode* xmlParent, NodePtr mapParent );
-		void CopyTree( NodePtr dst, NodePtr src );
-	};
-	
+        void ConvertXMLToMap( NodePtr mapParent, TiXmlNode* xmlParent, int inputIndex, bool stDefault );
+        void ConvertMapToXML( TiXmlNode* xmlParent, NodePtr mapParent );
+        void CopyTree( NodePtr dst, NodePtr src );
+    };
+    
 
-}	// namespace Onikiri
+}   // namespace Onikiri
 
-#endif	// #ifdef ENV_PARAM_PARAM_XML_TREE_H
+#endif  // #ifdef ENV_PARAM_PARAM_XML_TREE_H
 
 

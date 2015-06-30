@@ -35,40 +35,40 @@
 #include "Emu/PPC64Linux/PPC64Info.h"
 
 namespace Onikiri {
-	namespace PPC64Linux {
+    namespace PPC64Linux {
 
-		class PPC64Decoder
-		{
-		public:
-			static const int GP_REG0 = 0;
-			static const int FP_REG0 = 32;
-			static const int COND_REG0 = 64;
-			static const int LINK_REG = 72;
-			static const int COUNT_REG = 73;
-			static const int XER_REG = 74;
-			static const int FPSCR_REG = 75;
-			static const int ADDRESS_REG = 76;
+        class PPC64Decoder
+        {
+        public:
+            static const int GP_REG0 = 0;
+            static const int FP_REG0 = 32;
+            static const int COND_REG0 = 64;
+            static const int LINK_REG = 72;
+            static const int COUNT_REG = 73;
+            static const int XER_REG = 74;
+            static const int FPSCR_REG = 75;
+            static const int ADDRESS_REG = 76;
 
-			struct DecodedInsn
-			{
-				// 即値 (MSBから見て命令中に現れる順．ただし CR Bit Index は最初）
-				boost::array<u64, 4> Imm;
-				// オペランド・レジスタ (dst src区別せずMSBから見て命令中に現れる順)
-				boost::array<int, 4> Reg;
-				u32 CodeWord;
+            struct DecodedInsn
+            {
+                // 即値 (MSBから見て命令中に現れる順．ただし CR Bit Index は最初）
+                boost::array<u64, 4> Imm;
+                // オペランド・レジスタ (dst src区別せずMSBから見て命令中に現れる順)
+                boost::array<int, 4> Reg;
+                u32 CodeWord;
 
-				DecodedInsn();
-				void clear();
-			};
-		public:
-			PPC64Decoder();
+                DecodedInsn();
+                void clear();
+            };
+        public:
+            PPC64Decoder();
 
-			// 命令codeWordをデコードし，outに格納する
-			void Decode(u32 codeWord, DecodedInsn* out);
-		private:
-		};
+            // 命令codeWordをデコードし，outに格納する
+            void Decode(u32 codeWord, DecodedInsn* out);
+        private:
+        };
 
-	} // namespace PPC64Linux
+    } // namespace PPC64Linux
 } // namespace Onikiri
 
 #endif

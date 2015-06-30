@@ -42,183 +42,183 @@
 
 namespace Onikiri
 {
-	class Thread;
-	class ForwardEmulator;
-	class InorderList;
+    class Thread;
+    class ForwardEmulator;
+    class InorderList;
 
-	class Retirer :	public PipelineNodeBase
-	{
-	public:
+    class Retirer : public PipelineNodeBase
+    {
+    public:
 
-		// A hook parameter for s_commitSteeringHook.
-		struct CommitSteeringHookParam
-		{	
-			PhysicalResourceArray<Thread>* threadList;
-			Thread* targetThread;
-		};
+        // A hook parameter for s_commitSteeringHook.
+        struct CommitSteeringHookParam
+        {   
+            PhysicalResourceArray<Thread>* threadList;
+            Thread* targetThread;
+        };
 
-		// A hook parameter for s_commitDecisionHook.
-		struct CommitDecisionHookParam
-		{	
-			OpIterator op;
-			bool canCommit;
-		};
-
-
-		BEGIN_PARAM_MAP("")
-
-			BEGIN_PARAM_PATH( GetParamPath() )
-
-				PARAM_ENTRY( "@CommitWidth",	m_commitWidth )
-				PARAM_ENTRY( "@RetireWidth",	m_retireWidth )
-				PARAM_ENTRY( "@NoRetireLimit",	m_noCommitLimit )
-				PARAM_ENTRY( "@CommitLatency",	m_commitLatency )
-				PARAM_ENTRY( "@FixCommitLatency",	m_fixCommitLatency )
-
-				BEGIN_PARAM_BINDING( "@CommittableStatus", m_committableStatus, OpStatus )
-					PARAM_BINDING_ENTRY( "WRITTENBACK",	OpStatus::OS_WRITTEN_BACK )
-					PARAM_BINDING_ENTRY( "COMPLETED",	OpStatus::OS_COMPLETED )
-				END_PARAM_BINDING()
-
-			END_PARAM_PATH()
-
-			BEGIN_PARAM_PATH( GetResultPath() )
-				PARAM_ENTRY( "@NumCommittedOps",	m_numCommittedOps )
-				PARAM_ENTRY( "@NumCommittedInsns",	m_numCommittedInsns )
-				PARAM_ENTRY( "@NumRetiredOps",		m_numRetiredOps )
-				PARAM_ENTRY( "@NumRetiredInsns",	m_numRetiredInsns )
-				PARAM_ENTRY( "@NumStorePortFullStalledCycles",	m_numStorePortFullStalledCycles )
-				CHAIN_PARAM_MAP("OpStatistics", m_opClassStat)
-			END_PARAM_PATH()
-
-		END_PARAM_MAP()
-
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Thread,	"thread",	m_thread )
-			RESOURCE_ENTRY( Core,	"core",		m_core )
-			RESOURCE_ENTRY( EmulatorIF,			"emulator",			m_emulator )
-			RESOURCE_ENTRY( ForwardEmulator,	"forwardEmulator",	m_forwardEmulator )
-		END_RESOURCE_MAP()
+        // A hook parameter for s_commitDecisionHook.
+        struct CommitDecisionHookParam
+        {   
+            OpIterator op;
+            bool canCommit;
+        };
 
 
-		Retirer();
-		virtual ~Retirer();
+        BEGIN_PARAM_MAP("")
 
-		virtual void Initialize(InitPhase phase);
+            BEGIN_PARAM_PATH( GetParamPath() )
 
-		// PipelineNodeIF
-		virtual void Evaluate();
-		virtual void Transition();
-		virtual void Update();
+                PARAM_ENTRY( "@CommitWidth",    m_commitWidth )
+                PARAM_ENTRY( "@RetireWidth",    m_retireWidth )
+                PARAM_ENTRY( "@NoRetireLimit",  m_noCommitLimit )
+                PARAM_ENTRY( "@CommitLatency",  m_commitLatency )
+                PARAM_ENTRY( "@FixCommitLatency",   m_fixCommitLatency )
 
-		// accessors
-		bool IsEndOfProgram()		const { return m_endOfProgram;		}
-		s64 GetNumRetiredOp()		const { return m_numRetiredOps;		}
-		s64 GetNumRetiredInsns()	const { return m_numRetiredInsns;	}
+                BEGIN_PARAM_BINDING( "@CommittableStatus", m_committableStatus, OpStatus )
+                    PARAM_BINDING_ENTRY( "WRITTENBACK", OpStatus::OS_WRITTEN_BACK )
+                    PARAM_BINDING_ENTRY( "COMPLETED",   OpStatus::OS_COMPLETED )
+                END_PARAM_BINDING()
 
-		// Set the number of retired ops/insns.
-		// This is called when a simulation mode is changed from an emulation mode.
-		void SetInitialNumRetiredOp( s64 numInsns, s64 numOp, s64 simulationEndInsns );
+            END_PARAM_PATH()
 
-		// Called when the op is retired from OpRetireEvent.
-		// Caution: this method is not called from InorderList because
-		// the retirement of an op is triggered from this method.
-		void Retire( OpIterator op );
+            BEGIN_PARAM_PATH( GetResultPath() )
+                PARAM_ENTRY( "@NumCommittedOps",    m_numCommittedOps )
+                PARAM_ENTRY( "@NumCommittedInsns",  m_numCommittedInsns )
+                PARAM_ENTRY( "@NumRetiredOps",      m_numRetiredOps )
+                PARAM_ENTRY( "@NumRetiredInsns",    m_numRetiredInsns )
+                PARAM_ENTRY( "@NumStorePortFullStalledCycles",  m_numStorePortFullStalledCycles )
+                CHAIN_PARAM_MAP("OpStatistics", m_opClassStat)
+            END_PARAM_PATH()
 
-		// Called when the op is flushed from InorderList.
-		void Flush( OpIterator op );
+        END_PARAM_MAP()
 
-		//
-		// --- Hook
-		//
-		typedef HookPoint<Retirer> CommitHookPoint;
-		static CommitHookPoint s_commitHook;
-		
-		// The hook point of 'GetComittableThread()'
-		// Prototype : void Method( HookParameter<Retireer, SteeringHookParam>* param )
-		typedef HookPoint<Retirer, CommitSteeringHookParam> CommitSteeringHookPoint;
-		static CommitSteeringHookPoint s_commitSteeringHook;
-
-		// The hook point of 'CanRetire()'
-		// Prototype : void Method( HookParameter<Retireer,CommitDecisionHookPoint>* param )
-		typedef HookPoint<Retirer, CommitDecisionHookParam> CommitDecisionHookPoint;
-		static CommitDecisionHookPoint s_commitDecisionHook;
-
-		typedef HookPoint<Retirer> RetireHookPoint;
-		static RetireHookPoint s_retireHook;
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Thread, "thread",   m_thread )
+            RESOURCE_ENTRY( Core,   "core",     m_core )
+            RESOURCE_ENTRY( EmulatorIF,         "emulator",         m_emulator )
+            RESOURCE_ENTRY( ForwardEmulator,    "forwardEmulator",  m_forwardEmulator )
+        END_RESOURCE_MAP()
 
 
-	protected:
-		typedef PipelineNodeBase BaseType;
+        Retirer();
+        virtual ~Retirer();
 
-		// Parameters
-		int m_commitWidth;
-		int m_retireWidth;
-		int m_noCommitLimit;
-		int m_commitLatency;
-		bool m_fixCommitLatency;
-		OpStatus m_committableStatus;
+        virtual void Initialize(InitPhase phase);
 
-		// Statistics
-		s64 m_numCommittedOps;
-		s64 m_numCommittedInsns;
-		s64 m_numRetiredOps;
-		s64 m_numRetiredInsns;
-		OpClassStatistics m_opClassStat; // Statistics of ops.
-		
-		// Stalled cycles when commitment is stalled for store ports full.
-		s64 m_numStorePortFullStalledCycles;	
+        // PipelineNodeIF
+        virtual void Evaluate();
+        virtual void Transition();
+        virtual void Update();
 
-		int m_noCommittedCycle;
-		s64 m_numSimulationEndInsns;
+        // accessors
+        bool IsEndOfProgram()       const { return m_endOfProgram;      }
+        s64 GetNumRetiredOp()       const { return m_numRetiredOps;     }
+        s64 GetNumRetiredInsns()    const { return m_numRetiredInsns;   }
 
-		// The index of a retireable thread in attached threads.
-		int m_currentRetireThread;
-		bool m_endOfProgram;
+        // Set the number of retired ops/insns.
+        // This is called when a simulation mode is changed from an emulation mode.
+        void SetInitialNumRetiredOp( s64 numInsns, s64 numOp, s64 simulationEndInsns );
 
-		EmulatorIF*			m_emulator;			// Emulator
-		ForwardEmulator*	m_forwardEmulator;	// Forward Emulator.
-		
-		// Committed ops decided by Evaluate() in this cycle
-		
-		typedef pool_list< OpIterator > CommitingOps;
-		struct Evaluated
-		{
-			CommitingOps	committing;
+        // Called when the op is retired from OpRetireEvent.
+        // Caution: this method is not called from InorderList because
+        // the retirement of an op is triggered from this method.
+        void Retire( OpIterator op );
 
-			bool			exceptionOccur;
-			OpIterator		exceptionCauser;
-			bool evaluated;
-			bool storePortFull;
+        // Called when the op is flushed from InorderList.
+        void Flush( OpIterator op );
 
-			void Reset();
-		}
-		m_evaluated;
+        //
+        // --- Hook
+        //
+        typedef HookPoint<Retirer> CommitHookPoint;
+        static CommitHookPoint s_commitHook;
+        
+        // The hook point of 'GetComittableThread()'
+        // Prototype : void Method( HookParameter<Retireer, SteeringHookParam>* param )
+        typedef HookPoint<Retirer, CommitSteeringHookParam> CommitSteeringHookPoint;
+        static CommitSteeringHookPoint s_commitSteeringHook;
+
+        // The hook point of 'CanRetire()'
+        // Prototype : void Method( HookParameter<Retireer,CommitDecisionHookPoint>* param )
+        typedef HookPoint<Retirer, CommitDecisionHookParam> CommitDecisionHookPoint;
+        static CommitDecisionHookPoint s_commitDecisionHook;
+
+        typedef HookPoint<Retirer> RetireHookPoint;
+        static RetireHookPoint s_retireHook;
 
 
-		// --- Commit
+    protected:
+        typedef PipelineNodeBase BaseType;
 
-		// Returns whether 'op' can commit or not.
-		bool CanCommitOp( OpIterator op );
+        // Parameters
+        int m_commitWidth;
+        int m_retireWidth;
+        int m_noCommitLimit;
+        int m_commitLatency;
+        bool m_fixCommitLatency;
+        OpStatus m_committableStatus;
 
-		// Returns whether 'ops' that belongs to the same instruction can commit or not.
-		bool CanCommitInsn( OpIterator op );
+        // Statistics
+        s64 m_numCommittedOps;
+        s64 m_numCommittedInsns;
+        s64 m_numRetiredOps;
+        s64 m_numRetiredInsns;
+        OpClassStatistics m_opClassStat; // Statistics of ops.
+        
+        // Stalled cycles when commitment is stalled for store ports full.
+        s64 m_numStorePortFullStalledCycles;    
 
-		// Decide a thread that commits ops in this cycle.
-		Thread* GetCommitableThread();
+        int m_noCommittedCycle;
+        s64 m_numSimulationEndInsns;
 
-		void Commit( OpIterator op );
-		void EvaluateCommit();
-		void UpdateCommit();
-		void UpdateException();
+        // The index of a retireable thread in attached threads.
+        int m_currentRetireThread;
+        bool m_endOfProgram;
 
-		// Update counters related to retirement.
-		void CheckCommitCounters( int retiredOps, InorderList* inorderList );
+        EmulatorIF*         m_emulator;         // Emulator
+        ForwardEmulator*    m_forwardEmulator;  // Forward Emulator.
+        
+        // Committed ops decided by Evaluate() in this cycle
+        
+        typedef pool_list< OpIterator > CommitingOps;
+        struct Evaluated
+        {
+            CommitingOps    committing;
 
-		// Finish a thread.
-		void FinishThread( Thread* tread );
+            bool            exceptionOccur;
+            OpIterator      exceptionCauser;
+            bool evaluated;
+            bool storePortFull;
 
-	};
+            void Reset();
+        }
+        m_evaluated;
+
+
+        // --- Commit
+
+        // Returns whether 'op' can commit or not.
+        bool CanCommitOp( OpIterator op );
+
+        // Returns whether 'ops' that belongs to the same instruction can commit or not.
+        bool CanCommitInsn( OpIterator op );
+
+        // Decide a thread that commits ops in this cycle.
+        Thread* GetCommitableThread();
+
+        void Commit( OpIterator op );
+        void EvaluateCommit();
+        void UpdateCommit();
+        void UpdateException();
+
+        // Update counters related to retirement.
+        void CheckCommitCounters( int retiredOps, InorderList* inorderList );
+
+        // Finish a thread.
+        void FinishThread( Thread* tread );
+
+    };
 
 }; // namespace Onikiri
 

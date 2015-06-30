@@ -42,148 +42,148 @@ using namespace Onikiri;
 
 
 PerfectMemDepPred::PerfectMemDepPred() :
-	m_fwdEmulator( NULL ),
-	m_inorderList( NULL )
+    m_fwdEmulator( NULL ),
+    m_inorderList( NULL )
 {
 
 }
 
 PerfectMemDepPred::~PerfectMemDepPred()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void PerfectMemDepPred::Initialize( InitPhase phase )
 {
-	// Do not call "Initialize()" of a proxy target object,
-	// because the "Initialize()" is called by the resource system.
+    // Do not call "Initialize()" of a proxy target object,
+    // because the "Initialize()" is called by the resource system.
 
-	if( phase == INIT_PRE_CONNECTION ){
-		LoadParam();
-	}
-	else if( phase == INIT_POST_CONNECTION ){
-		CheckNodeInitialized( "forwardEmulator", m_fwdEmulator );
-		CheckNodeInitialized( "inorderList", m_inorderList );
+    if( phase == INIT_PRE_CONNECTION ){
+        LoadParam();
+    }
+    else if( phase == INIT_POST_CONNECTION ){
+        CheckNodeInitialized( "forwardEmulator", m_fwdEmulator );
+        CheckNodeInitialized( "inorderList", m_inorderList );
 
-		// Set endian information to the memory operation object.
-		ISAInfoIF* isa = m_fwdEmulator->GetEmulator()->GetISAInfo();
-		m_memOperations.SetTargetEndian( isa->IsLittleEndian() );
-		m_memOperations.SetAlignment( isa->GetMaxMemoryAccessByteSize() );
+        // Set endian information to the memory operation object.
+        ISAInfoIF* isa = m_fwdEmulator->GetEmulator()->GetISAInfo();
+        m_memOperations.SetTargetEndian( isa->IsLittleEndian() );
+        m_memOperations.SetAlignment( isa->GetMaxMemoryAccessByteSize() );
 
-		if( !m_fwdEmulator->IsEnabled() ){
-			THROW_RUNTIME_ERROR(
-				"A perfect memory dependency predictor requires that a forawrd emulator is enabled." 
-			);
-		}
-	}
+        if( !m_fwdEmulator->IsEnabled() ){
+            THROW_RUNTIME_ERROR(
+                "A perfect memory dependency predictor requires that a forawrd emulator is enabled." 
+            );
+        }
+    }
 }
 
 void PerfectMemDepPred::Resolve( OpIterator op )
 {
-	const OpClass& opClass = op->GetOpClass();
-	
-	if( !opClass.IsMem() ){
-		// Not loads/stores ops do not have memory dependencies.
-		return;
-	}
+    const OpClass& opClass = op->GetOpClass();
+    
+    if( !opClass.IsMem() ){
+        // Not loads/stores ops do not have memory dependencies.
+        return;
+    }
 
-	if( m_fwdEmulator->IsInMissPredictedPath( op ) ){
-		if( opClass.IsLoad() ){
-			// If an op is in a mis-predicted path,
-			// a dummy dependency that is never satisfied is set.
-			MemDependencyPtr tmpMem(
-				m_memDepPool.construct( op->GetCore()->GetNumScheduler() ) 
-			);
-			tmpMem->Clear();
-			op->SetSrcMem( 0, tmpMem );
-		}
-		// It is no problem that sores are executed.
-		return;
-	}
-	
+    if( m_fwdEmulator->IsInMissPredictedPath( op ) ){
+        if( opClass.IsLoad() ){
+            // If an op is in a mis-predicted path,
+            // a dummy dependency that is never satisfied is set.
+            MemDependencyPtr tmpMem(
+                m_memDepPool.construct( op->GetCore()->GetNumScheduler() ) 
+            );
+            tmpMem->Clear();
+            op->SetSrcMem( 0, tmpMem );
+        }
+        // It is no problem that sores are executed.
+        return;
+    }
+    
 
-	// Check memory addresses executed in a forward emulator, and
-	// set a dependency to an actually dependent op.
+    // Check memory addresses executed in a forward emulator, and
+    // set a dependency to an actually dependent op.
 
-	const MemAccess* consumer = m_fwdEmulator->GetMemoryAccessResult( op );
-	//if( !consumer )	return;
-	ASSERT( consumer != NULL, "Could not get a pre-executed memory access result. %s", op->ToString(6).c_str() );
+    const MemAccess* consumer = m_fwdEmulator->GetMemoryAccessResult( op );
+    //if( !consumer )   return;
+    ASSERT( consumer != NULL, "Could not get a pre-executed memory access result. %s", op->ToString(6).c_str() );
 
-	bool consumerIsStore = opClass.IsStore();
+    bool consumerIsStore = opClass.IsStore();
 
-	OpIterator i = m_inorderList->GetPrevIndexOp( op );
+    OpIterator i = m_inorderList->GetPrevIndexOp( op );
 
-	// Search a dependent store from 'op'.
-	while( !i.IsNull() ){
+    // Search a dependent store from 'op'.
+    while( !i.IsNull() ){
 
-		if( !i->GetOpClass().IsStore() ){
-			i = m_inorderList->GetPrevIndexOp( i );
-			continue;
-		}
+        if( !i->GetOpClass().IsStore() ){
+            i = m_inorderList->GetPrevIndexOp( i );
+            continue;
+        }
 
-		const MemAccess* producer = m_fwdEmulator->GetMemoryAccessResult( i );
-		//if( !producer ) return;
-		ASSERT( producer != NULL, "Could not get a pre-executed memory access result. %s", op->ToString(6).c_str() );
+        const MemAccess* producer = m_fwdEmulator->GetMemoryAccessResult( i );
+        //if( !producer ) return;
+        ASSERT( producer != NULL, "Could not get a pre-executed memory access result. %s", op->ToString(6).c_str() );
 
-		
-		if( consumerIsStore ){ 
-			// A store is dependent to a store with the same aligned address,
-			// because the predictor cannot determine which store is a producer
-			// of a load when partial read occurs.
-		    if( m_memOperations.IsOverlappedInAligned( *consumer, *producer ) ){
-				op->SetSrcMem( 0, i->GetDstMem(0) );
-				break;
-			}
-		}
-		else{
-			if( m_memOperations.IsOverlapped( *consumer, *producer ) ){
-				op->SetSrcMem( 0, i->GetDstMem(0) );
-				break;
-			}
-		}
+        
+        if( consumerIsStore ){ 
+            // A store is dependent to a store with the same aligned address,
+            // because the predictor cannot determine which store is a producer
+            // of a load when partial read occurs.
+            if( m_memOperations.IsOverlappedInAligned( *consumer, *producer ) ){
+                op->SetSrcMem( 0, i->GetDstMem(0) );
+                break;
+            }
+        }
+        else{
+            if( m_memOperations.IsOverlapped( *consumer, *producer ) ){
+                op->SetSrcMem( 0, i->GetDstMem(0) );
+                break;
+            }
+        }
 
-		i = m_inorderList->GetPrevIndexOp( i );
-	}
+        i = m_inorderList->GetPrevIndexOp( i );
+    }
 }
 
 void PerfectMemDepPred::Allocate( OpIterator op )
 {
-	if( !op->GetOpClass().IsMem() ) {
-		return;
-	}
+    if( !op->GetOpClass().IsMem() ) {
+        return;
+    }
 
-	// Allocate and assign a memory dependency.
-	if( op->GetDstMem(0) == NULL ) {
-		MemDependencyPtr tmpMem(
-			m_memDepPool.construct( op->GetCore()->GetNumScheduler() ) 
-		);
-		tmpMem->Clear();
-		op->SetDstMem( 0, tmpMem );
-	}
+    // Allocate and assign a memory dependency.
+    if( op->GetDstMem(0) == NULL ) {
+        MemDependencyPtr tmpMem(
+            m_memDepPool.construct( op->GetCore()->GetNumScheduler() ) 
+        );
+        tmpMem->Clear();
+        op->SetDstMem( 0, tmpMem );
+    }
 }
 
 void PerfectMemDepPred::Commit( OpIterator op )
 {
-	// Do nothing.
+    // Do nothing.
 }
 
 void PerfectMemDepPred::Flush( OpIterator op )
 {
-	// Do nothing.
+    // Do nothing.
 }
 
 void PerfectMemDepPred::OrderConflicted( OpIterator producer, OpIterator consumer )
 {
-	ASSERT( 
-		false, 
-		"A perfect memory dependency predictor must not predict incorrect dependencies. \n\n"
-		"Conflicted producer:\n %s\n\nConflicted consumer:\n%s\n",
-		producer->ToString(6).c_str(),
-		consumer->ToString(6).c_str()
-	);
+    ASSERT( 
+        false, 
+        "A perfect memory dependency predictor must not predict incorrect dependencies. \n\n"
+        "Conflicted producer:\n %s\n\nConflicted consumer:\n%s\n",
+        producer->ToString(6).c_str(),
+        consumer->ToString(6).c_str()
+    );
 }
 
 bool PerfectMemDepPred::CanAllocate( OpIterator* infoArray, int numOp )
 {
-	return true;
+    return true;
 }

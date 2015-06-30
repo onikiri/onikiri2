@@ -37,42 +37,42 @@
 
 namespace Onikiri 
 {
-	class Core;
-	
-	// ƒƒ‚ƒŠ‚ÉŠÖ‚·‚éˆË‘¶ŠÖŒW‚Ì—\‘ªŠí
-	// ‘S‚Ä‚Ìæsstore–½—ß‚É‘Î‚µ‚ÄˆË‘¶‚µ‚È‚¢‚Æ—\‘ª‚·‚é
-	class OptimisticMemDepPred : 
-		public MemDepPredIF,
-		public PhysicalResourceNode	
-	{
-	private:
-		Core* m_core;
-		int m_numAccessOrderViolated;
+    class Core;
+    
+    // ƒƒ‚ƒŠ‚ÉŠÖ‚·‚éˆË‘¶ŠÖŒW‚Ì—\‘ªŠí
+    // ‘S‚Ä‚Ìæsstore–½—ß‚É‘Î‚µ‚ÄˆË‘¶‚µ‚È‚¢‚Æ—\‘ª‚·‚é
+    class OptimisticMemDepPred : 
+        public MemDepPredIF,
+        public PhysicalResourceNode 
+    {
+    private:
+        Core* m_core;
+        int m_numAccessOrderViolated;
 
-	public:
-		BEGIN_PARAM_MAP( GetResultPath() )
-			PARAM_ENTRY( "@NumAccessOrderViolation",	  m_numAccessOrderViolated)
-		END_PARAM_MAP()
+    public:
+        BEGIN_PARAM_MAP( GetResultPath() )
+            PARAM_ENTRY( "@NumAccessOrderViolation",      m_numAccessOrderViolated)
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core, "core", m_core )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core, "core", m_core )
+        END_RESOURCE_MAP()
 
-		OptimisticMemDepPred();
-		virtual ~OptimisticMemDepPred();
+        OptimisticMemDepPred();
+        virtual ~OptimisticMemDepPred();
 
-		virtual void Initialize(InitPhase phase);
+        virtual void Initialize(InitPhase phase);
 
-		virtual void Resolve(OpIterator op);
-		virtual void Allocate(OpIterator op);
-		virtual void Commit(OpIterator op);
-		virtual void Flush(OpIterator op);
+        virtual void Resolve(OpIterator op);
+        virtual void Allocate(OpIterator op);
+        virtual void Commit(OpIterator op);
+        virtual void Flush(OpIterator op);
 
-		virtual void OrderConflicted(OpIterator producer, OpIterator consumer);
+        virtual void OrderConflicted(OpIterator producer, OpIterator consumer);
 
-		virtual bool CanAllocate(OpIterator* infoArray, int numOp);
+        virtual bool CanAllocate(OpIterator* infoArray, int numOp);
 
-	};
+    };
 
 }; // namespace Onikiri
 

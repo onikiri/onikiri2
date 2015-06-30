@@ -37,205 +37,205 @@
 namespace shttl 
 {
 
-	//
-	//	integer_base<T> 
-	//
+    //
+    //  integer_base<T> 
+    //
 
-	template<class T>
-	class integer_base {
-	private:
-		T _t;
+    template<class T>
+    class integer_base {
+    private:
+        T _t;
 
-	public:
-		integer_base(T t = T()) : _t(t) {}
-		operator T() const { return _t; }
+    public:
+        integer_base(T t = T()) : _t(t) {}
+        operator T() const { return _t; }
 
-	}; 
-
-
-	//
-	//	General Version
-	//
-
-	template<size_t N>
-	struct integer : public integer_base<u64> {
-		integer(u64 t = 0) : integer_base<u64>(t) {}
-	};
+    }; 
 
 
-	//
-	//	Special Versions for 1 .. 8
-	//
+    //
+    //  General Version
+    //
 
-	template<>
-	struct integer<1> : public integer_base<u8> {
-		integer(u8 t = 0) : integer_base<u8>(t) {}
-	};
-
-	template<>
-	struct integer<2> : public integer_base<u8> {
-		integer(u8 t = 0) : integer_base<u8>(t) {}
-	};
-
-	template<>
-	struct integer<3> : public integer_base<u8> {
-		integer(u8 t = 0) : integer_base<u8>(t) {}
-	};
-
-	template<>
-	struct integer<4> : public integer_base<u8> {
-		integer(u8 t = 0) : integer_base<u8>(t) {}
-	};
-
-	template<>
-	struct integer<5> : public integer_base<u8> {
-		integer(u8 t = 0) : integer_base<u8>(t) {}
-	};
-
-	template<>
-	struct integer<6> : public integer_base<u8> {
-		integer(u8 t = 0) : integer_base<u8>(t) {}
-	};
-
-	template<>
-	struct integer<7> : public integer_base<u8> {
-		integer(u8 t = 0) : integer_base<u8>(t) {}
-	};
-
-	template<>
-	struct integer<8> : public integer_base<u8> {
-		integer(u8 t = 0) : integer_base<u8>(t) {}
-	};
+    template<size_t N>
+    struct integer : public integer_base<u64> {
+        integer(u64 t = 0) : integer_base<u64>(t) {}
+    };
 
 
-	//
-	//	Special Versions for 9 .. 16
-	//
+    //
+    //  Special Versions for 1 .. 8
+    //
 
-	template<>
-	struct integer<9> : public integer_base<u16> {
-		integer(u16 t = 0) : integer_base<u16>(t) {}
-	};
+    template<>
+    struct integer<1> : public integer_base<u8> {
+        integer(u8 t = 0) : integer_base<u8>(t) {}
+    };
 
-	template<>
-	struct integer<10> : public integer_base<u16> {
-		integer(u16 t = 0) : integer_base<u16>(t) {}
-	};
+    template<>
+    struct integer<2> : public integer_base<u8> {
+        integer(u8 t = 0) : integer_base<u8>(t) {}
+    };
 
-	template<>
-	struct integer<11> : public integer_base<u16> {
-		integer(u16 t = 0) : integer_base<u16>(t) {}
-	};
+    template<>
+    struct integer<3> : public integer_base<u8> {
+        integer(u8 t = 0) : integer_base<u8>(t) {}
+    };
 
-	template<>
-	struct integer<12> : public integer_base<u16> {
-		integer(u16 t = 0) : integer_base<u16>(t) {}
-	};
+    template<>
+    struct integer<4> : public integer_base<u8> {
+        integer(u8 t = 0) : integer_base<u8>(t) {}
+    };
 
-	template<>
-	struct integer<13> : public integer_base<u16> {
-		integer(u16 t = 0) : integer_base<u16>(t) {}
-	};
+    template<>
+    struct integer<5> : public integer_base<u8> {
+        integer(u8 t = 0) : integer_base<u8>(t) {}
+    };
 
-	template<>
-	struct integer<14> : public integer_base<u16> {
-		integer(u16 t = 0) : integer_base<u16>(t) {}
-	};
+    template<>
+    struct integer<6> : public integer_base<u8> {
+        integer(u8 t = 0) : integer_base<u8>(t) {}
+    };
 
-	template<>
-	struct integer<15> : public integer_base<u16> {
-		integer(u16 t = 0) : integer_base<u16>(t) {}
-	};
+    template<>
+    struct integer<7> : public integer_base<u8> {
+        integer(u8 t = 0) : integer_base<u8>(t) {}
+    };
 
-	template<>
-	struct integer<16> : public integer_base<u16> {
-		integer(u16 t = 0) : integer_base<u16>(t) {}
-	};
+    template<>
+    struct integer<8> : public integer_base<u8> {
+        integer(u8 t = 0) : integer_base<u8>(t) {}
+    };
 
 
-	//
-	//	Special Versions for 17 .. 32
-	//
+    //
+    //  Special Versions for 9 .. 16
+    //
 
-	template<>
-	struct integer<17> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<9> : public integer_base<u16> {
+        integer(u16 t = 0) : integer_base<u16>(t) {}
+    };
 
-	template<>
-	struct integer<18> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<10> : public integer_base<u16> {
+        integer(u16 t = 0) : integer_base<u16>(t) {}
+    };
 
-	template<>
-	struct integer<19> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<11> : public integer_base<u16> {
+        integer(u16 t = 0) : integer_base<u16>(t) {}
+    };
 
-	template<>
-	struct integer<20> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<12> : public integer_base<u16> {
+        integer(u16 t = 0) : integer_base<u16>(t) {}
+    };
 
-	template<>
-	struct integer<21> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<13> : public integer_base<u16> {
+        integer(u16 t = 0) : integer_base<u16>(t) {}
+    };
 
-	template<>
-	struct integer<22> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<14> : public integer_base<u16> {
+        integer(u16 t = 0) : integer_base<u16>(t) {}
+    };
 
-	template<>
-	struct integer<23> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<15> : public integer_base<u16> {
+        integer(u16 t = 0) : integer_base<u16>(t) {}
+    };
 
-	template<>
-	struct integer<24> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<16> : public integer_base<u16> {
+        integer(u16 t = 0) : integer_base<u16>(t) {}
+    };
 
-	template<>
-	struct integer<25> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
 
-	template<>
-	struct integer<26> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    //
+    //  Special Versions for 17 .. 32
+    //
 
-	template<>
-	struct integer<27> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<17> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
 
-	template<>
-	struct integer<28> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<18> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
 
-	template<>
-	struct integer<29> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<19> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
 
-	template<>
-	struct integer<30> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<20> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
 
-	template<>
-	struct integer<31> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<21> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
 
-	template<>
-	struct integer<32> : public integer_base<u32> {
-		integer(u32 t = 0) : integer_base<u32>(t) {}
-	};
+    template<>
+    struct integer<22> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<23> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<24> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<25> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<26> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<27> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<28> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<29> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<30> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<31> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
+
+    template<>
+    struct integer<32> : public integer_base<u32> {
+        integer(u32 t = 0) : integer_base<u32>(t) {}
+    };
 
 } // namespace shttl
 

@@ -36,52 +36,52 @@
 
 namespace Onikiri 
 {
-	
-	class OpObserver;
-	class OpNotifier;
+    
+    class OpObserver;
+    class OpNotifier;
 
-	// Opのリタイア/フラッシュを監視するクラス
-	class OpObserver {
-	public:
-		OpObserver();
-		OpObserver(OpNotifier* notifier);
-		virtual ~OpObserver();
+    // Opのリタイア/フラッシュを監視するクラス
+    class OpObserver {
+    public:
+        OpObserver();
+        OpObserver(OpNotifier* notifier);
+        virtual ~OpObserver();
 
-		virtual void Commit(OpIterator op) = 0;
-		virtual void Flush(OpIterator op) = 0;
-	};
+        virtual void Commit(OpIterator op) = 0;
+        virtual void Flush(OpIterator op) = 0;
+    };
 
-	// OpObserverにOpのリタイア/フラッシュを通知するクラス
-	class OpNotifier {
-	private:
-		std::vector<OpObserver*> m_observer;
+    // OpObserverにOpのリタイア/フラッシュを通知するクラス
+    class OpNotifier {
+    private:
+        std::vector<OpObserver*> m_observer;
 
-		class NotifyFuncObj {
-		private:
-			OpIterator m_op;
-			void (OpObserver::*m_func)(OpIterator);
-		public:
-			NotifyFuncObj(OpIterator& op, void (OpObserver::*func)(OpIterator))
-				: m_op(op), m_func(func)
-			{
-			}
+        class NotifyFuncObj {
+        private:
+            OpIterator m_op;
+            void (OpObserver::*m_func)(OpIterator);
+        public:
+            NotifyFuncObj(OpIterator& op, void (OpObserver::*func)(OpIterator))
+                : m_op(op), m_func(func)
+            {
+            }
 
-			void operator()(OpObserver* observer)
-			{
-				(observer->*m_func)(m_op);
-			}
+            void operator()(OpObserver* observer)
+            {
+                (observer->*m_func)(m_op);
+            }
 
-		};
+        };
 
-	public:
-		OpNotifier();
-		virtual ~OpNotifier();
+    public:
+        OpNotifier();
+        virtual ~OpNotifier();
 
-		void Add(OpObserver* observer);
+        void Add(OpObserver* observer);
 
-		void NotifyCommit(OpIterator op);
-		void NotifyFlush(OpIterator op);
-	};
+        void NotifyCommit(OpIterator op);
+        void NotifyFlush(OpIterator op);
+    };
 
 }; // namespace Onikiri
 

@@ -41,51 +41,51 @@
 
 namespace Onikiri 
 {
-	class SimPC;
+    class SimPC;
 
-	// return address stack
-	class RAS : public PhysicalResourceNode
-	{
-	private:
-		CheckpointMaster*     m_checkpointMaster;
-		CheckpointedData<int> m_stackTop; // Stackのトップの場所を示す
-		std::vector<PC>       m_stack;
+    // return address stack
+    class RAS : public PhysicalResourceNode
+    {
+    private:
+        CheckpointMaster*     m_checkpointMaster;
+        CheckpointedData<int> m_stackTop; // Stackのトップの場所を示す
+        std::vector<PC>       m_stack;
 
-		CheckpointedData<int> m_backupStackTop;
-		static const int MAX_BACKUP_SIZE = 1;
-		typedef boost::array< PC, MAX_BACKUP_SIZE > BackupStack;
-		CheckpointedData< BackupStack > m_backupStack;
-		bool m_enableBackup;
+        CheckpointedData<int> m_backupStackTop;
+        static const int MAX_BACKUP_SIZE = 1;
+        typedef boost::array< PC, MAX_BACKUP_SIZE > BackupStack;
+        CheckpointedData< BackupStack > m_backupStack;
+        bool m_enableBackup;
 
-		int m_stackSize;
-	public:
-		// parameter mapping
-		BEGIN_PARAM_MAP( GetParamPath() )
-			PARAM_ENTRY( "@StackSize", m_stackSize )
-			PARAM_ENTRY( "@EnableBackup", m_enableBackup )
-		END_PARAM_MAP()
+        int m_stackSize;
+    public:
+        // parameter mapping
+        BEGIN_PARAM_MAP( GetParamPath() )
+            PARAM_ENTRY( "@StackSize", m_stackSize )
+            PARAM_ENTRY( "@EnableBackup", m_enableBackup )
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( CheckpointMaster, "checkpointMaster", m_checkpointMaster )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( CheckpointMaster, "checkpointMaster", m_checkpointMaster )
+        END_RESOURCE_MAP()
 
-		RAS();
-		virtual ~RAS();
+        RAS();
+        virtual ~RAS();
 
-		void Initialize(InitPhase phase);
+        void Initialize(InitPhase phase);
 
-		// call 命令のPCをpush
-		void Push(const SimPC& pc);
-		
-		// return 命令なのでPCをPop
-		SimPC Pop();
+        // call 命令のPCをpush
+        void Push(const SimPC& pc);
+        
+        // return 命令なのでPCをPop
+        SimPC Pop();
 
-		// accessors
-		int GetStackSize() { return m_stackSize; }
+        // accessors
+        int GetStackSize() { return m_stackSize; }
 
-		int PointStackPos(int basePos, int stackSize, int offset) 
-		{ return (basePos + stackSize + offset) % stackSize; }
-	};
+        int PointStackPos(int basePos, int stackSize, int offset) 
+        { return (basePos + stackSize + offset) % stackSize; }
+    };
 
 }; // namespace Onikiri
 

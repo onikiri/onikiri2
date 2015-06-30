@@ -39,65 +39,65 @@
 #include "SysDeps/STL/unordered_map.h"
 
 #ifdef ONIKIRI_USE_ONIKIRI_POOL_ALLOCATOR
-	#include "pool_allocator.h"
-	#define ONIKIRI_POOL_UNORDERED_MAP_ALLOCATOR pool_allocator
+    #include "pool_allocator.h"
+    #define ONIKIRI_POOL_UNORDERED_MAP_ALLOCATOR pool_allocator
 #else
-	#include <boost/pool/pool_alloc.hpp>
-	#define ONIKIRI_POOL_UNORDERED_MAP_ALLOCATOR boost::fast_pool_allocator
+    #include <boost/pool/pool_alloc.hpp>
+    #define ONIKIRI_POOL_UNORDERED_MAP_ALLOCATOR boost::fast_pool_allocator
 #endif
 
 namespace Onikiri
 {
 
-	template <
-		typename KeyT, 
-		typename T,
-		typename HashT,
-		typename CmpT = std::equal_to<KeyT> 
-	>
-	class pool_unordered_map :
-		public unordered_map<
-			KeyT, T, HashT, CmpT,
-			ONIKIRI_POOL_UNORDERED_MAP_ALLOCATOR<
-				std::pair<const KeyT, T>
-			> 
-		>
-	{
-		typedef 
-			ONIKIRI_POOL_UNORDERED_MAP_ALLOCATOR< 
-				std::pair<const KeyT, T>
-			> 
-			allocator_type;
+    template <
+        typename KeyT, 
+        typename T,
+        typename HashT,
+        typename CmpT = std::equal_to<KeyT> 
+    >
+    class pool_unordered_map :
+        public unordered_map<
+            KeyT, T, HashT, CmpT,
+            ONIKIRI_POOL_UNORDERED_MAP_ALLOCATOR<
+                std::pair<const KeyT, T>
+            > 
+        >
+    {
+        typedef 
+            ONIKIRI_POOL_UNORDERED_MAP_ALLOCATOR< 
+                std::pair<const KeyT, T>
+            > 
+            allocator_type;
 
-		typedef 
-			unordered_map<
-				KeyT, T, HashT, CmpT, 
-				allocator_type 
-			>
-			collection_type;
-			
-		
-	public:
-		pool_unordered_map()
-			: collection_type()
-		{
-		}
+        typedef 
+            unordered_map<
+                KeyT, T, HashT, CmpT, 
+                allocator_type 
+            >
+            collection_type;
+            
+        
+    public:
+        pool_unordered_map()
+            : collection_type()
+        {
+        }
 
-		explicit pool_unordered_map(
-			size_t initial_bucket_count,
-			const HashT& hash = HashT()
-		)
-			: collection_type( initial_bucket_count, hash )
-		{
-		}
+        explicit pool_unordered_map(
+            size_t initial_bucket_count,
+            const HashT& hash = HashT()
+        )
+            : collection_type( initial_bucket_count, hash )
+        {
+        }
 
-		pool_unordered_map(
-			const pool_unordered_map<KeyT, T, HashT, CmpT>& x
-		)
-			: collection_type(x)
-		{
-		}
-	};
+        pool_unordered_map(
+            const pool_unordered_map<KeyT, T, HashT, CmpT>& x
+        )
+            : collection_type(x)
+        {
+        }
+    };
 }
 
 #endif

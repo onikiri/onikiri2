@@ -77,166 +77,166 @@
 
 #ifdef HOST_IS_WINDOWS
 namespace Onikiri {
-	namespace POSIX {
-		typedef struct stat posix_struct_stat;
-		const int POSIX_O_BINARY = _O_BINARY;
-		const int POSIX_O_RDONLY = _O_RDONLY;
-		const int POSIX_O_WRONLY = _O_WRONLY;
-		const int POSIX_O_RDWR   = _O_RDWR;
-		const int POSIX_O_APPEND = _O_APPEND;
-		const int POSIX_O_CREAT  = _O_CREAT;
-		const int POSIX_O_EXCL   = _O_EXCL;
-		const int POSIX_O_TRUNC  = _O_TRUNC;
+    namespace POSIX {
+        typedef struct stat posix_struct_stat;
+        const int POSIX_O_BINARY = _O_BINARY;
+        const int POSIX_O_RDONLY = _O_RDONLY;
+        const int POSIX_O_WRONLY = _O_WRONLY;
+        const int POSIX_O_RDWR   = _O_RDWR;
+        const int POSIX_O_APPEND = _O_APPEND;
+        const int POSIX_O_CREAT  = _O_CREAT;
+        const int POSIX_O_EXCL   = _O_EXCL;
+        const int POSIX_O_TRUNC  = _O_TRUNC;
 
-		const int POSIX_S_IFDIR  = _S_IFDIR;
-		const int POSIX_S_IFCHR  = _S_IFCHR;
-		const int POSIX_S_IFREG  = _S_IFREG;
-		const int POSIX_S_IFIFO  = _S_IFIFO;
+        const int POSIX_S_IFDIR  = _S_IFDIR;
+        const int POSIX_S_IFCHR  = _S_IFCHR;
+        const int POSIX_S_IFREG  = _S_IFREG;
+        const int POSIX_S_IFIFO  = _S_IFIFO;
 
-		const int POSIX_S_IWRITE = _S_IWRITE;
-		const int POSIX_S_IREAD  = _S_IREAD;
+        const int POSIX_S_IWRITE = _S_IWRITE;
+        const int POSIX_S_IREAD  = _S_IREAD;
 
-		const int POSIX_F_OK = 0;
-		const int POSIX_X_OK = 0;
-		const int POSIX_W_OK = 2;
-		const int POSIX_R_OK = 4;
+        const int POSIX_F_OK = 0;
+        const int POSIX_X_OK = 0;
+        const int POSIX_W_OK = 2;
+        const int POSIX_R_OK = 4;
 
-		const int POSIX_SEEK_SET = SEEK_SET;
-		const int POSIX_SEEK_CUR = SEEK_CUR;
-		const int POSIX_SEEK_END = SEEK_END;
+        const int POSIX_SEEK_SET = SEEK_SET;
+        const int POSIX_SEEK_CUR = SEEK_CUR;
+        const int POSIX_SEEK_END = SEEK_END;
 
-		int posix_geterrno();
+        int posix_geterrno();
 
-		int posix_getpid();
+        int posix_getpid();
 
-		// Linux で確認したときに 959, 10 だったのでWindows ではその値にしておく．
-		inline int posix_getuid()
-			{ return 959; }
-		inline int posix_geteuid()
-			{ return 959; }
-		inline int posix_getgid()
-			{ return 10; }
-		inline int posix_getegid()
-			{ return 10; }
+        // Linux で確認したときに 959, 10 だったのでWindows ではその値にしておく．
+        inline int posix_getuid()
+            { return 959; }
+        inline int posix_geteuid()
+            { return 959; }
+        inline int posix_getgid()
+            { return 10; }
+        inline int posix_getegid()
+            { return 10; }
 
-		char *posix_getcwd(char* buf, int maxlen);
-		int posix_chdir(const char* path);
+        char *posix_getcwd(char* buf, int maxlen);
+        int posix_chdir(const char* path);
 
-		int posix_open(const char* name, int flags);
-		int posix_open(const char* name, int flags, int pmode);
-		int posix_read(int fd, void* buf, unsigned int count);
-		int posix_write(int fd, void* buf, unsigned int count);
-		int posix_close(int fd);
-		s64 posix_lseek(int fd, s64 offset, int whence);
-		int posix_dup(int fd);
+        int posix_open(const char* name, int flags);
+        int posix_open(const char* name, int flags, int pmode);
+        int posix_read(int fd, void* buf, unsigned int count);
+        int posix_write(int fd, void* buf, unsigned int count);
+        int posix_close(int fd);
+        s64 posix_lseek(int fd, s64 offset, int whence);
+        int posix_dup(int fd);
 
-		int posix_stat(const char* path, posix_struct_stat* s);
-		int posix_fstat(int fd, posix_struct_stat* s);
-		int posix_lstat(const char* path, posix_struct_stat* s);
+        int posix_stat(const char* path, posix_struct_stat* s);
+        int posix_fstat(int fd, posix_struct_stat* s);
+        int posix_lstat(const char* path, posix_struct_stat* s);
 
-		int posix_fileno(FILE *file);
-		int posix_access(const char* path, int mode);
-		int posix_unlink(const char* path);
-		int posix_rename(const char* oldpath, const char* newpath);
+        int posix_fileno(FILE *file);
+        int posix_access(const char* path, int mode);
+        int posix_unlink(const char* path);
+        int posix_rename(const char* oldpath, const char* newpath);
 
-		int posix_truncate(const char* path, s64 length);
-		int posix_ftruncate(int fd, s64 length);
-	}
+        int posix_truncate(const char* path, s64 length);
+        int posix_ftruncate(int fd, s64 length);
+    }
 }
 #elif defined(HOST_IS_CYGWIN) || defined(HOST_IS_LINUX)
 namespace Onikiri {
-	namespace POSIX {
-		typedef struct stat posix_struct_stat;
-		const int POSIX_O_BINARY = 0;
-		const int POSIX_O_RDONLY = O_RDONLY;
-		const int POSIX_O_WRONLY = O_WRONLY;
-		const int POSIX_O_RDWR   = O_RDWR;
-		const int POSIX_O_APPEND = O_APPEND;
-		const int POSIX_O_CREAT  = O_CREAT;
-		const int POSIX_O_EXCL   = O_EXCL;
-		const int POSIX_O_TRUNC  = O_TRUNC;
+    namespace POSIX {
+        typedef struct stat posix_struct_stat;
+        const int POSIX_O_BINARY = 0;
+        const int POSIX_O_RDONLY = O_RDONLY;
+        const int POSIX_O_WRONLY = O_WRONLY;
+        const int POSIX_O_RDWR   = O_RDWR;
+        const int POSIX_O_APPEND = O_APPEND;
+        const int POSIX_O_CREAT  = O_CREAT;
+        const int POSIX_O_EXCL   = O_EXCL;
+        const int POSIX_O_TRUNC  = O_TRUNC;
 
-		const int POSIX_S_IFDIR  = S_IFDIR;
-		const int POSIX_S_IFCHR  = S_IFCHR;
-		const int POSIX_S_IFREG  = S_IFREG;
-		const int POSIX_S_IFIFO  = S_IFIFO;
+        const int POSIX_S_IFDIR  = S_IFDIR;
+        const int POSIX_S_IFCHR  = S_IFCHR;
+        const int POSIX_S_IFREG  = S_IFREG;
+        const int POSIX_S_IFIFO  = S_IFIFO;
 
-		const int POSIX_S_IWRITE = S_IWRITE;
-		const int POSIX_S_IREAD  = S_IREAD;
+        const int POSIX_S_IWRITE = S_IWRITE;
+        const int POSIX_S_IREAD  = S_IREAD;
 
-		const int POSIX_F_OK = F_OK;
-		const int POSIX_X_OK = X_OK;
-		const int POSIX_W_OK = W_OK;
-		const int POSIX_R_OK = R_OK;
+        const int POSIX_F_OK = F_OK;
+        const int POSIX_X_OK = X_OK;
+        const int POSIX_W_OK = W_OK;
+        const int POSIX_R_OK = R_OK;
 
-		const int POSIX_SEEK_SET = SEEK_SET;
-		const int POSIX_SEEK_CUR = SEEK_CUR;
-		const int POSIX_SEEK_END = SEEK_END;
+        const int POSIX_SEEK_SET = SEEK_SET;
+        const int POSIX_SEEK_CUR = SEEK_CUR;
+        const int POSIX_SEEK_END = SEEK_END;
 
-		inline int posix_geterrno()
-			{ return errno; }
+        inline int posix_geterrno()
+            { return errno; }
 
-		inline int posix_getpid()
-			{ return getpid(); }
+        inline int posix_getpid()
+            { return getpid(); }
 
-		inline int posix_getuid()
-			{ return getuid(); }
-		inline int posix_geteuid()
-			{ return geteuid(); }
-		inline int posix_getgid()
-			{ return getgid(); }
-		inline int posix_getegid()
-			{ return getegid(); }
+        inline int posix_getuid()
+            { return getuid(); }
+        inline int posix_geteuid()
+            { return geteuid(); }
+        inline int posix_getgid()
+            { return getgid(); }
+        inline int posix_getegid()
+            { return getegid(); }
 
-		inline char *posix_getcwd(char* buf, int maxlen)
-			{ return getcwd(buf, maxlen); }
-		inline int posix_chdir(const char* path)
-			{ return chdir(path); }
+        inline char *posix_getcwd(char* buf, int maxlen)
+            { return getcwd(buf, maxlen); }
+        inline int posix_chdir(const char* path)
+            { return chdir(path); }
 
-		inline int posix_open(const char* name, int flags)
-			{ return open(name, flags); }
-		inline int posix_open(const char* name, int flags, int pmode)
-			{ return open(name, flags, pmode); }
-		inline int posix_read(int fd, void* buf, unsigned int count)
-			{ return read(fd, buf, count); }
-		inline int posix_write(int fd, void* buf, unsigned int count)
-			{ return write(fd, buf, count); }
-		inline int posix_close(int fd)
-			{ return close(fd); }
-		inline int posix_dup(int fd)
-			{ return dup(fd); }
+        inline int posix_open(const char* name, int flags)
+            { return open(name, flags); }
+        inline int posix_open(const char* name, int flags, int pmode)
+            { return open(name, flags, pmode); }
+        inline int posix_read(int fd, void* buf, unsigned int count)
+            { return read(fd, buf, count); }
+        inline int posix_write(int fd, void* buf, unsigned int count)
+            { return write(fd, buf, count); }
+        inline int posix_close(int fd)
+            { return close(fd); }
+        inline int posix_dup(int fd)
+            { return dup(fd); }
 
-		// <TODO> 本当は，off_tのサイズ・lseek64のサポートをチェックする．
+        // <TODO> 本当は，off_tのサイズ・lseek64のサポートをチェックする．
 #if defined(HOST_IS_CYGWIN)
-		// CYGWINはlseek64を持たない
-		inline s64 posix_lseek(int fd, s64 offset, int whence)
-			{ return lseek(fd, offset, whence); }
+        // CYGWINはlseek64を持たない
+        inline s64 posix_lseek(int fd, s64 offset, int whence)
+            { return lseek(fd, offset, whence); }
 #elif defined(HOST_IS_LINUX)
-		inline s64 posix_lseek(int fd, s64 offset, int whence)
-			{ return lseek64(fd, offset, whence); }
+        inline s64 posix_lseek(int fd, s64 offset, int whence)
+            { return lseek64(fd, offset, whence); }
 #endif
 
-		inline int posix_stat(const char* path, posix_struct_stat* s)
-			{ return stat(path, s); }
-		inline int posix_fstat(int fd, posix_struct_stat* s)
-			{ return fstat(fd, s); }
-		inline int posix_lstat(const char* path, posix_struct_stat* s)
-			{ return lstat(path, s); }
+        inline int posix_stat(const char* path, posix_struct_stat* s)
+            { return stat(path, s); }
+        inline int posix_fstat(int fd, posix_struct_stat* s)
+            { return fstat(fd, s); }
+        inline int posix_lstat(const char* path, posix_struct_stat* s)
+            { return lstat(path, s); }
 
-		inline int posix_fileno(FILE *file)
-			{ return fileno(file); }
-		inline int posix_access(const char* path, int mode)
-			{ return access(path, mode); }
-		inline int posix_unlink(const char* path)
-			{ return unlink(path); }
-		inline int posix_rename(const char* oldpath, const char* newpath)
-			{ return rename(oldpath, newpath); }
+        inline int posix_fileno(FILE *file)
+            { return fileno(file); }
+        inline int posix_access(const char* path, int mode)
+            { return access(path, mode); }
+        inline int posix_unlink(const char* path)
+            { return unlink(path); }
+        inline int posix_rename(const char* oldpath, const char* newpath)
+            { return rename(oldpath, newpath); }
 
-		inline int posix_truncate(const char* path, s64 length)
-			{ return truncate(path, length); }
-		inline int posix_ftruncate(int fd, s64 length)
-			{ return ftruncate(fd, length); }
-	}
+        inline int posix_truncate(const char* path, s64 length)
+            { return truncate(path, length); }
+        inline int posix_ftruncate(int fd, s64 length)
+            { return ftruncate(fd, length); }
+    }
 }
 #endif
 

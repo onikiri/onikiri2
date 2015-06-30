@@ -36,17 +36,17 @@
 
 namespace Onikiri 
 {
-	// A system that runs in an in-order simulation mode
-	class InorderSystem : public SystemBase
-	{
-		bool m_enableBPred;
-		bool m_enableHMPred;
-		bool m_enableCache;
-	public:
-		InorderSystem();
-		~InorderSystem();
-		void Run( SystemContext* context );
-	};
+    // A system that runs in an in-order simulation mode
+    class InorderSystem : public SystemBase
+    {
+        bool m_enableBPred;
+        bool m_enableHMPred;
+        bool m_enableCache;
+    public:
+        InorderSystem();
+        ~InorderSystem();
+        void Run( SystemContext* context );
+    };
 }; // namespace Onikiri
 
 #endif // __SYSTEM_BASE_H__

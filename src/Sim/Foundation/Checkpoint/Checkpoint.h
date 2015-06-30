@@ -38,71 +38,71 @@
 namespace Onikiri
 {
 
-	// Check pointing mechanism.
-	// 'Checkpoint' identifies the generation of check pointed data.
-	class Checkpoint
-	{
-	public:
+    // Check pointing mechanism.
+    // 'Checkpoint' identifies the generation of check pointed data.
+    class Checkpoint
+    {
+    public:
 
-		typedef CheckpointedDataBase::BackupIterator BackupIterator;
+        typedef CheckpointedDataBase::BackupIterator BackupIterator;
 
-		Checkpoint( size_t dataRefSize ) : 
-			m_committed( false ),
-			m_backedUpEntries( dataRefSize )
-		{
-		};
-		
-		~Checkpoint()
-		{
-		};
+        Checkpoint( size_t dataRefSize ) : 
+            m_committed( false ),
+            m_backedUpEntries( dataRefSize )
+        {
+        };
+        
+        ~Checkpoint()
+        {
+        };
 
-		void Commit()
-		{
-			m_committed = true;
-		}
+        void Commit()
+        {
+            m_committed = true;
+        }
 
-		bool IsCommitted() const
-		{
-			return m_committed;
-		}
+        bool IsCommitted() const
+        {
+            return m_committed;
+        }
 
-		// Set an iterator that refers actual check pointed data.
-		// 'handle' identifies each data.
-		// Ex. handle(0):PC, handle(1):RMT ... 
-		void SetIterator( CheckpointedDataHandle handle, BackupIterator i )
-		{
-			ASSERT( handle < m_backedUpEntries.size() );
-			Entry* entry = &m_backedUpEntries[ handle ];
-			entry->valid = true;
-			entry->iterator = i;
-		}
+        // Set an iterator that refers actual check pointed data.
+        // 'handle' identifies each data.
+        // Ex. handle(0):PC, handle(1):RMT ... 
+        void SetIterator( CheckpointedDataHandle handle, BackupIterator i )
+        {
+            ASSERT( handle < m_backedUpEntries.size() );
+            Entry* entry = &m_backedUpEntries[ handle ];
+            entry->valid = true;
+            entry->iterator = i;
+        }
 
-		bool GetIterator( const CheckpointedDataHandle handle, BackupIterator* iterator ) const
-		{
-			ASSERT( m_backedUpEntries.size() > handle, "Invalid handle." );
-			const Entry* entry = &m_backedUpEntries[ handle ];
-			if( !entry->valid ){
-				return false;
-			}
-			else{
-				*iterator = entry->iterator;
-				return true;
-			}
-		}
+        bool GetIterator( const CheckpointedDataHandle handle, BackupIterator* iterator ) const
+        {
+            ASSERT( m_backedUpEntries.size() > handle, "Invalid handle." );
+            const Entry* entry = &m_backedUpEntries[ handle ];
+            if( !entry->valid ){
+                return false;
+            }
+            else{
+                *iterator = entry->iterator;
+                return true;
+            }
+        }
 
-	protected:
-		bool m_committed;
-		struct Entry
-		{
-			BackupIterator iterator;
-			bool valid;
-			Entry() : 
-				valid(false)
-			{
-			}
-		};
-		pool_vector< Entry > m_backedUpEntries;
-	};
+    protected:
+        bool m_committed;
+        struct Entry
+        {
+            BackupIterator iterator;
+            bool valid;
+            Entry() : 
+                valid(false)
+            {
+            }
+        };
+        pool_vector< Entry > m_backedUpEntries;
+    };
 
 
 }; // namespace Onikiri

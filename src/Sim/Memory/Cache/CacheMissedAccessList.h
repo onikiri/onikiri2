@@ -36,100 +36,100 @@
 
 namespace Onikiri
 {
-	class Pipeline;
+    class Pipeline;
 
-	//
-	// This class handles missed accesses.
-	// It corresponds to Miss Status Handling Register(MSHR)
-	//
-	class CacheMissedAccessList
-	{
+    //
+    // This class handles missed accesses.
+    // It corresponds to Miss Status Handling Register(MSHR)
+    //
+    class CacheMissedAccessList
+    {
 
-	public:
-		typedef CacheAccess			 Access;
-		typedef CacheAccessResult	 Result;
-		typedef CacheAccessEventType EventType;
+    public:
+        typedef CacheAccess          Access;
+        typedef CacheAccessResult    Result;
+        typedef CacheAccessEventType EventType;
 
-		static const size_t MAX_MISSED_ACCESS_LIST_LIMIT = 1024;
-		static const size_t MAX_NOTIFIEE_COUNT = 4;
-		typedef 
-			boost::array<CacheAccessNotifieeIF*, MAX_NOTIFIEE_COUNT>
-			NotifieeArray;
+        static const size_t MAX_MISSED_ACCESS_LIST_LIMIT = 1024;
+        static const size_t MAX_NOTIFIEE_COUNT = 4;
+        typedef 
+            boost::array<CacheAccessNotifieeIF*, MAX_NOTIFIEE_COUNT>
+            NotifieeArray;
 
-		// An access state structure.
-		// See comments in'Add' method.
-		struct AccessState
-		{
-			Access access;
+        // An access state structure.
+        // See comments in'Add' method.
+        struct AccessState
+        {
+            Access access;
 
-			u64  id;					// serial ID of an access
-			s64  startTime;				// access start time
-			s64  endTime;				// access end time
+            u64  id;                    // serial ID of an access
+            s64  startTime;             // access start time
+            s64  endTime;               // access end time
 
-			// true if this entry is a link to a actual access.
-			// A successor access that hits a predecessor access is 
-			// linked to the predecessor access.
-			// A link access does not consume a port.
-			bool link;					
+            // true if this entry is a link to a actual access.
+            // A successor access that hits a predecessor access is 
+            // linked to the predecessor access.
+            // A link access does not consume a port.
+            bool link;                  
 
-			// Notifies when missed accesses are finished.
-			NotifieeArray notifiees;
-			int notifieesCount;
-			CacheAccessNotificationParam
-				notification;
-		};
+            // Notifies when missed accesses are finished.
+            NotifieeArray notifiees;
+            int notifieesCount;
+            CacheAccessNotificationParam
+                notification;
+        };
 
-		typedef pool_list< AccessState > AccessList;
-		typedef AccessList::iterator     AccessListIterator;
+        typedef pool_list< AccessState > AccessList;
+        typedef AccessList::iterator     AccessListIterator;
 
-		CacheMissedAccessList( 
-			Pipeline* pipe, 
-			int offsetBitSize
-		);
+        CacheMissedAccessList( 
+            Pipeline* pipe, 
+            int offsetBitSize
+        );
 
-		virtual ~CacheMissedAccessList();
+        virtual ~CacheMissedAccessList();
 
-		Result Find( const Addr& addr );
+        Result Find( const Addr& addr );
 
-		// Returns the size of the access list.
-		size_t GetSize() const;
+        // Returns the size of the access list.
+        size_t GetSize() const;
 
-		// Add a missed access to the list.
-		void Add( 
-			const Access& access, 
-			const Result& result,
-			CacheAccessNotifieeIF* notifiees[],
-			int notifieesCount,
-			const CacheAccessNotificationParam& notification
-		);
+        // Add a missed access to the list.
+        void Add( 
+            const Access& access, 
+            const Result& result,
+            CacheAccessNotifieeIF* notifiees[],
+            int notifieesCount,
+            const CacheAccessNotificationParam& notification
+        );
 
-		void Remove( const CacheAccess& access, AccessListIterator target );
+        void Remove( const CacheAccess& access, AccessListIterator target );
 
-		void SetEnabled( bool enabled );
+        void SetEnabled( bool enabled );
 
-	protected:
-		
-		bool m_enabled;
+    protected:
+        
+        bool m_enabled;
 
-		u64 m_currentAccessID;
+        u64 m_currentAccessID;
 
-		// アクセス中のアクセスを管理するリスト
-		AccessList m_list;
+        // アクセス中のアクセスを管理するリスト
+        AccessList m_list;
 
-		// A pipeline for the cache/memory.
-		Pipeline* m_pipe;
+        // A pipeline for the cache/memory.
+        Pipeline* m_pipe;
 
-		// An address offset of a cache line
-		int m_offsetBitSize;
+        // An address offset of a cache line
+        int m_offsetBitSize;
 
-		Addr MaskLineOffset( Addr addr );
-		AccessListIterator FindAccess( const Addr& addr );
+        Addr MaskLineOffset( Addr addr );
+        AccessListIterator FindAccess( const Addr& addr );
 
-		// Add an access state to the list.
-		void AddList( 
-			const CacheAccess& access, const AccessState& state, int latency
-		);
-	};
+        // Add an access state to the list.
+        void AddList( 
+            const CacheAccess& access, const AccessState& state, int latency
+        );
+    };
 
 }; // namespace Onikiri
 

@@ -36,16 +36,16 @@
 #ifndef __USER_DEFAULT_PARAM_H
 #define __USER_DEFAULT_PARAM_H
 
-static char g_userDefaultParam[] = "			\n\
-												\n\
-<?xml version='1.0' encoding='UTF-8'?>			\n\
-<Session>										\n\
-	<Simulator>									\n\
-	</Simulator>								\n\
-												\n\
-</Session>										\n\
-												\n\
-												\n\
+static char g_userDefaultParam[] = "            \n\
+                                                \n\
+<?xml version='1.0' encoding='UTF-8'?>          \n\
+<Session>                                       \n\
+    <Simulator>                                 \n\
+    </Simulator>                                \n\
+                                                \n\
+</Session>                                      \n\
+                                                \n\
+                                                \n\
 ";
 
 #endif

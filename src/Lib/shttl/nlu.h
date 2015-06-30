@@ -38,107 +38,107 @@
 
 namespace shttl 
 {
-	template< typename key_type >
-	class nlu : replacer< key_type >
-	{ 
-	public:
-		typedef typename replacer< key_type >::size_type size_type;
+    template< typename key_type >
+    class nlu : replacer< key_type >
+    { 
+    public:
+        typedef typename replacer< key_type >::size_type size_type;
 
 
-		nlu() :
-			m_way_num(0),
-			m_index_num(0)
-		{
-		}
+        nlu() :
+            m_way_num(0),
+            m_index_num(0)
+        {
+        }
 
-		void construct( const size_type set_num, const size_type way_num )
-		{
-			if( std::numeric_limits<bitmap_type>().digits < (int)way_num ){
-				throw std::invalid_argument( 
-					"shttl::nlu_array() \n Specified way number is too large." 
-				);
-			}
+        void construct( const size_type set_num, const size_type way_num )
+        {
+            if( std::numeric_limits<bitmap_type>().digits < (int)way_num ){
+                throw std::invalid_argument( 
+                    "shttl::nlu_array() \n Specified way number is too large." 
+                );
+            }
 
-			m_way_num = way_num;
-			m_index_num = set_num;
-			m_bitmap.resize( m_index_num, 0 );
-		}
+            m_way_num = way_num;
+            m_index_num = set_num;
+            m_bitmap.resize( m_index_num, 0 );
+        }
 
-		size_type size()
-		{
-			return m_index_num;
-		}
+        size_type size()
+        {
+            return m_index_num;
+        }
 
-		void touch(
-			const size_type index,
-			const size_type way,
-			const key_type  key
-		){
-			get_set( index ).touch( way );
-		}
+        void touch(
+            const size_type index,
+            const size_type way,
+            const key_type  key
+        ){
+            get_set( index ).touch( way );
+        }
 
-		size_type target(
-			const size_type index
-		){
-			return get_set( index ).target();
-		}
+        size_type target(
+            const size_type index
+        ){
+            return get_set( index ).target();
+        }
 
 
-	protected:
+    protected:
 
-		size_type			m_way_num; 
-		size_type			m_index_num; 
+        size_type           m_way_num; 
+        size_type           m_index_num; 
 
-		typedef u32 bitmap_type;
-		typedef std::vector<bitmap_type> bitmap_array_type;
-		bitmap_array_type m_bitmap;
+        typedef u32 bitmap_type;
+        typedef std::vector<bitmap_type> bitmap_array_type;
+        bitmap_array_type m_bitmap;
 
-		class set
-		{
-		public:
+        class set
+        {
+        public:
 
-			set( bitmap_array_type::iterator bitmap, size_t way_num ) : 
-			  m_bitmap( bitmap ),
-			  m_way_num( way_num )
-			{
-			}
+            set( bitmap_array_type::iterator bitmap, size_t way_num ) : 
+              m_bitmap( bitmap ),
+              m_way_num( way_num )
+            {
+            }
 
-			size_t target()
-			{
-				for(size_type i = 0; i < m_way_num; i++){
-					if(!(*m_bitmap & (1 << i)))
-						return i;
-				}
+            size_t target()
+            {
+                for(size_type i = 0; i < m_way_num; i++){
+                    if(!(*m_bitmap & (1 << i)))
+                        return i;
+                }
 
-				SHTTL_ASSERT(0);
-				return 0;			
-			}
-	
-			void touch(const size_t way)
-			{
-			#ifdef SHTTL_DEBUG
-				if ( (size_type)m_way_num <= way ){
-					throw std::out_of_range("nlu::touch");
-				}
-			#endif
+                SHTTL_ASSERT(0);
+                return 0;           
+            }
+    
+            void touch(const size_t way)
+            {
+            #ifdef SHTTL_DEBUG
+                if ( (size_type)m_way_num <= way ){
+                    throw std::out_of_range("nlu::touch");
+                }
+            #endif
 
-				*m_bitmap |= 1 << way;
-				if( *m_bitmap == mask(0, m_way_num) )
-					*m_bitmap = 0;			
-			}
+                *m_bitmap |= 1 << way;
+                if( *m_bitmap == mask(0, m_way_num) )
+                    *m_bitmap = 0;          
+            }
 
-		protected:
-			bitmap_array_type::iterator m_bitmap;
-			size_t m_way_num;
+        protected:
+            bitmap_array_type::iterator m_bitmap;
+            size_t m_way_num;
 
-		};
+        };
 
-		set get_set( const size_type index )
-		{
-			return set( m_bitmap.begin() + index, m_way_num );
-		}
+        set get_set( const size_type index )
+        {
+            return set( m_bitmap.begin() + index, m_way_num );
+        }
 
-	};
+    };
 } // namespace shttl
 
 #endif // SHTTL_NLU_H

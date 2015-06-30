@@ -46,11 +46,11 @@ using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::PPC64Linux;
 
 namespace {
-	const u16 MACHINE_PPC64 = 0x0015;
+    const u16 MACHINE_PPC64 = 0x0015;
 }
 
 PPC64LinuxLoader::PPC64LinuxLoader()
-	: Linux64Loader(MACHINE_PPC64)	// machine = PPC64
+    : Linux64Loader(MACHINE_PPC64)  // machine = PPC64
 {
 }
 
@@ -60,42 +60,42 @@ PPC64LinuxLoader::~PPC64LinuxLoader()
 
 u64 PPC64LinuxLoader::GetInitialRegValue(int index) const
 {
-	const int STACK_POINTER_REGNUM = 1;
-	const int TOC_POINTER_REGNUM = 2;
-	const int TLS_POINTER_REGNUM = 13;
+    const int STACK_POINTER_REGNUM = 1;
+    const int TOC_POINTER_REGNUM = 2;
+    const int TLS_POINTER_REGNUM = 13;
 
-	switch (index) {
-	case STACK_POINTER_REGNUM:
-		return GetInitialSp();
-	case TOC_POINTER_REGNUM:
-		return m_startTocPointer;
-	case PPC64Info::REG_FPSCR:
-		return 0;
-	case TLS_POINTER_REGNUM:
-		// <TODO>
-	default:
-		return 0;
-	}
+    switch (index) {
+    case STACK_POINTER_REGNUM:
+        return GetInitialSp();
+    case TOC_POINTER_REGNUM:
+        return m_startTocPointer;
+    case PPC64Info::REG_FPSCR:
+        return 0;
+    case TLS_POINTER_REGNUM:
+        // <TODO>
+    default:
+        return 0;
+    }
 }
 
 u64 PPC64LinuxLoader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
 {
-	// ELFのエントリポイントには_start関数の関数デスクリプタが格納されており，offset 0に関数ポインタが格納されている
-	//return memory->ReadMemory(elfReader.GetEntryPoint(), 8);
-	EmuMemAccess access( elfReader.GetEntryPoint(), 8 );
-	memory->ReadMemory( &access );
-	return access.value;
+    // ELFのエントリポイントには_start関数の関数デスクリプタが格納されており，offset 0に関数ポインタが格納されている
+    //return memory->ReadMemory(elfReader.GetEntryPoint(), 8);
+    EmuMemAccess access( elfReader.GetEntryPoint(), 8 );
+    memory->ReadMemory( &access );
+    return access.value;
 }
 
 
 void PPC64LinuxLoader::CalculateOthers(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
 {
-	// 関数デスクリプタのoffset 8がtoc
-	//m_startTocPointer = memory->ReadMemory(elfReader.GetEntryPoint()+8, 8);
+    // 関数デスクリプタのoffset 8がtoc
+    //m_startTocPointer = memory->ReadMemory(elfReader.GetEntryPoint()+8, 8);
 
-	EmuMemAccess access( elfReader.GetEntryPoint()+8, 8 );
-	memory->ReadMemory( &access );
-	m_startTocPointer = access.value;
+    EmuMemAccess access( elfReader.GetEntryPoint()+8, 8 );
+    memory->ReadMemory( &access );
+    m_startTocPointer = access.value;
 }
 
 // AT_DCACHEBSIZE: cache_line_size

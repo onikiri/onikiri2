@@ -45,12 +45,12 @@ using namespace Onikiri;
 
 TraceDumper::TraceDumper()
 {
-	m_enabled = false;
-	m_detail = 0;
-	m_valDetail = 0;
-	m_cycle = 0;
-	m_skipInsns = 0;
-	m_flush = false;
+    m_enabled = false;
+    m_detail = 0;
+    m_valDetail = 0;
+    m_cycle = 0;
+    m_skipInsns = 0;
+    m_flush = false;
 }
 
 TraceDumper::~TraceDumper()
@@ -59,100 +59,100 @@ TraceDumper::~TraceDumper()
 
 void TraceDumper::Initialize( const String& suffix )
 {
-	LoadParam();
-	Open( suffix );
+    LoadParam();
+    Open( suffix );
 }
 
 void TraceDumper::Finalize()
 {
-	ReleaseParam();
-	Close();
+    ReleaseParam();
+    Close();
 }
 
 void TraceDumper::DumpString(const std::string& str)
 {
-	m_dumpStream << m_cycle << "\t" << str << "\n";
-	if( m_flush )
-		m_dumpStream.flush();
+    m_dumpStream << m_cycle << "\t" << str << "\n";
+    if( m_flush )
+        m_dumpStream.flush();
 }
 
 void TraceDumper::Open( const String& suffix )
 {
 
-	if( Enabled() && (!m_dumpStream.is_complete()) ) {
-		String fileName = g_env.GetHostWorkPath() + MakeDumpFileName( m_filename, suffix, m_gzipEnabled );
-		if (m_gzipEnabled){
-			m_dumpStream.push( 
-				iostreams::gzip_compressor( 
-					iostreams::gzip_params(m_gzipLevel) 
-				)
-			);
-		}
-		m_dumpStream.push( iostreams::file_sink(fileName, ios::binary));
-	}
+    if( Enabled() && (!m_dumpStream.is_complete()) ) {
+        String fileName = g_env.GetHostWorkPath() + MakeDumpFileName( m_filename, suffix, m_gzipEnabled );
+        if (m_gzipEnabled){
+            m_dumpStream.push( 
+                iostreams::gzip_compressor( 
+                    iostreams::gzip_params(m_gzipLevel) 
+                )
+            );
+        }
+        m_dumpStream.push( iostreams::file_sink(fileName, ios::binary));
+    }
 }
 
 void TraceDumper::Close()
 {
-	if(m_dumpStream.is_complete()) {
-		m_dumpStream.reset();
-	}
+    if(m_dumpStream.is_complete()) {
+        m_dumpStream.reset();
+    }
 }
 
 
 void TraceDumper::Dump(DUMP_STATE state, Op* op, int detail)
 {
-	if( !Enabled() )
-		return;
+    if( !Enabled() )
+        return;
 
-	if( op->GetGlobalSerialID() < m_skipInsns )
-		return;
+    if( op->GetGlobalSerialID() < m_skipInsns )
+        return;
 
-	const char* str = g_traceDumperStrTbl[state];
+    const char* str = g_traceDumperStrTbl[state];
 
-	if(detail == -1){
-		if(op == NULL){
-			DumpString(str);
-		}
-		else{
-			Dump(state, op, Detail());
-		}
-	}
-	else{
-		ostringstream oss;
-		oss << str << "\t" << op->ToString(detail, m_valDetail > 0);
-		DumpString(oss.str());
-	}
+    if(detail == -1){
+        if(op == NULL){
+            DumpString(str);
+        }
+        else{
+            Dump(state, op, Detail());
+        }
+    }
+    else{
+        ostringstream oss;
+        oss << str << "\t" << op->ToString(detail, m_valDetail > 0);
+        DumpString(oss.str());
+    }
 
 }
 
 void TraceDumper::DumpStallBegin(Op* op)
 {
-	if( !Enabled() )
-		return;
-	
-	if( op->GetGlobalSerialID() < m_skipInsns )
-		return;
+    if( !Enabled() )
+        return;
+    
+    if( op->GetGlobalSerialID() < m_skipInsns )
+        return;
 
-	ostringstream oss;
-	oss << "stall begin" << "\t" << op->ToString(0);
-	DumpString(oss.str());
+    ostringstream oss;
+    oss << "stall begin" << "\t" << op->ToString(0);
+    DumpString(oss.str());
 }
 
 void TraceDumper::DumpStallEnd(Op* op)
 {
-	if( !Enabled() )
-		return;
-	
-	if( op->GetGlobalSerialID() < m_skipInsns )
-		return;
+    if( !Enabled() )
+        return;
+    
+    if( op->GetGlobalSerialID() < m_skipInsns )
+        return;
 
-	ostringstream oss;
-	oss << "stall end" << "\t" << op->ToString(0);
-	DumpString(oss.str());
+    ostringstream oss;
+    oss << "stall end" << "\t" << op->ToString(0);
+    DumpString(oss.str());
 }
 
 void TraceDumper::SetCurrentCycle(s64 cycle)
 {
-	m_cycle = cycle;
+    m_cycle = cycle;
 }

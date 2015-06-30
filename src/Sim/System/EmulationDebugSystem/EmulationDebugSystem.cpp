@@ -43,87 +43,87 @@ using namespace Onikiri;
 
 void EmulationDebugSystem::Run( SystemContext* context )
 {
-	int processCount = context->emulator->GetProcessCount();
-	if( processCount != 1 ){
-		THROW_RUNTIME_ERROR( 
-			"Remote debugging is not supported in the execution of multi processes." 
-		);
-	}
+    int processCount = context->emulator->GetProcessCount();
+    if( processCount != 1 ){
+        THROW_RUNTIME_ERROR( 
+            "Remote debugging is not supported in the execution of multi processes." 
+        );
+    }
 
-	// レジスタの初期化
-	ArchitectureStateList& archStateList = context->architectureStateList;
+    // レジスタの初期化
+    ArchitectureStateList& archStateList = context->architectureStateList;
 
-	s64 insnCount = 0;
-	int curPID = 0;
-	int terminateProcesses = 0;
-	vector<u64> opID( processCount );
+    s64 insnCount = 0;
+    int curPID = 0;
+    int terminateProcesses = 0;
+    vector<u64> opID( processCount );
 
-	m_debugStub = new DebugStub(context, curPID);
+    m_debugStub = new DebugStub(context, curPID);
 
-	while( insnCount < context->executionInsns ){
+    while( insnCount < context->executionInsns ){
 
-		// Decide a thread executed in this iteration.
-		PC& curThreadPC = archStateList[curPID].pc;
+        // Decide a thread executed in this iteration.
+        PC& curThreadPC = archStateList[curPID].pc;
 
-		if( curThreadPC.address == 0 ) {
-			terminateProcesses++;
-			if(terminateProcesses >= processCount){
-				break;
-			}
-			else{
-				continue;
-			}
-		}
+        if( curThreadPC.address == 0 ) {
+            terminateProcesses++;
+            if(terminateProcesses >= processCount){
+                break;
+            }
+            else{
+                continue;
+            }
+        }
 
-		EmulationDebugOp op( context->emulator->GetMemImage() );
+        EmulationDebugOp op( context->emulator->GetMemImage() );
 
-		// このPC
-		std::pair<OpInfo**, int> ops = 
-			context->emulator->GetOp( curThreadPC );
-		OpInfo** opInfoArray = ops.first;
-		int opCount          = ops.second;
+        // このPC
+        std::pair<OpInfo**, int> ops = 
+            context->emulator->GetOp( curThreadPC );
+        OpInfo** opInfoArray = ops.first;
+        int opCount          = ops.second;
 
-		// opInfoArray の命令を全て実行
-		for(int opIndex = 0; opIndex < opCount; opIndex ++){
-			OpInfo* opInfo = opInfoArray[opIndex];
-			op.SetPC( curThreadPC );
-			op.SetTakenPC( Addr(curThreadPC.pid, curThreadPC.tid, curThreadPC.address+4) );
-			op.SetOpInfo(opInfo);
-			op.SetTaken(false);
+        // opInfoArray の命令を全て実行
+        for(int opIndex = 0; opIndex < opCount; opIndex ++){
+            OpInfo* opInfo = opInfoArray[opIndex];
+            op.SetPC( curThreadPC );
+            op.SetTakenPC( Addr(curThreadPC.pid, curThreadPC.tid, curThreadPC.address+4) );
+            op.SetOpInfo(opInfo);
+            op.SetTaken(false);
 
-			// ソースオペランドを設定
-			int srcCount = opInfo->GetSrcNum();
-			for (int i = 0; i < srcCount; i ++) {
-				op.SetSrc(i, archStateList[curPID].registerValue[ opInfo->GetSrcOperand(i) ] );
-			}
+            // ソースオペランドを設定
+            int srcCount = opInfo->GetSrcNum();
+            for (int i = 0; i < srcCount; i ++) {
+                op.SetSrc(i, archStateList[curPID].registerValue[ opInfo->GetSrcOperand(i) ] );
+            }
 
-			context->emulator->Execute( &op, opInfo );
+            context->emulator->Execute( &op, opInfo );
 
-			// 命令の結果を取得
-			int dstCount = opInfo->GetDstNum();
-			for (int i = 0; i < dstCount; i ++) {
-				archStateList[curPID].registerValue[ opInfo->GetDstOperand(i) ] = op.GetDst(i);
-			}
+            // 命令の結果を取得
+            int dstCount = opInfo->GetDstNum();
+            for (int i = 0; i < dstCount; i ++) {
+                archStateList[curPID].registerValue[ opInfo->GetDstOperand(i) ] = op.GetDst(i);
+            }
 
-			++opID[curPID];
-		}
+            ++opID[curPID];
+        }
 
-		// 次のPC
-		if (op.GetTaken())
-			curThreadPC = op.GetTakenPC();
-		else
-			curThreadPC.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
+        // 次のPC
+        if (op.GetTaken())
+            curThreadPC = op.GetTakenPC();
+        else
+            curThreadPC.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
 
-		insnCount ++;
-		curPID = (curPID + 1) % processCount;	// Round robin
-		m_debugStub->OnExec(&op);
+        insnCount ++;
+        curPID = (curPID + 1) % processCount;   // Round robin
+        m_debugStub->OnExec(&op);
 
-	}
-	
-	delete m_debugStub;
+    }
+    
+    delete m_debugStub;
 
-	context->executedInsns.clear();
-	context->executedInsns.push_back( insnCount );
-	context->executedCycles = insnCount;
+    context->executedInsns.clear();
+    context->executedInsns.push_back( insnCount );
+    context->executedCycles = insnCount;
 }
 

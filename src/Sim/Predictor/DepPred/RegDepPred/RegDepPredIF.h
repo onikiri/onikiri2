@@ -37,37 +37,37 @@
 namespace Onikiri 
 {
 
-	// レジスタの依存関係予測器のインターフェース
-	class RegDepPredIF : public DepPredIF 
-	{
-	public:
-		virtual ~RegDepPredIF(){};
+    // レジスタの依存関係予測器のインターフェース
+    class RegDepPredIF : public DepPredIF 
+    {
+    public:
+        virtual ~RegDepPredIF(){};
 
-		// ソース・レジスタに対応する物理レジスタ番号を返す
-		virtual int ResolveReg(const int lno) = 0;
+        // ソース・レジスタに対応する物理レジスタ番号を返す
+        virtual int ResolveReg(const int lno) = 0;
 
-		// ResolveReg と同様に物理レジスタ番号を返す．
-		// ただしこのメソッドの呼び出しにより副作用がない事が保証される．
-		// エミュレーション<>シミュレーション時などの
-		// コンテキスト取得時などに使用
-		virtual int PeekReg(const int lno) const = 0;
-		
-		// デスティネーション・レジスタに物理レジスタ番号を割り当てる
-		virtual int AllocateReg(OpIterator op, const int lno) = 0;
+        // ResolveReg と同様に物理レジスタ番号を返す．
+        // ただしこのメソッドの呼び出しにより副作用がない事が保証される．
+        // エミュレーション<>シミュレーション時などの
+        // コンテキスト取得時などに使用
+        virtual int PeekReg(const int lno) const = 0;
+        
+        // デスティネーション・レジスタに物理レジスタ番号を割り当てる
+        virtual int AllocateReg(OpIterator op, const int lno) = 0;
 
-		// retireしたので、opが解放すべき物理レジスタを解放
-		virtual void ReleaseReg(OpIterator op, const int lno, int phyRegNo) = 0;
-		// flushされたので、opのデスティネーション・レジスタを解放
-		virtual void DeallocateReg(OpIterator op, const int lno, int phyRegNo) = 0;	
+        // retireしたので、opが解放すべき物理レジスタを解放
+        virtual void ReleaseReg(OpIterator op, const int lno, int phyRegNo) = 0;
+        // flushされたので、opのデスティネーション・レジスタを解放
+        virtual void DeallocateReg(OpIterator op, const int lno, int phyRegNo) = 0; 
 
-		// num個物理レジスタを割り当てることができるかどうか
-		virtual bool CanAllocate(OpIterator* infoArray, int numOp) = 0;
+        // num個物理レジスタを割り当てることができるかどうか
+        virtual bool CanAllocate(OpIterator* infoArray, int numOp) = 0;
 
-		// 論理/物理レジスタの個数
-		virtual int GetRegSegmentCount() = 0;
-		virtual int GetLogicalRegCount(int segment) = 0;
-		virtual int GetTotalLogicalRegCount() = 0;
-	};
+        // 論理/物理レジスタの個数
+        virtual int GetRegSegmentCount() = 0;
+        virtual int GetLogicalRegCount(int segment) = 0;
+        virtual int GetTotalLogicalRegCount() = 0;
+    };
 
 }; // namespace Onikiri
 

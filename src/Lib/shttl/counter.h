@@ -43,147 +43,147 @@
 namespace shttl
 {
 
-	//
-	// On shttl::counter, value_body_type is a type of a value itself.
-	// On shttl::counter_array, value_body_type is a reference and 
-	// m_value referes a element of a large array in shttl::counter_array.
-	//
-	template < typename value_type = u8, typename value_body_type = value_type >
-	class counter_base
-	{
+    //
+    // On shttl::counter, value_body_type is a type of a value itself.
+    // On shttl::counter_array, value_body_type is a reference and 
+    // m_value referes a element of a large array in shttl::counter_array.
+    //
+    template < typename value_type = u8, typename value_body_type = value_type >
+    class counter_base
+    {
 
-	public:
-		explicit counter_base(
-			value_body_type value,
-			value_type initv = value_type(),
-			value_type min  = 0,
-			value_type max  = 3,
-			value_type add = 1,
-			value_type sub = 1,
-			value_type threshold = 0
-		) :
-			m_value( value ),
-			m_initv( initv ),
-			m_min  ( min   ),
-			m_max  ( max   ),
-			m_add  ( add   ),
-			m_sub  ( sub   ),
-			m_threshold( threshold )
-		{
-		/*	static_assert( 
-				sizeof(int) >= sizeof(value_type), 
-				"The size of value_type is too large." 
-			);*/
-		}
+    public:
+        explicit counter_base(
+            value_body_type value,
+            value_type initv = value_type(),
+            value_type min  = 0,
+            value_type max  = 3,
+            value_type add = 1,
+            value_type sub = 1,
+            value_type threshold = 0
+        ) :
+            m_value( value ),
+            m_initv( initv ),
+            m_min  ( min   ),
+            m_max  ( max   ),
+            m_add  ( add   ),
+            m_sub  ( sub   ),
+            m_threshold( threshold )
+        {
+        /*  static_assert( 
+                sizeof(int) >= sizeof(value_type), 
+                "The size of value_type is too large." 
+            );*/
+        }
 
-		value_type initv() const
-		{
-			return m_initv;
-		}
+        value_type initv() const
+        {
+            return m_initv;
+        }
 
-		value_type min() const
-		{
-			return m_min;
-		}
+        value_type min() const
+        {
+            return m_min;
+        }
 
-		value_type max() const
-		{
-			return m_max;
-		}
+        value_type max() const
+        {
+            return m_max;
+        }
 
-		value_type threshold() const
-		{
-			return m_threshold;
-		}
+        value_type threshold() const
+        {
+            return m_threshold;
+        }
 
-		// Conversion to value_type
-		operator value_type() const 
-		{
-			return m_value; 
-		}
+        // Conversion to value_type
+        operator value_type() const 
+        {
+            return m_value; 
+        }
 
-		void set( 		
-			value_type initv = value_type(),
-			value_type min  = 0,
-			value_type max  = 3,
-			value_type add = 1,
-			value_type sub = 1,
-			value_type threshold = 0
-		)
-		{
-			m_initv = initv;
-			m_min = min;
-			m_max = max;
-			m_add = add;
-			m_sub = sub;
-			m_threshold = threshold;
-		}
+        void set(       
+            value_type initv = value_type(),
+            value_type min  = 0,
+            value_type max  = 3,
+            value_type add = 1,
+            value_type sub = 1,
+            value_type threshold = 0
+        )
+        {
+            m_initv = initv;
+            m_min = min;
+            m_max = max;
+            m_add = add;
+            m_sub = sub;
+            m_threshold = threshold;
+        }
 
-		void reset()
-		{
-			m_value = m_initv;
-		}
+        void reset()
+        {
+            m_value = m_initv;
+        }
 
-		value_type inc()
-		{
-			int value = m_value;
-			value += m_add;
-			if( value > m_max ){
-				value = m_max;
-			}
-			m_value = (value_type)value;
-			return m_value;
-		}
+        value_type inc()
+        {
+            int value = m_value;
+            value += m_add;
+            if( value > m_max ){
+                value = m_max;
+            }
+            m_value = (value_type)value;
+            return m_value;
+        }
 
-		value_type dec()
-		{
-			int value = m_value;
-			value -= m_sub;
-			if( value < m_min ){
-				value = m_min;
-			}
-			m_value = (value_type)value;
-			return m_value;
-		}
+        value_type dec()
+        {
+            int value = m_value;
+            value -= m_sub;
+            if( value < m_min ){
+                value = m_min;
+            }
+            m_value = (value_type)value;
+            return m_value;
+        }
 
-		// Returns whether a value is above a threshold.
-		bool above_threshold() const
-		{
-			return m_value >= m_threshold;
-		}
+        // Returns whether a value is above a threshold.
+        bool above_threshold() const
+        {
+            return m_value >= m_threshold;
+        }
 
-	protected:
-		value_body_type m_value;
-		value_type m_initv;
-		value_type m_min;
-		value_type m_max;
-		value_type m_add;
-		value_type m_sub;
-		value_type m_threshold;
+    protected:
+        value_body_type m_value;
+        value_type m_initv;
+        value_type m_min;
+        value_type m_max;
+        value_type m_add;
+        value_type m_sub;
+        value_type m_threshold;
 
-	};
+    };
 
-	template < typename value_type = u8 >
-	class counter : public counter_base< value_type, value_type >
-	{
+    template < typename value_type = u8 >
+    class counter : public counter_base< value_type, value_type >
+    {
 
-	public:
-		counter(
-			value_type initv = value_type(),
-			value_type min = 0,
-			value_type max = 3,
-			value_type add = 1,
-			value_type sub = 1,
-			value_type threshold = 0
-		) : 
-			base_type( initv, initv, min, max, add, sub, threshold )
-		{
-		}
+    public:
+        counter(
+            value_type initv = value_type(),
+            value_type min = 0,
+            value_type max = 3,
+            value_type add = 1,
+            value_type sub = 1,
+            value_type threshold = 0
+        ) : 
+            base_type( initv, initv, min, max, add, sub, threshold )
+        {
+        }
 
-	protected:
-		typedef counter_base< value_type, value_type > base_type;
+    protected:
+        typedef counter_base< value_type, value_type > base_type;
 
-	};
+    };
 
 
 } // namespace shttl

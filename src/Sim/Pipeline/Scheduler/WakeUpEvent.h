@@ -44,45 +44,45 @@
 namespace Onikiri 
 {
 
-	class OpWakeUpEvent : public EventBase< OpWakeUpEvent >
-	{
-	public:
-		using EventBase< OpWakeUpEvent >::SetPriority;
-	
-		OpWakeUpEvent( Scheduler* scheduler, OpIterator producer ) :
-			m_scheduler ( scheduler ),
-			m_producer  ( producer )
-		{
-			// A 'Wakeup' priority must be higher than that of 'Select'. 
-			SetPriority( RP_WAKEUP_EVENT );
-			m_evaluated = false;
-		}
+    class OpWakeUpEvent : public EventBase< OpWakeUpEvent >
+    {
+    public:
+        using EventBase< OpWakeUpEvent >::SetPriority;
+    
+        OpWakeUpEvent( Scheduler* scheduler, OpIterator producer ) :
+            m_scheduler ( scheduler ),
+            m_producer  ( producer )
+        {
+            // A 'Wakeup' priority must be higher than that of 'Select'. 
+            SetPriority( RP_WAKEUP_EVENT );
+            m_evaluated = false;
+        }
 
-		virtual void Evaluate()
-		{
-			m_evaluated = true;
+        virtual void Evaluate()
+        {
+            m_evaluated = true;
 
-			int index = m_scheduler->GetIndex();
-			for( int i = 0; i < m_producer->GetDstRegNum(); ++i ){
-				if( m_producer->GetDstPhyReg(i)->GetReadiness( index ) ){
-					return;	// This dependency is already set to true and consumers are woke up.
-				}
-			}
+            int index = m_scheduler->GetIndex();
+            for( int i = 0; i < m_producer->GetDstRegNum(); ++i ){
+                if( m_producer->GetDstPhyReg(i)->GetReadiness( index ) ){
+                    return; // This dependency is already set to true and consumers are woke up.
+                }
+            }
 
-			m_scheduler->EvaluateDependency( m_producer );
-		}
+            m_scheduler->EvaluateDependency( m_producer );
+        }
 
-		virtual void Update()
-		{
-			ASSERT( m_evaluated );
-		};
+        virtual void Update()
+        {
+            ASSERT( m_evaluated );
+        };
 
-	protected:
+    protected:
 
-		Scheduler*	m_scheduler;
-		OpIterator	m_producer;
-		bool		m_evaluated;
-	};
+        Scheduler*  m_scheduler;
+        OpIterator  m_producer;
+        bool        m_evaluated;
+    };
 
 }; // namespace Onikiri
 

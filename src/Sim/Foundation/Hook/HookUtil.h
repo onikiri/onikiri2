@@ -41,409 +41,409 @@
 
 namespace Onikiri
 {
-	//
-	//	Usage : 
-	//
-	//      void Class::MethodBody();
-	// 
-	//		HookEntry(
-	//			this,
-	//			&Class::MethodBody,
-	//			&hookPoint
-	//		);
-	//
-	template <
-		typename ClassType, 
-		typename HookPointType
-	>
-	NOINLINE void HookEntryBody( 
-		ClassType* obj, 
-		void (ClassType::*MethodPtr)(), 
-		HookPointType* hookPoint 
-	){
-		hookPoint->Trigger(obj, HookType::HOOK_BEFORE);
+    //
+    //  Usage : 
+    //
+    //      void Class::MethodBody();
+    // 
+    //      HookEntry(
+    //          this,
+    //          &Class::MethodBody,
+    //          &hookPoint
+    //      );
+    //
+    template <
+        typename ClassType, 
+        typename HookPointType
+    >
+    NOINLINE void HookEntryBody( 
+        ClassType* obj, 
+        void (ClassType::*MethodPtr)(), 
+        HookPointType* hookPoint 
+    ){
+        hookPoint->Trigger(obj, HookType::HOOK_BEFORE);
 
-		if( !hookPoint->HasAround() ) {
-			// –{—ˆ‚Ìˆ—
-			(obj->*MethodPtr)(); 
-		} else {
-			// ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
-			hookPoint->Trigger(obj, HookType::HOOK_AROUND);
-		}
+        if( !hookPoint->HasAround() ) {
+            // –{—ˆ‚Ìˆ—
+            (obj->*MethodPtr)(); 
+        } else {
+            // ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
+            hookPoint->Trigger(obj, HookType::HOOK_AROUND);
+        }
 
-		hookPoint->Trigger(obj, HookType::HOOK_AFTER);
-	}
+        hookPoint->Trigger(obj, HookType::HOOK_AFTER);
+    }
 
-	//
-	template <
-		typename ClassType, 
-		typename HookPointType
-	>
-	INLINE void HookEntry( 
-		ClassType* obj, 
-		void (ClassType::*MethodPtr)(), 
-		HookPointType* hookPoint 
-	){
-		if( hookPoint->IsAnyHookRegistered() ){
-			HookEntryBody( obj, MethodPtr, hookPoint );
-		}
-		else{
-			// –{—ˆ‚Ìˆ—
-			(obj->*MethodPtr)(); 
-		}
-	}
-
-
-	//
-	//	Usage : 
-	//
-	//      void Class::MethodBody( HookParam* hookParam );
-	// 
-	//		HookEntry(
-	//			this,
-	//			&Class::MethodBody,
-	//			&hookPoint,
-	//			&hookParam 
-	//		);
-	//
-	template <
-		typename ClassType, 
-		typename HookPointType,
-		typename HookParamType
-	>
-	NOINLINE void HookEntryBody( 
-		ClassType* obj, 
-		void (ClassType::*MethodPtr)( HookParamType* param ), 
-		HookPointType* hookPoint, 
-		HookParamType* hookParam 
-	){
-		hookPoint->Trigger(obj, hookParam, HookType::HOOK_BEFORE);
-
-		if( !hookPoint->HasAround() ) {
-			// –{—ˆ‚Ìˆ—
-			(obj->*MethodPtr)(hookParam); 
-		} else {
-			// ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
-			hookPoint->Trigger(obj, hookParam, HookType::HOOK_AROUND);
-		}
-
-		hookPoint->Trigger(obj, hookParam, HookType::HOOK_AFTER);
-	}
-
-	template <
-		typename ClassType, 
-		typename HookPointType,
-		typename HookParamType
-	>
-	INLINE void HookEntry( 
-		ClassType* obj, 
-		void (ClassType::*MethodPtr)( HookParamType* param ), 
-		HookPointType* hookPoint, 
-		HookParamType* hookParam 
-	){
-		if( hookPoint->IsAnyHookRegistered() ){
-			HookEntryBody( obj, MethodPtr, hookPoint, hookParam );
-		}
-		else{
-			// –{—ˆ‚Ìˆ—
-			(obj->*MethodPtr)(hookParam); 
-		}
-	}
-
-	//
-	//	Usage : 
-	//
-	//      void Class::MethodBody( OpIterator op );
-	// 
-	//		HookEntry(
-	//          op,
-	//			this,
-	//			&Class::MethodBody,
-	//			&hookPoint
-	//		);
-	//
-	template <
-		typename ClassType, 
-		typename HookPointType
-	>
-	NOINLINE void HookEntryBody( 
-		ClassType* obj, 
-		void (ClassType::*MethodPtr)( OpIterator op ), 
-		HookPointType* hookPoint,
-		OpIterator op
-	){
-		hookPoint->Trigger( op, obj, HookType::HOOK_BEFORE);
-
-		if( !hookPoint->HasAround() ) {
-			// –{—ˆ‚Ìˆ—
-			(obj->*MethodPtr)( op ); 
-		} else {
-			// ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
-			hookPoint->Trigger( op, obj, HookType::HOOK_AROUND);
-		}
-
-		hookPoint->Trigger( op, obj, HookType::HOOK_AFTER);
-	}
-
-	template <
-		typename ClassType, 
-		typename HookPointType
-	>
-	INLINE void HookEntry( 
-		ClassType* obj, 
-		void (ClassType::*MethodPtr)( OpIterator op ), 
-		HookPointType* hookPoint,
-		OpIterator op
-	){
-		if( hookPoint->IsAnyHookRegistered() ){
-			HookEntryBody( obj, MethodPtr, hookPoint, op ); 
-		}
-		else{
-			// –{—ˆ‚Ìˆ—
-			(obj->*MethodPtr)( op ); 
-		}
-	}
+    //
+    template <
+        typename ClassType, 
+        typename HookPointType
+    >
+    INLINE void HookEntry( 
+        ClassType* obj, 
+        void (ClassType::*MethodPtr)(), 
+        HookPointType* hookPoint 
+    ){
+        if( hookPoint->IsAnyHookRegistered() ){
+            HookEntryBody( obj, MethodPtr, hookPoint );
+        }
+        else{
+            // –{—ˆ‚Ìˆ—
+            (obj->*MethodPtr)(); 
+        }
+    }
 
 
-	//
-	//	Usage : 
-	//
-	//      void Class::MethodBody( OpIterator op, Parameter param );
-	// 
-	//		HookEntry(
-	//			this,
-	//			&Class::MethodBody,
-	//			&hookPoint,
-	//          op,
-	//          param
-	//		);
-	//
-	template <
-		typename ClassType, 
-		typename HookPointType,
-		typename Parameter
-	>
-	NOINLINE void HookEntryBody( 
-		ClassType* obj, 
-		void (ClassType::*MethodPtr)( OpIterator op, Parameter param ), 
-		HookPointType* hookPoint,
-		OpIterator op,
-		Parameter param
-	){
-		hookPoint->Trigger( op, obj, param, HookType::HOOK_BEFORE);
+    //
+    //  Usage : 
+    //
+    //      void Class::MethodBody( HookParam* hookParam );
+    // 
+    //      HookEntry(
+    //          this,
+    //          &Class::MethodBody,
+    //          &hookPoint,
+    //          &hookParam 
+    //      );
+    //
+    template <
+        typename ClassType, 
+        typename HookPointType,
+        typename HookParamType
+    >
+    NOINLINE void HookEntryBody( 
+        ClassType* obj, 
+        void (ClassType::*MethodPtr)( HookParamType* param ), 
+        HookPointType* hookPoint, 
+        HookParamType* hookParam 
+    ){
+        hookPoint->Trigger(obj, hookParam, HookType::HOOK_BEFORE);
 
-		if( !hookPoint->HasAround() ) {
-			// –{—ˆ‚Ìˆ—
-			(obj->*MethodPtr)( op, param ); 
-		} else {
-			// ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
-			hookPoint->Trigger( op, obj, param, HookType::HOOK_AROUND);
-		}
+        if( !hookPoint->HasAround() ) {
+            // –{—ˆ‚Ìˆ—
+            (obj->*MethodPtr)(hookParam); 
+        } else {
+            // ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
+            hookPoint->Trigger(obj, hookParam, HookType::HOOK_AROUND);
+        }
 
-		hookPoint->Trigger( op, obj, param, HookType::HOOK_AFTER);
-	}
+        hookPoint->Trigger(obj, hookParam, HookType::HOOK_AFTER);
+    }
 
-	template <
-		typename ClassType, 
-		typename HookPointType,
-		typename Parameter
-	>
-	INLINE void HookEntry( 
-		ClassType* obj, 
-		void (ClassType::*MethodPtr)( OpIterator op, Parameter param ), 
-		HookPointType* hookPoint,
-		OpIterator op,
-		Parameter param
-	){
-		if( hookPoint->IsAnyHookRegistered() ){
-			HookEntryBody( obj, MethodPtr, hookPoint, op, param ); 
-		}
-		else{
-			// –{—ˆ‚Ìˆ—
-			(obj->*MethodPtr)( op, param ); 
-		}
-	}
+    template <
+        typename ClassType, 
+        typename HookPointType,
+        typename HookParamType
+    >
+    INLINE void HookEntry( 
+        ClassType* obj, 
+        void (ClassType::*MethodPtr)( HookParamType* param ), 
+        HookPointType* hookPoint, 
+        HookParamType* hookParam 
+    ){
+        if( hookPoint->IsAnyHookRegistered() ){
+            HookEntryBody( obj, MethodPtr, hookPoint, hookParam );
+        }
+        else{
+            // –{—ˆ‚Ìˆ—
+            (obj->*MethodPtr)(hookParam); 
+        }
+    }
 
-	//
-	// Todo: sort arguments, implement macros with a class and decltype.
-	//
+    //
+    //  Usage : 
+    //
+    //      void Class::MethodBody( OpIterator op );
+    // 
+    //      HookEntry(
+    //          op,
+    //          this,
+    //          &Class::MethodBody,
+    //          &hookPoint
+    //      );
+    //
+    template <
+        typename ClassType, 
+        typename HookPointType
+    >
+    NOINLINE void HookEntryBody( 
+        ClassType* obj, 
+        void (ClassType::*MethodPtr)( OpIterator op ), 
+        HookPointType* hookPoint,
+        OpIterator op
+    ){
+        hookPoint->Trigger( op, obj, HookType::HOOK_BEFORE);
 
-	//
-	// hookPoint->Trigger( caller, HookType::HOOK_BEFORE );
-	//
-	// if( !hookPoint->HasAround() ) {
-	// 	  // Original processes.
-	// } 
-	// else {
-	//	  // If an 'AROUND' hook is registered, call it.
-	// 	  hookPoint->Trigger( caller, HookType::HOOK_AROUND );
-	// }
-	//
-	// hookPoint->Trigger( caller, HookType::HOOK_AFTER );
-	//
+        if( !hookPoint->HasAround() ) {
+            // –{—ˆ‚Ìˆ—
+            (obj->*MethodPtr)( op ); 
+        } else {
+            // ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
+            hookPoint->Trigger( op, obj, HookType::HOOK_AROUND);
+        }
 
-	//
-	//	Usage : 
-	//
-	//      Hook prototype: void HookMethod();
-	// 
-	//		HOOK_SECTION( s_hookPoint ){
-	//			// Original processes.
-	//      }
-	//
-	template < typename Caller, typename HookPoint >
-	INLINE bool HookSectionBefore( Caller* caller, HookPoint* hookPoint )
-	{
-		hookPoint->Trigger( caller, HookType::HOOK_BEFORE );
-		if( hookPoint->HasAround() ){
-			HookSectionAfter( caller, hookPoint );
-			return true;	// Exit the loop in HOOK_SECTION.
-		}
-		else{
-			return false;	// Not exit the loop, process a original routine.
-		}
-	}
+        hookPoint->Trigger( op, obj, HookType::HOOK_AFTER);
+    }
 
-	template < typename Caller, typename HookPoint >
-	INLINE bool HookSectionAfter( Caller* caller, HookPoint* hookPoint )
-	{
-		if( hookPoint->HasAround() ){
-			hookPoint->Trigger( caller, HookType::HOOK_AROUND );
-		}
-
-		hookPoint->Trigger( caller, HookType::HOOK_AFTER );
-		return true;
-	}
-
-	#define HOOK_SECTION( hookPoint ) \
-		for( \
-			bool onikiri_exitSection = HookSectionBefore( this, &hookPoint ); \
-			!onikiri_exitSection; \
-			onikiri_exitSection = HookSectionAfter( this, &hookPoint ) \
-		)
+    template <
+        typename ClassType, 
+        typename HookPointType
+    >
+    INLINE void HookEntry( 
+        ClassType* obj, 
+        void (ClassType::*MethodPtr)( OpIterator op ), 
+        HookPointType* hookPoint,
+        OpIterator op
+    ){
+        if( hookPoint->IsAnyHookRegistered() ){
+            HookEntryBody( obj, MethodPtr, hookPoint, op ); 
+        }
+        else{
+            // –{—ˆ‚Ìˆ—
+            (obj->*MethodPtr)( op ); 
+        }
+    }
 
 
+    //
+    //  Usage : 
+    //
+    //      void Class::MethodBody( OpIterator op, Parameter param );
+    // 
+    //      HookEntry(
+    //          this,
+    //          &Class::MethodBody,
+    //          &hookPoint,
+    //          op,
+    //          param
+    //      );
+    //
+    template <
+        typename ClassType, 
+        typename HookPointType,
+        typename Parameter
+    >
+    NOINLINE void HookEntryBody( 
+        ClassType* obj, 
+        void (ClassType::*MethodPtr)( OpIterator op, Parameter param ), 
+        HookPointType* hookPoint,
+        OpIterator op,
+        Parameter param
+    ){
+        hookPoint->Trigger( op, obj, param, HookType::HOOK_BEFORE);
 
-	//
-	//	Usage : 
-	//
-	//      Hook prototype: void HookMethod( OpIterator op );
-	// 
-	//		HOOK_SECTION( s_hookPoint, op ){
-	//			// Original processes.
-	//      }
-	//
-	template < typename Caller, typename HookPoint >
-	INLINE bool HookSectionBefore( Caller* caller, HookPoint* hookPoint, OpIterator op )
-	{
-		hookPoint->Trigger( op, caller, HookType::HOOK_BEFORE );
-		if( hookPoint->HasAround() ){
-			HookSectionAfter( caller, hookPoint, op );
-			return true;	// Exit the loop in HOOK_SECTION.
-		}
-		else{
-			return false;	// Not exit the loop, process a original routine.
-		}
-	}
+        if( !hookPoint->HasAround() ) {
+            // –{—ˆ‚Ìˆ—
+            (obj->*MethodPtr)( op, param ); 
+        } else {
+            // ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
+            hookPoint->Trigger( op, obj, param, HookType::HOOK_AROUND);
+        }
 
-	template < typename Caller, typename HookPoint >
-	INLINE bool HookSectionAfter( Caller* caller, HookPoint* hookPoint, OpIterator op  )
-	{
-		if( hookPoint->HasAround() ){
-			hookPoint->Trigger( op, caller, HookType::HOOK_AROUND );
-		}
+        hookPoint->Trigger( op, obj, param, HookType::HOOK_AFTER);
+    }
 
-		hookPoint->Trigger( op, caller, HookType::HOOK_AFTER );
-		return true;
-	}
+    template <
+        typename ClassType, 
+        typename HookPointType,
+        typename Parameter
+    >
+    INLINE void HookEntry( 
+        ClassType* obj, 
+        void (ClassType::*MethodPtr)( OpIterator op, Parameter param ), 
+        HookPointType* hookPoint,
+        OpIterator op,
+        Parameter param
+    ){
+        if( hookPoint->IsAnyHookRegistered() ){
+            HookEntryBody( obj, MethodPtr, hookPoint, op, param ); 
+        }
+        else{
+            // –{—ˆ‚Ìˆ—
+            (obj->*MethodPtr)( op, param ); 
+        }
+    }
 
-	#define HOOK_SECTION_OP( hookPoint, op ) \
-		for( \
-			bool onikiri_exitSection = HookSectionBefore( this, &hookPoint, op ); \
-			!onikiri_exitSection; \
-			onikiri_exitSection = HookSectionAfter( this, &hookPoint, op ) \
-		)
+    //
+    // Todo: sort arguments, implement macros with a class and decltype.
+    //
 
-	
-	//
-	//	Usage : 
-	//
-	//      Hook prototype: void HookMethod( Parameter* param );
-	// 
-	//		HOOK_SECTION( s_hookPoint, param ){
-	//			// Original processes.
-	//      }
-	//
-	template < typename Caller, typename HookPoint, typename Parameter >
-	INLINE bool HookSectionBefore( Caller* caller, HookPoint* hookPoint, Parameter* param )
-	{
-		hookPoint->Trigger( caller, param, HookType::HOOK_BEFORE );
-		if( hookPoint->HasAround() ){
-			HookSectionAfter( caller, hookPoint, param );
-			return true;	// Exit the loop in HOOK_SECTION.
-		}
-		else{
-			return false;	// Not exit the loop, process a original routine.
-		}
-	}
+    //
+    // hookPoint->Trigger( caller, HookType::HOOK_BEFORE );
+    //
+    // if( !hookPoint->HasAround() ) {
+    //    // Original processes.
+    // } 
+    // else {
+    //    // If an 'AROUND' hook is registered, call it.
+    //    hookPoint->Trigger( caller, HookType::HOOK_AROUND );
+    // }
+    //
+    // hookPoint->Trigger( caller, HookType::HOOK_AFTER );
+    //
 
-	template < typename Caller, typename HookPoint, typename Parameter >
-	INLINE bool HookSectionAfter( Caller* caller, HookPoint* hookPoint, Parameter* param )
-	{
-		if( hookPoint->HasAround() ){
-			hookPoint->Trigger( caller, param, HookType::HOOK_AROUND );
-		}
+    //
+    //  Usage : 
+    //
+    //      Hook prototype: void HookMethod();
+    // 
+    //      HOOK_SECTION( s_hookPoint ){
+    //          // Original processes.
+    //      }
+    //
+    template < typename Caller, typename HookPoint >
+    INLINE bool HookSectionBefore( Caller* caller, HookPoint* hookPoint )
+    {
+        hookPoint->Trigger( caller, HookType::HOOK_BEFORE );
+        if( hookPoint->HasAround() ){
+            HookSectionAfter( caller, hookPoint );
+            return true;    // Exit the loop in HOOK_SECTION.
+        }
+        else{
+            return false;   // Not exit the loop, process a original routine.
+        }
+    }
 
-		hookPoint->Trigger( caller, param, HookType::HOOK_AFTER );
-		return true;
-	}
+    template < typename Caller, typename HookPoint >
+    INLINE bool HookSectionAfter( Caller* caller, HookPoint* hookPoint )
+    {
+        if( hookPoint->HasAround() ){
+            hookPoint->Trigger( caller, HookType::HOOK_AROUND );
+        }
 
-	#define HOOK_SECTION_PARAM( hookPoint, param ) \
-		for( \
-			bool onikiri_exitSection = HookSectionBefore( this, &hookPoint, &param ); \
-			!onikiri_exitSection; \
-			onikiri_exitSection = HookSectionAfter( this, &hookPoint, &param ) \
-		)
+        hookPoint->Trigger( caller, HookType::HOOK_AFTER );
+        return true;
+    }
 
-	//
-	//	Usage : 
-	//
-	//      Hook prototype: void HookMethod( OpIterator op, Parameter* param );
-	// 
-	//		HOOK_SECTION( s_hookPoint, op, param ){
-	//			// Original processes.
-	//      }
-	//
-	template < typename Caller, typename HookPoint, typename Parameter >
-	INLINE bool HookSectionBefore( Caller* caller, HookPoint* hookPoint, OpIterator op, Parameter* param )
-	{
-		hookPoint->Trigger( op, caller, param, HookType::HOOK_BEFORE );
-		if( hookPoint->HasAround() ){
-			HookSectionAfter( caller, hookPoint, op, param );
-			return true;	// Exit the loop in HOOK_SECTION.
-		}
-		else{
-			return false;	// Not exit the loop, process a original routine.
-		}
-	}
+    #define HOOK_SECTION( hookPoint ) \
+        for( \
+            bool onikiri_exitSection = HookSectionBefore( this, &hookPoint ); \
+            !onikiri_exitSection; \
+            onikiri_exitSection = HookSectionAfter( this, &hookPoint ) \
+        )
 
-	template < typename Caller, typename HookPoint, typename Parameter >
-	INLINE bool HookSectionAfter( Caller* caller, HookPoint* hookPoint, OpIterator op, Parameter* param )
-	{
-		if( hookPoint->HasAround() ){
-			hookPoint->Trigger( op, caller, param, HookType::HOOK_AROUND );
-		}
 
-		hookPoint->Trigger( op, caller, param, HookType::HOOK_AFTER );
-		return true;
-	}
 
-	#define HOOK_SECTION_OP_PARAM( hookPoint, op, param ) \
-		for( \
-			bool onikiri_exitSection = HookSectionBefore( this, &hookPoint, op, &param ); \
-			!onikiri_exitSection; \
-			onikiri_exitSection = HookSectionAfter( this, &hookPoint, op, &param ) \
-		)
+    //
+    //  Usage : 
+    //
+    //      Hook prototype: void HookMethod( OpIterator op );
+    // 
+    //      HOOK_SECTION( s_hookPoint, op ){
+    //          // Original processes.
+    //      }
+    //
+    template < typename Caller, typename HookPoint >
+    INLINE bool HookSectionBefore( Caller* caller, HookPoint* hookPoint, OpIterator op )
+    {
+        hookPoint->Trigger( op, caller, HookType::HOOK_BEFORE );
+        if( hookPoint->HasAround() ){
+            HookSectionAfter( caller, hookPoint, op );
+            return true;    // Exit the loop in HOOK_SECTION.
+        }
+        else{
+            return false;   // Not exit the loop, process a original routine.
+        }
+    }
+
+    template < typename Caller, typename HookPoint >
+    INLINE bool HookSectionAfter( Caller* caller, HookPoint* hookPoint, OpIterator op  )
+    {
+        if( hookPoint->HasAround() ){
+            hookPoint->Trigger( op, caller, HookType::HOOK_AROUND );
+        }
+
+        hookPoint->Trigger( op, caller, HookType::HOOK_AFTER );
+        return true;
+    }
+
+    #define HOOK_SECTION_OP( hookPoint, op ) \
+        for( \
+            bool onikiri_exitSection = HookSectionBefore( this, &hookPoint, op ); \
+            !onikiri_exitSection; \
+            onikiri_exitSection = HookSectionAfter( this, &hookPoint, op ) \
+        )
+
+    
+    //
+    //  Usage : 
+    //
+    //      Hook prototype: void HookMethod( Parameter* param );
+    // 
+    //      HOOK_SECTION( s_hookPoint, param ){
+    //          // Original processes.
+    //      }
+    //
+    template < typename Caller, typename HookPoint, typename Parameter >
+    INLINE bool HookSectionBefore( Caller* caller, HookPoint* hookPoint, Parameter* param )
+    {
+        hookPoint->Trigger( caller, param, HookType::HOOK_BEFORE );
+        if( hookPoint->HasAround() ){
+            HookSectionAfter( caller, hookPoint, param );
+            return true;    // Exit the loop in HOOK_SECTION.
+        }
+        else{
+            return false;   // Not exit the loop, process a original routine.
+        }
+    }
+
+    template < typename Caller, typename HookPoint, typename Parameter >
+    INLINE bool HookSectionAfter( Caller* caller, HookPoint* hookPoint, Parameter* param )
+    {
+        if( hookPoint->HasAround() ){
+            hookPoint->Trigger( caller, param, HookType::HOOK_AROUND );
+        }
+
+        hookPoint->Trigger( caller, param, HookType::HOOK_AFTER );
+        return true;
+    }
+
+    #define HOOK_SECTION_PARAM( hookPoint, param ) \
+        for( \
+            bool onikiri_exitSection = HookSectionBefore( this, &hookPoint, &param ); \
+            !onikiri_exitSection; \
+            onikiri_exitSection = HookSectionAfter( this, &hookPoint, &param ) \
+        )
+
+    //
+    //  Usage : 
+    //
+    //      Hook prototype: void HookMethod( OpIterator op, Parameter* param );
+    // 
+    //      HOOK_SECTION( s_hookPoint, op, param ){
+    //          // Original processes.
+    //      }
+    //
+    template < typename Caller, typename HookPoint, typename Parameter >
+    INLINE bool HookSectionBefore( Caller* caller, HookPoint* hookPoint, OpIterator op, Parameter* param )
+    {
+        hookPoint->Trigger( op, caller, param, HookType::HOOK_BEFORE );
+        if( hookPoint->HasAround() ){
+            HookSectionAfter( caller, hookPoint, op, param );
+            return true;    // Exit the loop in HOOK_SECTION.
+        }
+        else{
+            return false;   // Not exit the loop, process a original routine.
+        }
+    }
+
+    template < typename Caller, typename HookPoint, typename Parameter >
+    INLINE bool HookSectionAfter( Caller* caller, HookPoint* hookPoint, OpIterator op, Parameter* param )
+    {
+        if( hookPoint->HasAround() ){
+            hookPoint->Trigger( op, caller, param, HookType::HOOK_AROUND );
+        }
+
+        hookPoint->Trigger( op, caller, param, HookType::HOOK_AFTER );
+        return true;
+    }
+
+    #define HOOK_SECTION_OP_PARAM( hookPoint, op, param ) \
+        for( \
+            bool onikiri_exitSection = HookSectionBefore( this, &hookPoint, op, &param ); \
+            !onikiri_exitSection; \
+            onikiri_exitSection = HookSectionAfter( this, &hookPoint, op, &param ) \
+        )
 
 }
 

@@ -40,22 +40,22 @@
 namespace Onikiri 
 {
 
-	class Scheduler;
-	class ExecUnitIF;
+    class Scheduler;
+    class ExecUnitIF;
 
-	// An event of the first stage of execution.
-	class OpExecuteEvent :
-		public EventBase<OpExecuteEvent>
-	{
-	public:
-		OpExecuteEvent( OpIterator op );
-		virtual void Update();
+    // An event of the first stage of execution.
+    class OpExecuteEvent :
+        public EventBase<OpExecuteEvent>
+    {
+    public:
+        OpExecuteEvent( OpIterator op );
+        virtual void Update();
 
-		static HookPoint<OpExecuteEvent> s_executeHook;
+        static HookPoint<OpExecuteEvent> s_executeHook;
 
-	protected:
-		OpIterator  m_op;			// An associated op.
-	};
+    protected:
+        OpIterator  m_op;           // An associated op.
+    };
 
 }; // namespace Onikiri
 

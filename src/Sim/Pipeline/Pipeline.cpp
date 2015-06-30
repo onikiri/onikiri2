@@ -43,30 +43,30 @@ using namespace Onikiri;
 // An event writing an op to a pipeline latch.
 //
 class OpPipelineProcessEndEvent :
-	public EventBase<OpPipelineProcessEndEvent>
+    public EventBase<OpPipelineProcessEndEvent>
 {
 protected:
-	OpIterator m_op;
-	Pipeline*  m_pipe;
-	PipelineNodeIF* m_lowerNode;
+    OpIterator m_op;
+    Pipeline*  m_pipe;
+    PipelineNodeIF* m_lowerNode;
 
 public:
-	OpPipelineProcessEndEvent( OpIterator op, Pipeline* pipe, PipelineNodeIF* lowerNode ) : 
-		m_op  ( op ),
-		m_pipe( pipe ),
-		m_lowerNode( lowerNode )
-	{
-	}
+    OpPipelineProcessEndEvent( OpIterator op, Pipeline* pipe, PipelineNodeIF* lowerNode ) : 
+        m_op  ( op ),
+        m_pipe( pipe ),
+        m_lowerNode( lowerNode )
+    {
+    }
 
-	virtual void Update()
-	{
-		m_pipe->ExitPipeline( m_op, m_lowerNode );
-	}
+    virtual void Update()
+    {
+        m_pipe->ExitPipeline( m_op, m_lowerNode );
+    }
 };
 
 
 Pipeline::Pipeline() :
-	m_enableDumpStall(true)
+    m_enableDumpStall(true)
 {
 }
 
@@ -77,67 +77,67 @@ Pipeline::~Pipeline()
 
 void Pipeline::EnterPipeline( OpIterator op, int time, PipelineNodeIF* lowerNode )
 {
-	m_opList.push_back( op );
-	EventPtr evnt( OpPipelineProcessEndEvent::Construct( op, this, lowerNode ) );
-	if( time == 0 ){
-		evnt->Update();
-	}
-	else{
-		op->AddEvent( evnt, this, time );
-	}
+    m_opList.push_back( op );
+    EventPtr evnt( OpPipelineProcessEndEvent::Construct( op, this, lowerNode ) );
+    if( time == 0 ){
+        evnt->Update();
+    }
+    else{
+        op->AddEvent( evnt, this, time );
+    }
 }
 
 void Pipeline::ExitPipeline( OpIterator op, PipelineNodeIF* lowerNode )
 {
-	lowerNode->ExitUpperPipeline( op );
-	for( size_t i = 0; i < m_upperPipelineNodes.size(); i++ ){
-		m_upperPipelineNodes[i]->ExitLowerPipeline( op );
-	}
-	m_opList.remove( op );
+    lowerNode->ExitUpperPipeline( op );
+    for( size_t i = 0; i < m_upperPipelineNodes.size(); i++ ){
+        m_upperPipelineNodes[i]->ExitLowerPipeline( op );
+    }
+    m_opList.remove( op );
 }
 
 void Pipeline::AddUpperPipelineNode( PipelineNodeIF* node )
 {
-	m_upperPipelineNodes.push_back( node );
+    m_upperPipelineNodes.push_back( node );
 }
 
 int Pipeline::GetOpCount()
 {
-	return (int)m_opList.size();
+    return (int)m_opList.size();
 }
 
 void Pipeline::Retire( OpIterator op )
 {
-	m_opList.remove( op );
+    m_opList.remove( op );
 }
 
 void Pipeline::Flush( OpIterator op )
 {
-	m_opList.remove( op );
+    m_opList.remove( op );
 }
 
 void Pipeline::BeginStall()
 {
-	if( !g_dumper.IsEnabled() || !m_enableDumpStall )
-		return;
+    if( !g_dumper.IsEnabled() || !m_enableDumpStall )
+        return;
 
-	for( List::iterator i = m_opList.begin(); i != m_opList.end(); ++i ){
-		g_dumper.DumpStallBegin( *i );
-	}
+    for( List::iterator i = m_opList.begin(); i != m_opList.end(); ++i ){
+        g_dumper.DumpStallBegin( *i );
+    }
 }
 
 void Pipeline::EndStall()
 {
-	if( !g_dumper.IsEnabled() || !m_enableDumpStall )
-		return;
+    if( !g_dumper.IsEnabled() || !m_enableDumpStall )
+        return;
 
-	for( List::iterator i = m_opList.begin(); i != m_opList.end(); ++i ){
-		g_dumper.DumpStallEnd( *i );
-	}
+    for( List::iterator i = m_opList.begin(); i != m_opList.end(); ++i ){
+        g_dumper.DumpStallEnd( *i );
+    }
 }
 
 
 void Pipeline::EnableDumpStall( bool enable )
 {
-	m_enableDumpStall = enable;
+    m_enableDumpStall = enable;
 }

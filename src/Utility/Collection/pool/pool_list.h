@@ -41,60 +41,60 @@
 #include <list>
 
 #ifdef ONIKIRI_USE_ONIKIRI_POOL_ALLOCATOR
-	#include "pool_allocator.h"
-	#define ONIKIRI_POOL_LIST_ALLOCATOR pool_allocator
+    #include "pool_allocator.h"
+    #define ONIKIRI_POOL_LIST_ALLOCATOR pool_allocator
 #else
-	#include <boost/pool/pool_alloc.hpp>
-	#define ONIKIRI_POOL_LIST_ALLOCATOR boost::fast_pool_allocator
+    #include <boost/pool/pool_alloc.hpp>
+    #define ONIKIRI_POOL_LIST_ALLOCATOR boost::fast_pool_allocator
 #endif
 
 namespace Onikiri
 {
-	template <typename T>
-	class pool_list :
-		public std::list<T, ONIKIRI_POOL_LIST_ALLOCATOR<T> >
-	{
-		typedef ONIKIRI_POOL_LIST_ALLOCATOR<T> allocator_type;
-		typedef std::list<T, allocator_type >  base_type;
+    template <typename T>
+    class pool_list :
+        public std::list<T, ONIKIRI_POOL_LIST_ALLOCATOR<T> >
+    {
+        typedef ONIKIRI_POOL_LIST_ALLOCATOR<T> allocator_type;
+        typedef std::list<T, allocator_type >  base_type;
 
-	public:
+    public:
 
-		pool_list()
-			: base_type()
-		{
-		}
+        pool_list()
+            : base_type()
+        {
+        }
 
-		explicit pool_list(
-			const allocator_type& allocator
-		) :
-			base_type(allocator)
-		{
-		}
+        explicit pool_list(
+            const allocator_type& allocator
+        ) :
+            base_type(allocator)
+        {
+        }
 
-		explicit pool_list(
-			size_t n, 
-			const T& value = T(), 
-			const allocator_type& allocator = allocator_type()
-		) : 
-			base_type(n, value, allocator) 
-		{
-		};
+        explicit pool_list(
+            size_t n, 
+            const T& value = T(), 
+            const allocator_type& allocator = allocator_type()
+        ) : 
+            base_type(n, value, allocator) 
+        {
+        };
 
-		template <class input_iterator>
-		pool_list(
-			input_iterator begin, 
-			input_iterator end, 
-			const allocator_type& allocator = allocator_type()
-		) : 
-			base_type(begin, end, allocator)
-		{
-		};
+        template <class input_iterator>
+        pool_list(
+            input_iterator begin, 
+            input_iterator end, 
+            const allocator_type& allocator = allocator_type()
+        ) : 
+            base_type(begin, end, allocator)
+        {
+        };
 
-		pool_list(const pool_list<T>& x)
-			: base_type(x)
-		{
-		}
-	};
+        pool_list(const pool_list<T>& x)
+            : base_type(x)
+        {
+        }
+    };
 
 }; // namespace Onikiri
 

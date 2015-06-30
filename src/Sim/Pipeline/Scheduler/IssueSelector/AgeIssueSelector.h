@@ -39,32 +39,32 @@
 
 namespace Onikiri
 {
-	class Scheduler;
+    class Scheduler;
 
-	// AgeIssueSelector selects the oldest ops from ready ops on issue.
-	class AgeIssueSelector : 
-		public IssueSelectorIF,
-		public PhysicalResourceNode
-	{
-	public:
-		typedef Scheduler::SchedulingOps SchedulingOps;
+    // AgeIssueSelector selects the oldest ops from ready ops on issue.
+    class AgeIssueSelector : 
+        public IssueSelectorIF,
+        public PhysicalResourceNode
+    {
+    public:
+        typedef Scheduler::SchedulingOps SchedulingOps;
 
-		AgeIssueSelector();
-		virtual ~AgeIssueSelector();
+        AgeIssueSelector();
+        virtual ~AgeIssueSelector();
 
-		virtual void Initialize( InitPhase );
-		virtual void Finalize();
+        virtual void Initialize( InitPhase );
+        virtual void Finalize();
 
-		virtual void EvaluateSelect( Scheduler* scheduler );
+        virtual void EvaluateSelect( Scheduler* scheduler );
 
-		BEGIN_PARAM_MAP( "" )
-		END_PARAM_MAP()
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
-		
-	};
+        BEGIN_PARAM_MAP( "" )
+        END_PARAM_MAP()
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
+        
+    };
 }
 
-#endif	// SIM_PIPELINE_SCHEDULER_SELECTOR_AGE_ISSUE_SELECTOR_H
+#endif  // SIM_PIPELINE_SCHEDULER_SELECTOR_AGE_ISSUE_SELECTOR_H
 
 

@@ -39,57 +39,57 @@
 namespace Onikiri 
 {
 
-	class PipelineLatch : public ClockedResourceBase
-	{
-	public:
-		// Pipeline latch
-		// PipelineNodeBase can belong to multiple cores (ex. Cache), 
-		// thus OpList cannot be used. One OpList cannot be used by multiple cores.
-		//typedef pool_list<OpIterator> List;
-		enum MaxLatchSize { MAX_LATCH_SIZE = 256 };
-		typedef fixed_sized_buffer< OpIterator, MAX_LATCH_SIZE, MaxLatchSize > List;
-		typedef List::iterator iterator;
+    class PipelineLatch : public ClockedResourceBase
+    {
+    public:
+        // Pipeline latch
+        // PipelineNodeBase can belong to multiple cores (ex. Cache), 
+        // thus OpList cannot be used. One OpList cannot be used by multiple cores.
+        //typedef pool_list<OpIterator> List;
+        enum MaxLatchSize { MAX_LATCH_SIZE = 256 };
+        typedef fixed_sized_buffer< OpIterator, MAX_LATCH_SIZE, MaxLatchSize > List;
+        typedef List::iterator iterator;
 
-		iterator begin()	{	return m_latchOut.begin();		}
-		iterator end()		{	return m_latchOut.end();		}
-		iterator erase( iterator i )
-							{	return m_latchOut.erase( i );	}
-		void pop_front()	{	m_latchOut.pop_front();			}
-		size_t   size()		{	return m_latchOut.size();		}
+        iterator begin()    {   return m_latchOut.begin();      }
+        iterator end()      {   return m_latchOut.end();        }
+        iterator erase( iterator i )
+                            {   return m_latchOut.erase( i );   }
+        void pop_front()    {   m_latchOut.pop_front();         }
+        size_t   size()     {   return m_latchOut.size();       }
 
-	protected:
-		typedef ClockedResourceBase BaseType;
+    protected:
+        typedef ClockedResourceBase BaseType;
 
-		List m_latchIn;
-		List m_latchOut;
-		bool m_enableDumpStall;
-		bool m_latchOutIsStalled;
+        List m_latchIn;
+        List m_latchOut;
+        bool m_enableDumpStall;
+        bool m_latchOutIsStalled;
 
-		bool FindAndEraseFromLatch( List* latch, OpIterator op );
-		void DumpStallBegin();
-		void DumpStallEnd();
+        bool FindAndEraseFromLatch( List* latch, OpIterator op );
+        void DumpStallBegin();
+        void DumpStallEnd();
 
-		// Update a latch
-		void UpdateLatch();
+        // Update a latch
+        void UpdateLatch();
 
-	public:
+    public:
 
-		PipelineLatch( const char* name = "" );
-		virtual void Receive( OpIterator op );
-		void EnableDumpStall( bool enable );
+        PipelineLatch( const char* name = "" );
+        virtual void Receive( OpIterator op );
+        void EnableDumpStall( bool enable );
 
-		// A cycle end handler
-		// Update the pipeline latch.
-		virtual void End();
+        // A cycle end handler
+        // Update the pipeline latch.
+        virtual void End();
 
-		// A cycle transition handler
-		virtual void Transition();
+        // A cycle transition handler
+        virtual void Transition();
 
-		// Stall handlers, which are called in stall begin/end
-		virtual void BeginStall();
-		virtual void EndStall();
-		virtual void Delete( OpIterator op );
-	};
+        // Stall handlers, which are called in stall begin/end
+        virtual void BeginStall();
+        virtual void EndStall();
+        virtual void Delete( OpIterator op );
+    };
 
 }; // namespace Onikiri
 

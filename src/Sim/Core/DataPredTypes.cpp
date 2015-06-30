@@ -38,21 +38,21 @@ using namespace Onikiri;
 
 void DataPredMissRecovery::Validate()
 {
-	if( m_policy == POLICY_END || m_from == FROM_END ){
-		THROW_RUNTIME_ERROR( "A policy or a recovery point is not set." );
-	}
+    if( m_policy == POLICY_END || m_from == FROM_END ){
+        THROW_RUNTIME_ERROR( "A policy or a recovery point is not set." );
+    }
 
-	if( m_policy == POLICY_REDISPATCH_ALL ){
-		THROW_RUNTIME_ERROR( "A recovery policy 'Redispatch' is not implemented." );
-	}
+    if( m_policy == POLICY_REDISPATCH_ALL ){
+        THROW_RUNTIME_ERROR( "A recovery policy 'Redispatch' is not implemented." );
+    }
 
-	if( m_policy == POLICY_REISSUE_SELECTIVE && m_from == FROM_NEXT_OF_PRODUCER ){
-		THROW_RUNTIME_ERROR( "Cannot reschedule ops based on a recovery policy 'ReissueSelective' from a 'NextOfProducer' op." );
-	}
+    if( m_policy == POLICY_REISSUE_SELECTIVE && m_from == FROM_NEXT_OF_PRODUCER ){
+        THROW_RUNTIME_ERROR( "Cannot reschedule ops based on a recovery policy 'ReissueSelective' from a 'NextOfProducer' op." );
+    }
 
-/*	if( m_policy == POLICY_REFETCH && m_from != FROM_NEXT_OF_PRODUCER ){
-		THROW_RUNTIME_ERROR( "A recovery policy 'Refetch' From' Consumer' or 'Producer' is not implemented." );
-	}*/
+/*  if( m_policy == POLICY_REFETCH && m_from != FROM_NEXT_OF_PRODUCER ){
+        THROW_RUNTIME_ERROR( "A recovery policy 'Refetch' From' Consumer' or 'Producer' is not implemented." );
+    }*/
 }
 
 //
@@ -65,98 +65,98 @@ void DataPredMissRecovery::Validate()
 //
 bool DataPredMissRecovery::IsRequiredBeforeCheckpoint( const OpClass& opClass ) const
 {
-	if( m_policy != POLICY_REFETCH ){
-		// An only re-fetch policy requires check-pointing.
-		return false;
-	}
+    if( m_policy != POLICY_REFETCH ){
+        // An only re-fetch policy requires check-pointing.
+        return false;
+    }
 
-	switch( m_type ){
-	case TYPE_LATENCY:	
-		// Producer : load
-		if( opClass.IsLoad() && m_from == FROM_PRODUCER ){ 
-			return true;
-		}
-		// Consumer : any
-		if( m_from == FROM_CONSUMER ){ 
-			return true;
-		}
-		break;
+    switch( m_type ){
+    case TYPE_LATENCY:  
+        // Producer : load
+        if( opClass.IsLoad() && m_from == FROM_PRODUCER ){ 
+            return true;
+        }
+        // Consumer : any
+        if( m_from == FROM_CONSUMER ){ 
+            return true;
+        }
+        break;
 
-	case TYPE_ADDRESS_MATCH:
-	case TYPE_PARTIAL_LOAD:
-		// Producer : store
-		if( opClass.IsStore() && m_from == FROM_PRODUCER ){ 
-			return true;
-		}
-		// Consumer : load
-		if( opClass.IsLoad() && m_from == FROM_CONSUMER ){ 
-			return true;
-		}
-		break;
+    case TYPE_ADDRESS_MATCH:
+    case TYPE_PARTIAL_LOAD:
+        // Producer : store
+        if( opClass.IsStore() && m_from == FROM_PRODUCER ){ 
+            return true;
+        }
+        // Consumer : load
+        if( opClass.IsLoad() && m_from == FROM_CONSUMER ){ 
+            return true;
+        }
+        break;
 
-	case TYPE_VALUE:
-		// Not implemented...
-		/*
-		// Producer : any
-		if( m_from == FROM_PRODUCER ){ 
-			return true;
-		}
-		// Consumer : any
-		if( m_from == FROM_CONSUMER ){ 
-			return true;
-		}
-		*/
-		break;
+    case TYPE_VALUE:
+        // Not implemented...
+        /*
+        // Producer : any
+        if( m_from == FROM_PRODUCER ){ 
+            return true;
+        }
+        // Consumer : any
+        if( m_from == FROM_CONSUMER ){ 
+            return true;
+        }
+        */
+        break;
 
-	default:
-		ASSERT( false, "An unknown recovery type." );
-		break;
-	}
+    default:
+        ASSERT( false, "An unknown recovery type." );
+        break;
+    }
 
-	return false;
+    return false;
 }
 
 bool DataPredMissRecovery::IsRequiredAfterCheckpoint ( const OpClass& opClass ) const
 {
-	if( m_policy != POLICY_REFETCH ){
-		// An only re-fetch policy requires check-pointing.
-		return false;
-	}
+    if( m_policy != POLICY_REFETCH ){
+        // An only re-fetch policy requires check-pointing.
+        return false;
+    }
 
-	switch( m_type ){
-	case TYPE_LATENCY:	
-		// Producer : load
-		if( opClass.IsLoad() && m_from == FROM_NEXT_OF_PRODUCER ){ 
-			return true;
-		}
-		break;
+    switch( m_type ){
+    case TYPE_LATENCY:  
+        // Producer : load
+        if( opClass.IsLoad() && m_from == FROM_NEXT_OF_PRODUCER ){ 
+            return true;
+        }
+        break;
 
-	case TYPE_ADDRESS_MATCH:
-	case TYPE_PARTIAL_LOAD:
-		// Producer : store
-		if( opClass.IsStore() && m_from == FROM_NEXT_OF_PRODUCER ){ 
-			return true;
-		}
-		break;
+    case TYPE_ADDRESS_MATCH:
+    case TYPE_PARTIAL_LOAD:
+        // Producer : store
+        if( opClass.IsStore() && m_from == FROM_NEXT_OF_PRODUCER ){ 
+            return true;
+        }
+        break;
 
-	case TYPE_VALUE:
-		// Not implemented...
-		/*
-		// Producer : any
-		if( m_from == FROM_NEXT_OF_PRODUCER ){ 
-			return true;
-		}
-		// Consumer : any
-		if( m_from == FROM_NEXT_OF_PRODUCER ){ 
-			return true;
-		}
-		*/
-		break;
+    case TYPE_VALUE:
+        // Not implemented...
+        /*
+        // Producer : any
+        if( m_from == FROM_NEXT_OF_PRODUCER ){ 
+            return true;
+        }
+        // Consumer : any
+        if( m_from == FROM_NEXT_OF_PRODUCER ){ 
+            return true;
+        }
+        */
+        break;
 
-	default:
-		ASSERT( false, "An unknown recovery type." );
-		break;
-	}
+    default:
+        ASSERT( false, "An unknown recovery type." );
+        break;
+    }
 
-	return false;
+    return false;
 }

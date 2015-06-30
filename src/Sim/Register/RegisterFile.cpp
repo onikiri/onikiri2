@@ -41,95 +41,95 @@
 using namespace Onikiri;
 
 RegisterFile::RegisterFile() :
-	m_totalCapacity(0),
-	m_core(0),
-	m_emulator(0)
+    m_totalCapacity(0),
+    m_core(0),
+    m_emulator(0)
 {
 }
 
 RegisterFile::~RegisterFile()
 {
-	for (size_t i = 0; i < m_register.size(); i++) {
-		if (m_register[i]) {
+    for (size_t i = 0; i < m_register.size(); i++) {
+        if (m_register[i]) {
             delete m_register[i];
             m_register[i] = NULL;
         }
-	}
-	ReleaseParam();
+    }
+    ReleaseParam();
 }
 
 void RegisterFile::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
-	}
-	else if(phase == INIT_POST_CONNECTION){
-		// member 変数のチェック
-		CheckNodeInitialized( "core", m_core );
-		CheckNodeInitialized( "emulator", m_emulator );
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
+    }
+    else if(phase == INIT_POST_CONNECTION){
+        // member 変数のチェック
+        CheckNodeInitialized( "core", m_core );
+        CheckNodeInitialized( "emulator", m_emulator );
 
-		// Check the physical register configuration.
-		ISAInfoIF* isaInfo = m_emulator->GetISAInfo();
-		if( (size_t)isaInfo->GetRegisterSegmentCount() != m_capacity.size() ){
-			THROW_RUNTIME_ERROR(
-				"The specified number of the physical register segments (%d) "
-				"and that of the logical register segments defined by the ISA (%d) "
-				"do not match in the configuration XML. Check the configuration "
-				"of the physical registers and the ISA.",
-				m_capacity.size(),
-				isaInfo->GetRegisterSegmentCount()
-			);
-		}
+        // Check the physical register configuration.
+        ISAInfoIF* isaInfo = m_emulator->GetISAInfo();
+        if( (size_t)isaInfo->GetRegisterSegmentCount() != m_capacity.size() ){
+            THROW_RUNTIME_ERROR(
+                "The specified number of the physical register segments (%d) "
+                "and that of the logical register segments defined by the ISA (%d) "
+                "do not match in the configuration XML. Check the configuration "
+                "of the physical registers and the ISA.",
+                m_capacity.size(),
+                isaInfo->GetRegisterSegmentCount()
+            );
+        }
 
-		// 全部でいくつ物理レジスタが必要か計算
-		m_totalCapacity = 0;
-		for(int i = 0; i < static_cast<int>(m_capacity.size()); ++i) {
-			m_totalCapacity += m_capacity[i];
-		}
-		
-		// 物理レジスタの確保
-		int schedulerCount = m_core->GetNumScheduler();
-		m_register.resize(m_totalCapacity, 0);
-		for (int i = 0; i < m_totalCapacity; i++) {
-			PhyReg* reg = new PhyReg(schedulerCount, i);
-			reg->Clear();
-			m_register[i] = reg;
-		}
-	}
+        // 全部でいくつ物理レジスタが必要か計算
+        m_totalCapacity = 0;
+        for(int i = 0; i < static_cast<int>(m_capacity.size()); ++i) {
+            m_totalCapacity += m_capacity[i];
+        }
+        
+        // 物理レジスタの確保
+        int schedulerCount = m_core->GetNumScheduler();
+        m_register.resize(m_totalCapacity, 0);
+        for (int i = 0; i < m_totalCapacity; i++) {
+            PhyReg* reg = new PhyReg(schedulerCount, i);
+            reg->Clear();
+            m_register[i] = reg;
+        }
+    }
 }
 
 PhyReg* RegisterFile::GetPhyReg(int phyRegNo) const
 {
-	ASSERT(phyRegNo >= 0 && phyRegNo < m_totalCapacity,
-		"illegal phyRegNo %d.", phyRegNo);
-	return m_register[phyRegNo];
+    ASSERT(phyRegNo >= 0 && phyRegNo < m_totalCapacity,
+        "illegal phyRegNo %d.", phyRegNo);
+    return m_register[phyRegNo];
 }
 
 PhyReg* RegisterFile::operator[](int phyRegNo) const
 {
-	return GetPhyReg(phyRegNo);
+    return GetPhyReg(phyRegNo);
 }
 
 void RegisterFile::SetPhyReg(int phyRegNo, PhyReg* phyReg)
 {
-	ASSERT(phyRegNo >= 0 && phyRegNo < m_totalCapacity,
-		"illegal phyRegNo %d.", phyRegNo);
-	m_register[phyRegNo] = phyReg;
+    ASSERT(phyRegNo >= 0 && phyRegNo < m_totalCapacity,
+        "illegal phyRegNo %d.", phyRegNo);
+    m_register[phyRegNo] = phyReg;
 }
 
 size_t RegisterFile::GetSegmentCount() const
 {
-	return m_capacity.size();
+    return m_capacity.size();
 }
 
 int RegisterFile::GetCapacity(int segment) const
 {
-	ASSERT(segment >= 0 && segment < static_cast<int>(m_capacity.size()),
-		"unknown segment %d", segment);		
-	return m_capacity[segment];
+    ASSERT(segment >= 0 && segment < static_cast<int>(m_capacity.size()),
+        "unknown segment %d", segment);     
+    return m_capacity[segment];
 }
 
 int RegisterFile::GetTotalCapacity() const
 {
-	return m_totalCapacity; 
+    return m_totalCapacity; 
 }

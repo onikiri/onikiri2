@@ -37,25 +37,25 @@
 namespace Onikiri 
 {
 
-	struct IssueState 
-	{
-		bool multiIssue;
-		bool issued;
-		bool executionKicked;
-		s64  executionKickedTime;
-		int  executionLatency;
-		int  currentPredIndex;
+    struct IssueState 
+    {
+        bool multiIssue;
+        bool issued;
+        bool executionKicked;
+        s64  executionKickedTime;
+        int  executionLatency;
+        int  currentPredIndex;
 
-		IssueState()
-		{
-			multiIssue = false;
-			issued = false;
-			executionKicked = false;
-			executionKickedTime = 0;
-			executionLatency = 0;
-			currentPredIndex = 0;
-		}
-	};
+        IssueState()
+        {
+            multiIssue = false;
+            issued = false;
+            executionKicked = false;
+            executionKickedTime = 0;
+            executionLatency = 0;
+            currentPredIndex = 0;
+        }
+    };
 
 }; // namespace Onikiri
 

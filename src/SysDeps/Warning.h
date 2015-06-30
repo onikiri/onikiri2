@@ -40,15 +40,15 @@
 
 #ifdef COMPILER_IS_MSVC
 
-#pragma warning( disable: 4100 )	// 引数は関数の本体部で 1 度も参照されません
-#pragma warning( disable: 4127 )	// 条件式が定数です
-#pragma warning( disable: 4512 )	// 代入演算子を生成できません
-#pragma warning( disable: 4702 )	// 制御が渡らないコードです
-#pragma warning( disable: 4714 )	// インライン関数ではなく、__forceinline として記述されています
+#pragma warning( disable: 4100 )    // 引数は関数の本体部で 1 度も参照されません
+#pragma warning( disable: 4127 )    // 条件式が定数です
+#pragma warning( disable: 4512 )    // 代入演算子を生成できません
+#pragma warning( disable: 4702 )    // 制御が渡らないコードです
+#pragma warning( disable: 4714 )    // インライン関数ではなく、__forceinline として記述されています
 
 
 // 以下の警告はC++標準通りの動作を行うことを示しているにすぎないのでdisable
-#pragma warning( disable: 4345 )	// POD型のデフォルトコンストラクタに関する警告
+#pragma warning( disable: 4345 )    // POD型のデフォルトコンストラクタに関する警告
 
 #endif
 

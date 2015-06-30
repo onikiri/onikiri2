@@ -36,24 +36,24 @@
 
 namespace Onikiri {
 
-	// 分岐方向予測器のインターフェース
-	class DirPredIF
-	{
-	public:
-		DirPredIF(){};
-		virtual ~DirPredIF(){};
+    // 分岐方向予測器のインターフェース
+    class DirPredIF
+    {
+    public:
+        DirPredIF(){};
+        virtual ~DirPredIF(){};
 
-		// 分岐方向を予測
-		virtual bool Predict(OpIterator opIterator, PC predIndexPC) = 0;
+        // 分岐方向を予測
+        virtual bool Predict(OpIterator opIterator, PC predIndexPC) = 0;
 
-		// 実行完了
-		// 再実行で複数回呼ばれる可能性がある
-		// また、間違っている結果を持っている可能性もある
-		virtual void Finished(OpIterator opIterator) = 0;
+        // 実行完了
+        // 再実行で複数回呼ばれる可能性がある
+        // また、間違っている結果を持っている可能性もある
+        virtual void Finished(OpIterator opIterator) = 0;
 
-		// リタイア
-		virtual void Retired(OpIterator opIterator) = 0;
-	};
+        // リタイア
+        virtual void Retired(OpIterator opIterator) = 0;
+    };
 
 }; // namespace Onikiri
 

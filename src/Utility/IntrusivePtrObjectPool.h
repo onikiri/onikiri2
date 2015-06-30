@@ -35,97 +35,97 @@
 namespace Onikiri
 {
 
-	struct IntrusiveObjectPoolTag
-	{
-	};
+    struct IntrusiveObjectPoolTag
+    {
+    };
 
-	template<typename T, typename PtrT = T > 
-	class PooledIntrusivePtrObject
-	{
+    template<typename T, typename PtrT = T > 
+    class PooledIntrusivePtrObject
+    {
 #if 1
-		INLINE static T* Allocate()
-		{
-			typedef boost::singleton_pool<
-				IntrusiveObjectPoolTag, 
-				sizeof(T)
-			> Pool;
-			return (T*)Pool::malloc();
-		}
+        INLINE static T* Allocate()
+        {
+            typedef boost::singleton_pool<
+                IntrusiveObjectPoolTag, 
+                sizeof(T)
+            > Pool;
+            return (T*)Pool::malloc();
+        }
 
-		INLINE static void Deallocate(T* ptr)
-		{
-			typedef boost::singleton_pool<
-				IntrusiveObjectPoolTag, 
-				sizeof(T)
-			> Pool;
-			Pool::free(ptr);
-		}
+        INLINE static void Deallocate(T* ptr)
+        {
+            typedef boost::singleton_pool<
+                IntrusiveObjectPoolTag, 
+                sizeof(T)
+            > Pool;
+            Pool::free(ptr);
+        }
 #else
-		NOINLINE static T* Allocate()
-		{
-			typedef pool_allocator<T> Pool;
-			return (T*)Pool().allocate(1);
-		}
+        NOINLINE static T* Allocate()
+        {
+            typedef pool_allocator<T> Pool;
+            return (T*)Pool().allocate(1);
+        }
 
-		INLINE static void Deallocate(T* ptr)
-		{
-			typedef pool_allocator<T> Pool;
-			Pool().deallocate(ptr,1);
-		}
+        INLINE static void Deallocate(T* ptr)
+        {
+            typedef pool_allocator<T> Pool;
+            Pool().deallocate(ptr,1);
+        }
 #endif
 
-	public:
+    public:
 
-		INLINE static void Destruct( T* ptr )
-		{
-			ptr->~T();
-			Deallocate(ptr);
-		}
+        INLINE static void Destruct( T* ptr )
+        {
+            ptr->~T();
+            Deallocate(ptr);
+        }
 
-		INLINE static boost::intrusive_ptr<PtrT> Construct()
-		{
-			T* const ret = Allocate();
-			new (ret) T();
-			return boost::intrusive_ptr<PtrT>(	ret );
-		};
+        INLINE static boost::intrusive_ptr<PtrT> Construct()
+        {
+            T* const ret = Allocate();
+            new (ret) T();
+            return boost::intrusive_ptr<PtrT>(  ret );
+        };
 
-		template <typename Arg0>
-		INLINE static boost::intrusive_ptr<PtrT> Construct(const Arg0& a0)
-		{
-			T* const ret = Allocate();
-			new (ret) T(a0);
-			return boost::intrusive_ptr<PtrT>(	ret );
-		};
+        template <typename Arg0>
+        INLINE static boost::intrusive_ptr<PtrT> Construct(const Arg0& a0)
+        {
+            T* const ret = Allocate();
+            new (ret) T(a0);
+            return boost::intrusive_ptr<PtrT>(  ret );
+        };
 
-		template <typename Arg0, typename Arg1>
-		INLINE static boost::intrusive_ptr<PtrT> Construct(const Arg0& a0, const Arg1& a1)
-		{
-			T* const ret = Allocate();
-			new (ret) T(a0, a1);
-			return boost::intrusive_ptr<PtrT>(	ret );
-		};
+        template <typename Arg0, typename Arg1>
+        INLINE static boost::intrusive_ptr<PtrT> Construct(const Arg0& a0, const Arg1& a1)
+        {
+            T* const ret = Allocate();
+            new (ret) T(a0, a1);
+            return boost::intrusive_ptr<PtrT>(  ret );
+        };
 
-		template <typename Arg0, typename Arg1, typename Arg2>
-		INLINE static boost::intrusive_ptr<PtrT> Construct(const Arg0& a0, const Arg1& a1, const Arg2& a2)
-		{
-			T* const ret = Allocate();
-			new (ret) T(a0, a1, a2);
-			return boost::intrusive_ptr<PtrT>(	ret );
-		};
+        template <typename Arg0, typename Arg1, typename Arg2>
+        INLINE static boost::intrusive_ptr<PtrT> Construct(const Arg0& a0, const Arg1& a1, const Arg2& a2)
+        {
+            T* const ret = Allocate();
+            new (ret) T(a0, a1, a2);
+            return boost::intrusive_ptr<PtrT>(  ret );
+        };
 
-		template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-		INLINE static boost::intrusive_ptr<PtrT> Construct(
-			const Arg0& a0, const Arg1& a1, const Arg2& a2, const Arg3& a3)
-		{
-			T* const ret = Allocate();
-			new (ret) T(a0, a1, a2, a3);
-			return boost::intrusive_ptr<PtrT>(	ret );
-		};
+        template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+        INLINE static boost::intrusive_ptr<PtrT> Construct(
+            const Arg0& a0, const Arg1& a1, const Arg2& a2, const Arg3& a3)
+        {
+            T* const ret = Allocate();
+            new (ret) T(a0, a1, a2, a3);
+            return boost::intrusive_ptr<PtrT>(  ret );
+        };
 
 
-	};
+    };
 } //namespace Onikiri
 
-#endif	// __INTRUISVE_PTR_OBJECT_POOL_H
+#endif  // __INTRUISVE_PTR_OBJECT_POOL_H
 
 

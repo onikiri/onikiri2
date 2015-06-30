@@ -36,11 +36,11 @@
 #include "Emu/AlphaLinux/Alpha64Info.h"
 
 namespace Onikiri {
-	namespace AlphaLinux {
+    namespace AlphaLinux {
 
-		typedef EmulatorUtility::CommonOpInfo<Alpha64Info> Alpha64OpInfo;
+        typedef EmulatorUtility::CommonOpInfo<Alpha64Info> Alpha64OpInfo;
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

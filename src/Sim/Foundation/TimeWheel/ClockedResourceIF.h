@@ -37,62 +37,62 @@
 
 namespace Onikiri 
 {
-	//
-	class ClockedResourceIF
-	{
-	public:
+    //
+    class ClockedResourceIF
+    {
+    public:
 
-		virtual ~ClockedResourceIF(){};
-		
-		//
-		// --- These methods corresponds to 1-cycle behavior.
-		// 
-		// Decide what to do in Evaluate(), and update those in Update().
-		//
+        virtual ~ClockedResourceIF(){};
+        
+        //
+        // --- These methods corresponds to 1-cycle behavior.
+        // 
+        // Decide what to do in Evaluate(), and update those in Update().
+        //
 
-		// Beginning of a cycle
-		virtual void Begin()      = 0;	
-		
-		// Evaluate and decide to stall this cycle.
-		// Processes with side-effects must not be done in this method.
-		virtual void Evaluate()   = 0;	
+        // Beginning of a cycle
+        virtual void Begin()      = 0;  
+        
+        // Evaluate and decide to stall this cycle.
+        // Processes with side-effects must not be done in this method.
+        virtual void Evaluate()   = 0;  
 
-		// Transition from Prepare and Process.
-		// Processes with side-effects must not be done in this method.
-		virtual void Transition() = 0;	
+        // Transition from Prepare and Process.
+        // Processes with side-effects must not be done in this method.
+        virtual void Transition() = 0;  
 
-		// Update resources.
-		// This method is not called when a module is stalled.
-		// Processes observing other resources must not be done in this method.
-		virtual void Update() = 0;
+        // Update resources.
+        // This method is not called when a module is stalled.
+        // Processes observing other resources must not be done in this method.
+        virtual void Update() = 0;
 
-		// End of a cycle
-		// Processes that observes other resources must not be done in this method.
-		virtual void End()		  = 0;	
-
-
-		// Trigger Update() for internal user.
-		virtual void TriggerUpdate() = 0;	
+        // End of a cycle
+        // Processes that observes other resources must not be done in this method.
+        virtual void End()        = 0;  
 
 
-		// This method can be called only in Evaluate().
-		virtual void StallThisCycle( ) = 0;
+        // Trigger Update() for internal user.
+        virtual void TriggerUpdate() = 0;   
 
-		// This method can be called in any phases.
-		virtual void StallNextCycle( int cycle ) = 0;
 
-		// Cancel a stall period set by StallNextCycle.
-		virtual void CacnelStallPeriod() = 0;
+        // This method can be called only in Evaluate().
+        virtual void StallThisCycle( ) = 0;
 
-		// Get a priority of this resource.
-		// Priority constants are defined in "Sim/ResourcePriority.h".
-		virtual int GetPriority() const = 0;
+        // This method can be called in any phases.
+        virtual void StallNextCycle( int cycle ) = 0;
 
-		// For debug
-		virtual void SetParent( ClockedResourceIF* parent ) = 0;
-		virtual const char* Who() const = 0;
+        // Cancel a stall period set by StallNextCycle.
+        virtual void CacnelStallPeriod() = 0;
 
-	};
+        // Get a priority of this resource.
+        // Priority constants are defined in "Sim/ResourcePriority.h".
+        virtual int GetPriority() const = 0;
+
+        // For debug
+        virtual void SetParent( ClockedResourceIF* parent ) = 0;
+        virtual const char* Who() const = 0;
+
+    };
 
 }; // namespace Onikiri
 

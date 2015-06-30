@@ -39,47 +39,47 @@ namespace EmulatorUtility {
 template < typename T >
 static bool IsNAN( T value )
 {
-	return boost::math::isnan( value );
+    return boost::math::isnan( value );
 }
 
 // generate signed/unsigned type of T
 // ex) signed_unsigned_type<int, false>::type is unsigned int
 template <typename T, bool Signed>
-	struct signed_unsigned_type;
+    struct signed_unsigned_type;
 
 template <typename T>
 struct signed_type
 {
-	typedef typename signed_unsigned_type<T, true>::type type;
+    typedef typename signed_unsigned_type<T, true>::type type;
 };
 
 template <typename T>
 struct unsigned_type
 {
-	typedef typename signed_unsigned_type<T, false>::type type;
+    typedef typename signed_unsigned_type<T, false>::type type;
 };
 
 #define IMPLEMENT_SIGNED_UNSIGNED_TYPE(Type)        \
 template <>                                         \
 struct signed_unsigned_type<signed Type, true> {    \
-	typedef signed Type type;                       \
+    typedef signed Type type;                       \
 };                                                  \
 template <>                                         \
 struct signed_unsigned_type<signed Type, false> {   \
-	typedef unsigned Type type;                     \
+    typedef unsigned Type type;                     \
 };                                                  \
 template <>                                         \
 struct signed_unsigned_type<unsigned Type, true> {  \
-	typedef signed Type type;                       \
+    typedef signed Type type;                       \
 };                                                  \
 template <>                                         \
 struct signed_unsigned_type<unsigned Type, false> { \
-	typedef unsigned Type type;                     \
+    typedef unsigned Type type;                     \
 };
 #define IMPLEMENT_SIGNED_UNSIGNED_TYPE_FLOAT(Type)  \
 template <bool Sign>                                \
 struct signed_unsigned_type<Type, Sign> {           \
-	typedef Type type;                              \
+    typedef Type type;                              \
 };
 
 IMPLEMENT_SIGNED_UNSIGNED_TYPE(char)
@@ -98,19 +98,19 @@ IMPLEMENT_SIGNED_UNSIGNED_TYPE_FLOAT(long double)
 template <typename T>
 inline typename unsigned_type<T>::type cast_to_unsigned(T x)
 {
-	return static_cast< typename unsigned_type<T>::type > (x); 
+    return static_cast< typename unsigned_type<T>::type > (x); 
 }
 
 // cast 'T' to 'signed T'
 template <typename T>
 inline typename signed_type<T>::type cast_to_signed(T x)
 {
-	return static_cast< typename signed_type<T>::type > (x);
+    return static_cast< typename signed_type<T>::type > (x);
 }
 
 } // namespace EmulatorUtility {
 } // namespace Onikiri
 
-#endif	// #ifndef EMU_UTILITY_MATH_H
+#endif  // #ifndef EMU_UTILITY_MATH_H
 
 

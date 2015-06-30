@@ -42,142 +42,142 @@ using namespace Onikiri;
 
 void EmulationTraceSystem::Run( SystemContext* context )
 {
-	int processCount = context->emulator->GetProcessCount();
+    int processCount = context->emulator->GetProcessCount();
 
-	vector<ofstream*> ofsList;
-	ofsList.resize( processCount );
-	for( int pid = 0; pid < processCount; pid++ ){
-		String fileName = 
-			g_env.GetHostWorkPath() + "./emulator." + lexical_cast<String>(pid) + ".log";
-		ofsList[pid] = new ofstream( fileName );
-	}
+    vector<ofstream*> ofsList;
+    ofsList.resize( processCount );
+    for( int pid = 0; pid < processCount; pid++ ){
+        String fileName = 
+            g_env.GetHostWorkPath() + "./emulator." + lexical_cast<String>(pid) + ".log";
+        ofsList[pid] = new ofstream( fileName );
+    }
 
-	// レジスタの初期化
-	ArchitectureStateList& archStateList = context->architectureStateList;
+    // レジスタの初期化
+    ArchitectureStateList& archStateList = context->architectureStateList;
 
-	s64 totalInsnCount = 0;
-	vector<s64> insnCount;
-	insnCount.resize( processCount, 0 );
+    s64 totalInsnCount = 0;
+    vector<s64> insnCount;
+    insnCount.resize( processCount, 0 );
 
-	int curPID = 0;
-	int terminateProcesses = 0;
-	vector<u64> opID( processCount );
+    int curPID = 0;
+    int terminateProcesses = 0;
+    vector<u64> opID( processCount );
 
-	while( totalInsnCount < context->executionInsns ){
+    while( totalInsnCount < context->executionInsns ){
 
-		// Decide a thread executed in this iteration.
-		PC& curThreadPC = archStateList[curPID].pc;
+        // Decide a thread executed in this iteration.
+        PC& curThreadPC = archStateList[curPID].pc;
 
-		if( curThreadPC.address == 0 ) {
-			terminateProcesses++;
-			if(terminateProcesses >= processCount){
-				break;
-			}
-			else{
-				continue;
-			}
-		}
+        if( curThreadPC.address == 0 ) {
+            terminateProcesses++;
+            if(terminateProcesses >= processCount){
+                break;
+            }
+            else{
+                continue;
+            }
+        }
 
-		ofstream& ofs = *ofsList[curPID];
-		EmulationOp op( context->emulator->GetMemImage() );
+        ofstream& ofs = *ofsList[curPID];
+        EmulationOp op( context->emulator->GetMemImage() );
 
-		// このPC
-		std::pair<OpInfo**, int> ops = 
-			context->emulator->GetOp( curThreadPC );
-		OpInfo** opInfoArray = ops.first;
-		int opCount          = ops.second;
+        // このPC
+        std::pair<OpInfo**, int> ops = 
+            context->emulator->GetOp( curThreadPC );
+        OpInfo** opInfoArray = ops.first;
+        int opCount          = ops.second;
 
-		// opInfoArray の命令を全て実行
-		for(int opIndex = 0; opIndex < opCount; opIndex ++){
-			OpInfo* opInfo = opInfoArray[opIndex];
-			op.SetPC( curThreadPC );
-			op.SetTakenPC( Addr(curThreadPC.pid, curThreadPC.tid, curThreadPC.address+4) );
-			op.SetOpInfo(opInfo);
-			op.SetTaken(false);
+        // opInfoArray の命令を全て実行
+        for(int opIndex = 0; opIndex < opCount; opIndex ++){
+            OpInfo* opInfo = opInfoArray[opIndex];
+            op.SetPC( curThreadPC );
+            op.SetTakenPC( Addr(curThreadPC.pid, curThreadPC.tid, curThreadPC.address+4) );
+            op.SetOpInfo(opInfo);
+            op.SetTaken(false);
 
-			// ソースオペランドを設定
-			int srcCount = opInfo->GetSrcNum();
-			for (int i = 0; i < srcCount; i ++) {
-				op.SetSrc(i, archStateList[curPID].registerValue[ opInfo->GetSrcOperand(i) ] );
-			}
+            // ソースオペランドを設定
+            int srcCount = opInfo->GetSrcNum();
+            for (int i = 0; i < srcCount; i ++) {
+                op.SetSrc(i, archStateList[curPID].registerValue[ opInfo->GetSrcOperand(i) ] );
+            }
 
-			context->emulator->Execute( &op, opInfo );
-			context->emulator->Commit( &op, opInfo );
+            context->emulator->Execute( &op, opInfo );
+            context->emulator->Commit( &op, opInfo );
 
-			// 命令の結果を取得
-			int dstCount = opInfo->GetDstNum();
-			for (int i = 0; i < dstCount; i ++) {
-				archStateList[curPID].registerValue[ opInfo->GetDstOperand(i) ] = op.GetDst(i);
-			}
+            // 命令の結果を取得
+            int dstCount = opInfo->GetDstNum();
+            for (int i = 0; i < dstCount; i ++) {
+                archStateList[curPID].registerValue[ opInfo->GetDstOperand(i) ] = op.GetDst(i);
+            }
 
-			// 出力
-			ofs << "ID: " << opID[curPID] << "\tPC: " << curThreadPC.pid << "/" << hex << curThreadPC.address << dec << "[" << opIndex << "]\t";
-			for (int i = 0; i < opInfo->GetDstNum(); ++i) {
-				ofs << "d" << i << ": " << opInfo->GetDstOperand(i) << "\t";
-			}
-			for (int i = opInfo->GetDstNum(); i < SimISAInfo::MAX_DST_REG_COUNT; ++i) {
-				ofs << "d" << i << ": -1" << "\t";
-			}
+            // 出力
+            ofs << "ID: " << opID[curPID] << "\tPC: " << curThreadPC.pid << "/" << hex << curThreadPC.address << dec << "[" << opIndex << "]\t";
+            for (int i = 0; i < opInfo->GetDstNum(); ++i) {
+                ofs << "d" << i << ": " << opInfo->GetDstOperand(i) << "\t";
+            }
+            for (int i = opInfo->GetDstNum(); i < SimISAInfo::MAX_DST_REG_COUNT; ++i) {
+                ofs << "d" << i << ": -1" << "\t";
+            }
 
-			for (int i = 0; i < opInfo->GetSrcNum(); ++i) {
-				ofs << "s" << i << ": " << opInfo->GetSrcOperand(i) << "\t";
-			}
-			for (int i = opInfo->GetSrcNum(); i < SimISAInfo::MAX_SRC_REG_COUNT; ++i) {
-				ofs << "s" << i << ": -1" << "\t";
-			}
+            for (int i = 0; i < opInfo->GetSrcNum(); ++i) {
+                ofs << "s" << i << ": " << opInfo->GetSrcOperand(i) << "\t";
+            }
+            for (int i = opInfo->GetSrcNum(); i < SimISAInfo::MAX_SRC_REG_COUNT; ++i) {
+                ofs << "s" << i << ": -1" << "\t";
+            }
 
-			ofs << "TPC: " << op.GetTakenPC().pid << "/" << hex << op.GetTakenPC().address << dec << "(" << ( op.GetTaken() ? "t" : "n" ) << ")\t";
+            ofs << "TPC: " << op.GetTakenPC().pid << "/" << hex << op.GetTakenPC().address << dec << "(" << ( op.GetTaken() ? "t" : "n" ) << ")\t";
 
 
-			for (int i = 0; i < opInfo->GetDstNum(); ++i) {
-				if( opInfo->GetDstOperand(i) != -1 ) {
-					ofs << "r" << opInfo->GetDstOperand(i) << "= " << hex << op.GetDst(i) << dec << "\t";
-				}else {
-					ofs << "r_= 0\t" ; 
-				}
-			}
-			for (int i = opInfo->GetDstNum(); i < SimISAInfo::MAX_DST_REG_COUNT; ++i) {
-				ofs << "r_= 0\t" ; 
-			}
+            for (int i = 0; i < opInfo->GetDstNum(); ++i) {
+                if( opInfo->GetDstOperand(i) != -1 ) {
+                    ofs << "r" << opInfo->GetDstOperand(i) << "= " << hex << op.GetDst(i) << dec << "\t";
+                }else {
+                    ofs << "r_= 0\t" ; 
+                }
+            }
+            for (int i = opInfo->GetDstNum(); i < SimISAInfo::MAX_DST_REG_COUNT; ++i) {
+                ofs << "r_= 0\t" ; 
+            }
 
-			for (int i = 0; i < opInfo->GetSrcNum(); ++i) {
-				if( opInfo->GetSrcOperand(i) != -1 ) {
-					ofs << "r" << opInfo->GetSrcOperand(i) << "= " << hex << op.GetSrc(i) << dec  << "\t";
-				}else {
-					ofs << "r_= 0\t" ; 
-				}
-			}
-			for (int i = opInfo->GetSrcNum(); i < SimISAInfo::MAX_SRC_REG_COUNT; ++i) {
-				ofs << "r_= 0\t" ; 
-			}
+            for (int i = 0; i < opInfo->GetSrcNum(); ++i) {
+                if( opInfo->GetSrcOperand(i) != -1 ) {
+                    ofs << "r" << opInfo->GetSrcOperand(i) << "= " << hex << op.GetSrc(i) << dec  << "\t";
+                }else {
+                    ofs << "r_= 0\t" ; 
+                }
+            }
+            for (int i = opInfo->GetSrcNum(); i < SimISAInfo::MAX_SRC_REG_COUNT; ++i) {
+                ofs << "r_= 0\t" ; 
+            }
 
-			/*
-			ofs << "Mem: " << hex << op.GetMemAccess().address.address << dec << "/"
-			<< op.GetMemAccess().size << "/"
-			<< (op.GetMemAccess().sign ? "s" : "u") << "/"
-			<< op.GetMemAccess().value;
-			*/
-			ofs << endl;
-			++opID[curPID];
-		}
+            /*
+            ofs << "Mem: " << hex << op.GetMemAccess().address.address << dec << "/"
+            << op.GetMemAccess().size << "/"
+            << (op.GetMemAccess().sign ? "s" : "u") << "/"
+            << op.GetMemAccess().value;
+            */
+            ofs << endl;
+            ++opID[curPID];
+        }
 
-		// 次のPC
-		if (op.GetTaken())
-			curThreadPC = op.GetTakenPC();
-		else
-			curThreadPC.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
+        // 次のPC
+        if (op.GetTaken())
+            curThreadPC = op.GetTakenPC();
+        else
+            curThreadPC.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
 
-		totalInsnCount++;
-		insnCount[ curPID ]++;
-		curPID = (curPID + 1) % processCount;	// Round robin
-	}
+        totalInsnCount++;
+        insnCount[ curPID ]++;
+        curPID = (curPID + 1) % processCount;   // Round robin
+    }
 
-	for( int pid = 0; pid < processCount; pid++ ){
-		ofsList[pid]->close();
-		delete ofsList[pid];
-	}
+    for( int pid = 0; pid < processCount; pid++ ){
+        ofsList[pid]->close();
+        delete ofsList[pid];
+    }
 
-	context->executedInsns  = insnCount;
-	context->executedCycles = 0;
+    context->executedInsns  = insnCount;
+    context->executedCycles = 0;
 }
 

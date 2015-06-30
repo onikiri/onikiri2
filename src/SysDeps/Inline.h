@@ -40,18 +40,18 @@
 
 #ifdef COMPILER_IS_MSVC
 
-	#define INLINE   __forceinline
-	#define NOINLINE __declspec(noinline)  
+    #define INLINE   __forceinline
+    #define NOINLINE __declspec(noinline)  
 
 #elif defined(COMPILER_IS_GCC) || defined(COMPILER_IS_CLANG)
 
-	#define INLINE 	 inline __attribute__((always_inline))
-	#define NOINLINE __attribute__((noinline)) 
+    #define INLINE   inline __attribute__((always_inline))
+    #define NOINLINE __attribute__((noinline)) 
 
 #else
-	
-	#define INLINE 	inline
-	#define NOINLINE
+    
+    #define INLINE  inline
+    #define NOINLINE
 
 #endif
 

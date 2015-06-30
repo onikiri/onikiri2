@@ -40,11 +40,11 @@ using namespace Onikiri;
 
 CountDumper::CountDumper()
 {
-	m_curInsnCount = 0;
-	m_curCycleCount = 0;
-	m_insnIntervalOrigin = 0;
-	m_cycleIntervalOrigin = 0;
-	m_nextUpdateInsnCount = 0;
+    m_curInsnCount = 0;
+    m_curCycleCount = 0;
+    m_insnIntervalOrigin = 0;
+    m_cycleIntervalOrigin = 0;
+    m_nextUpdateInsnCount = 0;
 }
 
 CountDumper::~CountDumper()
@@ -53,69 +53,69 @@ CountDumper::~CountDumper()
 
 void CountDumper::Initialize( const String& suffix )
 {
-	LoadParam();
+    LoadParam();
 
-	String fileName = g_env.GetHostWorkPath() + MakeDumpFileName( m_fileName, suffix, m_gzipEnabled );
+    String fileName = g_env.GetHostWorkPath() + MakeDumpFileName( m_fileName, suffix, m_gzipEnabled );
 
-	if( m_enabled && (!m_stream.is_complete()) ){
-		if(m_gzipEnabled){
-			m_stream.push(
-				iostreams::gzip_compressor(
-					iostreams::gzip_params(m_gzipLevel) ) );
-		}
-		m_stream.push( 
-			iostreams::file_sink(
-				fileName, ios::binary) );
-	}
+    if( m_enabled && (!m_stream.is_complete()) ){
+        if(m_gzipEnabled){
+            m_stream.push(
+                iostreams::gzip_compressor(
+                    iostreams::gzip_params(m_gzipLevel) ) );
+        }
+        m_stream.push( 
+            iostreams::file_sink(
+                fileName, ios::binary) );
+    }
 
-	m_nextUpdateInsnCount = m_interval;
+    m_nextUpdateInsnCount = m_interval;
 }
 
 void CountDumper::Finalize()
 {
-	ReleaseParam();
+    ReleaseParam();
 
-	if(m_stream.is_complete()) {
-		m_stream.reset();
-	}
+    if(m_stream.is_complete()) {
+        m_stream.reset();
+    }
 }
 
 void CountDumper::SetCurrentInsnCount(s64 count)
 {
-	m_curInsnCount = count;
+    m_curInsnCount = count;
 }
 
 void CountDumper::SetCurrentCycle(s64 count)
 {
-	m_curCycleCount = count;
-	Update();
+    m_curCycleCount = count;
+    Update();
 }
 
 bool CountDumper::Enabled()
 {
-	return m_enabled;
+    return m_enabled;
 }
 
 void CountDumper::Update()
 {
-	if(m_curInsnCount < m_nextUpdateInsnCount)
-		return;
+    if(m_curInsnCount < m_nextUpdateInsnCount)
+        return;
 
-	s64 insnCountDelta  = m_curInsnCount  - m_insnIntervalOrigin;
-	s64 cycleCountDelta = m_curCycleCount - m_cycleIntervalOrigin;
-	double localIPC  = (double)insnCountDelta / (double)cycleCountDelta;
-	double globalIPC = (double)m_curInsnCount / (double)m_curCycleCount;
+    s64 insnCountDelta  = m_curInsnCount  - m_insnIntervalOrigin;
+    s64 cycleCountDelta = m_curCycleCount - m_cycleIntervalOrigin;
+    double localIPC  = (double)insnCountDelta / (double)cycleCountDelta;
+    double globalIPC = (double)m_curInsnCount / (double)m_curCycleCount;
 
-	m_stream
-		<< "insns ,"		<< insnCountDelta	<< ","
-		<< "cycles ,"		<< cycleCountDelta	<< ","
-		<< "ipc ,"			<< localIPC			<< ","
-		<< "total insns ,"	<< m_curInsnCount	<< ","
-		<< "total cycles ," << m_curCycleCount	<< ","
-		<< "total ipc ,"	<< globalIPC 		<< ","
-		<< "\n";
+    m_stream
+        << "insns ,"        << insnCountDelta   << ","
+        << "cycles ,"       << cycleCountDelta  << ","
+        << "ipc ,"          << localIPC         << ","
+        << "total insns ,"  << m_curInsnCount   << ","
+        << "total cycles ," << m_curCycleCount  << ","
+        << "total ipc ,"    << globalIPC        << ","
+        << "\n";
 
-	m_nextUpdateInsnCount += m_interval;
-	m_insnIntervalOrigin  = m_curInsnCount;
-	m_cycleIntervalOrigin = m_curCycleCount;
+    m_nextUpdateInsnCount += m_interval;
+    m_insnIntervalOrigin  = m_curInsnCount;
+    m_cycleIntervalOrigin = m_curCycleCount;
 }

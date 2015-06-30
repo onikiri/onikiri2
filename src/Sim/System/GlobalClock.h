@@ -38,30 +38,30 @@
 namespace Onikiri 
 {
 
-	// システム全体の経過時間を表すクラス
-	class GlobalClock : public PhysicalResourceNode
-	{
-	protected:
-		s64 m_now;		// 時間
-		u64 m_insnID;	// Insn のグローバルなID
+    // システム全体の経過時間を表すクラス
+    class GlobalClock : public PhysicalResourceNode
+    {
+    protected:
+        s64 m_now;      // 時間
+        u64 m_insnID;   // Insn のグローバルなID
 
-	public:
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
+    public:
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
 
-		
-		GlobalClock();
-		virtual ~GlobalClock();
+        
+        GlobalClock();
+        virtual ~GlobalClock();
 
-		void Initialize(InitPhase phase);
-		s64 GetTick() const;
-		void SetTick(s64 now);
-		void Tick();
+        void Initialize(InitPhase phase);
+        s64 GetTick() const;
+        void SetTick(s64 now);
+        void Tick();
 
-		void SetInsnID( u64 id );
-		void AddInsnID( u64 num );
-		u64 GetInsnID();
-	};
+        void SetInsnID( u64 id );
+        void AddInsnID( u64 num );
+        u64 GetInsnID();
+    };
 
 }; // namespace Onikiri
 

@@ -51,34 +51,34 @@ using namespace std;
 using namespace Onikiri;
 
 MemExecUnit::MemExecUnit() :
-	m_cacheSystem(0),
-	m_cache(0),
-	m_cacheCount(0),
-	m_floatConversionLatency( 0 )
+    m_cacheSystem(0),
+    m_cache(0),
+    m_cacheCount(0),
+    m_floatConversionLatency( 0 )
 {
 }
 
 MemExecUnit::~MemExecUnit()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void MemExecUnit::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-	}
-	else if(phase == INIT_POST_CONNECTION){
-		CheckNodeInitialized( "memOrderManager", m_memOrderManager );
-		CheckNodeInitialized( "cacheSystem", m_cacheSystem );
+    if(phase == INIT_PRE_CONNECTION){
+    }
+    else if(phase == INIT_POST_CONNECTION){
+        CheckNodeInitialized( "memOrderManager", m_memOrderManager );
+        CheckNodeInitialized( "cacheSystem", m_cacheSystem );
 
-		// キャッシュの数を数える
-		m_cache = m_cacheSystem->GetFirstLevelDataCache();
-		m_cacheCount = 0;
-		Cache* cache = m_cache;
-		for(; cache != 0; cache = cache->GetNextCache(), ++m_cacheCount) {}
-	}
-	
-	PipelinedExecUnit::Initialize(phase);
+        // キャッシュの数を数える
+        m_cache = m_cacheSystem->GetFirstLevelDataCache();
+        m_cacheCount = 0;
+        Cache* cache = m_cache;
+        for(; cache != 0; cache = cache->GetNextCache(), ++m_cacheCount) {}
+    }
+    
+    PipelinedExecUnit::Initialize(phase);
 
 }
 
@@ -86,24 +86,24 @@ void MemExecUnit::Initialize(InitPhase phase)
 // 実行レイテンシ後に FinishEvent を登録する
 void MemExecUnit::Execute( OpIterator op )
 {
-	ExecUnitBase::Execute( op );	// Not PipelinedExecUnit
-	RegisterEvents( op, GetExecutedLatency( op ) );
+    ExecUnitBase::Execute( op );    // Not PipelinedExecUnit
+    RegisterEvents( op, GetExecutedLatency( op ) );
 }
 
 // Get the actual latency of executed 'op'.
 int MemExecUnit::GetExecutedLatency( OpIterator op )
 {
-	int latency = 0;
+    int latency = 0;
 
-	if(op->GetOpClass().IsLoad()) {
-		latency = GetExecutedReadLatency(op);
-	} else if(op->GetOpClass().IsStore()) {
-		latency = GetExecutedWriteLatency(op);
-	} else {
-		THROW_RUNTIME_ERROR("Unknwon opclass.");
-	}
+    if(op->GetOpClass().IsLoad()) {
+        latency = GetExecutedReadLatency(op);
+    } else if(op->GetOpClass().IsStore()) {
+        latency = GetExecutedWriteLatency(op);
+    } else {
+        THROW_RUNTIME_ERROR("Unknwon opclass.");
+    }
 
-	return latency;
+    return latency;
 }
 
 
@@ -112,98 +112,98 @@ int MemExecUnit::GetExecutedLatency( OpIterator op )
 // たとえばalpha21264などでは float の load の変換に1サイクルかかる
 int MemExecUnit::GetExecutedReadLatency( OpIterator op )
 {
-	int readLatency = 0;
+    int readLatency = 0;
 
-	// まず StoreBuffer にアドレスが一致する先行 Store がいないか聞く
-	// いない場合は cache にアクセス
-	OpIterator producer = GetProducerStore( op );
+    // まず StoreBuffer にアドレスが一致する先行 Store がいないか聞く
+    // いない場合は cache にアクセス
+    OpIterator producer = GetProducerStore( op );
 
-	// Only the first access is set to op, because the second or later cache 
-	// accesses are always partial hit and they are not useful for statistics.
-	bool firstAccess = 
-		op->GetCacheAccessResult().state == CacheAccessResult::ST_NOT_ACCESSED;
+    // Only the first access is set to op, because the second or later cache 
+    // accesses are always partial hit and they are not useful for statistics.
+    bool firstAccess = 
+        op->GetCacheAccessResult().state == CacheAccessResult::ST_NOT_ACCESSED;
 
-	if( !producer.IsNull() ) {
-		readLatency = GetLatency( op->GetOpClass(), 0 );
+    if( !producer.IsNull() ) {
+        readLatency = GetLatency( op->GetOpClass(), 0 );
 
-		if( firstAccess ){
-			CacheAccessResult result( 0, CacheAccessResult::ST_HIT, NULL );
-			op->SetCacheAccessResult( result );
-		}
-	} 
-	else {
-		CacheAccess access( op->GetMemAccess(), op, CacheAccess::OT_READ );
-		CacheAccessResult result = m_cache->Read( access, NULL );
-		readLatency = result.latency;
-		
-		if( firstAccess ){
-			op->SetCacheAccessResult( result );
-		}
+        if( firstAccess ){
+            CacheAccessResult result( 0, CacheAccessResult::ST_HIT, NULL );
+            op->SetCacheAccessResult( result );
+        }
+    } 
+    else {
+        CacheAccess access( op->GetMemAccess(), op, CacheAccess::OT_READ );
+        CacheAccessResult result = m_cache->Read( access, NULL );
+        readLatency = result.latency;
+        
+        if( firstAccess ){
+            op->SetCacheAccessResult( result );
+        }
 
-		// float の Load だったら変換レイテンシを加える
-		if(	op->GetOpClass().IsFloat() ) {
-			readLatency += m_floatConversionLatency;
-		}
-	}
+        // float の Load だったら変換レイテンシを加える
+        if( op->GetOpClass().IsFloat() ) {
+            readLatency += m_floatConversionLatency;
+        }
+    }
 
-	return readLatency;
+    return readLatency;
 }
 
 // Writeの実行レイテンシを返す
 int MemExecUnit::GetExecutedWriteLatency(OpIterator op)
 {
-	// StoreBuffer への Write レイテンシ( ISA で規定)を返す
-	int code = op->GetOpClass().GetCode();
-	int writeLatency = m_execLatencyInfo->GetLatency(code);
+    // StoreBuffer への Write レイテンシ( ISA で規定)を返す
+    int code = op->GetOpClass().GetCode();
+    int writeLatency = m_execLatencyInfo->GetLatency(code);
 
-	return writeLatency; 
+    return writeLatency; 
 }
 
 // OpCode から取りうるレイテンシの種類の数を返す
 int MemExecUnit::GetLatencyCount(const OpClass& opClass)
 {
-	ASSERT(opClass.IsMem(), "not mem op");
-	if( opClass.IsStore() ) {
-		// store は固定レイテンシ
-		return 1;
-	}
+    ASSERT(opClass.IsMem(), "not mem op");
+    if( opClass.IsStore() ) {
+        // store は固定レイテンシ
+        return 1;
+    }
 
-	// load はキャッシュの数だけ取りうる可能性がある
-	return m_cacheCount;
+    // load はキャッシュの数だけ取りうる可能性がある
+    return m_cacheCount;
 }
 
 // OpCode とインデクスからレイテンシを返す
 int MemExecUnit::GetLatency(const OpClass& opClass, int index)
 {
-	ASSERT( opClass.IsMem(), "not mem op");
-	if( opClass.IsStore() ) {
-		// store のレイテンシは ExecLatencyInfo に聞く
-		return m_execLatencyInfo->GetLatency(opClass.GetCode());
-	}
-	
-	int latency = 0;
-	Cache* cache = m_cache;
-	for(int i = 0; i <= index; ++i, cache = cache->GetNextCache()) {
-		ASSERT(cache != 0, "cache not set.(index: %d)", index);
-		latency += cache->GetStaticLatency();
-	}
-	
-	if( opClass.IsFloat() && opClass.IsLoad() ) {
-		latency += m_floatConversionLatency;
-	}
+    ASSERT( opClass.IsMem(), "not mem op");
+    if( opClass.IsStore() ) {
+        // store のレイテンシは ExecLatencyInfo に聞く
+        return m_execLatencyInfo->GetLatency(opClass.GetCode());
+    }
+    
+    int latency = 0;
+    Cache* cache = m_cache;
+    for(int i = 0; i <= index; ++i, cache = cache->GetNextCache()) {
+        ASSERT(cache != 0, "cache not set.(index: %d)", index);
+        latency += cache->GetStaticLatency();
+    }
+    
+    if( opClass.IsFloat() && opClass.IsLoad() ) {
+        latency += m_floatConversionLatency;
+    }
 
-	return latency;
+    return latency;
 }
 
 // Get a producer store of 'consumer'.
 OpIterator MemExecUnit::GetProducerStore( OpIterator consumer )
 {
-	MemOrderManager* memOrderManager = 
-		consumer->GetThread()->GetMemOrderManager();
+    MemOrderManager* memOrderManager = 
+        consumer->GetThread()->GetMemOrderManager();
 
-	return
-		memOrderManager->GetProducerStore(
-			consumer,
-			consumer->GetMemAccess()
-		);
+    return
+        memOrderManager->GetProducerStore(
+            consumer,
+            consumer->GetMemAccess()
+        );
 }

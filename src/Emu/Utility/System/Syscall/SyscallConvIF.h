@@ -35,38 +35,38 @@
 #include "Interface/OpStateIF.h"
 
 namespace Onikiri {
-	class SystemIF;
+    class SystemIF;
 
-	namespace EmulatorUtility {
-		class OpEmulationState;
+    namespace EmulatorUtility {
+        class OpEmulationState;
 
-		// ターゲットからのシステムコールを変換するクラス
-		//
-		// SetArg, GetResult の意味はtargetのシステムによって変化するが，典型的には次のようなものを想定：
-		// ・SetArg : システムコールの番号，システムコールの引数
-		// ・GetResult : システムコールの戻り値，エラーコード
-		class SyscallConvIF
-		{
-		public:
-			virtual ~SyscallConvIF() {}
+        // ターゲットからのシステムコールを変換するクラス
+        //
+        // SetArg, GetResult の意味はtargetのシステムによって変化するが，典型的には次のようなものを想定：
+        // ・SetArg : システムコールの番号，システムコールの引数
+        // ・GetResult : システムコールの戻り値，エラーコード
+        class SyscallConvIF
+        {
+        public:
+            virtual ~SyscallConvIF() {}
 
-			// システムコールの引数 (index番目) を設定する
-			virtual void SetArg(int index, u64 value) = 0;
+            // システムコールの引数 (index番目) を設定する
+            virtual void SetArg(int index, u64 value) = 0;
 
-			// SetArg によって与えられた引数に従ってシステムコールを行う
-			virtual void Execute(OpEmulationState* opState) = 0;
+            // SetArg によって与えられた引数に従ってシステムコールを行う
+            virtual void Execute(OpEmulationState* opState) = 0;
 
-			// Exec した結果を得る
-			virtual u64 GetResult(int index) = 0;
+            // Exec した結果を得る
+            virtual u64 GetResult(int index) = 0;
 
-			// callback するsystemをセット
-			virtual void SetSystem(SystemIF* system) = 0;
+            // callback するsystemをセット
+            virtual void SetSystem(SystemIF* system) = 0;
 
-			static const int RetValueIndex = 0;
-			static const int ErrorFlagIndex = 1;
-		};
+            static const int RetValueIndex = 0;
+            static const int ErrorFlagIndex = 1;
+        };
 
-	} // namespace EmulatorUtility
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif

@@ -37,43 +37,43 @@
 namespace Onikiri 
 {
 
-	class MemOrderOperations
-	{
-	public:
+    class MemOrderOperations
+    {
+    public:
 
-		MemOrderOperations();
-		void SetTargetEndian( bool targetIsLittleEndian )
-		{
-			m_targetIsLittleEndian = targetIsLittleEndian;
-		}
+        MemOrderOperations();
+        void SetTargetEndian( bool targetIsLittleEndian )
+        {
+            m_targetIsLittleEndian = targetIsLittleEndian;
+        }
 
-		void SetAlignment( int alignment );
+        void SetAlignment( int alignment );
 
-		// For store-load forwarding on a LS-queue.
-		u64 ReadPreviousAccess( const MemAccess& load, const MemAccess& store );
+        // For store-load forwarding on a LS-queue.
+        u64 ReadPreviousAccess( const MemAccess& load, const MemAccess& store );
 
-		// Merge 2 accesses to a single value.
-		u64 MergePartialAccess( const MemAccess& base, const MemAccess& store );
+        // Merge 2 accesses to a single value.
+        u64 MergePartialAccess( const MemAccess& base, const MemAccess& store );
 
-		// Convert endian for store-load forwarding.
-		u64 CorrectEndian( u64 src, int size );
+        // Convert endian for store-load forwarding.
+        u64 CorrectEndian( u64 src, int size );
 
-		// アドレスの範囲が重なっているか
-		bool IsOverlapped( const MemAccess& access1, const MemAccess& access2 ) const;
-		bool IsOverlapped( u64 addr1, int size1, u64 addr2, int size2 ) const;
+        // アドレスの範囲が重なっているか
+        bool IsOverlapped( const MemAccess& access1, const MemAccess& access2 ) const;
+        bool IsOverlapped( u64 addr1, int size1, u64 addr2, int size2 ) const;
 
-		bool IsOverlappedInAligned( const MemAccess& access1, const MemAccess& access2 ) const;
-		bool IsOverlappedInAligned( u64 addr1, int size1, u64 addr2, int size2 ) const;
+        bool IsOverlappedInAligned( const MemAccess& access1, const MemAccess& access2 ) const;
+        bool IsOverlappedInAligned( u64 addr1, int size1, u64 addr2, int size2 ) const;
 
-		// Returns whether a 'inner' access is in a 'outer' access or not.
-		bool IsInnerAccess( const MemAccess& inner, const MemAccess& outer ) const;
-		bool IsInnerAccess( u64 inner, int innerSize, u64 outer, int outerSize ) const;
+        // Returns whether a 'inner' access is in a 'outer' access or not.
+        bool IsInnerAccess( const MemAccess& inner, const MemAccess& outer ) const;
+        bool IsInnerAccess( u64 inner, int innerSize, u64 outer, int outerSize ) const;
 
-	protected:
-		bool m_targetIsLittleEndian;	// Whether a target architecture is little endian or not.
-		int  m_memoryAlignment;
-		u64  m_memoryAlignmentMask;
-	};
+    protected:
+        bool m_targetIsLittleEndian;    // Whether a target architecture is little endian or not.
+        int  m_memoryAlignment;
+        u64  m_memoryAlignmentMask;
+    };
 }; // namespace Onikiri
 
 #endif // MEM_ORDER_OPERATIONS_H

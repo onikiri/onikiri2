@@ -47,81 +47,81 @@
 // All Onikiri classes are placed in a 'Onikiri' namespace.
 namespace Onikiri
 {
-	// All modules must inherit PhysicalResourceNode.
-	class SampleNull : public PhysicalResourceNode
-	{
-	public:
+    // All modules must inherit PhysicalResourceNode.
+    class SampleNull : public PhysicalResourceNode
+    {
+    public:
 
-		SampleNull(){};
-		virtual ~SampleNull(){};
+        SampleNull(){};
+        virtual ~SampleNull(){};
 
-		// Initialize and Finalize must be implemented.
-		virtual void Initialize( InitPhase phase )
-		{
-			if( phase == INIT_PRE_CONNECTION ){
-				// After constructing and before object connection.
-				// LoadParam() must be called in this phase or later.
-				LoadParam();
-			}
-			else if ( phase == INIT_POST_CONNECTION ){
-				// After connection
-			}
-			g_env.Print( "SampleNull::Initialize is called.\n" );
-		}
-		virtual void Finalize()
-		{
-			// ReleaseParam must be called in Finalize.
-			ReleaseParam();
-			g_env.Print( "SampleNull::Finalize() is called.\n" );
-		};
+        // Initialize and Finalize must be implemented.
+        virtual void Initialize( InitPhase phase )
+        {
+            if( phase == INIT_PRE_CONNECTION ){
+                // After constructing and before object connection.
+                // LoadParam() must be called in this phase or later.
+                LoadParam();
+            }
+            else if ( phase == INIT_POST_CONNECTION ){
+                // After connection
+            }
+            g_env.Print( "SampleNull::Initialize is called.\n" );
+        }
+        virtual void Finalize()
+        {
+            // ReleaseParam must be called in Finalize.
+            ReleaseParam();
+            g_env.Print( "SampleNull::Finalize() is called.\n" );
+        };
 
-		// Parameter & resource map.
-		// These contents in this map are bound to the below XML.
-		// Binding is defined in 'User/UserResourceMap.h' and 'User/UserInit.h'.
-		BEGIN_PARAM_MAP("")
-			BEGIN_PARAM_PATH( GetParamPath() )
-			END_PARAM_PATH()
-			BEGIN_PARAM_PATH( GetResultPath() )
-			END_PARAM_PATH()
-		END_PARAM_MAP()
+        // Parameter & resource map.
+        // These contents in this map are bound to the below XML.
+        // Binding is defined in 'User/UserResourceMap.h' and 'User/UserInit.h'.
+        BEGIN_PARAM_MAP("")
+            BEGIN_PARAM_PATH( GetParamPath() )
+            END_PARAM_PATH()
+            BEGIN_PARAM_PATH( GetResultPath() )
+            END_PARAM_PATH()
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-		END_RESOURCE_MAP()
-	};
+        BEGIN_RESOURCE_MAP()
+        END_RESOURCE_MAP()
+    };
 
 #ifdef USE_SAMPLE_NULL
-	// Default parameters and connections for SampleNull.
-	// This XML overwrite XML in DefaultParam.xml partially.
-	static const char g_sampleNullParam[] = "		\n\
-													\n\
-	<?xml version='1.0' encoding='UTF-8'?>			\n\
-	<Session>										\n\
-	  <Simulator>									\n\
-		<Configurations>							\n\
-		  <DefaultConfiguration>					\n\
-													\n\
-			<Structure>								\n\
-			  <Copy>								\n\
-				<SampleNull							\n\
-				  Count = 'CoreCount'				\n\
-				  Name  = 'sampleNull'				\n\
-				/>                                  \n\
-			  </Copy>								\n\
-			</Structure>							\n\
-													\n\
-			<Parameter>								\n\
-			  <SampleNull							\n\
-				Name  = 'sampleNull'				\n\
-			  />									\n\
-			</Parameter>							\n\
-		  </DefaultConfiguration>					\n\
-		</Configurations>							\n\
-	  </Simulator>								    \n\
-	</Session>										\n\
-	";
+    // Default parameters and connections for SampleNull.
+    // This XML overwrite XML in DefaultParam.xml partially.
+    static const char g_sampleNullParam[] = "       \n\
+                                                    \n\
+    <?xml version='1.0' encoding='UTF-8'?>          \n\
+    <Session>                                       \n\
+      <Simulator>                                   \n\
+        <Configurations>                            \n\
+          <DefaultConfiguration>                    \n\
+                                                    \n\
+            <Structure>                             \n\
+              <Copy>                                \n\
+                <SampleNull                         \n\
+                  Count = 'CoreCount'               \n\
+                  Name  = 'sampleNull'              \n\
+                />                                  \n\
+              </Copy>                               \n\
+            </Structure>                            \n\
+                                                    \n\
+            <Parameter>                             \n\
+              <SampleNull                           \n\
+                Name  = 'sampleNull'                \n\
+              />                                    \n\
+            </Parameter>                            \n\
+          </DefaultConfiguration>                   \n\
+        </Configurations>                           \n\
+      </Simulator>                                  \n\
+    </Session>                                      \n\
+    ";
 
-#endif	// #ifdef USE_SAMPLE_NULL
+#endif  // #ifdef USE_SAMPLE_NULL
 
 }
 
-#endif	// #ifndef SAMPLES_SAMPLE_NULL_H
+#endif  // #ifndef SAMPLES_SAMPLE_NULL_H

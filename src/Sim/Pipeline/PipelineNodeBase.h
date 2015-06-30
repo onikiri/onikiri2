@@ -41,203 +41,203 @@
 
 namespace Onikiri 
 {
-	class Thread;
-	class Core;
+    class Thread;
+    class Core;
 
-	// A base class of Fetcher/Renamer/Dispatcher/Scheduler/Retirer
-	class PipelineNodeBase :
-		public ClockedResourceBase,
-		public PipelineNodeIF,
-		public PhysicalResourceNode
-	{
+    // A base class of Fetcher/Renamer/Dispatcher/Scheduler/Retirer
+    class PipelineNodeBase :
+        public ClockedResourceBase,
+        public PipelineNodeIF,
+        public PhysicalResourceNode
+    {
 
-	public:
-		
-		const char* Who() const 
-		{
-			return PhysicalResourceNode::Who(); 
-		};
+    public:
+        
+        const char* Who() const 
+        {
+            return PhysicalResourceNode::Who(); 
+        };
 
-		PipelineNodeBase() : 
-			m_initialized( false ),
-			m_enableLatch( true ),
-			m_upperPipelineNode( NULL ),
-			m_upperPipeline( NULL ),
-			m_lowerPipelineNode( NULL )
-		{
-			BaseT::AddChild( &m_latch );			// gcc needs 'BaseT::'
-			BaseT::AddChild( &m_lowerPipeline );	
-			m_lowerPipeline.AddUpperPipelineNode( this );
-		}
+        PipelineNodeBase() : 
+            m_initialized( false ),
+            m_enableLatch( true ),
+            m_upperPipelineNode( NULL ),
+            m_upperPipeline( NULL ),
+            m_lowerPipelineNode( NULL )
+        {
+            BaseT::AddChild( &m_latch );            // gcc needs 'BaseT::'
+            BaseT::AddChild( &m_lowerPipeline );    
+            m_lowerPipeline.AddUpperPipelineNode( this );
+        }
 
-		virtual ~PipelineNodeBase()
-		{
-			ASSERT( m_initialized, "Initialize() has not been called." );
-		}
+        virtual ~PipelineNodeBase()
+        {
+            ASSERT( m_initialized, "Initialize() has not been called." );
+        }
 
-		virtual void Initialize( InitPhase phase )
-		{
-			if( phase == INIT_POST_CONNECTION ){
-				if( m_thread.GetSize() == 0 ) {
-					THROW_RUNTIME_ERROR("thread not set.");
-				}
-				if( m_core.GetSize() == 0 ) {
-					THROW_RUNTIME_ERROR("core not set.");
-				}
-			}
+        virtual void Initialize( InitPhase phase )
+        {
+            if( phase == INIT_POST_CONNECTION ){
+                if( m_thread.GetSize() == 0 ) {
+                    THROW_RUNTIME_ERROR("thread not set.");
+                }
+                if( m_core.GetSize() == 0 ) {
+                    THROW_RUNTIME_ERROR("core not set.");
+                }
+            }
 
-			m_initialized = true;
-		}
+            m_initialized = true;
+        }
 
-		// Stall handlers
-		virtual void StallThisCycle()
-		{
-			BaseT::StallThisCycle();
-			
-			PipelineNodeIF* upper = GetUpperPipelineNode();
-			if( upper ){
-				upper->StallThisCycle();
-			}
-		}
+        // Stall handlers
+        virtual void StallThisCycle()
+        {
+            BaseT::StallThisCycle();
+            
+            PipelineNodeIF* upper = GetUpperPipelineNode();
+            if( upper ){
+                upper->StallThisCycle();
+            }
+        }
 
-		virtual void StallNextCycle( int cycle )
-		{
-			BaseT::StallNextCycle( cycle );
+        virtual void StallNextCycle( int cycle )
+        {
+            BaseT::StallNextCycle( cycle );
 
-			PipelineNodeIF* upper = GetUpperPipelineNode();
-			if( upper ){
-				upper->StallNextCycle( cycle );
-			}
-		}
+            PipelineNodeIF* upper = GetUpperPipelineNode();
+            if( upper ){
+                upper->StallNextCycle( cycle );
+            }
+        }
 
-		// Stall only upper pipelines and the latch.
-		// A pipeline next to this node is not stalled.
-		virtual void StallThisNodeAndUpperThisCycle()
-		{
-			PipelineNodeIF* upper = GetUpperPipelineNode();
-			if( upper ){
-				upper->StallThisCycle();
-			}
-			if( m_enableLatch ){
-				m_latch.StallThisCycle();
-			}
-			BaseT::StallThisCycleExcludingChildren();	// gcc needs 'BaseT::'
-		}
+        // Stall only upper pipelines and the latch.
+        // A pipeline next to this node is not stalled.
+        virtual void StallThisNodeAndUpperThisCycle()
+        {
+            PipelineNodeIF* upper = GetUpperPipelineNode();
+            if( upper ){
+                upper->StallThisCycle();
+            }
+            if( m_enableLatch ){
+                m_latch.StallThisCycle();
+            }
+            BaseT::StallThisCycleExcludingChildren();   // gcc needs 'BaseT::'
+        }
 
-		// This method is called when an op exits on upper pipeline.
-		// A pipeline that writes a buffer like Dispatcher
-		// overwrites this method.
-		virtual void ExitUpperPipeline( OpIterator op )
-		{
-			if( m_enableLatch ){
-				m_latch.Receive( op );
-			}
-		};
-		
-		// This method is called when an op exits an lower pipeline.
-		virtual void ExitLowerPipeline( OpIterator op )
-		{
-		};
+        // This method is called when an op exits on upper pipeline.
+        // A pipeline that writes a buffer like Dispatcher
+        // overwrites this method.
+        virtual void ExitUpperPipeline( OpIterator op )
+        {
+            if( m_enableLatch ){
+                m_latch.Receive( op );
+            }
+        };
+        
+        // This method is called when an op exits an lower pipeline.
+        virtual void ExitLowerPipeline( OpIterator op )
+        {
+        };
 
-		// Link pipeline nodes.
-		virtual void SetUpperPipelineNode( PipelineNodeIF* upper )
-		{
-			m_upperPipelineNode = upper;
-			m_upperPipeline     = upper->GetLowerPipeline();
-			upper->SetLowerPipelineNode( this );
-		}
+        // Link pipeline nodes.
+        virtual void SetUpperPipelineNode( PipelineNodeIF* upper )
+        {
+            m_upperPipelineNode = upper;
+            m_upperPipeline     = upper->GetLowerPipeline();
+            upper->SetLowerPipelineNode( this );
+        }
 
-		virtual void SetLowerPipelineNode( PipelineNodeIF* lower )
-		{
-			m_lowerPipelineNode = lower;
-		}
+        virtual void SetLowerPipelineNode( PipelineNodeIF* lower )
+        {
+            m_lowerPipelineNode = lower;
+        }
 
-		// 下流のPipelineを取得
-		virtual Pipeline* GetLowerPipeline()
-		{
-			return &m_lowerPipeline;
-		}
+        // 下流のPipelineを取得
+        virtual Pipeline* GetLowerPipeline()
+        {
+            return &m_lowerPipeline;
+        }
 
-		// 下流のPipelineNodeを取得
-		virtual PipelineNodeIF* GetLowerPipelineNode()
-		{
-			return m_lowerPipelineNode;
-		}
+        // 下流のPipelineNodeを取得
+        virtual PipelineNodeIF* GetLowerPipelineNode()
+        {
+            return m_lowerPipelineNode;
+        }
 
-		// 上流のパイプラインノードを取得
-		virtual PipelineNodeIF* GetUpperPipelineNode()
-		{
-			return m_upperPipelineNode;
-		}
+        // 上流のパイプラインノードを取得
+        virtual PipelineNodeIF* GetUpperPipelineNode()
+        {
+            return m_upperPipelineNode;
+        }
 
-		// Returns whether this node can allocate entries or not.
-		virtual bool CanAllocate( int ops )
-		{
-			return true;
-		}
+        // Returns whether this node can allocate entries or not.
+        virtual bool CanAllocate( int ops )
+        {
+            return true;
+        }
 
-		// Add an external lower pipeline.
-		virtual void AddLowerPipeline( Pipeline* pipe )
-		{
-			this->AddChild( pipe );	// gcc needs 'BaseT::'
-			pipe->AddUpperPipelineNode( this );
-			m_exLowerPipelines.push_back( pipe );
-		}
+        // Add an external lower pipeline.
+        virtual void AddLowerPipeline( Pipeline* pipe )
+        {
+            this->AddChild( pipe ); // gcc needs 'BaseT::'
+            pipe->AddUpperPipelineNode( this );
+            m_exLowerPipelines.push_back( pipe );
+        }
 
-		virtual void Commit( OpIterator op ){}
-		virtual void Cancel( OpIterator op ){}
+        virtual void Commit( OpIterator op ){}
+        virtual void Cancel( OpIterator op ){}
 
-		virtual void Flush( OpIterator op )
-		{
-			if( m_enableLatch ){
-				m_latch.Delete( op );
-			}
-			m_lowerPipeline.Flush( op );
-			for( size_t i = 0; i < m_exLowerPipelines.size(); i++ ){
-				m_exLowerPipelines[i]->Flush( op );
-			}
-		}
+        virtual void Flush( OpIterator op )
+        {
+            if( m_enableLatch ){
+                m_latch.Delete( op );
+            }
+            m_lowerPipeline.Flush( op );
+            for( size_t i = 0; i < m_exLowerPipelines.size(); i++ ){
+                m_exLowerPipelines[i]->Flush( op );
+            }
+        }
 
-		virtual void Retire( OpIterator op )
-		{
-			if( m_enableLatch ){
-				m_latch.Delete( op );
-			}
-			m_lowerPipeline.Retire( op );
-			for( size_t i = 0; i < m_exLowerPipelines.size(); i++ ){
-				m_exLowerPipelines[i]->Retire( op );
-			}
-		}
+        virtual void Retire( OpIterator op )
+        {
+            if( m_enableLatch ){
+                m_latch.Delete( op );
+            }
+            m_lowerPipeline.Retire( op );
+            for( size_t i = 0; i < m_exLowerPipelines.size(); i++ ){
+                m_exLowerPipelines[i]->Retire( op );
+            }
+        }
 
-		// Disable a pipeline latch if a latch is not used for optimization.
-		void DisableLatch()
-		{
-			for( Children::iterator i = m_children.begin(); i != m_children.end(); ++i ){
-				if( *i == (ClockedResourceIF*)&m_latch ){
-					m_children.erase( i );
-					break;
-				}
-			}
-			m_enableLatch = false;
-		}
+        // Disable a pipeline latch if a latch is not used for optimization.
+        void DisableLatch()
+        {
+            for( Children::iterator i = m_children.begin(); i != m_children.end(); ++i ){
+                if( *i == (ClockedResourceIF*)&m_latch ){
+                    m_children.erase( i );
+                    break;
+                }
+            }
+            m_enableLatch = false;
+        }
 
-		// accessors
-		Core* GetCore( int index = 0 ) { return m_core[index]; }
-	protected:
-		bool m_initialized;
-		bool m_enableLatch;
-		typedef ClockedResourceBase BaseT;
+        // accessors
+        Core* GetCore( int index = 0 ) { return m_core[index]; }
+    protected:
+        bool m_initialized;
+        bool m_enableLatch;
+        typedef ClockedResourceBase BaseT;
 
-		PipelineLatch m_latch;
-		PhysicalResourceArray<Thread> m_thread;
-		PhysicalResourceArray<Core>   m_core;
+        PipelineLatch m_latch;
+        PhysicalResourceArray<Thread> m_thread;
+        PhysicalResourceArray<Core>   m_core;
 
-		PipelineNodeIF* m_upperPipelineNode;
-		Pipeline*       m_upperPipeline;
-		PipelineNodeIF* m_lowerPipelineNode;
-		Pipeline        m_lowerPipeline;
-		std::vector<Pipeline*>  m_exLowerPipelines;
-	};
+        PipelineNodeIF* m_upperPipelineNode;
+        Pipeline*       m_upperPipeline;
+        PipelineNodeIF* m_lowerPipelineNode;
+        Pipeline        m_lowerPipeline;
+        std::vector<Pipeline*>  m_exLowerPipelines;
+    };
 
 }; // namespace Onikiri
 

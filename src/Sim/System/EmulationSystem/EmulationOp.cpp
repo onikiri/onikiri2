@@ -37,20 +37,20 @@ using namespace Onikiri;
 
 
 EmulationOp::EmulationOp( MemIF* mainMem ) :
-	m_opInfo ( NULL ),
-	m_taken  ( false ),
-	m_mem( mainMem )
+    m_opInfo ( NULL ),
+    m_taken  ( false ),
+    m_mem( mainMem )
 {
 }
 
 EmulationOp::EmulationOp( const EmulationOp& op ) :
-	m_pc     ( op.m_pc ),
-	m_opInfo ( op.m_opInfo ),
-	m_takenPC( op.m_takenPC ),
-	m_taken  ( op.m_taken ),
-	m_mem( op.m_mem ),
-	m_dstReg ( op.m_dstReg ),
-	m_srcReg ( op.m_srcReg )
+    m_pc     ( op.m_pc ),
+    m_opInfo ( op.m_opInfo ),
+    m_takenPC( op.m_takenPC ),
+    m_taken  ( op.m_taken ),
+    m_mem( op.m_mem ),
+    m_dstReg ( op.m_dstReg ),
+    m_srcReg ( op.m_srcReg )
 {
 }
 
@@ -59,93 +59,93 @@ EmulationOp::~EmulationOp()
 }
 
 void EmulationOp::SetPC( const PC& pc ) {
-	m_pc = pc;
+    m_pc = pc;
 }
 
 void EmulationOp::SetOpInfo( OpInfo* opInfo ) {
-	m_opInfo = opInfo;
+    m_opInfo = opInfo;
 }
 
 const OpInfo* EmulationOp::GetOpInfo() const
 {
-	return m_opInfo;
+    return m_opInfo;
 }
 
 void EmulationOp::SetMem( MemIF* mem )
 {
-	m_mem = mem;
+    m_mem = mem;
 }
 
 // OpStateIF
 PC EmulationOp::GetPC() const
 {
-	return m_pc;
+    return m_pc;
 }
 
 const u64 EmulationOp::GetSrc( const int index ) const
 {
-	return m_srcReg[index];
+    return m_srcReg[index];
 }
 
 void EmulationOp::SetSrc( const int index, const u64 value )
 {
-	m_srcReg[index] = value;
+    m_srcReg[index] = value;
 }
 
 const u64 EmulationOp::GetDst( const int index ) const
 {
-	return m_dstReg[index];
+    return m_dstReg[index];
 }
 
 
 void EmulationOp::SetDst( const int index, const u64 value )
 {
-	m_dstReg[index] = value;
+    m_dstReg[index] = value;
 }
 
 void EmulationOp::SetTakenPC( const PC takenPC )
 {
-	m_takenPC = takenPC;
+    m_takenPC = takenPC;
 }
 
 PC EmulationOp::GetTakenPC() const
 {
-	return m_takenPC;
+    return m_takenPC;
 }
 
 void EmulationOp::SetTaken( const bool taken )
 {
-	m_taken = taken;
+    m_taken = taken;
 }
 
 bool EmulationOp::GetTaken() const
 {
-	return m_taken;
+    return m_taken;
 }
 
 // MemIF
 void EmulationOp::Read( MemAccess* access )
 {
-	ASSERT( m_mem != NULL );
-	
-	// Write correct 'tid', because an emulator does not initialized it.
-	access->address.tid = m_pc.tid;
-	
-	m_mem->Read( access );
-	if( access->result != MemAccess::MAR_SUCCESS ){
-		RUNTIME_WARNING( "An access violation occurs.\n%s", access->ToString().c_str() );
-	}
+    ASSERT( m_mem != NULL );
+    
+    // Write correct 'tid', because an emulator does not initialized it.
+    access->address.tid = m_pc.tid;
+    
+    m_mem->Read( access );
+    if( access->result != MemAccess::MAR_SUCCESS ){
+        RUNTIME_WARNING( "An access violation occurs.\n%s", access->ToString().c_str() );
+    }
 }
 
 void EmulationOp::Write( MemAccess* access )
 {
-	ASSERT( m_mem != NULL );
+    ASSERT( m_mem != NULL );
 
-	// Write correct 'tid', because an emulator does not initialized it.
-	access->address.tid = m_pc.tid;
+    // Write correct 'tid', because an emulator does not initialized it.
+    access->address.tid = m_pc.tid;
 
-	m_mem->Write( access );
-	if( access->result != MemAccess::MAR_SUCCESS ){
-		RUNTIME_WARNING( "An access violation occurs.\n%s", access->ToString().c_str() );
-	}
+    m_mem->Write( access );
+    if( access->result != MemAccess::MAR_SUCCESS ){
+        RUNTIME_WARNING( "An access violation occurs.\n%s", access->ToString().c_str() );
+    }
 }

@@ -39,42 +39,42 @@
 
 namespace Onikiri {
 
-	namespace PPC64Linux {
+    namespace PPC64Linux {
 
-		// PowerPCの命令を，OpInfo の列に変換する
-		struct PPC64ConverterTraits {
-			typedef PPC64OpInfo OpInfoType;
-			typedef PPC64Decoder DecoderType;
+        // PowerPCの命令を，OpInfo の列に変換する
+        struct PPC64ConverterTraits {
+            typedef PPC64OpInfo OpInfoType;
+            typedef PPC64Decoder DecoderType;
 
-			typedef u32 CodeWordType;
-			static const int MaxOpInfoDefs = 3;
-			static const int MaxDstOperands = PPC64OpInfo::MaxDstRegCount;
-			static const int MaxSrcOperands = 6;	// SrcReg と SrcImm の合計
-		};
+            typedef u32 CodeWordType;
+            static const int MaxOpInfoDefs = 3;
+            static const int MaxDstOperands = PPC64OpInfo::MaxDstRegCount;
+            static const int MaxSrcOperands = 6;    // SrcReg と SrcImm の合計
+        };
 
-		// Alphaの命令を，OpInfo の列に変換する
-		class PPC64Converter : public EmulatorUtility::CommonConverter<PPC64ConverterTraits>
-		{
-		public:
-			PPC64Converter();
-			virtual ~PPC64Converter();
+        // Alphaの命令を，OpInfo の列に変換する
+        class PPC64Converter : public EmulatorUtility::CommonConverter<PPC64ConverterTraits>
+        {
+        public:
+            PPC64Converter();
+            virtual ~PPC64Converter();
 
-		private:
-			// CommonConverter のカスタマイズ
-			virtual bool IsZeroReg(int reg) const;
-			virtual std::pair<OperandType, int> GetActualSrcOperand(int srcTemplate, const DecodedInsn& decoded) const;
-			virtual int GetActualRegNumber(int regTemplate, const DecodedInsn& decoded) const;
-			virtual const OpDef* GetOpDefUnknown() const;
+        private:
+            // CommonConverter のカスタマイズ
+            virtual bool IsZeroReg(int reg) const;
+            virtual std::pair<OperandType, int> GetActualSrcOperand(int srcTemplate, const DecodedInsn& decoded) const;
+            virtual int GetActualRegNumber(int regTemplate, const DecodedInsn& decoded) const;
+            virtual const OpDef* GetOpDefUnknown() const;
 
-			// OpDef
-			static OpDef m_OpDefsBase[];
-			static OpDef m_OpDefsSplitLoadStore[];
-			static OpDef m_OpDefsNonSplitLoadStore[];
-			static OpDef m_OpDefUnknown;
+            // OpDef
+            static OpDef m_OpDefsBase[];
+            static OpDef m_OpDefsSplitLoadStore[];
+            static OpDef m_OpDefsNonSplitLoadStore[];
+            static OpDef m_OpDefUnknown;
 
-			static void PPC64UnknownOperation(EmulatorUtility::OpEmulationState* opState);
-		};
-	} // namespace PPC64Linux
+            static void PPC64UnknownOperation(EmulatorUtility::OpEmulationState* opState);
+        };
+    } // namespace PPC64Linux
 } // namespace Onikiri
 
 #endif

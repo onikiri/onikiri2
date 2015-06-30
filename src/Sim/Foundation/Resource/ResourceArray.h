@@ -37,64 +37,64 @@
 
 namespace Onikiri 
 {
-	template <class T>
-	class PhysicalResourceArray
-	{
-		std::vector<T*> m_array;
-	public:
+    template <class T>
+    class PhysicalResourceArray
+    {
+        std::vector<T*> m_array;
+    public:
 
-		typedef T ValueType;
-		typedef T* PtrType;
+        typedef T ValueType;
+        typedef T* PtrType;
 
-		PhysicalResourceArray()
-		{
-		}
+        PhysicalResourceArray()
+        {
+        }
 
-		virtual ~PhysicalResourceArray()
-		{
-		}
+        virtual ~PhysicalResourceArray()
+        {
+        }
 
-		void Clear()
-		{
-			m_array.clear();
-		}
+        void Clear()
+        {
+            m_array.clear();
+        }
 
-		void Resize(int size)
-		{
-			m_array.resize( size );
-		}
+        void Resize(int size)
+        {
+            m_array.resize( size );
+        }
 
-		int GetSize() const
-		{
-			return (int)m_array.size();
-		}
+        int GetSize() const
+        {
+            return (int)m_array.size();
+        }
 
-		void Add(T* ptr)
-		{
-			m_array.push_back( ptr );
-		}
+        void Add(T* ptr)
+        {
+            m_array.push_back( ptr );
+        }
 
-		PtrType& At(int index) 
-		{
-			return m_array[index];
-		}
+        PtrType& At(int index) 
+        {
+            return m_array[index];
+        }
 
-		const PtrType& At(int index) const
-		{
-			return m_array[index];
-		}
+        const PtrType& At(int index) const
+        {
+            return m_array[index];
+        }
 
 
-		PtrType& operator[] (int index) 
-		{
-			return m_array[index];
-		}
+        PtrType& operator[] (int index) 
+        {
+            return m_array[index];
+        }
 
-		const PtrType&  operator[] (int index) const
-		{
-			return m_array[index];
-		}
-	};
+        const PtrType&  operator[] (int index) const
+        {
+            return m_array[index];
+        }
+    };
 
 }; // namespace Onikiri
 

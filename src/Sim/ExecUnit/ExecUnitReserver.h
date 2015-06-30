@@ -36,56 +36,56 @@
 namespace Onikiri 
 {
 
-	class ExecUnitReserver
-	{
-	public:
-		ExecUnitReserver();
-		~ExecUnitReserver();
+    class ExecUnitReserver
+    {
+    public:
+        ExecUnitReserver();
+        ~ExecUnitReserver();
 
-		// unitCount:
-		//   The number of execution units belonging to this reserver.
-		// wheelSize: 
-		//   The size of a reservation wheel. Usually, 
-		//   this is set to the size of a time wheel.
-		void Initialize( int unitCount, int wheelSize );
+        // unitCount:
+        //   The number of execution units belonging to this reserver.
+        // wheelSize: 
+        //   The size of a reservation wheel. Usually, 
+        //   this is set to the size of a time wheel.
+        void Initialize( int unitCount, int wheelSize );
 
-		// Called when each cycle begins.
-		void Begin();
+        // Called when each cycle begins.
+        void Begin();
 
-		// Called in Evaluate phase.
-		bool CanReserve( int n, int time, int period );
-		
-		// Called in Evaluate phase.
-		void Reserve( int n, int time, int period );
-		
-		// Called in Update phase.
-		void Update();
+        // Called in Evaluate phase.
+        bool CanReserve( int n, int time, int period );
+        
+        // Called in Evaluate phase.
+        void Reserve( int n, int time, int period );
+        
+        // Called in Update phase.
+        void Update();
 
-	protected:
-		
-		// The number of units corresponding to this reserver.
-		int m_unitCount;
+    protected:
+        
+        // The number of units corresponding to this reserver.
+        int m_unitCount;
 
-		// Reservation wheel.
-		// This records the number of units used in each cycle.
-		std::vector< int > m_wheel;
+        // Reservation wheel.
+        // This records the number of units used in each cycle.
+        std::vector< int > m_wheel;
 
-		// This refers a point corresponding to a current cycle.
-		size_t m_current;
+        // This refers a point corresponding to a current cycle.
+        size_t m_current;
 
-		// Reservation queue.
-		struct Reservation
-		{
-			int count;
-			int time;
-			int period;
-		};
-		static const int RESERVATION_QUEUE_SIZE = 256;
-		typedef fixed_sized_buffer< Reservation, RESERVATION_QUEUE_SIZE > ReservationQueue;
-		ReservationQueue m_resvQueue;
+        // Reservation queue.
+        struct Reservation
+        {
+            int count;
+            int time;
+            int period;
+        };
+        static const int RESERVATION_QUEUE_SIZE = 256;
+        typedef fixed_sized_buffer< Reservation, RESERVATION_QUEUE_SIZE > ReservationQueue;
+        ReservationQueue m_resvQueue;
 
-		int GetWheelIndex( int delta );
-	};
+        int GetWheelIndex( int delta );
+    };
 
 }; // namespace Onikiri
 

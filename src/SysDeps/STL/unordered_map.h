@@ -43,11 +43,11 @@ namespace Onikiri
 {
 
 #ifdef BOOST_HAS_TR1_UNORDERED_MAP
-	using ::std::tr1::unordered_map;
-	using ::std::tr1::hash;
+    using ::std::tr1::unordered_map;
+    using ::std::tr1::hash;
 #else
-	using ::boost::unordered_map;
-	using ::boost::hash;
+    using ::boost::unordered_map;
+    using ::boost::hash;
 #endif
 
 }

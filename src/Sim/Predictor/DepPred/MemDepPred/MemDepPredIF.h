@@ -37,27 +37,27 @@
 
 namespace Onikiri 
 {
-	class Core;
-	
-	// メモリに関する依存予測器のインターフェース
-	class MemDepPredIF : public DepPredIF 
-	{
-	public:
-		virtual ~MemDepPredIF(){};
+    class Core;
+    
+    // メモリに関する依存予測器のインターフェース
+    class MemDepPredIF : public DepPredIF 
+    {
+    public:
+        virtual ~MemDepPredIF(){};
 
-		// Rename(Fetch) 時
-		virtual void Resolve(OpIterator op) = 0;		// op を 依存元の MemDependency に consumer 命令として割り当てる
-		virtual void Allocate(OpIterator op) = 0;		// op を MemDependency の producer 命令として割り当てる
-		virtual void Commit(OpIterator op) = 0;
-		virtual void Flush(OpIterator op) = 0;		// op が Flush された
+        // Rename(Fetch) 時
+        virtual void Resolve(OpIterator op) = 0;        // op を 依存元の MemDependency に consumer 命令として割り当てる
+        virtual void Allocate(OpIterator op) = 0;       // op を MemDependency の producer 命令として割り当てる
+        virtual void Commit(OpIterator op) = 0;
+        virtual void Flush(OpIterator op) = 0;      // op が Flush された
 
-		// MemOrderManagerによって、MemOrderのconflictを起こしたopの組(producer, consumer)を教えてもらう
-		virtual void OrderConflicted(OpIterator producer, OpIterator consumer) = 0;
+        // MemOrderManagerによって、MemOrderのconflictを起こしたopの組(producer, consumer)を教えてもらう
+        virtual void OrderConflicted(OpIterator producer, OpIterator consumer) = 0;
 
-		// num数のopをFetchできるかどうかを返す
-		virtual bool CanAllocate(OpIterator* infoArray, int numOp) = 0;
+        // num数のopをFetchできるかどうかを返す
+        virtual bool CanAllocate(OpIterator* infoArray, int numOp) = 0;
 
-	};
+    };
 
 }; // namespace Onikiri
 

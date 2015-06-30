@@ -46,43 +46,43 @@ const int FE_TOWARDZERO = _RC_CHOP;
 
 inline int fegetround(void)
 {
-	unsigned int fpcr;
-	_controlfp_s(&fpcr, 0, 0);
-	return (int)(fpcr & _MCW_RC);
+    unsigned int fpcr;
+    _controlfp_s(&fpcr, 0, 0);
+    return (int)(fpcr & _MCW_RC);
 }
 
 inline int fesetround(int rounding_mode)
 {
-	unsigned int fpcr;
-	return _controlfp_s(&fpcr, (unsigned int)rounding_mode, _MCW_RC);
+    unsigned int fpcr;
+    return _controlfp_s(&fpcr, (unsigned int)rounding_mode, _MCW_RC);
 }
 
 
 #elif defined( COMPILER_IS_GCC ) || defined(COMPILER_IS_CLANG)
-#	ifndef _GNU_SOURCE
-#		define _GNU_SOURCE
-#	endif
-#	include <fenv.h>
+#   ifndef _GNU_SOURCE
+#       define _GNU_SOURCE
+#   endif
+#   include <fenv.h>
 #else
-#	error "unknown compiler"
+#   error "unknown compiler"
 #endif
 
 const int FE_ROUNDDEFAULT = FE_TONEAREST;
 
 namespace Onikiri {
-	// setroundを毎回行うことによる性能低下はほとんどない
-	class ScopedFESetRound {
-	public:
-		ScopedFESetRound(int mode) {
-			m_oldMode = fegetround();
-			fesetround(mode);
-		}
-		~ScopedFESetRound() {
-			fesetround(m_oldMode);
-		}
-	private:
-		int m_oldMode;
-	};
+    // setroundを毎回行うことによる性能低下はほとんどない
+    class ScopedFESetRound {
+    public:
+        ScopedFESetRound(int mode) {
+            m_oldMode = fegetround();
+            fesetround(mode);
+        }
+        ~ScopedFESetRound() {
+            fesetround(m_oldMode);
+        }
+    private:
+        int m_oldMode;
+    };
 }
 
 #endif

@@ -37,18 +37,18 @@
 
 namespace Onikiri 
 {
-	
-	class SystemIF 
-	{
-	public:
-		SystemIF() {}
-		virtual ~SystemIF() {}
+    
+    class SystemIF 
+    {
+    public:
+        SystemIF() {}
+        virtual ~SystemIF() {}
 
-		virtual void NotifyProcessTermination(int pid) = 0;
-		virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size) = 0;
-		virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size) = 0;
-		virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate) = 0;
-	}; // class SystemIF
+        virtual void NotifyProcessTermination(int pid) = 0;
+        virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size) = 0;
+        virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size) = 0;
+        virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate) = 0;
+    }; // class SystemIF
 
 }; // namespace Onikiri
 

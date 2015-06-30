@@ -38,42 +38,42 @@ using namespace shttl;
 
 
 PHT::PHT() :
-	m_counterBits(0), 
-	m_entryBits(0)
+    m_counterBits(0), 
+    m_entryBits(0)
 {
 }
 
 PHT::~PHT()
 {
-	ReleaseParam();
+    ReleaseParam();
 }
 
 void PHT::Initialize(InitPhase phase)
 {
-	if(phase == INIT_PRE_CONNECTION){
-		LoadParam();
-		u8 max = (1 << m_counterBits) - 1;
-		m_table.construct(
-			1 << m_entryBits,	// size
-			(max + 1) / 2,		// init
-			0,					// min
-			max,				// max
-			1,					// add
-			1,					// sub
-			(max + 1) / 2		// threshold
-		);
-	}
+    if(phase == INIT_PRE_CONNECTION){
+        LoadParam();
+        u8 max = (1 << m_counterBits) - 1;
+        m_table.construct(
+            1 << m_entryBits,   // size
+            (max + 1) / 2,      // init
+            0,                  // min
+            max,                // max
+            1,                  // add
+            1,                  // sub
+            (max + 1) / 2       // threshold
+        );
+    }
 }
 
 void PHT::Update(int index, bool taken)
 {
-	if(taken)
-		m_table[index].inc();
-	else
-		m_table[index].dec();
+    if(taken)
+        m_table[index].inc();
+    else
+        m_table[index].dec();
 }
 
 bool PHT::Predict(int index)
 {
-	return m_table[index].above_threshold();
+    return m_table[index].above_threshold();
 }

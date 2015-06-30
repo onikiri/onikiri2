@@ -36,104 +36,104 @@
 #include "Emu/Utility/System/Memory/VirtualMemory.h"
 
 namespace Onikiri {
-	namespace EmulatorUtility {
+    namespace EmulatorUtility {
 
 
 
-		class MemorySystem
-		{
-			static const int RESERVED_PAGES = 256; // 鬼斬りで予約するページ
-			static const int RESERVED_PAGE_NULL = 0;
-			static const int RESERVED_PAGE_ZERO_FILLED = 1;
-		public:
-			MemorySystem( int pid, bool bigEndian, SystemIF* simSystem );
-			~MemorySystem();
+        class MemorySystem
+        {
+            static const int RESERVED_PAGES = 256; // 鬼斬りで予約するページ
+            static const int RESERVED_PAGE_NULL = 0;
+            static const int RESERVED_PAGE_ZERO_FILLED = 1;
+        public:
+            MemorySystem( int pid, bool bigEndian, SystemIF* simSystem );
+            ~MemorySystem();
 
-			// メモリ管理
-			// システムから見えるページサイズ
-			u64 GetPageSize();
+            // メモリ管理
+            // システムから見えるページサイズ
+            u64 GetPageSize();
 
-			// アドレス0からこれで返すアドレスまでは予約．
-			u64 GetReservedAddressRange(){ return GetPageSize() * RESERVED_PAGES - 1; };
+            // アドレス0からこれで返すアドレスまでは予約．
+            u64 GetReservedAddressRange(){ return GetPageSize() * RESERVED_PAGES - 1; };
 
-			// mmapに使うヒープに，[addr, addr+size) の領域を追加する
-			void AddHeapBlock(u64 addr, u64 size);
+            // mmapに使うヒープに，[addr, addr+size) の領域を追加する
+            void AddHeapBlock(u64 addr, u64 size);
 
-			// brkの初期値 (ロードされたイメージの末尾) を設定する
-			void SetInitialBrk(u64 initialBrk);
-			u64 Brk(u64 addr);
-			u64 MMap(u64 addr, u64 length);
-			u64 MRemap(u64 old_addr, u64 old_size, u64 new_size, bool mayMove = false);
-			int MUnmap(u64 addr, u64 length);
+            // brkの初期値 (ロードされたイメージの末尾) を設定する
+            void SetInitialBrk(u64 initialBrk);
+            u64 Brk(u64 addr);
+            u64 MMap(u64 addr, u64 length);
+            u64 MRemap(u64 old_addr, u64 old_size, u64 new_size, bool mayMove = false);
+            int MUnmap(u64 addr, u64 length);
 
-			// ビッグエンディアンかどうか
-			bool IsBigEndian() const 
-			{
-				return m_bigEndian;
-			}
+            // ビッグエンディアンかどうか
+            bool IsBigEndian() const 
+            {
+                return m_bigEndian;
+            }
 
-			u64 GetPageSize() const
-			{
-				return m_virtualMemory.GetPageSize();
-			}
+            u64 GetPageSize() const
+            {
+                return m_virtualMemory.GetPageSize();
+            }
 
-			// [addr, addr+size) を含むページに物理メモリを割り当てる．同上
-			void AssignPhysicalMemory(u64 addr, u64 size, VIRTUAL_MEMORY_ATTR_TYPE attr )
-			{
-				m_virtualMemory.AssignPhysicalMemory( addr, size, attr );
-			}
+            // [addr, addr+size) を含むページに物理メモリを割り当てる．同上
+            void AssignPhysicalMemory(u64 addr, u64 size, VIRTUAL_MEMORY_ATTR_TYPE attr )
+            {
+                m_virtualMemory.AssignPhysicalMemory( addr, size, attr );
+            }
 
-			// メモリ読み書き
-			void ReadMemory( MemAccess* access ) 
-			{
-				m_virtualMemory.ReadMemory( access );
-			}
+            // メモリ読み書き
+            void ReadMemory( MemAccess* access ) 
+            {
+                m_virtualMemory.ReadMemory( access );
+            }
 
-			void WriteMemory( MemAccess* access )
-			{
-				m_virtualMemory.WriteMemory( access );
-			}
+            void WriteMemory( MemAccess* access )
+            {
+                m_virtualMemory.WriteMemory( access );
+            }
 
 
-			// メモリ関連のヘルパ
-			// targetAddrからsizeバイトにvalueの値を書き込む
-			void TargetMemset(u64 targetAddr, int value, u64 size )
-			{
-				m_virtualMemory.TargetMemset( targetAddr, value, size );
-			}
-			// target のアドレス src から，host のアドレス dst に size バイトをコピーする
-			void MemCopyToHost(void* dst, u64 src, u64 size)
-			{
-				m_virtualMemory.MemCopyToHost( dst, src, size );
-			}
-			// host のアドレス src から，target のアドレス dst に size バイトをコピーする
-			void MemCopyToTarget(u64 dst, const void* src, u64 size)
-			{
-				m_virtualMemory.MemCopyToTarget( dst, src, size );
-			}
+            // メモリ関連のヘルパ
+            // targetAddrからsizeバイトにvalueの値を書き込む
+            void TargetMemset(u64 targetAddr, int value, u64 size )
+            {
+                m_virtualMemory.TargetMemset( targetAddr, value, size );
+            }
+            // target のアドレス src から，host のアドレス dst に size バイトをコピーする
+            void MemCopyToHost(void* dst, u64 src, u64 size)
+            {
+                m_virtualMemory.MemCopyToHost( dst, src, size );
+            }
+            // host のアドレス src から，target のアドレス dst に size バイトをコピーする
+            void MemCopyToTarget(u64 dst, const void* src, u64 size)
+            {
+                m_virtualMemory.MemCopyToTarget( dst, src, size );
+            }
 
-		private:
+        private:
 
-			// Cehck a value is aligned on a page boundary.
-			void CheckValueOnPageBoundary( u64 addr, const char* signature );
+            // Cehck a value is aligned on a page boundary.
+            void CheckValueOnPageBoundary( u64 addr, const char* signature );
 
-			VirtualMemory m_virtualMemory;
-			HeapAllocator m_heapAlloc;
+            VirtualMemory m_virtualMemory;
+            HeapAllocator m_heapAlloc;
 
-			// 実行ファイルが占める領域の終端 (currentBrkを含まず) Brk で拡張
-			u64 m_currentBrk;
+            // 実行ファイルが占める領域の終端 (currentBrkを含まず) Brk で拡張
+            u64 m_currentBrk;
 
-			// メモリ確保，解放時にシミュレータにコールバックを投げるためのインターフェース
-			SystemIF* m_simSystem;
+            // メモリ確保，解放時にシミュレータにコールバックを投げるためのインターフェース
+            SystemIF* m_simSystem;
 
-			// PID
-			int m_pid;
+            // PID
+            int m_pid;
 
-			// ターゲットがビッグエンディアンかどうか
-			bool m_bigEndian;
-		};
+            // ターゲットがビッグエンディアンかどうか
+            bool m_bigEndian;
+        };
 
-	} // namespace EmulatorUtility
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif

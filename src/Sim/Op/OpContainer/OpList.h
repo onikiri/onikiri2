@@ -37,123 +37,123 @@
 
 namespace Onikiri 
 {
-	class OpList
-		: private pool_list<OpIterator>
-	{
-	public:
-		typedef pool_list<OpIterator> list_type;
-		typedef pool_list<OpIterator>::iterator iterator;
-		typedef pool_list<OpIterator>::const_iterator const_iterator;
+    class OpList
+        : private pool_list<OpIterator>
+    {
+    public:
+        typedef pool_list<OpIterator> list_type;
+        typedef pool_list<OpIterator>::iterator iterator;
+        typedef pool_list<OpIterator>::const_iterator const_iterator;
 
-		OpList();
-		OpList( const OpArray& opArray );
-		virtual ~OpList();
+        OpList();
+        OpList( const OpArray& opArray );
+        virtual ~OpList();
 
-		void resize( const OpArray& opArray );
-		void resize( int capacity );
+        void resize( const OpArray& opArray );
+        void resize( int capacity );
 
-		iterator get_iterator( const OpIterator& opIterator ) const;
-		iterator get_original_iterator( const OpIterator& opIterator ) const;
-		iterator operator[]( const OpIterator& opIterator ) const;
-		iterator insert( iterator pos, const OpIterator& opIterator );
-		iterator erase( const OpIterator& opIterator );
-		iterator erase( iterator pos );
-		void clear();
-		iterator find( const OpIterator& opIterator );
-		size_t count( const OpIterator& op ) const;
-		void push_inorder( OpIterator op );
-		bool find_and_erase( OpIterator op );
+        iterator get_iterator( const OpIterator& opIterator ) const;
+        iterator get_original_iterator( const OpIterator& opIterator ) const;
+        iterator operator[]( const OpIterator& opIterator ) const;
+        iterator insert( iterator pos, const OpIterator& opIterator );
+        iterator erase( const OpIterator& opIterator );
+        iterator erase( iterator pos );
+        void clear();
+        iterator find( const OpIterator& opIterator );
+        size_t count( const OpIterator& op ) const;
+        void push_inorder( OpIterator op );
+        bool find_and_erase( OpIterator op );
 
-		size_t size() const
-		{
-			return list_type::size();
-		}
+        size_t size() const
+        {
+            return list_type::size();
+        }
 
-		bool empty() const
-		{
-			return list_type::empty();
-		}
+        bool empty() const
+        {
+            return list_type::empty();
+        }
 
-		iterator begin()
-		{
-			return list_type::begin();
-		}
+        iterator begin()
+        {
+            return list_type::begin();
+        }
 
-		const_iterator begin() const
-		{
-			return list_type::begin();
-		}
+        const_iterator begin() const
+        {
+            return list_type::begin();
+        }
 
-		iterator end()
-		{
-			return list_type::end();
-		}
+        iterator end()
+        {
+            return list_type::end();
+        }
 
-		const_iterator end() const
-		{
-			return list_type::end();
-		}
+        const_iterator end() const
+        {
+            return list_type::end();
+        }
 
-		OpIterator& front()
-		{
-			return list_type::front();
-		}
+        OpIterator& front()
+        {
+            return list_type::front();
+        }
 
-		OpIterator& back()
-		{
-			return list_type::back();
-		}
+        OpIterator& back()
+        {
+            return list_type::back();
+        }
 
-		const OpIterator& front() const 
-		{
-			return list_type::front();
-		}
+        const OpIterator& front() const 
+        {
+            return list_type::front();
+        }
 
-		const OpIterator& back() const 
-		{
-			return list_type::back();
-		}
+        const OpIterator& back() const 
+        {
+            return list_type::back();
+        }
 
-		void push_front( const OpIterator& opIterator )
-		{
-			insert( begin(), opIterator );
-		}
+        void push_front( const OpIterator& opIterator )
+        {
+            insert( begin(), opIterator );
+        }
 
-		void push_back( const OpIterator& opIterator )
-		{
-			insert( end(), opIterator );
-		}
+        void push_back( const OpIterator& opIterator )
+        {
+            insert( end(), opIterator );
+        }
 
-		void pop_front()
-		{
-			erase( begin() );
-		}
+        void pop_front()
+        {
+            erase( begin() );
+        }
 
-		void pop_back()
-		{
-			erase( --end() );
-		}
+        void pop_back()
+        {
+            erase( --end() );
+        }
 
-		template <class SortCmpT>
-		void sort(SortCmpT cmp)
-		{
-			list_type::sort(cmp);
-		}
+        template <class SortCmpT>
+        void sort(SortCmpT cmp)
+        {
+            list_type::sort(cmp);
+        }
 
-		// Move ops from other list to this list.
-		void move( OpList* from )
-		{
-			for( iterator i = from->begin(); i != from->end(); ){
-				push_inorder( *i );
-				i = from->erase(i);
-			}
-		}
+        // Move ops from other list to this list.
+        void move( OpList* from )
+        {
+            for( iterator i = from->begin(); i != from->end(); ){
+                push_inorder( *i );
+                i = from->erase(i);
+            }
+        }
 
-	protected:
-		boost::dynamic_bitset<> alive_table;
-		std::vector< iterator > iterator_table;
+    protected:
+        boost::dynamic_bitset<> alive_table;
+        std::vector< iterator > iterator_table;
 
-	};
+    };
 }; // namespace Onikiri
 
 #endif // SIM_OP_OP_CONTAINER_OP_LIST_H

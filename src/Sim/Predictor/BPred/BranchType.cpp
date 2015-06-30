@@ -36,41 +36,41 @@ using namespace Onikiri;
 
 size_t BranchTypeUtility::GetTypeCount() const
 {
-	return BT_END - BT_CONDITIONAL;
+    return BT_END - BT_CONDITIONAL;
 }
 
 BranchType BranchTypeUtility::OpClassToBranchType(const OpClass& opClass) const
 {
-	if(!opClass.IsBranch())
-		return BT_NON;
+    if(!opClass.IsBranch())
+        return BT_NON;
 
-	bool conditinal = opClass.IsConditionalBranch();
+    bool conditinal = opClass.IsConditionalBranch();
 
-	if( opClass.IsCall() )
-		return BT_CALL;
-	else if( opClass.IsReturn() )
-		return conditinal ? BT_CONDITIONAL_RETURN : BT_RETURN;
-	else if( conditinal )
-		return BT_CONDITIONAL;
-	else
-		return BT_UNCONDITIONAL;
+    if( opClass.IsCall() )
+        return BT_CALL;
+    else if( opClass.IsReturn() )
+        return conditinal ? BT_CONDITIONAL_RETURN : BT_RETURN;
+    else if( conditinal )
+        return BT_CONDITIONAL;
+    else
+        return BT_UNCONDITIONAL;
 }
 
 String BranchTypeUtility::GetTypeName(size_t index) const
 {
-	const char* name[] = 
-	{
-		"Conditional",
-		"Unconditional",
-		"Call",
-		"Return",
-		"Conditional return",
-		"Not branch"
-	};
+    const char* name[] = 
+    {
+        "Conditional",
+        "Unconditional",
+        "Call",
+        "Return",
+        "Conditional return",
+        "Not branch"
+    };
 
-	BranchType type = (BranchType)index;
-	if(type == BT_END){
-		THROW_RUNTIME_ERROR("BT_END is invalid.");
-	}
-	return name[type];
+    BranchType type = (BranchType)index;
+    if(type == BT_END){
+        THROW_RUNTIME_ERROR("BT_END is invalid.");
+    }
+    return name[type];
 }

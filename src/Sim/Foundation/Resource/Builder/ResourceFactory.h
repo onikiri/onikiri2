@@ -37,31 +37,31 @@
 
 namespace Onikiri
 {
-	// ---
-	class ResourceTypeTraitBase
-	{
-	public:
-		virtual ~ResourceTypeTraitBase(){};
-		virtual PhysicalResourceNode* CreateInstance() = 0;
-		virtual void* DynamicCast( PhysicalResourceIF* ) = 0;
-	};
+    // ---
+    class ResourceTypeTraitBase
+    {
+    public:
+        virtual ~ResourceTypeTraitBase(){};
+        virtual PhysicalResourceNode* CreateInstance() = 0;
+        virtual void* DynamicCast( PhysicalResourceIF* ) = 0;
+    };
 
 
-	class ResourceFactory : public ResourceTypeConverterIF
-	{
-		typedef std::map< String, ResourceTypeTraitBase* > MapType;
-		MapType	m_resTypeMap;
+    class ResourceFactory : public ResourceTypeConverterIF
+    {
+        typedef std::map< String, ResourceTypeTraitBase* > MapType;
+        MapType m_resTypeMap;
 
-		void CheckTypeRegistered(const String& typeName);
-		ResourceTypeTraitBase* GetTrait( const String& typeName );
-		void InitializeUserResourceMap();
-	public:
+        void CheckTypeRegistered(const String& typeName);
+        ResourceTypeTraitBase* GetTrait( const String& typeName );
+        void InitializeUserResourceMap();
+    public:
 
-		ResourceFactory();
-		void InitializeResourceMap();
-		PhysicalResourceNode* CreateInstance(const String& typeName);
-		void* DynamicCast(const String& typeName, PhysicalResourceIF* orgPtr);
-	};
+        ResourceFactory();
+        void InitializeResourceMap();
+        PhysicalResourceNode* CreateInstance(const String& typeName);
+        void* DynamicCast(const String& typeName, PhysicalResourceIF* orgPtr);
+    };
 }
 
 #endif

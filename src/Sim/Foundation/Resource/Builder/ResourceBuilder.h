@@ -40,178 +40,178 @@
 
 namespace Onikiri
 {
-	class ResourceBuilder
-	{
-	public:
-		// Node of structure
-		struct ResNode
-		{
-			typedef 
-				boost::shared_ptr<ResNode> 
-				ResNodePtr;
+    class ResourceBuilder
+    {
+    public:
+        // Node of structure
+        struct ResNode
+        {
+            typedef 
+                boost::shared_ptr<ResNode> 
+                ResNodePtr;
 
-			ResNodePtr parent;
-			std::vector< PhysicalResourceNode* > instances;
+            ResNodePtr parent;
+            std::vector< PhysicalResourceNode* > instances;
 
-			struct Child
-			{
-				String to;
-				String name;
-				ResNodePtr node;
-			};
-			std::vector< Child > children;
+            struct Child
+            {
+                String to;
+                String name;
+                ResNodePtr node;
+            };
+            std::vector< Child > children;
 
-			String type;
-			String name;
-			ParamXMLPath paramPath;
-			ParamXMLPath resultPath;
-			int count;
-			int cluster;
-			int copyCount;
-			bool external;
+            String type;
+            String name;
+            ParamXMLPath paramPath;
+            ParamXMLPath resultPath;
+            int count;
+            int cluster;
+            int copyCount;
+            bool external;
 
-			ResNode();
-		};
-		typedef ResNode::ResNodePtr ResNodePtr;
+            ResNode();
+        };
+        typedef ResNode::ResNodePtr ResNodePtr;
 
-		typedef ParamXMLTree::Node    XMLNode;
-		typedef ParamXMLTree::NodePtr XMLNodePtr;
-		typedef ParamXMLTree::NodeArray XMLNodeArray;
-		typedef ParamXMLTree::ChildMap  XMLChildMap;
-		typedef ParamXMLTree::AttributeMap XMLAttributeMap;
+        typedef ParamXMLTree::Node    XMLNode;
+        typedef ParamXMLTree::NodePtr XMLNodePtr;
+        typedef ParamXMLTree::NodeArray XMLNodeArray;
+        typedef ParamXMLTree::ChildMap  XMLChildMap;
+        typedef ParamXMLTree::AttributeMap XMLAttributeMap;
 
-	protected:
-		ResNodePtr m_rootNode;
+    protected:
+        ResNodePtr m_rootNode;
 
-		typedef std::map<String, ResNodePtr> ResNodeMap;
-		ResNodeMap m_resNodeMap;
-		std::vector<PhysicalResourceNode*> m_instanceList;
+        typedef std::map<String, ResNodePtr> ResNodeMap;
+        ResNodeMap m_resNodeMap;
+        std::vector<PhysicalResourceNode*> m_instanceList;
 
-		ResourceFactory m_factory;
+        ResourceFactory m_factory;
 
-		// Constant value map
-		typedef std::map<String, int> ConstantMap;
-		ConstantMap m_constMap;
+        // Constant value map
+        typedef std::map<String, int> ConstantMap;
+        ConstantMap m_constMap;
 
-		// Get the path of 'Configuration' node specified by 'Simulator/@Configuration'
-		ParamXMLPath GetConfigurationPath();
-		
-		// Load the constant section in XML
-		void LoadConstantSection(const ParamXMLPath& path);
+        // Get the path of 'Configuration' node specified by 'Simulator/@Configuration'
+        ParamXMLPath GetConfigurationPath();
+        
+        // Load the constant section in XML
+        void LoadConstantSection(const ParamXMLPath& path);
 
-		// Load the parameter section
-		void LoadParameterSection(const ParamXMLPath& path);
+        // Load the parameter section
+        void LoadParameterSection(const ParamXMLPath& path);
 
-		// Load the structure section
-		void LoadStructureSection(const ParamXMLPath& path);
+        // Load the structure section
+        void LoadStructureSection(const ParamXMLPath& path);
 
-		// Get attribute of 'Structure' node 
-		int GetStructureNodeValue(const XMLNodePtr node, const String& attrName);
-		String GetStructureNodeString(const XMLNodePtr node, const String& attrName);
+        // Get attribute of 'Structure' node 
+        int GetStructureNodeValue(const XMLNodePtr node, const String& attrName);
+        String GetStructureNodeString(const XMLNodePtr node, const String& attrName);
 
-		// Process structure nodes recursively
-		void TraverseStructureNode(ResNodePtr resParent, XMLNodePtr xmlParent, int copyCount);
+        // Process structure nodes recursively
+        void TraverseStructureNode(ResNodePtr resParent, XMLNodePtr xmlParent, int copyCount);
 
-		// Construct each resource from the node map
-		void ConstructResources();
+        // Construct each resource from the node map
+        void ConstructResources();
 
-		// Connect each resource
-		void ConnectResources();
+        // Connect each resource
+        void ConnectResources();
 
-		// Initialize all nodes
-		void InitializeNodes( PhysicalResourceNode::InitPhase phase );
+        // Initialize all nodes
+        void InitializeNodes( PhysicalResourceNode::InitPhase phase );
 
-		// Validate connection.
-		void ValidateConnection();
+        // Validate connection.
+        void ValidateConnection();
 
-		// --- Dump the loaded data for debug
-		void Dump();
+        // --- Dump the loaded data for debug
+        void Dump();
 
-	public:
-		ResourceBuilder();
-		virtual ~ResourceBuilder();
+    public:
+        ResourceBuilder();
+        virtual ~ResourceBuilder();
 
-		// Set external resource
-		void SetExternalResource( ResNode* node );
+        // Set external resource
+        void SetExternalResource( ResNode* node );
 
-		// Construct all physical resources
-		void Construct();
+        // Construct all physical resources
+        void Construct();
 
-		// Release all configuration data
-		void Release();
+        // Release all configuration data
+        void Release();
 
-		// Get all resources
-		std::vector<PhysicalResourceNode*> GetAllResources()
-		{
-			return m_instanceList; 
-		}
+        // Get all resources
+        std::vector<PhysicalResourceNode*> GetAllResources()
+        {
+            return m_instanceList; 
+        }
 
-		// Get resources specified by the passed name.
-		// Todo: add a version specified by the type name
-		template <class T>
-		bool GetResource(const String& name, PhysicalResourceArray<T>& resArray)
-		{
-			ResNodeMap::iterator ni = m_resNodeMap.find( name );
-			if( ni == m_resNodeMap.end() )
-				return false;
+        // Get resources specified by the passed name.
+        // Todo: add a version specified by the type name
+        template <class T>
+        bool GetResource(const String& name, PhysicalResourceArray<T>& resArray)
+        {
+            ResNodeMap::iterator ni = m_resNodeMap.find( name );
+            if( ni == m_resNodeMap.end() )
+                return false;
 
-			ResNodePtr node = ni->second;
-			size_t size = node->instances.size();
-			resArray.Resize( size );
-			for( size_t i = 0; i < size; i++ ){
-				resArray[i] = dynamic_cast<T*>( node->instances[i] );
-			}
+            ResNodePtr node = ni->second;
+            size_t size = node->instances.size();
+            resArray.Resize( size );
+            for( size_t i = 0; i < size; i++ ){
+                resArray[i] = dynamic_cast<T*>( node->instances[i] );
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		template <class T>
-		bool GetResource(const String& name, T*& resPtr)
-		{
-			PhysicalResourceArray<T> resArray;
-			if( !GetResource( name, resArray ) ){
-				return false;
-			}
+        template <class T>
+        bool GetResource(const String& name, T*& resPtr)
+        {
+            PhysicalResourceArray<T> resArray;
+            if( !GetResource( name, resArray ) ){
+                return false;
+            }
 
-			if( resArray.GetSize() != 1 ){
-				return false;
-			}
+            if( resArray.GetSize() != 1 ){
+                return false;
+            }
 
-			resPtr = resArray[0];
-			return true;
-		}
+            resPtr = resArray[0];
+            return true;
+        }
 
 
-		// Get resources specified by the passed type name.
-		template <class T>
-		bool GetResourceByType(const String& typeName, PhysicalResourceArray<T>& resArray)
-		{
-			resArray.Clear();
-			for( size_t i = 0; i < m_instanceList.size(); ++i ){
-				if( m_instanceList[i]->GetTypeName() == typeName ){
-					resArray.Add( dynamic_cast<T*>( m_instanceList[i] ) );
-				}
-			}
+        // Get resources specified by the passed type name.
+        template <class T>
+        bool GetResourceByType(const String& typeName, PhysicalResourceArray<T>& resArray)
+        {
+            resArray.Clear();
+            for( size_t i = 0; i < m_instanceList.size(); ++i ){
+                if( m_instanceList[i]->GetTypeName() == typeName ){
+                    resArray.Add( dynamic_cast<T*>( m_instanceList[i] ) );
+                }
+            }
 
-			return resArray.GetSize() != 0;
-		}
+            return resArray.GetSize() != 0;
+        }
 
-		template <class T>
-		bool GetResourceByType(const String& typeName, T*& resPtr)
-		{
-			PhysicalResourceArray<T> resArray;
-			if( !GetResourceByType( typeName, resArray ) ){
-				return false;
-			}
+        template <class T>
+        bool GetResourceByType(const String& typeName, T*& resPtr)
+        {
+            PhysicalResourceArray<T> resArray;
+            if( !GetResourceByType( typeName, resArray ) ){
+                return false;
+            }
 
-			if( resArray.GetSize() != 1 ){
-				return false;
-			}
+            if( resArray.GetSize() != 1 ){
+                return false;
+            }
 
-			resPtr = resArray[0];
-			return true;
-		}
-	};
+            resPtr = resArray[0];
+            return true;
+        }
+    };
 
 } // namespace Onikiri
 

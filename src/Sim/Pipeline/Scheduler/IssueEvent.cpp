@@ -39,14 +39,14 @@
 using namespace Onikiri;
 
 OpIssueEvent::OpIssueEvent(
-	OpIterator op
+    OpIterator op
 ) :
-	m_op( op )
+    m_op( op )
 {
 }
 
 void OpIssueEvent::Update()
 {
-	m_op->GetScheduler()->Issue( m_op );
+    m_op->GetScheduler()->Issue( m_op );
 }
 

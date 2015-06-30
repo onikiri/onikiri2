@@ -41,11 +41,11 @@
 namespace Onikiri 
 {
 
-	struct HookType;
-	template <typename CallerT, typename ParamT = CallerT> 
-		class  HookParameter;
-	template<typename CallerT, typename ParamT = CallerT>
-		class HookPoint;
+    struct HookType;
+    template <typename CallerT, typename ParamT = CallerT> 
+        class  HookParameter;
+    template<typename CallerT, typename ParamT = CallerT>
+        class HookPoint;
 
 }; // namespace Onikiri
 

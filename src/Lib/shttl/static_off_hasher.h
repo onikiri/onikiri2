@@ -41,74 +41,74 @@
 namespace shttl 
 {
 
-	template<class T = u32, size_t OFFSET = 0>		// Offset bits
-	class static_off_hasher : public hasher<T> {
-	public:
+    template<class T = u32, size_t OFFSET = 0>      // Offset bits
+    class static_off_hasher : public hasher<T> {
+    public:
 
-		// Types
-		typedef static_off_hasher<T, OFFSET>	this_type;
-		typedef hasher<T>				base_type;
+        // Types
+        typedef static_off_hasher<T, OFFSET>    this_type;
+        typedef hasher<T>               base_type;
 
-		typedef typename base_type::size_type  size_type;
-		typedef T                              value_type;
+        typedef typename base_type::size_type  size_type;
+        typedef T                              value_type;
 
-		static const std::numeric_limits<value_type> value_info;
+        static const std::numeric_limits<value_type> value_info;
 
-		// Accessors
-		size_type  idx_bit()  const { return m_idx_bit;				 }
-		value_type idx_mask() const { return m_idx_mask;			 }
-		size_type  off_bit()  const { return OFFSET;				 }
-		u64		   off_mask() const { return shttl::mask(0, OFFSET); }
+        // Accessors
+        size_type  idx_bit()  const { return m_idx_bit;              }
+        value_type idx_mask() const { return m_idx_mask;             }
+        size_type  off_bit()  const { return OFFSET;                 }
+        u64        off_mask() const { return shttl::mask(0, OFFSET); }
 
-		// size() returns maximum value of index()
-		size_type size() const 
-		{
-			return (size_type)idx_mask() + 1; 
-		}
+        // size() returns maximum value of index()
+        size_type size() const 
+        {
+            return (size_type)idx_mask() + 1; 
+        }
 
-		// Constructor(s)
-		explicit static_off_hasher(const size_type index_bit_size) :
-			m_idx_bit ( index_bit_size ), 
-			m_idx_mask( (value_type)shttl::mask(0, index_bit_size) )
-		{
-			if( (/*idx_bit() < 0 || */(size_type)value_info.digits < idx_bit()) ||
-				(/*off_bit() < 0 || */(size_type)value_info.digits < off_bit()) ||
-				(                 (size_type)value_info.digits < idx_bit() + off_bit()	)
-			){
-				throw std::invalid_argument("static_off_hasher::static_off_hasher");  
-			}
-		}
+        // Constructor(s)
+        explicit static_off_hasher(const size_type index_bit_size) :
+            m_idx_bit ( index_bit_size ), 
+            m_idx_mask( (value_type)shttl::mask(0, index_bit_size) )
+        {
+            if( (/*idx_bit() < 0 || */(size_type)value_info.digits < idx_bit()) ||
+                (/*off_bit() < 0 || */(size_type)value_info.digits < off_bit()) ||
+                (                 (size_type)value_info.digits < idx_bit() + off_bit()  )
+            ){
+                throw std::invalid_argument("static_off_hasher::static_off_hasher");  
+            }
+        }
 
 
-		// Member Functions
-		size_type index(const T& t) const  
-		{
-			return static_cast<size_type>((t >> off_bit()) & idx_mask());
-		}
+        // Member Functions
+        size_type index(const T& t) const  
+        {
+            return static_cast<size_type>((t >> off_bit()) & idx_mask());
+        }
 
-		T tag(const T& t) const
-		{
-			return t >> (off_bit()+idx_bit());
-		}
+        T tag(const T& t) const
+        {
+            return t >> (off_bit()+idx_bit());
+        }
 
-		value_type rebuild(const value_type& tag, size_type index) const 
-		{
-			return (value_type)(
-				((tag << idx_bit()) | index) << off_bit()
-			);
-		}
+        value_type rebuild(const value_type& tag, size_type index) const 
+        {
+            return (value_type)(
+                ((tag << idx_bit()) | index) << off_bit()
+            );
+        }
 
-		bool match(const T& lhs, const T& rhs) const 
-		{
-			return (lhs & ~off_mask()) == (rhs & ~off_mask());
-		}
+        bool match(const T& lhs, const T& rhs) const 
+        {
+            return (lhs & ~off_mask()) == (rhs & ~off_mask());
+        }
 
-	protected:
+    protected:
 
-		size_type   m_idx_bit;
-		value_type  m_idx_mask;
+        size_type   m_idx_bit;
+        value_type  m_idx_mask;
 
-	};
+    };
 
 } // namespace shttl
 

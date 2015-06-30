@@ -37,81 +37,81 @@
 
 namespace Onikiri
 {
-	class AdrHasher : public shttl::hasher<Addr>
-	{
-	public:
-		// --
+    class AdrHasher : public shttl::hasher<Addr>
+    {
+    public:
+        // --
 
-		typedef shttl::hasher<Addr> base_type;
-		typedef AdrHasher		    this_type;
+        typedef shttl::hasher<Addr> base_type;
+        typedef AdrHasher           this_type;
 
-		typedef base_type::size_type size_type;
-		typedef Addr value_type;
+        typedef base_type::size_type size_type;
+        typedef Addr value_type;
 
-		static const std::numeric_limits<u64> value_info;
+        static const std::numeric_limits<u64> value_info;
 
-	private:
-		size_type   m_idx_bit;
-		u64         m_idx_mask;
-		size_type	m_off_bit;
-		u64	        m_off_mask;
+    private:
+        size_type   m_idx_bit;
+        u64         m_idx_mask;
+        size_type   m_off_bit;
+        u64         m_off_mask;
 
-	public:
+    public:
 
-		// size() returns maximum value of index()
-		size_type size() const 
-		{
-			return (size_type)(m_idx_mask + 1); 
-		}
+        // size() returns maximum value of index()
+        size_type size() const 
+        {
+            return (size_type)(m_idx_mask + 1); 
+        }
 
-		// Constructor(s)
-		explicit AdrHasher(
-			const size_type idx_bit_arg, 
-			const size_type off_bit_arg
-		) :
-			m_idx_bit ( idx_bit_arg ), 
-			m_idx_mask( shttl::mask(0, idx_bit_arg) ),
-			m_off_bit ( off_bit_arg ), 
-			m_off_mask( shttl::mask(0, off_bit_arg ) 
-		){
-			if( ( (size_type)value_info.digits < m_idx_bit ) ||
-			    ( (size_type)value_info.digits < m_off_bit ) ||
-			    ( (size_type)value_info.digits < m_idx_bit + m_off_bit )
-			){
-				throw std::invalid_argument("AdrHasher::AdrHasher");
-			}
-		}
+        // Constructor(s)
+        explicit AdrHasher(
+            const size_type idx_bit_arg, 
+            const size_type off_bit_arg
+        ) :
+            m_idx_bit ( idx_bit_arg ), 
+            m_idx_mask( shttl::mask(0, idx_bit_arg) ),
+            m_off_bit ( off_bit_arg ), 
+            m_off_mask( shttl::mask(0, off_bit_arg ) 
+        ){
+            if( ( (size_type)value_info.digits < m_idx_bit ) ||
+                ( (size_type)value_info.digits < m_off_bit ) ||
+                ( (size_type)value_info.digits < m_idx_bit + m_off_bit )
+            ){
+                throw std::invalid_argument("AdrHasher::AdrHasher");
+            }
+        }
 
-		~AdrHasher() 
-		{
-		}
+        ~AdrHasher() 
+        {
+        }
 
-		// Member Functions
-		size_type index(const value_type& t) const 
-		{
-			return (size_type)((t.address >> m_off_bit) & m_idx_mask);
-		}
+        // Member Functions
+        size_type index(const value_type& t) const 
+        {
+            return (size_type)((t.address >> m_off_bit) & m_idx_mask);
+        }
 
-		value_type tag(const value_type& t) const
-		{
-			value_type adr(t);
-			adr.address >>= (m_off_bit+m_idx_bit);
-			return adr;
-		}
+        value_type tag(const value_type& t) const
+        {
+            value_type adr(t);
+            adr.address >>= (m_off_bit+m_idx_bit);
+            return adr;
+        }
 
-		value_type rebuild(const value_type& tag, size_type index) const 
-		{
-			value_type adr(tag);
-			adr.address = ((tag.address << m_idx_bit) | index) << m_off_bit;
-			return adr;
-		}
+        value_type rebuild(const value_type& tag, size_type index) const 
+        {
+            value_type adr(tag);
+            adr.address = ((tag.address << m_idx_bit) | index) << m_off_bit;
+            return adr;
+        }
 
-		bool match(const value_type& lhs, const value_type& rhs) const 
-		{
-			return lhs == rhs;
-		}
+        bool match(const value_type& lhs, const value_type& rhs) const 
+        {
+            return lhs == rhs;
+        }
 
-	};
+    };
 
 } // namespace Onikiri
 

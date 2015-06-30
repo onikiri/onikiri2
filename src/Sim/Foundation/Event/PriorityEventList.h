@@ -40,137 +40,137 @@
 
 namespace Onikiri
 {
-	class PriorityEventList
-	{
-	public:
-		PriorityEventList() :
-			m_updatePriority( RP_LOWEST ),
-			m_evaluatePriority( RP_LOWEST )
-		{
-			//m_eventList.resize( CRP_HIGHEST + 1 );
-			for( int i = RP_LOWEST; i < RP_HIGHEST + 1; i++ ){
-				m_eventList.push_back( new EventList );
-			}
-		}
+    class PriorityEventList
+    {
+    public:
+        PriorityEventList() :
+            m_updatePriority( RP_LOWEST ),
+            m_evaluatePriority( RP_LOWEST )
+        {
+            //m_eventList.resize( CRP_HIGHEST + 1 );
+            for( int i = RP_LOWEST; i < RP_HIGHEST + 1; i++ ){
+                m_eventList.push_back( new EventList );
+            }
+        }
 
-		~PriorityEventList()
-		{
-			for( PriorityList::iterator i = m_eventList.begin(); i != m_eventList.end(); ++i ){
-				delete *i;
-			}
-			m_eventList.clear();
-		}
+        ~PriorityEventList()
+        {
+            for( PriorityList::iterator i = m_eventList.begin(); i != m_eventList.end(); ++i ){
+                delete *i;
+            }
+            m_eventList.clear();
+        }
 
-		//typedef EventPtr PtrType;
-		typedef EventBaseImplement* PtrType;
-		struct Entry
-		{
-			PtrType event;
-			TimeWheelBase* timeWheel;
+        //typedef EventPtr PtrType;
+        typedef EventBaseImplement* PtrType;
+        struct Entry
+        {
+            PtrType event;
+            TimeWheelBase* timeWheel;
 
-			Entry( const PtrType& e, TimeWheelBase* t ) :
-				event( e ),
-				timeWheel( t )
-			{
+            Entry( const PtrType& e, TimeWheelBase* t ) :
+                event( e ),
+                timeWheel( t )
+            {
 
-			}
-			Entry() :
-				event( 0 ),
-				timeWheel( 0 )
-			{
+            }
+            Entry() :
+                event( 0 ),
+                timeWheel( 0 )
+            {
 
-			}
-		};
+            }
+        };
 
-		//typedef pool_vector< Entry > EventList;
-		enum MaxEvent{ MAX_EVENT_IN_ONE_CYCLE = 4096 };
-		typedef fixed_sized_buffer< Entry, MAX_EVENT_IN_ONE_CYCLE, MaxEvent > EventList;
+        //typedef pool_vector< Entry > EventList;
+        enum MaxEvent{ MAX_EVENT_IN_ONE_CYCLE = 4096 };
+        typedef fixed_sized_buffer< Entry, MAX_EVENT_IN_ONE_CYCLE, MaxEvent > EventList;
 
-		enum MaxPriority{ MAX_PRIORITY = RP_HIGHEST + 1 };
-		typedef fixed_sized_buffer< EventList*, MAX_PRIORITY, MaxPriority > PriorityList;
+        enum MaxPriority{ MAX_PRIORITY = RP_HIGHEST + 1 };
+        typedef fixed_sized_buffer< EventList*, MAX_PRIORITY, MaxPriority > PriorityList;
 
-		typedef std::vector< TimeWheelBase* > TimeWheelList;
+        typedef std::vector< TimeWheelBase* > TimeWheelList;
 
-		// Extract events processed in this cycle.
-		// Events are extracted from 'timeWheels' to 'm_eventList'.
-		void ExtractEvent( TimeWheelList* timeWheels )
-		{
-			for( PriorityList::iterator i = m_eventList.begin(); i != m_eventList.end(); ++i ){
-				(*i)->clear();
-			}
+        // Extract events processed in this cycle.
+        // Events are extracted from 'timeWheels' to 'm_eventList'.
+        void ExtractEvent( TimeWheelList* timeWheels )
+        {
+            for( PriorityList::iterator i = m_eventList.begin(); i != m_eventList.end(); ++i ){
+                (*i)->clear();
+            }
 
-			// Extract events triggered in this cycle.
-			TimeWheelList::iterator timeEnd = timeWheels->end();
-			for( TimeWheelList::iterator i = timeWheels->begin(); i != timeEnd; ++i ){
-				TimeWheelBase* wheel = *i;
-				const TimeWheelBase::ListType& events = wheel->CurrentEvents();
-				TimeWheelBase::ListType::ConstIteratorType end = events.end();
-				for( TimeWheelBase::ListType::ConstIteratorType e = events.begin(); e != end; ++e ){
-					PtrType event = &(*e->event);
-					if( !event->IsCanceled() ){
-						EventList* list = m_eventList[ event->GetPriority() ];
-						list->push_back( Entry( event, wheel ) );
-					}
-				}
-			}
+            // Extract events triggered in this cycle.
+            TimeWheelList::iterator timeEnd = timeWheels->end();
+            for( TimeWheelList::iterator i = timeWheels->begin(); i != timeEnd; ++i ){
+                TimeWheelBase* wheel = *i;
+                const TimeWheelBase::ListType& events = wheel->CurrentEvents();
+                TimeWheelBase::ListType::ConstIteratorType end = events.end();
+                for( TimeWheelBase::ListType::ConstIteratorType e = events.begin(); e != end; ++e ){
+                    PtrType event = &(*e->event);
+                    if( !event->IsCanceled() ){
+                        EventList* list = m_eventList[ event->GetPriority() ];
+                        list->push_back( Entry( event, wheel ) );
+                    }
+                }
+            }
 
-		}
+        }
 
-		void BeginEvaluate()
-		{
-			m_evaluatePriority = RP_HIGHEST;
-		}
+        void BeginEvaluate()
+        {
+            m_evaluatePriority = RP_HIGHEST;
+        }
 
-		void TriggerEvaluate( int priority )
-		{
-			int curPriority;
-			for( curPriority = m_evaluatePriority; curPriority >= priority; curPriority-- ){
-				EventList* eventList = m_eventList[curPriority];
-				EventList::iterator eventEnd = eventList->end();
-				for( EventList::iterator i = eventList->begin(); i != eventEnd; ++i ){
-					i->event->TriggerEvaluate();
-				}
-			}
-			m_evaluatePriority = curPriority; 
-		}
+        void TriggerEvaluate( int priority )
+        {
+            int curPriority;
+            for( curPriority = m_evaluatePriority; curPriority >= priority; curPriority-- ){
+                EventList* eventList = m_eventList[curPriority];
+                EventList::iterator eventEnd = eventList->end();
+                for( EventList::iterator i = eventList->begin(); i != eventEnd; ++i ){
+                    i->event->TriggerEvaluate();
+                }
+            }
+            m_evaluatePriority = curPriority; 
+        }
 
-		void EndEvaluate()
-		{
-			TriggerEvaluate( RP_LOWEST );
-		}
+        void EndEvaluate()
+        {
+            TriggerEvaluate( RP_LOWEST );
+        }
 
 
-		void BeginUpdate()
-		{
-			m_updatePriority = RP_HIGHEST;
-		}
+        void BeginUpdate()
+        {
+            m_updatePriority = RP_HIGHEST;
+        }
 
-		void TriggerUpdate( int priority )
-		{
-			int curPriority;
-			for( curPriority = m_updatePriority; curPriority >= priority; curPriority-- ){
-				EventList* eventList = m_eventList[curPriority];
-				EventList::iterator eventEnd = eventList->end();
-				for( EventList::iterator i = eventList->begin(); i != eventEnd; ++i ){
-					if( !i->timeWheel->IsStalledThisCycle() ){
-						i->event->TriggerUpdate();
-					}
-				}
-			}
-			m_updatePriority = curPriority; 
-		}
+        void TriggerUpdate( int priority )
+        {
+            int curPriority;
+            for( curPriority = m_updatePriority; curPriority >= priority; curPriority-- ){
+                EventList* eventList = m_eventList[curPriority];
+                EventList::iterator eventEnd = eventList->end();
+                for( EventList::iterator i = eventList->begin(); i != eventEnd; ++i ){
+                    if( !i->timeWheel->IsStalledThisCycle() ){
+                        i->event->TriggerUpdate();
+                    }
+                }
+            }
+            m_updatePriority = curPriority; 
+        }
 
-		void EndUpdate()
-		{
-			TriggerUpdate( RP_LOWEST );
-		}
+        void EndUpdate()
+        {
+            TriggerUpdate( RP_LOWEST );
+        }
 
-	private:
+    private:
 
-		PriorityList m_eventList;
-		int m_updatePriority;
-		int m_evaluatePriority;
-	};
+        PriorityList m_eventList;
+        int m_updatePriority;
+        int m_evaluatePriority;
+    };
 
 } //namespace Onikiri
 

@@ -39,69 +39,69 @@
 
 namespace Onikiri 
 {
-	class SimulationSystem : public SystemBase
-	{
+    class SimulationSystem : public SystemBase
+    {
 
-	public:
-		SimulationSystem();
-		void Run( SystemContext* context );
-		SystemContext* GetContext();
+    public:
+        SimulationSystem();
+        void Run( SystemContext* context );
+        SystemContext* GetContext();
 
-		// Prototype : void Method( HookParameter<SimulationSystem>* system )
-		static HookPoint<SimulationSystem, SimulationSystem> s_systemInitHook;
+        // Prototype : void Method( HookParameter<SimulationSystem>* system )
+        static HookPoint<SimulationSystem, SimulationSystem> s_systemInitHook;
 
-		// Prototype : void Method()
-		static HookPoint<SimulationSystem> s_cycleBeginHook;
-		static HookPoint<SimulationSystem> s_cycleEvaluateHook;
-		static HookPoint<SimulationSystem> s_cycleTransitionHook;
-		static HookPoint<SimulationSystem> s_cycleUpdateHook;
-		static HookPoint<SimulationSystem> s_cycleEndHook;
+        // Prototype : void Method()
+        static HookPoint<SimulationSystem> s_cycleBeginHook;
+        static HookPoint<SimulationSystem> s_cycleEvaluateHook;
+        static HookPoint<SimulationSystem> s_cycleTransitionHook;
+        static HookPoint<SimulationSystem> s_cycleUpdateHook;
+        static HookPoint<SimulationSystem> s_cycleEndHook;
 
-	protected:
-		struct SchedulerResources
-		{
-		};
+    protected:
+        struct SchedulerResources
+        {
+        };
 
-		struct CoreResources
-		{
-			Core*     core;
-		};
+        struct CoreResources
+        {
+            Core*     core;
+        };
 
-		struct ThreadResources
-		{
-			MemOrderManager* memOrderManager;
-		};
+        struct ThreadResources
+        {
+            MemOrderManager* memOrderManager;
+        };
 
-		struct MemoryResources
-		{
-		};
+        struct MemoryResources
+        {
+        };
 
-		std::vector<CoreResources>   m_coreResources;
-		std::vector<ThreadResources> m_threadResources;
-		std::vector<MemoryResources> m_memResources;
+        std::vector<CoreResources>   m_coreResources;
+        std::vector<ThreadResources> m_threadResources;
+        std::vector<MemoryResources> m_memResources;
 
-		typedef std::vector<ClockedResourceIF*> ClockedResourceList;
-		ClockedResourceList m_clockedResources;
+        typedef std::vector<ClockedResourceIF*> ClockedResourceList;
+        ClockedResourceList m_clockedResources;
 
-		typedef PriorityEventList::TimeWheelList TimeWheelList;
-		TimeWheelList m_timeWheels;
+        typedef PriorityEventList::TimeWheelList TimeWheelList;
+        TimeWheelList m_timeWheels;
 
-		PriorityEventList m_priorityEventList;
+        PriorityEventList m_priorityEventList;
 
-		void SimulateCycle();
+        void SimulateCycle();
 
-		void CycleBegin();
-		void CycleEvaluate();
-		void CycleTransition();
-		void CycleEvent();
-		void CycleUpdate();
-		void CycleEnd();
+        void CycleBegin();
+        void CycleEvaluate();
+        void CycleTransition();
+        void CycleEvent();
+        void CycleUpdate();
+        void CycleEnd();
 
-		void InitializeResources();
-		void InitializeResourcesBody();
+        void InitializeResources();
+        void InitializeResourcesBody();
 
-		SystemContext* m_context;
-	};
+        SystemContext* m_context;
+    };
 }; // namespace Onikiri
 
 #endif // SIM_SYSTEM_SIMULATION_SYSTEM_SIMULATION_SYSTEM_H

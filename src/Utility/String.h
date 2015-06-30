@@ -43,90 +43,90 @@
 
 namespace Onikiri
 {
-	class String : public std::string
-	{
-		typedef std::string t_string;
+    class String : public std::string
+    {
+        typedef std::string t_string;
 
-	public:
-		String();
-		String(const t_string &str, size_type pos = 0, size_type n = npos);
-		String(const char* str);
-		String& format_arg(const char* fmt, va_list& arg);
+    public:
+        String();
+        String(const t_string &str, size_type pos = 0, size_type n = npos);
+        String(const char* str);
+        String& format_arg(const char* fmt, va_list& arg);
 
-		// 'printf' style format
-		String& format(const char* fmt, ... );
+        // 'printf' style format
+        String& format(const char* fmt, ... );
 
-		operator const char*() const {	return c_str();	};
+        operator const char*() const {  return c_str(); };
 
-		template<class T> String& operator=(const T& rhs)
-		{
-			assign(rhs);
-			return *this;
-		}
+        template<class T> String& operator=(const T& rhs)
+        {
+            assign(rhs);
+            return *this;
+        }
 
-		template<class T> String operator+(const T& rhs)
-		{
-			String tmp(*this);
-			tmp.append(rhs);
-			return tmp;
-		}
+        template<class T> String operator+(const T& rhs)
+        {
+            String tmp(*this);
+            tmp.append(rhs);
+            return tmp;
+        }
 
-		String& operator=(const t_string& rhs)
-		{
-			assign(rhs);
-			return *this;
-		}
+        String& operator=(const t_string& rhs)
+        {
+            assign(rhs);
+            return *this;
+        }
 
-		String operator+(const t_string& rhs)
-		{
-			String tmp(*this);
-			tmp.append(rhs);
-			return tmp;
-		}
+        String operator+(const t_string& rhs)
+        {
+            String tmp(*this);
+            tmp.append(rhs);
+            return tmp;
+        }
 
-		String& operator+=(const t_string& rhs)
-		{
-			append(rhs);
-			return *this;
-		}
+        String& operator+=(const t_string& rhs)
+        {
+            append(rhs);
+            return *this;
+        }
 
-		template<class T> String& operator+=(const T& rhs)
-		{
-			append(rhs);
-			return *this;
-		}
+        template<class T> String& operator+=(const T& rhs)
+        {
+            append(rhs);
+            return *this;
+        }
 
-		String& operator+=(const char rhs)
-		{
-			append(&rhs, 1);
-			return *this;
-		}
+        String& operator+=(const char rhs)
+        {
+            append(&rhs, 1);
+            return *this;
+        }
 
-		void find_and_replace( const String& from, const String& to )
-		{
-			while( true ){
-				std::string::size_type i = find( from ); 
+        void find_and_replace( const String& from, const String& to )
+        {
+            while( true ){
+                std::string::size_type i = find( from ); 
 
-				if( i == std::string::npos ){
-					break;
-				}
+                if( i == std::string::npos ){
+                    break;
+                }
 
-				std::string::replace( i, from.length(), to );
-			}
-		}
+                std::string::replace( i, from.length(), to );
+            }
+        }
 
-		// sepStr     : delimiter 
-		// sepKeepStr : delimiter（分割後文字列にも残る）
-		// ",/"なら，','と'/'をdelimiterとして文字列を分割
-		std::vector<String> split(
-			const char* delimiter, 
-			const char* delimiterKeep = NULL) const;
+        // sepStr     : delimiter 
+        // sepKeepStr : delimiter（分割後文字列にも残る）
+        // ",/"なら，','と'/'をdelimiterとして文字列を分割
+        std::vector<String> split(
+            const char* delimiter, 
+            const char* delimiterKeep = NULL) const;
 
-		template <class T> T to()
-		{
-			return boost::lexical_cast<T>(*this);
-		}
-	};
+        template <class T> T to()
+        {
+            return boost::lexical_cast<T>(*this);
+        }
+    };
 }
 
 #endif

@@ -37,14 +37,14 @@
 namespace Onikiri 
 {
 
-	// Memory読み書きのインターフェース
-	class MemIF
-	{
-	public:
-		virtual ~MemIF(){};
-	    virtual void Read( MemAccess* access ) = 0;
-		virtual void Write( MemAccess* access ) = 0;
-	};
+    // Memory読み書きのインターフェース
+    class MemIF
+    {
+    public:
+        virtual ~MemIF(){};
+        virtual void Read( MemAccess* access ) = 0;
+        virtual void Write( MemAccess* access ) = 0;
+    };
 
 
 }; // namespace Onikiri

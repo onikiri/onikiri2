@@ -40,7 +40,7 @@ using namespace Onikiri;
 //
 ResourceFactory::ResourceFactory()
 {
-	InitializeResourceMap();
+    InitializeResourceMap();
 }
 
 //
@@ -50,38 +50,38 @@ template <typename T>
 class ResourceInterfaceTrait : public ResourceTypeTraitBase
 {
 public:
-	ResourceInterfaceTrait()
-	{
-	}
+    ResourceInterfaceTrait()
+    {
+    }
 
-	virtual PhysicalResourceNode* CreateInstance()
-	{
-		return NULL;
-	}
+    virtual PhysicalResourceNode* CreateInstance()
+    {
+        return NULL;
+    }
 
-	virtual void* DynamicCast(PhysicalResourceIF* ptr)
-	{
-		return dynamic_cast<T*>(ptr);
-	}
+    virtual void* DynamicCast(PhysicalResourceIF* ptr)
+    {
+        return dynamic_cast<T*>(ptr);
+    }
 };
 
 template <typename T>
 class ResourceTypeTrait : public ResourceTypeTraitBase
 {
 public:
-	ResourceTypeTrait()
-	{
-	}
+    ResourceTypeTrait()
+    {
+    }
 
-	virtual PhysicalResourceNode* CreateInstance()
-	{
-		return new T();
-	}
+    virtual PhysicalResourceNode* CreateInstance()
+    {
+        return new T();
+    }
 
-	virtual void* DynamicCast(PhysicalResourceIF* ptr)
-	{
-		return dynamic_cast<T*>(ptr);
-	}
+    virtual void* DynamicCast(PhysicalResourceIF* ptr)
+    {
+        return dynamic_cast<T*>(ptr);
+    }
 };
 
 //
@@ -89,13 +89,13 @@ public:
 //
 void ResourceFactory::CheckTypeRegistered(const String& typeName)
 {
-	MapType::iterator i = m_resTypeMap.find( typeName );
-	if( i != m_resTypeMap.end() ){
-		THROW_RUNTIME_ERROR(
-			"'%s' is already registered in 'ResourceFactory'.",
-			typeName.c_str()
-		);
-	}
+    MapType::iterator i = m_resTypeMap.find( typeName );
+    if( i != m_resTypeMap.end() ){
+        THROW_RUNTIME_ERROR(
+            "'%s' is already registered in 'ResourceFactory'.",
+            typeName.c_str()
+        );
+    }
 }
 
 //
@@ -103,14 +103,14 @@ void ResourceFactory::CheckTypeRegistered(const String& typeName)
 //
 ResourceTypeTraitBase* ResourceFactory::GetTrait( const String& typeName )
 {
-	MapType::iterator i = m_resTypeMap.find( typeName );
-	if(i == m_resTypeMap.end()){
-		THROW_RUNTIME_ERROR(
-			"The resource type '%s' is not registered in the map of 'ResourceFactory'.", 
-			typeName.c_str()
-		);
-	}
-	return i->second;
+    MapType::iterator i = m_resTypeMap.find( typeName );
+    if(i == m_resTypeMap.end()){
+        THROW_RUNTIME_ERROR(
+            "The resource type '%s' is not registered in the map of 'ResourceFactory'.", 
+            typeName.c_str()
+        );
+    }
+    return i->second;
 }
 
 //
@@ -118,19 +118,19 @@ ResourceTypeTraitBase* ResourceFactory::GetTrait( const String& typeName )
 //
 PhysicalResourceNode* ResourceFactory::CreateInstance(const String& typeName)
 {
-	PhysicalResourceNode* instance = 
-		GetTrait( typeName )->CreateInstance();
+    PhysicalResourceNode* instance = 
+        GetTrait( typeName )->CreateInstance();
 
-	if( !instance ){
-		THROW_RUNTIME_ERROR(
-			"Could not create the instance of the '%s'.\n"
-			"This class is an interface.",
-			typeName.c_str()
-		);
-	}
+    if( !instance ){
+        THROW_RUNTIME_ERROR(
+            "Could not create the instance of the '%s'.\n"
+            "This class is an interface.",
+            typeName.c_str()
+        );
+    }
 
-	instance->SetTypeConverter( this );
-	return instance;
+    instance->SetTypeConverter( this );
+    return instance;
 }
 
 //
@@ -138,7 +138,7 @@ PhysicalResourceNode* ResourceFactory::CreateInstance(const String& typeName)
 //
 void* ResourceFactory::DynamicCast(const String& typeName, PhysicalResourceIF* orgPtr)
 {
-	return GetTrait( typeName )->DynamicCast( orgPtr );
+    return GetTrait( typeName )->DynamicCast( orgPtr );
 }
 
 
@@ -146,25 +146,25 @@ void* ResourceFactory::DynamicCast(const String& typeName, PhysicalResourceIF* o
 // --- Macros for type map
 //
 #define BEGIN_RESOURCE_TYPE_MAP() \
-	void ResourceFactory::InitializeResourceMap(){
+    void ResourceFactory::InitializeResourceMap(){
 
 #define END_RESOURCE_TYPE_MAP() \
-		InitializeUserResourceMap(); \
-	}
+        InitializeUserResourceMap(); \
+    }
 
 #define BEGIN_USER_RESOURCE_TYPE_MAP() \
-	void ResourceFactory::InitializeUserResourceMap(){
+    void ResourceFactory::InitializeUserResourceMap(){
 
 #define END_USER_RESOURCE_TYPE_MAP() \
-	}
+    }
 
 #define RESOURCE_TYPE_ENTRY( typeName ) \
-	CheckTypeRegistered( #typeName ); \
-	m_resTypeMap[ #typeName ] = new ResourceTypeTrait<typeName>();
+    CheckTypeRegistered( #typeName ); \
+    m_resTypeMap[ #typeName ] = new ResourceTypeTrait<typeName>();
 
 #define RESOURCE_INTERFACE_ENTRY( typeName ) \
-	CheckTypeRegistered( #typeName ); \
-	m_resTypeMap[ #typeName ] = new ResourceInterfaceTrait<typeName>();
+    CheckTypeRegistered( #typeName ); \
+    m_resTypeMap[ #typeName ] = new ResourceInterfaceTrait<typeName>();
 
 #include "Sim/ResourceMap.h"
 #include "User/UserResourceMap.h"

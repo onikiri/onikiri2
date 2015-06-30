@@ -37,55 +37,55 @@
 
 namespace Onikiri 
 {
-	class Pipeline;
-	class Core;
+    class Pipeline;
+    class Core;
 
-	// PipelineNodeのインタフェース
-	class PipelineNodeIF/*  : public ClockedResourceIF*/
-	{
-	public:
-		PipelineNodeIF(){}
-		virtual ~PipelineNodeIF(){}
+    // PipelineNodeのインタフェース
+    class PipelineNodeIF/*  : public ClockedResourceIF*/
+    {
+    public:
+        PipelineNodeIF(){}
+        virtual ~PipelineNodeIF(){}
 
-		// OpがCommitするとき
-		virtual void Commit( OpIterator op ) = 0;
+        // OpがCommitするとき
+        virtual void Commit( OpIterator op ) = 0;
 
-		// OpがCancelされるとき
-		virtual void Cancel( OpIterator op ) = 0;
+        // OpがCancelされるとき
+        virtual void Cancel( OpIterator op ) = 0;
 
-		// 自分の中からOpを消す
-		virtual void Retire( OpIterator op ) = 0;
+        // 自分の中からOpを消す
+        virtual void Retire( OpIterator op ) = 0;
 
-		// OpがFlushされるとき
-		virtual void Flush( OpIterator op ) = 0;
+        // OpがFlushされるとき
+        virtual void Flush( OpIterator op ) = 0;
 
-		// パイプラインをストールさせる
-		virtual void StallThisCycle() = 0;
-		// パイプラインをcycle数ストールする
-		virtual void StallNextCycle(int cycle) = 0;
+        // パイプラインをストールさせる
+        virtual void StallThisCycle() = 0;
+        // パイプラインをcycle数ストールする
+        virtual void StallNextCycle(int cycle) = 0;
 
-		// 下流のPipelineを取得
-		virtual Pipeline* GetLowerPipeline() = 0;
+        // 下流のPipelineを取得
+        virtual Pipeline* GetLowerPipeline() = 0;
 
-		// 下流のPipelineNodeを取得
-		virtual PipelineNodeIF* GetLowerPipelineNode() = 0;
+        // 下流のPipelineNodeを取得
+        virtual PipelineNodeIF* GetLowerPipelineNode() = 0;
 
-		// 上流のパイプラインノードを取得
-		virtual PipelineNodeIF* GetUpperPipelineNode() = 0;
+        // 上流のパイプラインノードを取得
+        virtual PipelineNodeIF* GetUpperPipelineNode() = 0;
 
-		// Set lower pipeline nodes.
-		virtual void SetLowerPipelineNode( PipelineNodeIF* lower ) = 0;
+        // Set lower pipeline nodes.
+        virtual void SetLowerPipelineNode( PipelineNodeIF* lower ) = 0;
 
-		// This method is called when an op exits an upper pipeline.
-		// This method is used for a pipeline writing a buffer(ex. Dispatcher).
-		virtual void ExitUpperPipeline( OpIterator op ) = 0;
+        // This method is called when an op exits an upper pipeline.
+        // This method is used for a pipeline writing a buffer(ex. Dispatcher).
+        virtual void ExitUpperPipeline( OpIterator op ) = 0;
 
-		// This method is called when an op exits an lower pipeline.
-		virtual void ExitLowerPipeline( OpIterator op ) = 0;
+        // This method is called when an op exits an lower pipeline.
+        virtual void ExitLowerPipeline( OpIterator op ) = 0;
 
-		// Returns whether this node can allocate entries or not.
-		virtual bool CanAllocate( int ops ) = 0;
-	};
+        // Returns whether this node can allocate entries or not.
+        virtual bool CanAllocate( int ops ) = 0;
+    };
 
 }; // namespace Onikiri
 

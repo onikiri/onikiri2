@@ -37,139 +37,139 @@
 #include "Emu/Utility/System/ProcessState.h"
 
 namespace Onikiri {
-	class SystemIF;
+    class SystemIF;
 
-	namespace EmulatorUtility {
-		class MemorySystem;
-		class OpEmulationState;
+    namespace EmulatorUtility {
+        class MemorySystem;
+        class OpEmulationState;
 
-		class Linux64SyscallConv : public EmulatorUtility::SyscallConvIF
-		{
-		private:
-			Linux64SyscallConv() {}
-		public:
-			Linux64SyscallConv(EmulatorUtility::ProcessState* processState);
-			virtual ~Linux64SyscallConv();
+        class Linux64SyscallConv : public EmulatorUtility::SyscallConvIF
+        {
+        private:
+            Linux64SyscallConv() {}
+        public:
+            Linux64SyscallConv(EmulatorUtility::ProcessState* processState);
+            virtual ~Linux64SyscallConv();
 
-			// システムコールの引数 (index番目) を設定する
-			virtual void SetArg(int index, u64 value);
+            // システムコールの引数 (index番目) を設定する
+            virtual void SetArg(int index, u64 value);
 
-			// SetArg によって与えられた引数に従ってシステムコールを行う
-			virtual void Execute(EmulatorUtility::OpEmulationState* opState) = 0;
+            // SetArg によって与えられた引数に従ってシステムコールを行う
+            virtual void Execute(EmulatorUtility::OpEmulationState* opState) = 0;
 
-			// Exec した結果を得る
-			virtual u64 GetResult(int index);
-			virtual void SetSystem(SystemIF* system);
+            // Exec した結果を得る
+            virtual u64 GetResult(int index);
+            virtual void SetSystem(SystemIF* system);
 
-		private:
-			static const int MaxResultCount = 2;
+        private:
+            static const int MaxResultCount = 2;
 
-			std::vector<u64> m_args;
-			std::vector<u64> m_results;
-			EmulatorUtility::ProcessState* m_processState;
-			SystemIF* m_simulatorSystem;
+            std::vector<u64> m_args;
+            std::vector<u64> m_results;
+            EmulatorUtility::ProcessState* m_processState;
+            SystemIF* m_simulatorSystem;
 
 
-		protected:
-			static const int MaxArgCount = 16;
+        protected:
+            static const int MaxArgCount = 16;
 
-			u64 GetArg(int index) const
-			{
-				return m_args[index];
-			}
+            u64 GetArg(int index) const
+            {
+                return m_args[index];
+            }
 
-			EmulatorUtility::ProcessState* GetProcessState()
-			{
-				return m_processState;
-			}
+            EmulatorUtility::ProcessState* GetProcessState()
+            {
+                return m_processState;
+            }
 
-			EmulatorUtility::MemorySystem* GetMemorySystem()
-			{
-				return m_processState->GetMemorySystem();
-			}
+            EmulatorUtility::MemorySystem* GetMemorySystem()
+            {
+                return m_processState->GetMemorySystem();
+            }
 
-			EmulatorUtility::VirtualSystem* GetVirtualSystem()
-			{
-				return m_processState->GetVirtualSystem();
-			}
+            EmulatorUtility::VirtualSystem* GetVirtualSystem()
+            {
+                return m_processState->GetVirtualSystem();
+            }
 
-			void SetResult(bool success, u64 result);
+            void SetResult(bool success, u64 result);
 
-			virtual void syscall_exit(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_exit(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_open(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_close(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_read(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_write(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_readv(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_writev(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_open(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_close(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_read(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_write(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_readv(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_writev(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_lseek(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_unlink(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_rename(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_lseek(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_unlink(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_rename(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_mmap(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_munmap(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_mremap(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_mprotect(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_fcntl(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_uname(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_mmap(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_munmap(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_mremap(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_mprotect(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_fcntl(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_uname(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_brk(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_brk(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_getpid(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_getuid(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_geteuid(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_getgid(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_getegid(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_getpid(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_getuid(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_geteuid(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_getgid(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_getegid(EmulatorUtility::OpEmulationState* opState);
 
-			//virtual void syscall_setuid(EmulatorUtility::OpEmulationState* opState);
-			//virtual void syscall_seteuid(EmulatorUtility::OpEmulationState* opState);
-			//virtual void syscall_setgid(EmulatorUtility::OpEmulationState* opState);
-			//virtual void syscall_setegid(EmulatorUtility::OpEmulationState* opState);
-			//virtual void syscall_setreuid(EmulatorUtility::OpEmulationState* opState);
-			//virtual void syscall_setregid(EmulatorUtility::OpEmulationState* opState);
+            //virtual void syscall_setuid(EmulatorUtility::OpEmulationState* opState);
+            //virtual void syscall_seteuid(EmulatorUtility::OpEmulationState* opState);
+            //virtual void syscall_setgid(EmulatorUtility::OpEmulationState* opState);
+            //virtual void syscall_setegid(EmulatorUtility::OpEmulationState* opState);
+            //virtual void syscall_setreuid(EmulatorUtility::OpEmulationState* opState);
+            //virtual void syscall_setregid(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_access(EmulatorUtility::OpEmulationState* opState);
-		//	virtual void syscall_fstat(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_stat64(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_lstat64(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_fstat64(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_access(EmulatorUtility::OpEmulationState* opState);
+        //  virtual void syscall_fstat(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_stat64(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_lstat64(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_fstat64(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_ioctl(EmulatorUtility::OpEmulationState* opState);
-//			virtual void syscall_readlink(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_mkdir(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_ioctl(EmulatorUtility::OpEmulationState* opState);
+//          virtual void syscall_readlink(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_mkdir(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_dup(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_truncate(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_ftruncate(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_dup(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_truncate(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_ftruncate(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_kill(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_tgkill(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_kill(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_tgkill(EmulatorUtility::OpEmulationState* opState);
 
-			void kill_helper(EmulatorUtility::OpEmulationState* opState, int pid, int sig);
+            void kill_helper(EmulatorUtility::OpEmulationState* opState, int pid, int sig);
 
-			virtual void syscall_ignore(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_time(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_times(EmulatorUtility::OpEmulationState* opState);
-			virtual void syscall_gettimeofday(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_ignore(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_time(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_times(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_gettimeofday(EmulatorUtility::OpEmulationState* opState);
 
-			virtual void syscall_getcwd(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_getcwd(EmulatorUtility::OpEmulationState* opState);
 
-			// arch dependent
+            // arch dependent
 
-			// concversion
-			virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
-			virtual int Get_MAP_ANONYMOUS() = 0;
-			virtual int Get_MREMAP_MAYMOVE() = 0;
-			virtual int Get_CLK_TCK() = 0;
+            // concversion
+            virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
+            virtual int Get_MAP_ANONYMOUS() = 0;
+            virtual int Get_MREMAP_MAYMOVE() = 0;
+            virtual int Get_CLK_TCK() = 0;
 
-			virtual u32 OpenFlagTargetToHost(u32 flag) = 0;
-			virtual u32 SeekWhenceTargetToHost(u32 flag);
-			virtual u32 AccessModeTargetToHost(u32 flag);
-		};
+            virtual u32 OpenFlagTargetToHost(u32 flag) = 0;
+            virtual u32 SeekWhenceTargetToHost(u32 flag);
+            virtual u32 AccessModeTargetToHost(u32 flag);
+        };
 
-	} // namespace AlphaLinux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

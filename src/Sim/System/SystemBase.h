@@ -46,80 +46,80 @@
 
 namespace Onikiri 
 {
-	class ForwardEmulator;
+    class ForwardEmulator;
 
-	// Notify を SystemManager 経由で受け取るため，SystemBase 由来クラスは
-	// SystemManagerIF::SetSystem を経由して自身を SystemManager に登録する必要がある．
-	// また，自身の破壊時には SystemManagerIF::SetSystem 経由で自身の登録を解除する必要がある．
-	// これにより，例外によってSystemBase 由来クラスが破壊された場合でも，適切に
-	// SystemManager の登録を解除することが出来る．
-	class SystemManagerIF
-	{
-	public:
-		virtual ~SystemManagerIF(){};
-		virtual void SetSystem( SystemIF* system ) = 0;
-	};
+    // Notify を SystemManager 経由で受け取るため，SystemBase 由来クラスは
+    // SystemManagerIF::SetSystem を経由して自身を SystemManager に登録する必要がある．
+    // また，自身の破壊時には SystemManagerIF::SetSystem 経由で自身の登録を解除する必要がある．
+    // これにより，例外によってSystemBase 由来クラスが破壊された場合でも，適切に
+    // SystemManager の登録を解除することが出来る．
+    class SystemManagerIF
+    {
+    public:
+        virtual ~SystemManagerIF(){};
+        virtual void SetSystem( SystemIF* system ) = 0;
+    };
 
-	// プロセッサ全体を管理するクラス
-	class SystemBase : public SystemIF
-	{
-	public:
-	
-		struct SystemContext
-		{
-			SystemContext();
-			String targetArchitecture;	// Target architecture
-			String mode;				// Simulation mode
+    // プロセッサ全体を管理するクラス
+    class SystemBase : public SystemIF
+    {
+    public:
+    
+        struct SystemContext
+        {
+            SystemContext();
+            String targetArchitecture;  // Target architecture
+            String mode;                // Simulation mode
 
-			s64 executionCycles;	
-			s64 executionInsns;
+            s64 executionCycles;    
+            s64 executionInsns;
 
-			s64 executedCycles;	
-			std::vector<s64> executedInsns;	// Executed insns in each thread.
+            s64 executedCycles; 
+            std::vector<s64> executedInsns; // Executed insns in each thread.
 
-			PhysicalResourceArray<Core>   cores;		// Todo: support non-uniform multi core
-			PhysicalResourceArray<Thread> threads;
-			PhysicalResourceArray<Cache>  caches;
-			GlobalClock*					globalClock;
-			ForwardEmulator*				forwardEmulator;
-			
-			EmulatorIF*     emulator;
-			EmulatorWrapper emulatorWrapper;
+            PhysicalResourceArray<Core>   cores;        // Todo: support non-uniform multi core
+            PhysicalResourceArray<Thread> threads;
+            PhysicalResourceArray<Cache>  caches;
+            GlobalClock*                    globalClock;
+            ForwardEmulator*                forwardEmulator;
+            
+            EmulatorIF*     emulator;
+            EmulatorWrapper emulatorWrapper;
 
-			ResourceBuilder *resBuilder;
-			ArchitectureStateList architectureStateList;
+            ResourceBuilder *resBuilder;
+            ArchitectureStateList architectureStateList;
 
-			struct InorderParam
-			{
-				bool enableBPred;
-				bool enableHMPred;
-				bool enableCache;
-			};
-			InorderParam inorderParam;
+            struct InorderParam
+            {
+                bool enableBPred;
+                bool enableHMPred;
+                bool enableCache;
+            };
+            InorderParam inorderParam;
 
-			struct DebugParam
-			{
-				int debugPort;
-			};
-			DebugParam debugParam;
-		};
+            struct DebugParam
+            {
+                int debugPort;
+            };
+            DebugParam debugParam;
+        };
 
-		virtual void Run( SystemContext* context ) = 0;
+        virtual void Run( SystemContext* context ) = 0;
 
-		// SystemIF
-		virtual void NotifyProcessTermination(int pid){}
-		virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size){}
-		virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size){}
-		virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate){};
+        // SystemIF
+        virtual void NotifyProcessTermination(int pid){}
+        virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size){}
+        virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size){}
+        virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate){};
 
-		//
-		SystemBase();
-		virtual ~SystemBase();
-		void SetSystemManager( SystemManagerIF* systemManager );
+        //
+        SystemBase();
+        virtual ~SystemBase();
+        void SetSystemManager( SystemManagerIF* systemManager );
 
-	protected:
-		SystemManagerIF* m_systemManager;
-	};
+    protected:
+        SystemManagerIF* m_systemManager;
+    };
 
 }; // namespace Onikiri
 

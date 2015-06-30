@@ -37,43 +37,43 @@
 
 namespace Onikiri 
 {
-	class Core;
-	class PhyReg;
+    class Core;
+    class PhyReg;
 
-	class RegisterFile 
-		: public PhysicalResourceNode
-	{
-	private:
-		std::vector<PhyReg*> m_register;
-		std::vector<int>     m_capacity;
-		int m_totalCapacity;
-		Core* m_core;
-		EmulatorIF* m_emulator;
+    class RegisterFile 
+        : public PhysicalResourceNode
+    {
+    private:
+        std::vector<PhyReg*> m_register;
+        std::vector<int>     m_capacity;
+        int m_totalCapacity;
+        Core* m_core;
+        EmulatorIF* m_emulator;
 
-	public:
-		BEGIN_PARAM_MAP( GetParamPath() )
-			PARAM_ENTRY("@Capacity",	m_capacity)
-		END_PARAM_MAP()
+    public:
+        BEGIN_PARAM_MAP( GetParamPath() )
+            PARAM_ENTRY("@Capacity",    m_capacity)
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( Core, "core", m_core )
-			RESOURCE_ENTRY( EmulatorIF, "emulator", m_emulator )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core, "core", m_core )
+            RESOURCE_ENTRY( EmulatorIF, "emulator", m_emulator )
+        END_RESOURCE_MAP()
 
-		RegisterFile();
-		virtual ~RegisterFile();
+        RegisterFile();
+        virtual ~RegisterFile();
 
-		void Initialize(InitPhase phase);
+        void Initialize(InitPhase phase);
 
-		PhyReg* GetPhyReg(int phyRegNo) const;
-		PhyReg* operator[](int phyRegNo) const;
+        PhyReg* GetPhyReg(int phyRegNo) const;
+        PhyReg* operator[](int phyRegNo) const;
 
-		void SetPhyReg(int phyRegNo, PhyReg* phyReg);
+        void SetPhyReg(int phyRegNo, PhyReg* phyReg);
 
-		int GetCapacity(int segment) const;
-		size_t GetSegmentCount() const;
-		int GetTotalCapacity() const;
-	};
+        int GetCapacity(int segment) const;
+        size_t GetSegmentCount() const;
+        int GetTotalCapacity() const;
+    };
 
 }; // namespace Onikiri
 

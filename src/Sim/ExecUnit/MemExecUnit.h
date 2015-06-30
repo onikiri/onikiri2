@@ -41,69 +41,69 @@
 
 namespace Onikiri 
 {
-	class Cache;
-	class CacheSystem;
-	class MemOrderManager;
+    class Cache;
+    class CacheSystem;
+    class MemOrderManager;
 
-	class MemExecUnit :	public PipelinedExecUnit
-	{
+    class MemExecUnit : public PipelinedExecUnit
+    {
 
-	public:
-		BEGIN_PARAM_MAP("")
-			BEGIN_PARAM_PATH( GetParamPath() )
-				PARAM_ENTRY("@FloatConversionLatency",	m_floatConversionLatency)
-			END_PARAM_PATH()
-			CHAIN_BASE_PARAM_MAP( PipelinedExecUnit )
-		END_PARAM_MAP()
+    public:
+        BEGIN_PARAM_MAP("")
+            BEGIN_PARAM_PATH( GetParamPath() )
+                PARAM_ENTRY("@FloatConversionLatency",  m_floatConversionLatency)
+            END_PARAM_PATH()
+            CHAIN_BASE_PARAM_MAP( PipelinedExecUnit )
+        END_PARAM_MAP()
 
-		BEGIN_RESOURCE_MAP()
-			RESOURCE_ENTRY( MemOrderManager,	"memOrderManager",	m_memOrderManager )
-			RESOURCE_ENTRY( CacheSystem,		"cacheSystem",		m_cacheSystem )
-			CHAIN_BASE_RESOURCE_MAP( PipelinedExecUnit )
-		END_RESOURCE_MAP()
+        BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( MemOrderManager,    "memOrderManager",  m_memOrderManager )
+            RESOURCE_ENTRY( CacheSystem,        "cacheSystem",      m_cacheSystem )
+            CHAIN_BASE_RESOURCE_MAP( PipelinedExecUnit )
+        END_RESOURCE_MAP()
 
-		MemExecUnit();
-		virtual ~MemExecUnit();
+        MemExecUnit();
+        virtual ~MemExecUnit();
 
-		void Initialize( InitPhase phase );
+        void Initialize( InitPhase phase );
 
-		// 実行レイテンシ後に FinishEvent を登録する
-		virtual void Execute(OpIterator op);
+        // 実行レイテンシ後に FinishEvent を登録する
+        virtual void Execute(OpIterator op);
 
-		// OpClass から取りうるレイテンシの種類の数を返す
-		virtual int GetLatencyCount(const OpClass& opClass);
+        // OpClass から取りうるレイテンシの種類の数を返す
+        virtual int GetLatencyCount(const OpClass& opClass);
 
-		// OpClass とインデクスからレイテンシを返す
-		virtual int GetLatency(const OpClass& opClass, int index);
+        // OpClass とインデクスからレイテンシを返す
+        virtual int GetLatency(const OpClass& opClass, int index);
 
-		// accessors
-		Cache* GetCache(){ return m_cache; }
+        // accessors
+        Cache* GetCache(){ return m_cache; }
 
-	protected:
-		
-		// キャッシュ
-		CacheSystem*	m_cacheSystem;
-		Cache*			m_cache;
+    protected:
+        
+        // キャッシュ
+        CacheSystem*    m_cacheSystem;
+        Cache*          m_cache;
 
-		// キャッシュの数
-		int m_cacheCount;
-		
-		// float の Load の変換レイテンシ
-		int m_floatConversionLatency;
-		PhysicalResourceArray<MemOrderManager> m_memOrderManager;
+        // キャッシュの数
+        int m_cacheCount;
+        
+        // float の Load の変換レイテンシ
+        int m_floatConversionLatency;
+        PhysicalResourceArray<MemOrderManager> m_memOrderManager;
 
-		// Readの実行レイテンシを返す
-		int GetExecutedReadLatency( OpIterator op );
+        // Readの実行レイテンシを返す
+        int GetExecutedReadLatency( OpIterator op );
 
-		// Writeの実行レイテンシを返す
-		int GetExecutedWriteLatency( OpIterator op );
+        // Writeの実行レイテンシを返す
+        int GetExecutedWriteLatency( OpIterator op );
 
-		// Get the actual latency of executed 'op'.
-		int GetExecutedLatency( OpIterator op );
+        // Get the actual latency of executed 'op'.
+        int GetExecutedLatency( OpIterator op );
 
-		// Get a producer store of 'consumer'.
-		OpIterator GetProducerStore( OpIterator consumer );
-	};
+        // Get a producer store of 'consumer'.
+        OpIterator GetProducerStore( OpIterator consumer );
+    };
 
 }; // namespace Onikiri
 

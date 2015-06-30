@@ -36,18 +36,18 @@
 
 namespace Onikiri 
 {
-	
-	// メモリ上の依存関係を表現するクラス
-	typedef Dependency MemDependency;
+    
+    // メモリ上の依存関係を表現するクラス
+    typedef Dependency MemDependency;
 
-	// Use shared_ptr for a memory dependency because 
-	// it is difficult to know when a memory dependency 
-	// can be released. For example, Ia/Ib/Ic depend on Ip,
-	// a memory dependency between them cannot be released 
-	// when Ip retires. The memory dependency can be released
-	// after all Ip/Ia/Ib/Ic are released, but it is difficult
-	// to know this timing.
-	typedef boost::shared_ptr<MemDependency> MemDependencyPtr;
+    // Use shared_ptr for a memory dependency because 
+    // it is difficult to know when a memory dependency 
+    // can be released. For example, Ia/Ib/Ic depend on Ip,
+    // a memory dependency between them cannot be released 
+    // when Ip retires. The memory dependency can be released
+    // after all Ip/Ia/Ib/Ic are released, but it is difficult
+    // to know this timing.
+    typedef boost::shared_ptr<MemDependency> MemDependencyPtr;
 
 };
 

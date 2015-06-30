@@ -41,153 +41,153 @@ using namespace std;
 namespace Onikiri
 {
 
-	static bool g_inException = false;
-	static bool g_suppressWarning = false;
+    static bool g_inException = false;
+    static bool g_suppressWarning = false;
 
-	static String DebugWhere( const RuntimeErrorInfo& info ){
-		return String().format(
-			"%s(%d):\n  Method: %s\n  Object: %s \n",
-			info.file,
-			info.line, 
-			info.func, 
-			info.name
-		);
-	}
+    static String DebugWhere( const RuntimeErrorInfo& info ){
+        return String().format(
+            "%s(%d):\n  Method: %s\n  Object: %s \n",
+            info.file,
+            info.line, 
+            info.func, 
+            info.name
+        );
+    }
 
-	static bool g_assertNoThrow = false;
+    static bool g_assertNoThrow = false;
 
-	void SetAssertNoThrow( bool noThrow )
-	{
-		g_assertNoThrow = noThrow;
-	}
+    void SetAssertNoThrow( bool noThrow )
+    {
+        g_assertNoThrow = noThrow;
+    }
 
-	void SuppressWaning( bool suppress )
-	{
-		g_suppressWarning = suppress;
-	}
+    void SuppressWaning( bool suppress )
+    {
+        g_suppressWarning = suppress;
+    }
 
-	bool IsInException()
-	{
-		return g_inException;
-	}
-
-
-
-	void RuntimeErrorFunction( const RuntimeErrorInfo& info, const char* fmt, ...)
-	{
-		String str;
-
-		va_list arg;
-		va_start(arg, fmt);
-		str.format_arg(fmt, arg);
-		va_end(arg);
-
-		std::runtime_error error("");
-		if( String(info.file) == "" ){
-			error = std::runtime_error(
-				str + "\n\n"
-			);
-		}
-		else{
-			error = std::runtime_error(
-				"\n" + DebugWhere( info ) + "  Message: " + str + "\n"
-			);
-		}
-
-		if(g_inException){
-			//printf( "%s\n",  error.what() );
-			return;
-		}
-		g_inException = true;
-		throw error;
-	}
-
-	//
-	// Runtime warning
-	//
-	void RuntimeWarningFunction( const RuntimeErrorInfo& info, const char* fmt, ...)
-	{
-		String str;
-
-		va_list arg;
-		va_start(arg, fmt);
-		str.format_arg(fmt, arg);
-		va_end(arg);
+    bool IsInException()
+    {
+        return g_inException;
+    }
 
 
-		String msg;
-		if( String(info.file) == "" ){
-			msg = str;
-		}
-		else{
-			msg = 
-				DebugWhere( info ) + 
-				"Warning:\n" +
-				str;
-		}
 
-		if( !g_suppressWarning ){
-			printf( "%s\n\n", msg.c_str() );
-		}
-	}
+    void RuntimeErrorFunction( const RuntimeErrorInfo& info, const char* fmt, ...)
+    {
+        String str;
 
-	//
-	// Assert
-	//
+        va_list arg;
+        va_start(arg, fmt);
+        str.format_arg(fmt, arg);
+        va_end(arg);
 
-	void AssertFunction( const RuntimeErrorInfo& info, bool assertCond, const char* fmt, ... )
-	{
-		if(assertCond)
-			return;
-		if(g_inException)
-			return;
-		g_inException = true;
+        std::runtime_error error("");
+        if( String(info.file) == "" ){
+            error = std::runtime_error(
+                str + "\n\n"
+            );
+        }
+        else{
+            error = std::runtime_error(
+                "\n" + DebugWhere( info ) + "  Message: " + str + "\n"
+            );
+        }
 
-		if(g_assertNoThrow){
-			assert(0);
-		}
-		else{
-			String str;
+        if(g_inException){
+            //printf( "%s\n",  error.what() );
+            return;
+        }
+        g_inException = true;
+        throw error;
+    }
 
-			va_list arg;
-			va_start(arg, fmt);
-			str.format_arg(fmt, arg);
-			va_end(arg);
+    //
+    // Runtime warning
+    //
+    void RuntimeWarningFunction( const RuntimeErrorInfo& info, const char* fmt, ...)
+    {
+        String str;
 
-			if( String(info.file) == "" ){
-				throw std::runtime_error(
-					str + "\n"
-					);
-			}
-			else{
-				throw std::runtime_error(
-					DebugWhere( info ) + 
-					"Assertion failed.\n" +
-					"Condition : " + info.cond + "\n"
-					+ str + "\n"
-					);
-			}
-		}
-	}
-	
-	void AssertFunction( const RuntimeErrorInfo& info, bool assertCond )
-	{
-		if(assertCond)
-			return;
-		if(g_inException)
-			return;
-		g_inException = true;
+        va_list arg;
+        va_start(arg, fmt);
+        str.format_arg(fmt, arg);
+        va_end(arg);
 
-		if(g_assertNoThrow){
-			assert(0);
-		}
-		else{
-			throw std::runtime_error(
-				DebugWhere( info ) +
-				"Assertion failed.\n" +
-				"Condition : " + info.cond + "\n"
-				);
-		}
-	}
+
+        String msg;
+        if( String(info.file) == "" ){
+            msg = str;
+        }
+        else{
+            msg = 
+                DebugWhere( info ) + 
+                "Warning:\n" +
+                str;
+        }
+
+        if( !g_suppressWarning ){
+            printf( "%s\n\n", msg.c_str() );
+        }
+    }
+
+    //
+    // Assert
+    //
+
+    void AssertFunction( const RuntimeErrorInfo& info, bool assertCond, const char* fmt, ... )
+    {
+        if(assertCond)
+            return;
+        if(g_inException)
+            return;
+        g_inException = true;
+
+        if(g_assertNoThrow){
+            assert(0);
+        }
+        else{
+            String str;
+
+            va_list arg;
+            va_start(arg, fmt);
+            str.format_arg(fmt, arg);
+            va_end(arg);
+
+            if( String(info.file) == "" ){
+                throw std::runtime_error(
+                    str + "\n"
+                    );
+            }
+            else{
+                throw std::runtime_error(
+                    DebugWhere( info ) + 
+                    "Assertion failed.\n" +
+                    "Condition : " + info.cond + "\n"
+                    + str + "\n"
+                    );
+            }
+        }
+    }
+    
+    void AssertFunction( const RuntimeErrorInfo& info, bool assertCond )
+    {
+        if(assertCond)
+            return;
+        if(g_inException)
+            return;
+        g_inException = true;
+
+        if(g_assertNoThrow){
+            assert(0);
+        }
+        else{
+            throw std::runtime_error(
+                DebugWhere( info ) +
+                "Assertion failed.\n" +
+                "Condition : " + info.cond + "\n"
+                );
+        }
+    }
 }
 

@@ -37,27 +37,27 @@
 
 namespace Onikiri {
 
-	class OpDetectLatPredMissEvent :
-		public EventBase<OpDetectLatPredMissEvent>
-	{
-	protected:
-		// member variables
-		OpIterator m_op;
-		int m_level;
-		int m_predicted;
-		int m_latency;
+    class OpDetectLatPredMissEvent :
+        public EventBase<OpDetectLatPredMissEvent>
+    {
+    protected:
+        // member variables
+        OpIterator m_op;
+        int m_level;
+        int m_predicted;
+        int m_latency;
 
-	public:
-		OpDetectLatPredMissEvent( 
-			const OpIterator& op,
-			int level,
-			int predicted,
-			int latency
-		);
-		virtual ~OpDetectLatPredMissEvent();
+    public:
+        OpDetectLatPredMissEvent( 
+            const OpIterator& op,
+            int level,
+            int predicted,
+            int latency
+        );
+        virtual ~OpDetectLatPredMissEvent();
 
-		virtual void Update();
-	};
+        virtual void Update();
+    };
 
 }; // namespace Onikiri
 

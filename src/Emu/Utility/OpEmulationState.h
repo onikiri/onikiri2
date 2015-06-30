@@ -38,201 +38,201 @@
 #include "Emu/Utility/CommonOpInfo.h"
 
 namespace Onikiri {
-	namespace EmulatorUtility {
+    namespace EmulatorUtility {
 
-		class ProcessState;
+        class ProcessState;
 
-		class OpEmulationState {
-		private:
-			OpStateIF* m_opState;
-			OpInfo* m_opInfo;
-			EmulatorUtility::ProcessState* m_processState;
+        class OpEmulationState {
+        private:
+            OpStateIF* m_opState;
+            OpInfo* m_opInfo;
+            EmulatorUtility::ProcessState* m_processState;
 
-			// 新しいアーキテクチャを追加したら調節する
-			static const int MaxSrcCount = 8;	// SrcReg + Imm
-			static const int MaxDstCount = 3;
+            // 新しいアーキテクチャを追加したら調節する
+            static const int MaxSrcCount = 8;   // SrcReg + Imm
+            static const int MaxDstCount = 3;
 
-			// ・即値は src に入れておく
-			// ・ソースレジスタがゼロレジスタの場合は src に 0 を入れておく
-			// ・デスティネーションレジスタがゼロレジスタの場合は，デスティネーションレジスタがないものとして扱い dst を OpState に反映させない
-			boost::array<u64, MaxSrcCount> m_src;
-			boost::array<u64, MaxDstCount> m_dst;
+            // ・即値は src に入れておく
+            // ・ソースレジスタがゼロレジスタの場合は src に 0 を入れておく
+            // ・デスティネーションレジスタがゼロレジスタの場合は，デスティネーションレジスタがないものとして扱い dst を OpState に反映させない
+            boost::array<u64, MaxSrcCount> m_src;
+            boost::array<u64, MaxDstCount> m_dst;
 
-			u64 m_PC;
-			u64 m_takenPC;
-			bool m_taken;
-			int m_pid;
-			int m_tid;
+            u64 m_PC;
+            u64 m_takenPC;
+            bool m_taken;
+            int m_pid;
+            int m_tid;
 
 
-		private:
-			template<typename TOpInfo, typename TRegObtainer>
-			void InitOperands(TRegObtainer obtainer)
-			{
-				TOpInfo* opInfo = static_cast<TOpInfo*>(m_opInfo);
-				{
-					int immNum = opInfo->GetImmNum();
-					for (int i = 0; i < immNum; i ++) {
-						m_src[ opInfo->GetImmOpMap(i) ] = opInfo->GetImm(i);
-					}
-				}
+        private:
+            template<typename TOpInfo, typename TRegObtainer>
+            void InitOperands(TRegObtainer obtainer)
+            {
+                TOpInfo* opInfo = static_cast<TOpInfo*>(m_opInfo);
+                {
+                    int immNum = opInfo->GetImmNum();
+                    for (int i = 0; i < immNum; i ++) {
+                        m_src[ opInfo->GetImmOpMap(i) ] = opInfo->GetImm(i);
+                    }
+                }
 
-				{
-					int srcRegNum = opInfo->GetSrcRegNum();
-					for (int i = 0; i < srcRegNum; i ++) {
-						m_src[ opInfo->GetSrcRegOpMap(i) ] = obtainer(i);
-					}
-				}
-			}
-		public:
-			// レジスタの値をOpStateから取得する
-			struct RegFromOpState : public std::unary_function<int, u64>
-			{
-				RegFromOpState(Onikiri::OpStateIF* opState) : m_opState(opState) {}
+                {
+                    int srcRegNum = opInfo->GetSrcRegNum();
+                    for (int i = 0; i < srcRegNum; i ++) {
+                        m_src[ opInfo->GetSrcRegOpMap(i) ] = obtainer(i);
+                    }
+                }
+            }
+        public:
+            // レジスタの値をOpStateから取得する
+            struct RegFromOpState : public std::unary_function<int, u64>
+            {
+                RegFromOpState(Onikiri::OpStateIF* opState) : m_opState(opState) {}
 
-				u64 operator()(int index) {
-					return m_opState->GetSrc(index);
-				}
-				Onikiri::OpStateIF* m_opState;
-			};
+                u64 operator()(int index) {
+                    return m_opState->GetSrc(index);
+                }
+                Onikiri::OpStateIF* m_opState;
+            };
 
-			// レジスタの値をregArrayから取得する
-			template<typename TOpInfo>
-			struct RegFromRegArray : public std::unary_function<int, u64>
-			{
-				RegFromRegArray(TOpInfo* opInfo, u64* regArray) : m_opInfo(opInfo), m_regArray(regArray)  {}
+            // レジスタの値をregArrayから取得する
+            template<typename TOpInfo>
+            struct RegFromRegArray : public std::unary_function<int, u64>
+            {
+                RegFromRegArray(TOpInfo* opInfo, u64* regArray) : m_opInfo(opInfo), m_regArray(regArray)  {}
 
-				u64 operator()(int index) {
-					return m_regArray[ m_opInfo->GetSrcReg(index) ];
-				}
-				TOpInfo* m_opInfo;
-				u64* m_regArray;
-			};
+                u64 operator()(int index) {
+                    return m_regArray[ m_opInfo->GetSrcReg(index) ];
+                }
+                TOpInfo* m_opInfo;
+                u64* m_regArray;
+            };
 
-			// opInfoに従ってopStateから値を取得して初期化
-			template<typename TOpInfo>
-			OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState)
-				: m_opState(opState), m_opInfo(opInfo), m_processState(processState)
-			{
-				Addr addr = m_opState->GetTakenPC();
-				m_takenPC = addr.address;
-				m_taken = false;
-				m_pid = addr.pid;
-				m_tid = addr.tid;
+            // opInfoに従ってopStateから値を取得して初期化
+            template<typename TOpInfo>
+            OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState)
+                : m_opState(opState), m_opInfo(opInfo), m_processState(processState)
+            {
+                Addr addr = m_opState->GetTakenPC();
+                m_takenPC = addr.address;
+                m_taken = false;
+                m_pid = addr.pid;
+                m_tid = addr.tid;
 
-				m_PC = m_opState->GetPC().address;
+                m_PC = m_opState->GetPC().address;
 
-				InitOperands<TOpInfo, RegFromOpState>( RegFromOpState(opState) );
-			}
+                InitOperands<TOpInfo, RegFromOpState>( RegFromOpState(opState) );
+            }
 
-			// エミュレーション高速化用
-			// レジスタ値を regArray から取得する
-			template<typename TOpInfo>
-			OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState, PC pc, u64 takenAddr, u64* regArray)
-				: m_opState(opState), m_opInfo(opInfo), m_processState(processState)
-			{
-				m_takenPC = pc.address+4;
-				m_taken = false;
-				m_pid = pc.pid;
-				m_tid = pc.tid;
+            // エミュレーション高速化用
+            // レジスタ値を regArray から取得する
+            template<typename TOpInfo>
+            OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState, PC pc, u64 takenAddr, u64* regArray)
+                : m_opState(opState), m_opInfo(opInfo), m_processState(processState)
+            {
+                m_takenPC = pc.address+4;
+                m_taken = false;
+                m_pid = pc.pid;
+                m_tid = pc.tid;
 
-				m_PC = pc.address;
+                m_PC = pc.address;
 
-				InitOperands<TOpInfo, RegFromRegArray<TOpInfo> >( RegFromRegArray<TOpInfo>(opInfo, regArray) );
-			}
+                InitOperands<TOpInfo, RegFromRegArray<TOpInfo> >( RegFromRegArray<TOpInfo>(opInfo, regArray) );
+            }
 
-			// OpState に結果を反映させる
-			template<typename TOpInfo>
-			void ApplyEmulationState()
-			{
-				TOpInfo* opInfo = static_cast<TOpInfo*>(m_opInfo);
-				m_opState->SetTaken(m_taken);
-				m_opState->SetTakenPC( Addr(m_pid, m_tid, m_takenPC) );
+            // OpState に結果を反映させる
+            template<typename TOpInfo>
+            void ApplyEmulationState()
+            {
+                TOpInfo* opInfo = static_cast<TOpInfo*>(m_opInfo);
+                m_opState->SetTaken(m_taken);
+                m_opState->SetTakenPC( Addr(m_pid, m_tid, m_takenPC) );
 
-				// opInfoに従って dst を設定
-				int dstRegNum = opInfo->GetDstRegNum();
-				for (int i = 0; i < dstRegNum; i ++) {
-					m_opState->SetDst( i, m_dst[ opInfo->GetDstRegOpMap(i) ]);
-				}
-			}
+                // opInfoに従って dst を設定
+                int dstRegNum = opInfo->GetDstRegNum();
+                for (int i = 0; i < dstRegNum; i ++) {
+                    m_opState->SetDst( i, m_dst[ opInfo->GetDstRegOpMap(i) ]);
+                }
+            }
 
-			// エミュレーション高速化用
-			// regArray に結果を反映させる
-			template<typename TOpInfo>
-			void ApplyEmulationStateToRegArray(u64* regArray)
-			{
-				TOpInfo* opInfo = static_cast<TOpInfo*>(m_opInfo);
+            // エミュレーション高速化用
+            // regArray に結果を反映させる
+            template<typename TOpInfo>
+            void ApplyEmulationStateToRegArray(u64* regArray)
+            {
+                TOpInfo* opInfo = static_cast<TOpInfo*>(m_opInfo);
 
-				// opInfoに従って dst を設定
-				int dstRegNum = opInfo->GetDstRegNum();
-				for (int i = 0; i < dstRegNum; i ++) {
-					regArray[ opInfo->GetDstReg(i) ] = m_dst[ opInfo->GetDstRegOpMap(i) ];
-				}
-			}
+                // opInfoに従って dst を設定
+                int dstRegNum = opInfo->GetDstRegNum();
+                for (int i = 0; i < dstRegNum; i ++) {
+                    regArray[ opInfo->GetDstReg(i) ] = m_dst[ opInfo->GetDstRegOpMap(i) ];
+                }
+            }
 
-			void SetDst(int index, u64 value)
-			{
-				m_dst[index] = value;
-			}
-			u64 GetSrc(int index)
-			{
-				return m_src[index];
-			}
-			u64 GetDst(int index)
-			{
-				return m_dst[index];
-			}
+            void SetDst(int index, u64 value)
+            {
+                m_dst[index] = value;
+            }
+            u64 GetSrc(int index)
+            {
+                return m_src[index];
+            }
+            u64 GetDst(int index)
+            {
+                return m_dst[index];
+            }
 
-			//// Accessors for results
-			void SetTaken(bool t)
-			{
-				m_taken = t;
-			}
-			bool GetTaken() const
-			{
-				return m_taken;
-			}
+            //// Accessors for results
+            void SetTaken(bool t)
+            {
+                m_taken = t;
+            }
+            bool GetTaken() const
+            {
+                return m_taken;
+            }
 
-			Onikiri::u64 GetPC() const
-			{
-				return m_PC;
-			}
+            Onikiri::u64 GetPC() const
+            {
+                return m_PC;
+            }
 
-			void SetTakenPC(Onikiri::u64 pc)
-			{
-				m_takenPC = pc;
-			}
+            void SetTakenPC(Onikiri::u64 pc)
+            {
+                m_takenPC = pc;
+            }
 
-			Onikiri::u64 GetTakenPC() const
-			{
-				return m_takenPC;
-			}
+            Onikiri::u64 GetTakenPC() const
+            {
+                return m_takenPC;
+            }
 
-			int GetPID() const
-			{
-				return m_pid;
-			}
+            int GetPID() const
+            {
+                return m_pid;
+            }
 
-			int GetTID() const
-			{
-				return m_tid;
-			}
+            int GetTID() const
+            {
+                return m_tid;
+            }
 
-			OpStateIF* GetOpState()
-			{
-				return m_opState;
-			}
-			OpInfo* GetOpInfo()
-			{
-				return m_opInfo;
-			}
-			EmulatorUtility::ProcessState* GetProcessState()
-			{
-				return m_processState;
-			}
-		};
+            OpStateIF* GetOpState()
+            {
+                return m_opState;
+            }
+            OpInfo* GetOpInfo()
+            {
+                return m_opInfo;
+            }
+            EmulatorUtility::ProcessState* GetProcessState()
+            {
+                return m_processState;
+            }
+        };
 
-	} // namespace EmulatorUtility
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif

@@ -34,34 +34,34 @@
 
 namespace Onikiri
 {
-	struct PathReductionMapEntry
-	{
-		const char* reductionPath;
-		const char* fullPath;
-	};
+    struct PathReductionMapEntry
+    {
+        const char* reductionPath;
+        const char* fullPath;
+    };
 
-	static const PathReductionMapEntry g_pathReductionMap[] = 
-	{
-		{ 
-			"/SS/",
-			"/Session/Simulator/"
-		},
-		{ 
-			"/SSC/",
-			"/Session/Simulator/Configurations/"
-		},
-		{ 
-			"/SSCD/",
-			"/Session/Simulator/Configurations/DefaultConfiguration/"
-		},
-		{ 
-			"/SSCDP/",
-			"/Session/Simulator/Configurations/DefaultConfiguration/Parameter/"
-		},
-	};
+    static const PathReductionMapEntry g_pathReductionMap[] = 
+    {
+        { 
+            "/SS/",
+            "/Session/Simulator/"
+        },
+        { 
+            "/SSC/",
+            "/Session/Simulator/Configurations/"
+        },
+        { 
+            "/SSCD/",
+            "/Session/Simulator/Configurations/DefaultConfiguration/"
+        },
+        { 
+            "/SSCDP/",
+            "/Session/Simulator/Configurations/DefaultConfiguration/Parameter/"
+        },
+    };
 
-	static const int g_pathReductionMapSize = 
-		sizeof(g_pathReductionMap) / sizeof(PathReductionMapEntry);
+    static const int g_pathReductionMapSize = 
+        sizeof(g_pathReductionMap) / sizeof(PathReductionMapEntry);
 };
 
 #endif

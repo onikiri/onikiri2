@@ -38,43 +38,43 @@
 //
 #ifdef _MSC_VER
 
-	namespace Onikiri
-	{
-		typedef signed   __int64 s64;
-		typedef unsigned __int64 u64;
-		typedef signed   __int32 s32;
-		typedef unsigned __int32 u32;
-		typedef signed   __int16 s16;
-		typedef unsigned __int16 u16;
-		typedef signed   __int8  s8;
-		typedef unsigned __int8  u8;
+    namespace Onikiri
+    {
+        typedef signed   __int64 s64;
+        typedef unsigned __int64 u64;
+        typedef signed   __int32 s32;
+        typedef unsigned __int32 u32;
+        typedef signed   __int16 s16;
+        typedef unsigned __int16 u16;
+        typedef signed   __int8  s8;
+        typedef unsigned __int8  u8;
 
-		typedef float  f32;
-		typedef double f64;
-	};
-	
+        typedef float  f32;
+        typedef double f64;
+    };
+    
 #else
  
-	#include <inttypes.h>
- 	namespace Onikiri
-	{
-		typedef int64_t  s64;
-		typedef uint64_t u64;
-		typedef int32_t  s32;
-		typedef uint32_t u32;
-		typedef int16_t  s16;
-		typedef uint16_t u16;
-		typedef int8_t   s8;
-		typedef uint8_t  u8;
+    #include <inttypes.h>
+    namespace Onikiri
+    {
+        typedef int64_t  s64;
+        typedef uint64_t u64;
+        typedef int32_t  s32;
+        typedef uint32_t u32;
+        typedef int16_t  s16;
+        typedef uint16_t u16;
+        typedef int8_t   s8;
+        typedef uint8_t  u8;
 
-		typedef float  f32;
-		typedef double f64;
-	};
+        typedef float  f32;
+        typedef double f64;
+    };
 
 #endif
 
 
 
 
-#endif	// #ifndef TYPES_H
+#endif  // #ifndef TYPES_H
 
