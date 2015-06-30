@@ -36,7 +36,14 @@
 #ifndef SYSDEPS_BOOST_ASIO_H
 #define SYSDEPS_BOOST_ASIO_H
 
-#ifdef HOST_IS_CYGWIN
+#ifdef COMPILER_IS_MSVC
+
+#   pragma warning(push)
+#   pragma warning(disable:4996)
+#   include <boost/asio.hpp>
+#   pragma warning(pop)
+
+#elif defined HOST_IS_CYGWIN
     // push & pop is available since gcc 4.6 but
     // currently Cygwin gcc is 4.5.3
     // #pragma GCC diagnostic push
