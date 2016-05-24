@@ -4,7 +4,7 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
+// Copyright (c) 2005-2016 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
 // 
 // This software is provided 'as-is', without any express or implied
@@ -46,6 +46,9 @@
 #pragma warning( disable: 4702 )    // 制御が渡らないコードです
 #pragma warning( disable: 4714 )    // インライン関数ではなく、__forceinline として記述されています
 
+// declaration of 'identifier' hides previous local declaration
+// This warning is disabled for ParamDB macros.
+#pragma warning(disable: 4456)
 
 // 以下の警告はC++標準通りの動作を行うことを示しているにすぎないのでdisable
 #pragma warning( disable: 4345 )    // POD型のデフォルトコンストラクタに関する警告

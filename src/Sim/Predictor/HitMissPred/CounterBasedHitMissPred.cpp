@@ -58,7 +58,7 @@ void CounterBasedHitMissPred::Initialize(InitPhase phase)
 
         u8 max = (1 << m_counterBits) - 1;
         m_table.construct(
-            1 << m_entryBits,   // size
+            (u64)1 << m_entryBits,   // size
             (max + 1) / 2,      // init
             0,                  // min
             max,                // max

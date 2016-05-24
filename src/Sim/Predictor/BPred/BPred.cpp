@@ -69,9 +69,9 @@ BPred::Statistics::Statistics()
     numMiss = 0;
 }
 
-void BPred::Statistics::SetName( const String& name )
+void BPred::Statistics::SetName(const String& nameArg)
 {
-    this->name = name;
+    this->name = nameArg;
 }
 
 
