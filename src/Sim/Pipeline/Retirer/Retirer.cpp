@@ -242,32 +242,32 @@ void Retirer::Flush( OpIterator op )
 // Returns whether 'op' can retire or not.
 bool Retirer::CanCommitOp( OpIterator op )
 {
-    CommitDecisionHookParam param = { op, false };
+    CommitDecisionHookParam param = { op, true };
     HOOK_SECTION_OP_PARAM( s_commitDecisionHook, op, param )
     {
-        param.canCommit = true;
-
-        if( op->GetException().exception ){
-            // Exception occurs.
-            param.canCommit = false;
-        }
-        else{
-            // An op can commit if the state of 'op' is 
-            // after than FINISHED or COMPLETED.
-            if( op->GetStatus() < m_committableStatus ){
+        if (param.canCommit) {
+            if( op->GetException().exception ){
+                // Exception occurs.
                 param.canCommit = false;
             }
             else{
-                // Store
-                const OpClass& opClass = op->GetOpClass();
-                if( opClass.IsStore() ){
-                    ExecUnitIF* execUnit = op->GetExecUnit();
-                    if( execUnit->CanReserve( op, 0 ) ){
-                        execUnit->Reserve( op, 0 );
-                    }
-                    else{
-                        param.canCommit = false;
-                        m_evaluated.storePortFull = true;
+                // An op can commit if the state of 'op' is
+                // after than FINISHED or COMPLETED.
+                if( op->GetStatus() < m_committableStatus ){
+                    param.canCommit = false;
+                }
+                else{
+                    // Store
+                    const OpClass& opClass = op->GetOpClass();
+                    if( opClass.IsStore() ){
+                        ExecUnitIF* execUnit = op->GetExecUnit();
+                        if( execUnit->CanReserve( op, 0 ) ){
+                            execUnit->Reserve( op, 0 );
+                        }
+                        else{
+                            param.canCommit = false;
+                            m_evaluated.storePortFull = true;
+                        }
                     }
                 }
             }
