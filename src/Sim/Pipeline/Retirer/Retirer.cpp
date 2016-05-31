@@ -245,6 +245,8 @@ bool Retirer::CanCommitOp( OpIterator op )
     CommitDecisionHookParam param = { op, true };
     HOOK_SECTION_OP_PARAM( s_commitDecisionHook, op, param )
     {
+        // ここで分岐をする理由は，Hook により param.canCommit が書き換えられることがあるため．
+        // Hook before で param.canCommit が false となった場合 Hook の結果を優先する．
         if (param.canCommit) {
             if( op->GetException().exception ){
                 // Exception occurs.
