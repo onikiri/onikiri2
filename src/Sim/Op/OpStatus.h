@@ -45,21 +45,21 @@ namespace Onikiri
         enum Status 
         {
             OS_INVALID = 0,     //
-            OS_FLUSHED,         // •ªŠò—\‘ªƒ~ƒX‚Åƒtƒ‰ƒbƒVƒ…‚³‚ê‚½
-            OS_FETCH,           // Fetcher‚ÌnextPipelineã‚É‚ ‚éó‘Ô
-            OS_RENAME,          // Renamer‚ÌnextPipelineã‚É‚ ‚éó‘Ô
-            OS_DISPATCHING,     // Dispatcher‚ÌnextPipelineã‚É‚ ‚éó‘Ô
-            OS_DISPATCHED,      // ƒXƒPƒWƒ…[ƒ‰‚É“ü‚Á‚½
-            OS_ISSUING,         // issue‚³‚ê‚½
-            OS_EXECUTING,       // ŽÀs‚³‚ê‚½
-            OS_FINISHED,        // ŽÀs‚ªI—¹‚µ‚½
-            OS_WRITING_BACK,    // ƒ‰ƒCƒgƒoƒbƒN’†
-            OS_WRITTEN_BACK,    // ƒ‰ƒCƒgƒoƒbƒN‚³‚ê‚½
-            OS_COMPLETED,       // ƒŠƒ^ƒCƒA‚ð‹–‰Â‚·‚éƒXƒe[ƒ^ƒX‚ÌƒIƒvƒVƒ‡ƒ“‚Æ‚µ‚Ä—pˆÓ
-            OS_NOP,             // NOP‚ÍDispatcher‚É‘—‚ç‚¸‚ÉŽÀsI—¹ó‘Ô‚É‚·‚é
+            OS_FLUSHED,         // åˆ†å²äºˆæ¸¬ãƒŸã‚¹ã§ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã•ã‚ŒãŸ
+            OS_FETCH,           // Fetcherã®nextPipelineä¸Šã«ã‚ã‚‹çŠ¶æ…‹
+            OS_RENAME,          // Renamerã®nextPipelineä¸Šã«ã‚ã‚‹çŠ¶æ…‹
+            OS_DISPATCHING,     // Dispatcherã®nextPipelineä¸Šã«ã‚ã‚‹çŠ¶æ…‹
+            OS_DISPATCHED,      // ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©ã«å…¥ã£ãŸ
+            OS_ISSUING,         // issueã•ã‚ŒãŸ
+            OS_EXECUTING,       // å®Ÿè¡Œã•ã‚ŒãŸ
+            OS_FINISHED,        // å®Ÿè¡ŒãŒçµ‚äº†ã—ãŸ
+            OS_WRITING_BACK,    // ãƒ©ã‚¤ãƒˆãƒãƒƒã‚¯ä¸­
+            OS_WRITTEN_BACK,    // ãƒ©ã‚¤ãƒˆãƒãƒƒã‚¯ã•ã‚ŒãŸ
+            OS_COMPLETED,       // ãƒªã‚¿ã‚¤ã‚¢ã‚’è¨±å¯ã™ã‚‹ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã¨ã—ã¦ç”¨æ„
+            OS_NOP,             // NOPã¯Dispatcherã«é€ã‚‰ãšã«å®Ÿè¡Œçµ‚äº†çŠ¶æ…‹ã«ã™ã‚‹
             OS_COMITTING,       // in committing
             OS_COMITTED,        // after commit
-            OS_RETIRED,         // ƒŠƒ^ƒCƒA‚µ‚½
+            OS_RETIRED,         // ãƒªã‚¿ã‚¤ã‚¢ã—ãŸ
             OS_MAX
         };
 

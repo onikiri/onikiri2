@@ -116,8 +116,8 @@ namespace Onikiri
         }
 
         // sepStr     : delimiter 
-        // sepKeepStr : delimiteri•ªŠ„Œã•¶š—ñ‚É‚àc‚éj
-        // ",/"‚È‚çC','‚Æ'/'‚ğdelimiter‚Æ‚µ‚Ä•¶š—ñ‚ğ•ªŠ„
+        // sepKeepStr : delimiterï¼ˆåˆ†å‰²å¾Œæ–‡å­—åˆ—ã«ã‚‚æ®‹ã‚‹ï¼‰
+        // ",/"ãªã‚‰ï¼Œ','ã¨'/'ã‚’delimiterã¨ã—ã¦æ–‡å­—åˆ—ã‚’åˆ†å‰²
         std::vector<String> split(
             const char* delimiter, 
             const char* delimiterKeep = NULL) const;

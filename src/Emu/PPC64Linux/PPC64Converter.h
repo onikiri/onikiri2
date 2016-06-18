@@ -41,7 +41,7 @@ namespace Onikiri {
 
     namespace PPC64Linux {
 
-        // PowerPC‚Ì–½—ß‚ğCOpInfo ‚Ì—ñ‚É•ÏŠ·‚·‚é
+        // PowerPCã®å‘½ä»¤ã‚’ï¼ŒOpInfo ã®åˆ—ã«å¤‰æ›ã™ã‚‹
         struct PPC64ConverterTraits {
             typedef PPC64OpInfo OpInfoType;
             typedef PPC64Decoder DecoderType;
@@ -49,10 +49,10 @@ namespace Onikiri {
             typedef u32 CodeWordType;
             static const int MaxOpInfoDefs = 3;
             static const int MaxDstOperands = PPC64OpInfo::MaxDstRegCount;
-            static const int MaxSrcOperands = 6;    // SrcReg ‚Æ SrcImm ‚Ì‡Œv
+            static const int MaxSrcOperands = 6;    // SrcReg ã¨ SrcImm ã®åˆè¨ˆ
         };
 
-        // Alpha‚Ì–½—ß‚ğCOpInfo ‚Ì—ñ‚É•ÏŠ·‚·‚é
+        // Alphaã®å‘½ä»¤ã‚’ï¼ŒOpInfo ã®åˆ—ã«å¤‰æ›ã™ã‚‹
         class PPC64Converter : public EmulatorUtility::CommonConverter<PPC64ConverterTraits>
         {
         public:
@@ -60,7 +60,7 @@ namespace Onikiri {
             virtual ~PPC64Converter();
 
         private:
-            // CommonConverter ‚ÌƒJƒXƒ^ƒ}ƒCƒY
+            // CommonConverter ã®ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º
             virtual bool IsZeroReg(int reg) const;
             virtual std::pair<OperandType, int> GetActualSrcOperand(int srcTemplate, const DecodedInsn& decoded) const;
             virtual int GetActualRegNumber(int regTemplate, const DecodedInsn& decoded) const;

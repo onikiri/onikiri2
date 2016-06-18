@@ -274,13 +274,13 @@ void AlphaLinuxSyscallConv::Execute(OpEmulationState* opState)
     //case syscall_id_setgid:
     //  syscall_setgid(opState);
     //  break;
-    case syscall_id_getxgid:        // egid -> a4 (!), gid -> a3, error -> v0 ‚È‚Ì‚ÅŠ„‚Æ‘å‚«‚È‰ü‘¢‚ğ‚µ‚È‚¢‚ÆÀ‘•‚Å‚«‚È‚¢
+    case syscall_id_getxgid:        // egid -> a4 (!), gid -> a3, error -> v0 ãªã®ã§å‰²ã¨å¤§ããªæ”¹é€ ã‚’ã—ãªã„ã¨å®Ÿè£…ã§ããªã„
         syscall_getegid(opState);
     //  break;
     //case syscall_id_seteuid:
     //  syscall_seteuid(opState);
     //  break;
-    case syscall_id_getxuid:        // euid -> a4 (!), uid -> a3, error -> v0 ‚È‚Ì‚ÅŠ„‚Æ‘å‚«‚È‰ü‘¢‚ğ‚µ‚È‚¢‚ÆÀ‘•‚Å‚«‚È‚¢
+    case syscall_id_getxuid:        // euid -> a4 (!), uid -> a3, error -> v0 ãªã®ã§å‰²ã¨å¤§ããªæ”¹é€ ã‚’ã—ãªã„ã¨å®Ÿè£…ã§ããªã„
         syscall_geteuid(opState);
         break;
     //case syscall_id_setegid:
@@ -345,7 +345,7 @@ void AlphaLinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_tgkill(opState);
         break;
 
-    // gcc ‚ª stack ‚ÌŠg’£‚Ég—p‚·‚é‚¾‚¯
+    // gcc ãŒ stack ã®æ‹¡å¼µã«ä½¿ç”¨ã™ã‚‹ã ã‘
     case syscall_id_getrlimit:
         syscall_ignore(opState);
         break;
@@ -357,7 +357,7 @@ void AlphaLinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_mkdir(opState);
         break;
 
-    // gcc ‚ªÀsŠÔ‚Ìæ“¾‚Ég—p
+    // gcc ãŒå®Ÿè¡Œæ™‚é–“ã®å–å¾—ã«ä½¿ç”¨
     case syscall_id_getrusage:
         syscall_ignore(opState);
         break;
@@ -381,7 +381,7 @@ void AlphaLinuxSyscallConv::Execute(OpEmulationState* opState)
 }
 
 //
-// ‹¤’Ê‚ÌÀ‘•
+// å…±é€šã®å®Ÿè£…
 //
 
 
@@ -443,7 +443,7 @@ void AlphaLinuxSyscallConv::syscall_setsysinfo(OpEmulationState* opState)
 //  u64 buffer = GetArg(2);
 
     switch (kind) {
-    case 14:    // SSI_IEEE_FP_CONTROL  “®“IŠÛ‚ßƒ‚[ƒhˆÈŠO(FP—áŠOEƒXƒe[ƒ^ƒX)‚ğİ’è
+    case 14:    // SSI_IEEE_FP_CONTROL  å‹•çš„ä¸¸ã‚ãƒ¢ãƒ¼ãƒ‰ä»¥å¤–(FPä¾‹å¤–ãƒ»ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹)ã‚’è¨­å®š
         SetResult(true, 0);
         break;
     default:

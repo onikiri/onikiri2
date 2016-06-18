@@ -49,7 +49,7 @@ int Alpha64Info::GetRegisterSegmentID(int regNum)
         32,     // FP
         64,     // Address
         65,     // FPCR
-        66      // Å‘å+1
+        66      // æœ€å¤§+1
     };
     const int nElems = sizeof(segmentRange)/sizeof(segmentRange[0]);
 

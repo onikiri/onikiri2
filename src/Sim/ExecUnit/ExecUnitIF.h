@@ -41,7 +41,7 @@ namespace Onikiri
     class ExecUnitReserver;
     class OpClass;
 
-    // ���Z��(ALU�Ȃ�)�̃C���^�[�t�F�[�X
+    // 演算器(ALUなど)のインターフェース
     class ExecUnitIF 
     {
     public:
@@ -49,10 +49,10 @@ namespace Onikiri
         virtual ~ExecUnitIF() {}
 
 
-        // ���s���C�e���V��� FinishEvent ��o�^����
+        // 実行レイテンシ後に FinishEvent を登録する
         virtual void Execute( OpIterator op ) = 0;
 
-        // ���T�C�N���Ă΂��
+        // 毎サイクル呼ばれる
         virtual void Begin() = 0;
 
         // Called in Evaluate phase.
@@ -68,13 +68,13 @@ namespace Onikiri
         // without CanReserve()/Reserve().
         virtual ExecUnitReserver* GetReserver() = 0; 
         
-        // ExecLatencyInfo��Ԃ�
+        // ExecLatencyInfoを返す
         virtual ExecLatencyInfo* GetExecLatencyInfo() = 0;
 
-        // OpClass �����肤�郌�C�e���V�̎�ނ̐���Ԃ�
+        // OpClass から取りうるレイテンシの種類の数を返す
         virtual int GetLatencyCount( const OpClass& opClass ) = 0;
 
-        // OpClass �ƃC���f�N�X���烌�C�e���V��Ԃ�
+        // OpClass とインデクスからレイテンシを返す
         virtual int GetLatency( const OpClass& opClass, int index ) = 0;
 
         // Return a code of OpClass mapped to this unit.

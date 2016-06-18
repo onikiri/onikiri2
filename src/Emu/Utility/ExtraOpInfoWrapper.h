@@ -30,7 +30,7 @@
 
 
 //
-// ÉÜÅ[ÉUÅ[íËã`ñΩóﬂÉfÉRÅ[É_Ç≈ÉfÉRÅ[ÉhÇµÇΩñΩóﬂÇÃÉâÉbÉp
+// „É¶„Éº„Ç∂„ÉºÂÆöÁæ©ÂëΩ‰ª§„Éá„Ç≥„Éº„ÉÄ„Åß„Éá„Ç≥„Éº„Éâ„Åó„ÅüÂëΩ‰ª§„ÅÆ„É©„ÉÉ„Éë
 //
 
 #ifndef EMU_UTILITY_EXTRA_OP_INFO_WRAPPER_H
@@ -141,7 +141,7 @@ namespace Onikiri
             {
                 m_exOp = exOp;
 
-                // CommonOpInfo ë§Ç…îΩâf
+                // CommonOpInfo ÂÅ¥„Å´ÂèçÊò†
                 SetDstRegNum( m_exOp->GetDstNum() );
                 SetSrcRegNum( m_exOp->GetSrcNum() );
                 
@@ -168,12 +168,12 @@ namespace Onikiri
 
                 ExtraOpEmuStateWrapper<TISAInfo> tmpState( emuState );
 
-                // é¿çs
+                // ÂÆüË°å
                 ExtraOpInfoIF* exOpInfo = wrapper->GetExtraOpInfo();
                 exOpInfo->Execute( &tmpState );
             }
 
-            // OpInfo ÇÃé¿ëï
+            // OpInfo „ÅÆÂÆüË£Ö
             const OpClass& GetOpClass() const
             {
                 ASSERT( m_exOp != 0 );

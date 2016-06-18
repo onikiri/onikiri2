@@ -70,7 +70,7 @@ inline int fesetround(int rounding_mode)
 const int FE_ROUNDDEFAULT = FE_TONEAREST;
 
 namespace Onikiri {
-    // setround�𖈉�s�����Ƃɂ�鐫�\�ቺ�͂قƂ�ǂȂ�
+    // setroundを毎回行うことによる性能低下はほとんどない
     class ScopedFESetRound {
     public:
         ScopedFESetRound(int mode) {

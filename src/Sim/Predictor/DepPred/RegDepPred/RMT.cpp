@@ -51,7 +51,7 @@ namespace Onikiri
 };  // namespace Onikiri
 
 
-// RMT ‚Ì‰Šú‰»‘O‚É RegisterFile / CheckpointMaster ‚Ì‰Šú‰»‚ªs‚í‚ê‚Ä‚¢‚é•K—v‚ª‚ ‚é
+// RMT ã®åˆæœŸåŒ–å‰ã« RegisterFile / CheckpointMaster ã®åˆæœŸåŒ–ãŒè¡Œã‚ã‚Œã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚‹
 RMT::RMT() :
     m_numLogicalReg(0),
     m_numRegSegment(0),
@@ -72,7 +72,7 @@ RMT::~RMT()
 void RMT::Initialize(InitPhase phase)
 {
     if(phase == INIT_POST_CONNECTION){
-        // ƒƒ“ƒo•Ï”‚Ìƒ`ƒFƒbƒN
+        // ãƒ¡ãƒ³ãƒå¤‰æ•°ã®ãƒã‚§ãƒƒã‚¯
         CheckNodeInitialized( "registerFile",   m_registerFile );
         CheckNodeInitialized( "regFreeList",    m_regFreeList );
         CheckNodeInitialized( "emulator",       m_emulator );
@@ -83,14 +83,14 @@ void RMT::Initialize(InitPhase phase)
         m_numLogicalReg = isaInfo->GetRegisterCount();
         m_numRegSegment = isaInfo->GetRegisterSegmentCount();
 
-        // checkpointedData ‚Ì‰Šú‰»
+        // checkpointedData ã®åˆæœŸåŒ–
         CheckpointMaster* checkpointMaster = m_checkpointMaster;
         m_allocationTable.Initialize(
             checkpointMaster,
             CheckpointMaster::SLOT_RENAME
         );
 
-        // ƒZƒOƒƒ“ƒgî•ñ‚ğƒe[ƒuƒ‹‚ÉŠi”[
+        // ã‚»ã‚°ãƒ¡ãƒ³ãƒˆæƒ…å ±ã‚’ãƒ†ãƒ¼ãƒ–ãƒ«ã«æ ¼ç´
         m_segmentTable.assign(-1);
         for (int i = 0; i < m_numLogicalReg; ++i) {
             int segment = isaInfo->GetRegisterSegmentID(i);
@@ -98,44 +98,44 @@ void RMT::Initialize(InitPhase phase)
         }
         vector<int> logicalRegNum( m_numRegSegment , 0 );
         
-        // ˜_—ƒŒƒWƒXƒ^‚Ì”‚¾‚¯ƒŒƒWƒXƒ^‚ğ‰Šú‰»
+        // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®æ•°ã ã‘ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’åˆæœŸåŒ–
         for (int i = 0; i < m_numLogicalReg; i++) {
-            // freelist ‚©‚ç1‚ÂƒŒƒWƒXƒ^”Ô†‚ğ‚à‚ç‚¤
+            // freelist ã‹ã‚‰1ã¤ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’ã‚‚ã‚‰ã†
             int segment = GetRegisterSegmentID(i);
             int phyRegNo = m_regFreeList->Allocate(segment);
             logicalRegNum[segment]++;
 
-            // ˜_—ƒŒƒWƒXƒ^¨•¨—ƒŒƒWƒXƒ^‚ÌŠ„‚è“–‚Ä
+            // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿â†’ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®å‰²ã‚Šå½“ã¦
             (*m_allocationTable)[i] = phyRegNo;
 
-            // ƒŒƒWƒXƒ^‚Ìó‘Ô‚Ì‰Šú‰»
-            // ‚±‚±‚Å‰Šú‰»‚³‚ê‚È‚©‚Á‚½‚à‚Ì‚Íallocate‚³‚ê‚é‚É‰Šú‰»‚³‚ê‚é
+            // ãƒ¬ã‚¸ã‚¹ã‚¿ã®çŠ¶æ…‹ã®åˆæœŸåŒ–
+            // ã“ã“ã§åˆæœŸåŒ–ã•ã‚Œãªã‹ã£ãŸã‚‚ã®ã¯allocateã•ã‚Œã‚‹æ™‚ã«åˆæœŸåŒ–ã•ã‚Œã‚‹
             PhyReg* phyReg = (*m_registerFile)[phyRegNo];
             phyReg->Clear();
 
-            // ˆê”Ô‰‚ß‚Í‘S•”ƒŒƒfƒB
+            // ä¸€ç•ªåˆã‚ã¯å…¨éƒ¨ãƒ¬ãƒ‡ã‚£
             phyReg->Set();
-            // value ‚ğ m_emulator‚©‚çó‚¯æ‚é
+            // value ã‚’ m_emulatorã‹ã‚‰å—ã‘å–ã‚‹
             phyReg->SetVal(m_emulator->GetInitialRegValue(0, i));
         }
 
-        // ‰ğ•ú—p‚Ìƒe[ƒuƒ‹‚Ì‰Šú‰»
-        // ‰Šúó‘Ô‚Å‚ÍƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“ƒŒƒWƒXƒ^‚Æ‚µ‚ÄŠ„‚è“–‚Ä‚ç‚ê‚½•¨—ƒŒƒWƒXƒ^‚Í‚¢‚È‚¢
+        // è§£æ”¾ç”¨ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã®åˆæœŸåŒ–
+        // åˆæœŸçŠ¶æ…‹ã§ã¯ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿ã¨ã—ã¦å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã¯ã„ãªã„
         // 
         m_releaseTable.resize(m_registerFile->GetTotalCapacity(), -1);
     }
 }
 
-// ƒ}ƒbƒv•\‚ğ‚Ğ‚¢‚Ä˜_—ƒŒƒWƒXƒ^”Ô†‚É‘Î‰‚·‚é•¨—ƒŒƒWƒXƒ^‚Ì”Ô†‚ğ•Ô‚·
+// ãƒãƒƒãƒ—è¡¨ã‚’ã²ã„ã¦è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã«å¯¾å¿œã™ã‚‹ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç•ªå·ã‚’è¿”ã™
 int RMT::ResolveReg(int lno)
 {
-    // RMT ‚Ìê‡CResolveReg ‚Å•›ì—p‚Í¶‚¶‚È‚¢‚½‚ßC
-    // PeekReg ‚ÉˆÏ÷
+    // RMT ã®å ´åˆï¼ŒResolveReg ã§å‰¯ä½œç”¨ã¯ç”Ÿã˜ãªã„ãŸã‚ï¼Œ
+    // PeekReg ã«å§”è­²
     return PeekReg(lno);
 }
 
-// ResolveReg ‚Æ“¯—l‚É•¨—ƒŒƒWƒXƒ^”Ô†‚ğ•Ô‚·D
-// ‚½‚¾‚µC•›ì—p‚ª‚È‚¢‚±‚Æ‚ª•ÛØ‚³‚ê‚é
+// ResolveReg ã¨åŒæ§˜ã«ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’è¿”ã™ï¼
+// ãŸã ã—ï¼Œå‰¯ä½œç”¨ãŒãªã„ã“ã¨ãŒä¿è¨¼ã•ã‚Œã‚‹
 int RMT::PeekReg(int lno) const
 {
     ASSERT(
@@ -147,7 +147,7 @@ int RMT::PeekReg(int lno) const
 }
 
 
-// ƒtƒŠ[ƒŠƒXƒg‚©‚çŠ„‚è“–‚Ä‰Â”\‚È•¨—ƒŒƒWƒXƒ^‚Ì”Ô†‚ğó‚¯æ‚é
+// ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆã‹ã‚‰å‰²ã‚Šå½“ã¦å¯èƒ½ãªç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç•ªå·ã‚’å—ã‘å–ã‚‹
 int RMT::AllocateReg( OpIterator op, int lno )
 {
     HookParam hookParam = {op, lno, 0};
@@ -160,7 +160,7 @@ int RMT::AllocateReg( OpIterator op, int lno )
     return hookParam.physicalRegNum;
 }
 
-// Retire‚µ‚½‚Ì‚ÅA’l‚ª—˜—p‚³‚ê‚é‚±‚Æ‚Ì‚È‚­‚È‚é•¨—ƒŒƒWƒXƒ^‚ğ‰ğ•ú‚·‚é
+// Retireã—ãŸã®ã§ã€å€¤ãŒåˆ©ç”¨ã•ã‚Œã‚‹ã“ã¨ã®ãªããªã‚‹ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’è§£æ”¾ã™ã‚‹
 void RMT::ReleaseReg( OpIterator op, const int lno, int phyRegNo )
 {
     HookParam hookParam = { op, lno, phyRegNo };
@@ -172,7 +172,7 @@ void RMT::ReleaseReg( OpIterator op, const int lno, int phyRegNo )
     );
 }
 
-// Flush‚³‚ê‚½‚Ì‚Åop‚ÌƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“EƒŒƒWƒXƒ^‚ğƒtƒŠ[ƒŠƒXƒg‚É–ß‚·
+// Flushã•ã‚ŒãŸã®ã§opã®ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆã«æˆ»ã™
 void RMT::DeallocateReg( OpIterator op, const int lno, int phyRegNo )
 {
     HookParam hookParam = { op, lno, phyRegNo };
@@ -185,7 +185,7 @@ void RMT::DeallocateReg( OpIterator op, const int lno, int phyRegNo )
 }
 
 
-// AllocateReg‚ÌÀ‘•
+// AllocateRegã®å®Ÿè£…
 void RMT::AllocateRegBody( HookParam* param )
 {
     int lno = param->logicalRegNum;
@@ -196,24 +196,24 @@ void RMT::AllocateRegBody( HookParam* param )
         "illegal register No.: %d\n", lno
     );
 
-    // ƒtƒŠ[ƒŠƒXƒg‚©‚ç•¨—ƒŒƒWƒXƒ^”Ô†‚ğó‚¯æ‚é
+    // ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆã‹ã‚‰ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’å—ã‘å–ã‚‹
     int phyRegNo = m_regFreeList->Allocate( segment );
 
-    // allocation‚É•¨—ƒŒƒWƒXƒ^‚ğ‰Šú‰»
+    // allocationæ™‚ã«ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’åˆæœŸåŒ–
     PhyReg* phyReg = (*m_registerFile)[ phyRegNo ];
     phyReg->Clear();
 
-    // reg‚ªcommit‚É‰ğ•ú‚·‚é•¨—ƒŒƒWƒXƒ^‚ğm_releaseTable‚É“o˜^
-    // ‚»‚ê‚Ü‚Åreg‚Ì˜_—ƒŒƒWƒXƒ^‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚½•¨—ƒŒƒWƒXƒ^‚ğ‰ğ•ú‚·‚é
+    // regãŒcommitæ™‚ã«è§£æ”¾ã™ã‚‹ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’m_releaseTableã«ç™»éŒ²
+    // ãã‚Œã¾ã§regã®è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãŸç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’è§£æ”¾ã™ã‚‹
     m_releaseTable[ phyRegNo ] = ( m_allocationTable.GetCurrent() )[ lno ];
 
-    // <˜_—ƒŒƒWƒXƒ^A•¨—ƒŒƒWƒXƒ^>‚Ìƒ}ƒbƒsƒ“ƒOƒe[ƒuƒ‹‚ğXV
+    // <è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã€ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿>ã®ãƒãƒƒãƒ”ãƒ³ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’æ›´æ–°
     ( m_allocationTable.GetCurrent() )[ lno ] = phyRegNo;
 
     param->physicalRegNum = phyRegNo;
 }
 
-// Retire‚µ‚½‚Ì‚ÅA’l‚ª—˜—p‚³‚ê‚é‚±‚Æ‚Ì‚È‚­‚È‚é•¨—ƒŒƒWƒXƒ^‚ğ‰ğ•ú‚·‚é
+// Retireã—ãŸã®ã§ã€å€¤ãŒåˆ©ç”¨ã•ã‚Œã‚‹ã“ã¨ã®ãªããªã‚‹ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’è§£æ”¾ã™ã‚‹
 void RMT::ReleaseRegBody( HookParam* param )
 {
     int lno = param->logicalRegNum;
@@ -224,13 +224,13 @@ void RMT::ReleaseRegBody( HookParam* param )
     
     int segment = GetRegisterSegmentID( lno );
 
-    // ‰ğ•ú‚·‚é•¨—ƒŒƒWƒXƒ^‚ğƒtƒŠ[ƒŠƒXƒg‚É–ß‚·
+    // è§£æ”¾ã™ã‚‹ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆã«æˆ»ã™
     int releasedPhyReg = m_releaseTable[ param->physicalRegNum ];
     m_regFreeList->Release( segment, releasedPhyReg );
     param->physicalRegNum = releasedPhyReg;
 }
 
-// Flush‚³‚ê‚½‚Ì‚Åop‚ÌƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“EƒŒƒWƒXƒ^‚ğƒtƒŠ[ƒŠƒXƒg‚É–ß‚·
+// Flushã•ã‚ŒãŸã®ã§opã®ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆã«æˆ»ã™
 void RMT::DeallocateRegBody( HookParam* param )
 {
     int lno = param->logicalRegNum;
@@ -247,7 +247,7 @@ void RMT::DeallocateRegBody( HookParam* param )
 
 bool RMT::CanAllocate(OpIterator* infoArray, int numOp)
 {
-    // •K—v‚ÈƒŒƒWƒXƒ^”‚ğƒZƒOƒƒ“ƒg‚²‚Æ‚É”‚¦‚é
+    // å¿…è¦ãªãƒ¬ã‚¸ã‚¹ã‚¿æ•°ã‚’ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã”ã¨ã«æ•°ãˆã‚‹
     boost::array<size_t, SimISAInfo::MAX_REG_SEGMENT_COUNT> requiredRegCount;
     requiredRegCount.assign(0);
 
@@ -262,7 +262,7 @@ bool RMT::CanAllocate(OpIterator* infoArray, int numOp)
         }
     }
 
-    // ƒZƒOƒƒ“ƒg‚²‚Æ‚ÉŠ„‚è“–‚Ä‰Â”\‚©”»’f
+    // ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã”ã¨ã«å‰²ã‚Šå½“ã¦å¯èƒ½ã‹åˆ¤æ–­
     for(int m = 0; m < m_numRegSegment; ++m){
         size_t freeRegCount = (size_t)m_regFreeList->GetFreeEntryCount(m);
         if( freeRegCount < requiredRegCount[m] ) {
@@ -272,7 +272,7 @@ bool RMT::CanAllocate(OpIterator* infoArray, int numOp)
     return true;
 }
 
-// ˜_—/•¨—ƒŒƒWƒXƒ^‚ÌŒÂ”
+// è«–ç†/ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®å€‹æ•°
 int RMT::GetRegSegmentCount()
 {
     return m_numRegSegment;

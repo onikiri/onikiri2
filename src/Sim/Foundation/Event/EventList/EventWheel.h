@@ -42,8 +42,8 @@ namespace Onikiri
 {
 #if 1
 
-    // ƒiƒC[ƒu‚ÈÀ‘•
-    // ListType ‚Ì”z—ñ‚Æ‚µ‚Ä“®ì
+    // ãƒŠã‚¤ãƒ¼ãƒ–ãªå®Ÿè£…
+    // ListType ã®é…åˆ—ã¨ã—ã¦å‹•ä½œ
     class EventWheel
     {
 
@@ -51,10 +51,10 @@ namespace Onikiri
         typedef EventPtr  ListNode;
         typedef EventList ListType;
 
-        // ŠeƒTƒCƒNƒ‹—p‚ÌƒCƒxƒ“ƒg
+        // å„ã‚µã‚¤ã‚¯ãƒ«ç”¨ã®ã‚¤ãƒ™ãƒ³ãƒˆ
         std::vector<ListType> m_event;
 
-        // Šm•Û‚·‚éƒTƒCƒY
+        // ç¢ºä¿ã™ã‚‹ã‚µã‚¤ã‚º
         int m_size;
 
     public:
@@ -88,7 +88,7 @@ namespace Onikiri
 
 #elif 1
 
-    // ƒtƒŠ[ƒŠƒXƒg‚ğ—p‚¢‚Äƒƒ‚ƒŠ—e—Ê‚ğíŒ¸
+    // ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆã‚’ç”¨ã„ã¦ãƒ¡ãƒ¢ãƒªå®¹é‡ã‚’å‰Šæ¸›
     class EventWheel
     {
 
@@ -96,18 +96,18 @@ namespace Onikiri
         typedef EventPtr  ListNode;
         typedef EventList ListType;
 
-        // ŠeƒTƒCƒNƒ‹—p‚ÌƒCƒxƒ“ƒg
+        // å„ã‚µã‚¤ã‚¯ãƒ«ç”¨ã®ã‚¤ãƒ™ãƒ³ãƒˆ
         std::vector<ListType*> m_event;
 
-        // Šm•Û‚·‚éƒTƒCƒY
+        // ç¢ºä¿ã™ã‚‹ã‚µã‚¤ã‚º
         int m_size;
 
-        // ƒtƒŠ[ƒŠƒXƒg
+        // ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆ
         class EventFreeList
         {
 
         public:
-            pool_vector<ListType*> m_eventFreeList; // ƒ|ƒCƒ“ƒ^‚ÌƒtƒŠ[ƒŠƒXƒgiƒXƒ^ƒbƒNj
+            pool_vector<ListType*> m_eventFreeList; // ãƒã‚¤ãƒ³ã‚¿ã®ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆï¼ˆã‚¹ã‚¿ãƒƒã‚¯ï¼‰
 
 
             EventFreeList()
@@ -195,15 +195,15 @@ namespace Onikiri
             m_event.resize( m_size, NULL );
         }
 
-        // ƒ|ƒCƒ“ƒ^‚ğ•Ô‚·‚¾‚¯‚ÅCŠm•Û‚ğs‚í‚È‚¢
+        // ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™ã ã‘ã§ï¼Œç¢ºä¿ã‚’è¡Œã‚ãªã„
         INLINE ListType* PeekEventList( int index ) const
         {
             ASSERT( index < m_size, "The passed index is out of range." );
             return m_event[index];
         }
 
-        // ƒŠƒXƒg‚Ìæ“¾
-        // ‚Ü‚¾Šm•Û‚³‚ê‚Ä‚¢‚È‚¢ê‡CƒŠƒXƒg‚Ì—Ìˆæ‚ğŠm•Û
+        // ãƒªã‚¹ãƒˆã®å–å¾—
+        // ã¾ã ç¢ºä¿ã•ã‚Œã¦ã„ãªã„å ´åˆï¼Œãƒªã‚¹ãƒˆã®é ˜åŸŸã‚’ç¢ºä¿
         INLINE ListType* GetEventList( int index )
         {
             ASSERT( index < m_size, "The passed index is out of range." );
@@ -215,7 +215,7 @@ namespace Onikiri
             return eventList;
         }
 
-        // ƒŠƒXƒg‚Ì•Ô‹p
+        // ãƒªã‚¹ãƒˆã®è¿”å´
         INLINE void ReleaseEventList( ListType* list, int index )
         {
             ASSERT( m_event[index], "A not allocated list is released." );
@@ -227,7 +227,7 @@ namespace Onikiri
 
 #elif 1
 
-    // ƒnƒbƒVƒ…g—p
+    // ãƒãƒƒã‚·ãƒ¥ä½¿ç”¨
     class EventWheel
     {
 
@@ -235,7 +235,7 @@ namespace Onikiri
         typedef EventPtr  ListNode;
         typedef EventList ListType;
 
-        // ŠeƒTƒCƒNƒ‹—p‚ÌƒCƒxƒ“ƒg
+        // å„ã‚µã‚¤ã‚¯ãƒ«ç”¨ã®ã‚¤ãƒ™ãƒ³ãƒˆ
         class EventHash
         {
         public:
@@ -247,7 +247,7 @@ namespace Onikiri
 
         pool_unordered_map<int, ListType, EventHash> m_event;
 
-        // Šm•Û‚·‚éƒTƒCƒY
+        // ç¢ºä¿ã™ã‚‹ã‚µã‚¤ã‚º
         int m_size;
 
     public:
@@ -265,7 +265,7 @@ namespace Onikiri
             m_size = size;
         }
 
-        // ƒ|ƒCƒ“ƒ^‚ğ•Ô‚·‚¾‚¯‚ÅCŠm•Û‚ğs‚í‚È‚¢
+        // ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™ã ã‘ã§ï¼Œç¢ºä¿ã‚’è¡Œã‚ãªã„
         INLINE ListType* PeekEventList( int index ) 
         {
             ASSERT( index < m_size, "The passed index is out of range." );
@@ -273,8 +273,8 @@ namespace Onikiri
             return i == m_event.end() ? NULL : &i->second;
         }
 
-        // ƒŠƒXƒg‚Ìæ“¾
-        // ‚Ü‚¾Šm•Û‚³‚ê‚Ä‚¢‚È‚¢ê‡CƒŠƒXƒg‚Ì—Ìˆæ‚ğŠm•Û
+        // ãƒªã‚¹ãƒˆã®å–å¾—
+        // ã¾ã ç¢ºä¿ã•ã‚Œã¦ã„ãªã„å ´åˆï¼Œãƒªã‚¹ãƒˆã®é ˜åŸŸã‚’ç¢ºä¿
         INLINE ListType* GetEventList( int index )
         {
             ASSERT( index < m_size, "The passed index is out of range." );
@@ -286,7 +286,7 @@ namespace Onikiri
             return &i->second;
         }
 
-        // ƒŠƒXƒg‚Ì•Ô‹p
+        // ãƒªã‚¹ãƒˆã®è¿”å´
         INLINE void ReleaseEventList( ListType* list, int index )
         {
             m_event.erase(index);

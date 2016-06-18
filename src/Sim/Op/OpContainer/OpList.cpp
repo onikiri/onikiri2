@@ -94,8 +94,8 @@ OpList::iterator OpList::erase( const OpIterator& opIterator )
 
 OpList::iterator OpList::erase( iterator pos )
 {
-    // Ä“x“¯‚¶ handle ‚ª insert ‚³‚ê‚é‚Æ‚«‚É‰Šú‰»‚³‚ê‚é‚Ì‚ÅA
-    // erase ‚·‚éŽž‚É m_iteratorTable ‚ÌŠY“–‚·‚é—v‘f‚É‚Í‰½‚à‚µ‚È‚¢
+    // å†åº¦åŒã˜ handle ãŒ insert ã•ã‚Œã‚‹ã¨ãã«åˆæœŸåŒ–ã•ã‚Œã‚‹ã®ã§ã€
+    // erase ã™ã‚‹æ™‚ã« m_iteratorTable ã®è©²å½“ã™ã‚‹è¦ç´ ã«ã¯ä½•ã‚‚ã—ãªã„
     OpArray::ID     id     = pos->GetID();
 
     alive_table[ id ] = false;
@@ -140,27 +140,27 @@ bool OpList::find_and_erase( OpIterator op )
 
 void OpList::push_inorder( OpIterator op )
 {
-    // ‹ó‚Å‚ ‚ê‚Îpush_back‚µ‚ÄI‚í‚è
+    // ç©ºã§ã‚ã‚Œã°push_backã—ã¦çµ‚ã‚ã‚Š
     if(empty()) {
         push_back(op);
         return;
     }
 
-    // Œã‚ë‘¤‚©‚çop‚æ‚èSerialID‚ª¬‚³‚¢OpIterator‚ðŒ©‚Â‚¯‚é
+    // å¾Œã‚å´ã‹ã‚‰opã‚ˆã‚ŠSerialIDãŒå°ã•ã„OpIteratorã‚’è¦‹ã¤ã‘ã‚‹
     iterator iter = end();
     u64 id = op->GetGlobalSerialID();
     do {
         --iter;
         if( (*iter)->GetGlobalSerialID() < id ) {
-            // Œ©‚Â‚¯‚½OpIterator‚ÌŒã‚ë‚Éop‚ð‘}“ü
-            // insert ‚ÍŽw’è‚µ‚½—v‘f‚Ì’¼‘O‚É‘}“ü‚È‚Ì‚Å1‰ñƒCƒ“ƒNƒŠƒƒ“ƒg
+            // è¦‹ã¤ã‘ãŸOpIteratorã®å¾Œã‚ã«opã‚’æŒ¿å…¥
+            // insert ã¯æŒ‡å®šã—ãŸè¦ç´ ã®ç›´å‰ã«æŒ¿å…¥ãªã®ã§1å›žã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
             ++iter;
             insert(iter, op);
             return;
         }
     } while( iter != begin() );
     
-    // æ“ª‚Ü‚Å’B‚µ‚½‚çæ“ª‚É“ü‚ê‚é
+    // å…ˆé ­ã¾ã§é”ã—ãŸã‚‰å…ˆé ­ã«å…¥ã‚Œã‚‹
     push_front(op);
 }
 

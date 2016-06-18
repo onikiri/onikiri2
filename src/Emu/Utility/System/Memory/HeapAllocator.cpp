@@ -47,7 +47,7 @@ bool HeapAllocator::AddMemoryBlock(u64 start, u64 length)
     mb.Addr = start;
     mb.Bytes = length;
 
-    // d•¡ƒ`ƒFƒbƒN
+    // é‡è¤‡ãƒã‚§ãƒƒã‚¯
     typedef list<MemoryBlock>::iterator iterator;
     for (iterator e = m_freeList.begin(); e != m_freeList.end(); ++e) {
         if (e->Intersects(mb))
@@ -62,7 +62,7 @@ bool HeapAllocator::AddMemoryBlock(u64 start, u64 length)
     return true;
 }
 
-// addr ‚ÍŠm•Û‚³‚ê‚Ä‚¢‚é—Ìˆæ‚ÆŒğ·‚·‚é‚©
+// addr ã¯ç¢ºä¿ã•ã‚Œã¦ã„ã‚‹é ˜åŸŸã¨äº¤å·®ã™ã‚‹ã‹
 u64 HeapAllocator::IsIntersected(u64 addr, u64 length) const
 {
     MemoryBlock mb;
@@ -88,7 +88,7 @@ u64 HeapAllocator::Alloc(u64 addr, u64 length)
     for (iterator e = m_freeList.begin(); e != m_freeList.end(); ++e) {
         // first fit
         if (e->Bytes > length) {
-            // ƒƒ‚ƒŠ‚ğŠm•Û
+            // ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿
 
             MemoryBlock mb;
             mb.Addr = e->Addr;
@@ -106,13 +106,13 @@ u64 HeapAllocator::Alloc(u64 addr, u64 length)
         }
     }
 
-    // ƒƒ‚ƒŠŠm•Û‚É¸”s
+    // ãƒ¡ãƒ¢ãƒªç¢ºä¿ã«å¤±æ•—
     return 0;
 }
 
 u64 HeapAllocator::ReAlloc(u64 addr, u64 old_size, u64 new_size)
 {
-    // ƒƒ‚ƒŠƒuƒƒbƒN‚ÌƒTƒCƒY‚ğ•Ï‚¦‚È‚¢ê‡
+    // ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã®ã‚µã‚¤ã‚ºã‚’å¤‰ãˆãªã„å ´åˆ
     if (old_size == new_size)
         return addr;
 
@@ -122,14 +122,14 @@ u64 HeapAllocator::ReAlloc(u64 addr, u64 old_size, u64 new_size)
     new_size = in_pages(new_size) * m_pageSize;
     BlockList::iterator alloc_it = find(m_allocList.begin(), m_allocList.end(), MemoryBlock(addr));
 
-    // ‚»‚ñ‚Èƒƒ‚ƒŠƒuƒƒbƒN‚Í‚È‚¢
+    // ãã‚“ãªãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã¯ãªã„
     if (alloc_it == m_allocList.end())
         return 0;
 
     if (new_size < old_size) {
-        // ƒƒ‚ƒŠƒuƒƒbƒN‚ğ¬‚³‚­‚·‚éê‡
+        // ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã‚’å°ã•ãã™ã‚‹å ´åˆ
 
-        // ‹ó‚«—Ìˆæ‚ğ’Ç‰Á
+        // ç©ºãé ˜åŸŸã‚’è¿½åŠ 
         MemoryBlock free_mb;
         free_mb.Addr = alloc_it->Addr+new_size;
         free_mb.Bytes = alloc_it->Bytes-new_size;
@@ -137,28 +137,28 @@ u64 HeapAllocator::ReAlloc(u64 addr, u64 old_size, u64 new_size)
         BlockList::iterator free_ins_pos = lower_bound(m_freeList.begin(), m_freeList.end(), free_mb);
         m_freeList.insert(free_ins_pos, free_mb);
 
-        // ƒƒ‚ƒŠƒuƒƒbƒN‚ğ¬‚³‚­‚·‚é
+        // ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã‚’å°ã•ãã™ã‚‹
         alloc_it->Bytes = new_size;
 
         IntegrateFreeBlocks();
     }
     else {
-        // ƒƒ‚ƒŠƒuƒƒbƒN‚ğ‘å‚«‚­‚·‚éê‡
+        // ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã‚’å¤§ããã™ã‚‹å ´åˆ
         MemoryBlock oldmb;
         oldmb.Addr = addr;
         oldmb.Bytes = old_size;
-        // ’¼Œã‚Ì‹ó‚«ƒƒ‚ƒŠƒuƒƒbƒN‚ğ’T‚·
+        // ç›´å¾Œã®ç©ºããƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã‚’æ¢ã™
         iterator next_free = upper_bound(m_freeList.begin(), m_freeList.end(), oldmb);
         iterator next_alloc = upper_bound(m_allocList.begin(), m_allocList.end(), oldmb);
 
-        // Œã‚ë‚É‚Í‹ó‚«ƒƒ‚ƒŠ‚ª‚È‚¢
+        // å¾Œã‚ã«ã¯ç©ºããƒ¡ãƒ¢ãƒªãŒãªã„
         if (next_free == m_freeList.end())
             return 0;
-        // ’¼Œã‚Ìƒƒ‚ƒŠƒuƒƒbƒN‚Íallocated
+        // ç›´å¾Œã®ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã¯allocated
         if (next_alloc != m_allocList.end() && next_alloc->Addr < next_free->Addr)
             return 0;
 
-        // ƒƒ‚ƒŠ‘«‚è‚È‚¢
+        // ãƒ¡ãƒ¢ãƒªè¶³ã‚Šãªã„
         if (alloc_it->Bytes + next_free->Bytes < new_size)
             return 0;
 
@@ -178,7 +178,7 @@ bool HeapAllocator::Free(u64 addr)
 {
     BlockList::iterator alloc_it = find(m_allocList.begin(), m_allocList.end(), MemoryBlock(addr));
 
-    // ‚»‚ñ‚Èƒƒ‚ƒŠƒuƒƒbƒN‚Í‚È‚¢
+    // ãã‚“ãªãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã¯ãªã„
     if (alloc_it == m_allocList.end())
         return false;
 
@@ -187,27 +187,27 @@ bool HeapAllocator::Free(u64 addr)
 
 bool HeapAllocator::Free(u64 addr, u64 size)
 {
-    // ‚Ü‚¾Alloc‚³‚ê‚Ä‚¢‚È‚¢
+    // ã¾ã Allocã•ã‚Œã¦ã„ãªã„
     if (m_allocList.size() == 0)
         return false;
 
-    // allocList‚©‚ç free_mb : [addr, addr+size) ‚ğŠÜ‚Şƒƒ‚ƒŠƒuƒƒbƒN‚ğ’T‚·
+    // allocListã‹ã‚‰ free_mb : [addr, addr+size) ã‚’å«ã‚€ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã‚’æ¢ã™
     MemoryBlock free_mb(addr, size);
-    // addr ˆÈ‰º‚ÌƒAƒhƒŒƒX‚ğ‚Âƒƒ‚ƒŠƒuƒƒbƒN‚ÅCˆê”ÔÅŒã‚Ì‚à‚Ì‚ªŒó•â
+    // addr ä»¥ä¸‹ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æŒã¤ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã§ï¼Œä¸€ç•ªæœ€å¾Œã®ã‚‚ã®ãŒå€™è£œ
     BlockList::iterator alloc_it = --upper_bound(m_allocList.begin(), m_allocList.end(), free_mb);
-    // free_mb ‚ğŠÜ‚Şƒƒ‚ƒŠƒuƒƒbƒN‚ª‘¶İ‚µ‚È‚¢
+    // free_mb ã‚’å«ã‚€ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ãŒå­˜åœ¨ã—ãªã„
     if (alloc_it->Contains( free_mb ))
         return false;
 
-    // free_mb ‚ğ Free ‚·‚é‚±‚Æ‚É‚æ‚è alloc_it‚Ìƒƒ‚ƒŠƒuƒƒbƒN‚ª3‚Â‚É•ª‚©‚ê‚é
+    // free_mb ã‚’ Free ã™ã‚‹ã“ã¨ã«ã‚ˆã‚Š alloc_itã®ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ãŒ3ã¤ã«åˆ†ã‹ã‚Œã‚‹
 
-    // free_mb ‚ÌŒã‚ë
+    // free_mb ã®å¾Œã‚
     u64 free_mb_end = free_mb.Addr+free_mb.Bytes;
     MemoryBlock alloc_mb2( free_mb_end , alloc_it->Addr+alloc_it->Bytes - free_mb_end );
     if (alloc_mb2.Bytes != 0)
         m_allocList.insert(++BlockList::iterator(alloc_it), alloc_mb2);
     
-    // free_mb ‚Ì‘O
+    // free_mb ã®å‰
     alloc_it->Bytes = addr - alloc_it->Addr;
     if (alloc_it->Bytes == 0)
         m_allocList.erase(alloc_it);
@@ -221,7 +221,7 @@ bool HeapAllocator::Free(u64 addr, u64 size)
     return true;
 }
 
-// addr ‚ÉAlloc‚³‚ê‚½ƒƒ‚ƒŠ—Ìˆæ‚ÌƒTƒCƒY‚ğ“¾‚é
+// addr ã«Allocã•ã‚ŒãŸãƒ¡ãƒ¢ãƒªé ˜åŸŸã®ã‚µã‚¤ã‚ºã‚’å¾—ã‚‹
 u64 HeapAllocator::GetBlockSize(u64 addr) const
 {
     BlockList::const_iterator alloc_it = find(m_allocList.begin(), m_allocList.end(), MemoryBlock(addr));
@@ -232,12 +232,12 @@ u64 HeapAllocator::GetBlockSize(u64 addr) const
         return alloc_it->Bytes;
 }
 
-// ‹ó‚«—Ìˆæ‚Ì“‡
+// ç©ºãé ˜åŸŸã®çµ±åˆ
 void HeapAllocator::IntegrateFreeBlocks()
 {
     typedef list<MemoryBlock>::iterator iterator;
 
-    // ‹ó‚«—Ìˆæ‚ğæ“ª‚©‚çŒ©‚ÄC‚»‚ê‚¼‚ê‚É‘Î‚µŸ‚Ì‹ó‚«—Ìˆæ‚ª’¼Œã‚É‘¶İ‚·‚ê‚ÎŒ‹‡‚·‚é
+    // ç©ºãé ˜åŸŸã‚’å…ˆé ­ã‹ã‚‰è¦‹ã¦ï¼Œãã‚Œãã‚Œã«å¯¾ã—æ¬¡ã®ç©ºãé ˜åŸŸãŒç›´å¾Œã«å­˜åœ¨ã™ã‚Œã°çµåˆã™ã‚‹
     for (iterator e = m_freeList.begin(); e != m_freeList.end(); ++e) {
         iterator next;
         for (next = e, ++next; next != m_freeList.end(); next = e, ++next) {

@@ -37,7 +37,7 @@
 namespace Onikiri {
     namespace PPC64Linux {
 
-        // PPC64‚ÌISAî•ñ
+        // PPC64ã®ISAæƒ…å ±
         class PPC64Info : public ISAInfoIF
         {
         public:
@@ -60,10 +60,10 @@ namespace Onikiri {
             //static const int REG_XER     = ;
             static const int REG_FPSCR   = 74;
             //static const int REG_SO      = ;
-            static const int REG_CA      = 75;  // (carry flag) CA ‚Í“Æ—§‚µ‚½ƒŒƒWƒXƒ^‚Æ‚µ‚ÄŠÇ—‚µ‚Ä‚¨‚­
+            static const int REG_CA      = 75;  // (carry flag) CA ã¯ç‹¬ç«‹ã—ãŸãƒ¬ã‚¸ã‚¹ã‚¿ã¨ã—ã¦ç®¡ç†ã—ã¦ãŠã
             static const int REG_ADDRESS = 76;
 
-            // XER‚Íg—p‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å‚Æ‚è‚ ‚¦‚¸–¢À‘•D‚½‚¾‚µCCF (carry flag) ‚Íg—p‚³‚ê‚é
+            // XERã¯ä½¿ç”¨ã•ã‚Œã¦ã„ãªã„ã®ã§ã¨ã‚Šã‚ãˆãšæœªå®Ÿè£…ï¼ãŸã ã—ï¼ŒCF (carry flag) ã¯ä½¿ç”¨ã•ã‚Œã‚‹
 
             static const int MAX_MEMORY_ACCESS_WIDTH = 8;
 

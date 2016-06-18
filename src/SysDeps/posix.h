@@ -109,7 +109,7 @@ namespace Onikiri {
 
         int posix_getpid();
 
-        // Linux ‚ÅŠm”F‚µ‚½‚Æ‚«‚É 959, 10 ‚¾‚Á‚½‚Ì‚ÅWindows ‚Å‚Í‚»‚Ì’l‚É‚µ‚Ä‚¨‚­D
+        // Linux ã§ç¢ºèªã—ãŸã¨ãã« 959, 10 ã ã£ãŸã®ã§Windows ã§ã¯ãã®å€¤ã«ã—ã¦ãŠãï¼
         inline int posix_getuid()
             { return 959; }
         inline int posix_geteuid()
@@ -206,9 +206,9 @@ namespace Onikiri {
         inline int posix_dup(int fd)
             { return dup(fd); }
 
-        // <TODO> –{“–‚ÍCoff_t‚ÌƒTƒCƒYElseek64‚ÌƒTƒ|[ƒg‚ğƒ`ƒFƒbƒN‚·‚éD
+        // <TODO> æœ¬å½“ã¯ï¼Œoff_tã®ã‚µã‚¤ã‚ºãƒ»lseek64ã®ã‚µãƒãƒ¼ãƒˆã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ï¼
 #if defined(HOST_IS_CYGWIN)
-        // CYGWIN‚Ílseek64‚ğ‚½‚È‚¢
+        // CYGWINã¯lseek64ã‚’æŒãŸãªã„
         inline s64 posix_lseek(int fd, s64 offset, int whence)
             { return lseek(fd, offset, whence); }
 #elif defined(HOST_IS_LINUX)

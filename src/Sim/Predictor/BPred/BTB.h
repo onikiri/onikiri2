@@ -66,13 +66,13 @@ namespace Onikiri
         int m_numWays;
 
         // statistical information
-        s64     m_numPred;          // fetchŽž‚É—\‘ª‚µ‚½‰ñ”
-        s64     m_numTableHit;      // ƒe[ƒuƒ‹‚Éƒqƒbƒg‚µ‚½‰ñ”
-        s64     m_numTableMiss;     // ƒe[ƒuƒ‹‚Éƒ~ƒX‚µ‚½‰ñ”
-        s64     m_numHit;           // ƒ^[ƒQƒbƒg‚ªƒqƒbƒg‚µ‚½‰ñ”
-        s64     m_numMiss;          // ƒ^[ƒQƒbƒg‚ªƒ~ƒX‚µ‚½‰ñ”
-        s64     m_numUpdate;        // Update‚µ‚½–½—ß”
-        int     m_numEntries;       // ƒGƒ“ƒgƒŠ”
+        s64     m_numPred;          // fetchæ™‚ã«äºˆæ¸¬ã—ãŸå›žæ•°
+        s64     m_numTableHit;      // ãƒ†ãƒ¼ãƒ–ãƒ«ã«ãƒ’ãƒƒãƒˆã—ãŸå›žæ•°
+        s64     m_numTableMiss;     // ãƒ†ãƒ¼ãƒ–ãƒ«ã«ãƒŸã‚¹ã—ãŸå›žæ•°
+        s64     m_numHit;           // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒãƒ’ãƒƒãƒˆã—ãŸå›žæ•°
+        s64     m_numMiss;          // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒãƒŸã‚¹ã—ãŸå›žæ•°
+        s64     m_numUpdate;        // Updateã—ãŸå‘½ä»¤æ•°
+        int     m_numEntries;       // ã‚¨ãƒ³ãƒˆãƒªæ•°
 
     public:
         BEGIN_PARAM_MAP("")
@@ -104,10 +104,10 @@ namespace Onikiri
 
         void Initialize(InitPhase phase);
 
-        // PC‚©‚çŽŸ‚ÌPC‚ð—\‘ª‚µ‚Ä•Ô‚·
+        // PCã‹ã‚‰æ¬¡ã®PCã‚’äºˆæ¸¬ã—ã¦è¿”ã™
         BTBPredict Predict(const PC& pc);
 
-        // BTB‚ðupdate‚·‚é
+        // BTBã‚’updateã™ã‚‹
         void Update(const OpIterator& op, const BTBPredict& predict);
     };
 

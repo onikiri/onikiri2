@@ -325,7 +325,7 @@ int Recoverer::RecoverByRescheduleSelective( OpIterator producerOp, Recovery::Fr
     return recoveredInsns;
 }
 
-// checkpoint ‚ÌƒŠƒJƒoƒŠ‚ğs‚¤
+// checkpoint ã®ãƒªã‚«ãƒãƒªã‚’è¡Œã†
 void Recoverer::RecoverCheckpoint( Checkpoint* checkpoint )
 {
     ASSERT( checkpoint != 0, "no checkpoint for recovery" );

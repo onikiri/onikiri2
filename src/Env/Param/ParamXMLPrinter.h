@@ -33,7 +33,7 @@
 // Custom XML printer for tiny XML
 //
 // Modified the original 'TiXmlPrinter' to insert a line break for each attribute.
-// # Do not inherit the original 'TiXmlPrinter'Å@because all member
+// # Do not inherit the original 'TiXmlPrinter'„ÄÄbecause all member
 //   values are private and cannot use those.
 //
 

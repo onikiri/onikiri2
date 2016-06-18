@@ -130,7 +130,7 @@ namespace Onikiri
         typedef ParamT  ParameterType;
         typedef HookParameter<CallerType, ParameterType> HookParameterType;
 
-        // hook ‚³‚ê‚éŠÖ”‚ÌŠî’êƒNƒ‰ƒX
+        // hook ã•ã‚Œã‚‹é–¢æ•°ã®åŸºåº•ã‚¯ãƒ©ã‚¹
         class HookFunctionBase
         {
         public:
@@ -138,7 +138,7 @@ namespace Onikiri
             virtual void operator()(HookParameterType* hookParameter) = 0;
         };
 
-        // hook ‚³‚ê‚éŠÖ”(ClassType‚ÌƒIƒuƒWƒFƒNƒg‚Æƒƒ“ƒo•Ï”‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğæ‚é)
+        // hook ã•ã‚Œã‚‹é–¢æ•°(ClassTypeã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨ãƒ¡ãƒ³ãƒå¤‰æ•°ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å–ã‚‹)
         template <typename ClassType>
         class HookFunction : public HookFunctionBase
         {
@@ -158,7 +158,7 @@ namespace Onikiri
             FuncType m_func;
         };
 
-        // HookParameterType* ‚ğ“n‚·
+        // HookParameterType* ã‚’æ¸¡ã™
         template <typename ClassType>
         class HookFunctionWithParam : public HookFunctionBase 
         {
@@ -178,7 +178,7 @@ namespace Onikiri
             FuncType m_func;
         };
 
-        // Caller/OpIterator/ParameterType* ‚ğ“n‚·
+        // Caller/OpIterator/ParameterType* ã‚’æ¸¡ã™
         template <typename ClassType>
         class HookFunctionWithSeparateParam : public HookFunctionBase 
         {
@@ -202,7 +202,7 @@ namespace Onikiri
             FuncType m_func;
         };
 
-        // OpIterator ‚ğ“n‚·
+        // OpIterator ã‚’æ¸¡ã™
         template <typename ClassType>
         class HookFunctionWithOp : public HookFunctionBase 
         {
@@ -223,7 +223,7 @@ namespace Onikiri
             }
         };
 
-        // Caller ‚ğ“n‚·
+        // Caller ã‚’æ¸¡ã™
         template <typename ClassType>
         class HookFunctionWithCaller : public HookFunctionBase 
         {
@@ -243,7 +243,7 @@ namespace Onikiri
             FuncType m_func;
         };
 
-        // Caller/OpIterator ‚ğ“n‚·
+        // Caller/OpIterator ã‚’æ¸¡ã™
         template <typename ClassType>
         class HookFunctionWithCallerAndOp : public HookFunctionBase 
         {
@@ -263,7 +263,7 @@ namespace Onikiri
             FuncType m_func;
         };
 
-        // OpIterator/ParameterType* ‚ğ“n‚·
+        // OpIterator/ParameterType* ã‚’æ¸¡ã™
         template <typename ClassType>
         class HookFunctionWithOpAndRawParam : public HookFunctionBase 
         {
@@ -283,7 +283,7 @@ namespace Onikiri
             FuncType m_func;
         };
 
-        // Caller/ParameterType* ‚ğ“n‚·
+        // Caller/ParameterType* ã‚’æ¸¡ã™
         template <typename ClassType>
         class HookFunctionWithCallerAndRawParam : public HookFunctionBase 
         {
@@ -303,7 +303,7 @@ namespace Onikiri
             FuncType m_func;
         };
 
-        // ParameterType* ‚ğ“n‚·
+        // ParameterType* ã‚’æ¸¡ã™
         template <typename ClassType>
         class HookFunctionWithRawParam : public HookFunctionBase 
         {
@@ -335,7 +335,7 @@ namespace Onikiri
             ReleaseHookVector(m_afterFunction);
         }
 
-        // OpIterator ‚Æ Caller ‚Æ Parameter ‚ğó‚¯æ‚Á‚ÄƒƒCƒ“‚Ìˆ—‚Ì‘O‚És‚Á‚Ä—~‚µ‚¢ˆ—‚ğƒgƒŠƒK‚·‚éŠÖ”
+        // OpIterator ã¨ Caller ã¨ Parameter ã‚’å—ã‘å–ã£ã¦ãƒ¡ã‚¤ãƒ³ã®å‡¦ç†ã®å‰ã«è¡Œã£ã¦æ¬²ã—ã„å‡¦ç†ã‚’ãƒˆãƒªã‚¬ã™ã‚‹é–¢æ•°
         void Trigger( OpIterator opIterator, CallerType* caller, ParameterType* parameter, HookType::Type hookType)
         {
             if( !IsHookExists(hookType) )
@@ -345,7 +345,7 @@ namespace Onikiri
             Trigger( GetHookFunction(hookType), &hookParameter );
         }
 
-        // OpIterator ‚Æ Caller ‚ğó‚¯æ‚Á‚ÄƒƒCƒ“‚Ìˆ—‚Ì‘O‚És‚Á‚Ä—~‚µ‚¢ˆ—‚ğƒgƒŠƒK‚·‚éŠÖ”
+        // OpIterator ã¨ Caller ã‚’å—ã‘å–ã£ã¦ãƒ¡ã‚¤ãƒ³ã®å‡¦ç†ã®å‰ã«è¡Œã£ã¦æ¬²ã—ã„å‡¦ç†ã‚’ãƒˆãƒªã‚¬ã™ã‚‹é–¢æ•°
         void Trigger( OpIterator opIterator, CallerType* caller, HookType::Type hookType)
         {
             if( !IsHookExists(hookType) )
@@ -353,7 +353,7 @@ namespace Onikiri
             Trigger( opIterator, caller, 0, hookType);
         }
 
-        // Caller ‚Æ Parameter ‚ğó‚¯æ‚Á‚ÄƒƒCƒ“‚Ìˆ—‚Ì‘O‚És‚Á‚Ä—~‚µ‚¢ˆ—‚ğƒgƒŠƒK‚·‚éŠÖ”
+        // Caller ã¨ Parameter ã‚’å—ã‘å–ã£ã¦ãƒ¡ã‚¤ãƒ³ã®å‡¦ç†ã®å‰ã«è¡Œã£ã¦æ¬²ã—ã„å‡¦ç†ã‚’ãƒˆãƒªã‚¬ã™ã‚‹é–¢æ•°
         void Trigger( CallerType* caller, ParameterType* parameter, HookType::Type hookType)
         {
             if( !IsHookExists(hookType) )
@@ -363,7 +363,7 @@ namespace Onikiri
             Trigger( GetHookFunction(hookType), &hookParameter );
         }
 
-        // Caller ‚ğó‚¯æ‚Á‚ÄƒƒCƒ“‚Ìˆ—‚Ì‘O‚És‚Á‚Ä—~‚µ‚¢ˆ—‚ğƒgƒŠƒK‚·‚éŠÖ”
+        // Caller ã‚’å—ã‘å–ã£ã¦ãƒ¡ã‚¤ãƒ³ã®å‡¦ç†ã®å‰ã«è¡Œã£ã¦æ¬²ã—ã„å‡¦ç†ã‚’ãƒˆãƒªã‚¬ã™ã‚‹é–¢æ•°
         void Trigger( CallerType* caller, HookType::Type hookType)
         {
             if( !IsHookExists(hookType) )
@@ -372,88 +372,88 @@ namespace Onikiri
         }
 
         //
-        // --- Hook ‚ğ“o˜^‚·‚éŠÖ”
-        // HookFunction~ ‚ªHook ‚·‚éƒƒ\ƒbƒh‚ÌŒ`‚É‘Î‰‚µ‚Ä‚¢‚é
-        // HookParameter ‚©‚ç“KØ‚ÉCaller/Op/Parameter ‚ğæ“¾‚µ‚Ä“n‚·•K—v‚ª‚ ‚é‚½‚ßC
-        // ƒeƒ“ƒvƒŒ[ƒg‚Åˆê‚Â‚É‚Ü‚Æ‚ß‚é‚Ì‚Í“ï‚µ‚¢
+        // --- Hook ã‚’ç™»éŒ²ã™ã‚‹é–¢æ•°
+        // HookFunction~ ãŒHook ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã®å½¢ã«å¯¾å¿œã—ã¦ã„ã‚‹
+        // HookParameter ã‹ã‚‰é©åˆ‡ã«Caller/Op/Parameter ã‚’å–å¾—ã—ã¦æ¸¡ã™å¿…è¦ãŒã‚ã‚‹ãŸã‚ï¼Œ
+        // ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã§ä¸€ã¤ã«ã¾ã¨ã‚ã‚‹ã®ã¯é›£ã—ã„
         //
 
-        // ƒpƒ‰ƒ[ƒ^‚È‚µ
+        // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãªã—
         template <typename T>
         void Register(T* object, typename HookFunction<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunction<T>(object, func), priority);
         }
 
-        // ƒpƒ‰ƒ[ƒ^‚Â‚«‚Ì Hook ‚ğ“o˜^‚·‚éŠÖ”
+        // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¤ãã® Hook ã‚’ç™»éŒ²ã™ã‚‹é–¢æ•°
         template <typename T>
         void Register(T* object, typename HookFunctionWithParam<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunctionWithParam<T>(object, func), priority);
         }
 
-        // Caller/OpIterator/ParameterType ‚ğó‚¯æ‚éHook ‚ğ“o˜^‚·‚éŠÖ”
+        // Caller/OpIterator/ParameterType ã‚’å—ã‘å–ã‚‹Hook ã‚’ç™»éŒ²ã™ã‚‹é–¢æ•°
         template <typename T>
         void Register(T* object, typename HookFunctionWithSeparateParam<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunctionWithSeparateParam<T>(object, func), priority);
         }
 
-        // OpIterator ‚ğó‚¯æ‚éHook ‚ğ“o˜^‚·‚éŠÖ”
+        // OpIterator ã‚’å—ã‘å–ã‚‹Hook ã‚’ç™»éŒ²ã™ã‚‹é–¢æ•°
         template <typename T>
         void Register(T* object, typename HookFunctionWithOp<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunctionWithOp<T>(object, func), priority);
         }
 
-        // Caller ‚ğó‚¯æ‚éHook ‚ğ“o˜^‚·‚éŠÖ”
+        // Caller ã‚’å—ã‘å–ã‚‹Hook ã‚’ç™»éŒ²ã™ã‚‹é–¢æ•°
         template <typename T>
         void Register(T* object, typename HookFunctionWithCaller<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunctionWithCaller<T>(object, func), priority);
         }
 
-        // Caller/OpIterator ‚ğó‚¯æ‚éHook ‚ğ“o˜^‚·‚éŠÖ”
+        // Caller/OpIterator ã‚’å—ã‘å–ã‚‹Hook ã‚’ç™»éŒ²ã™ã‚‹é–¢æ•°
         template <typename T>
         void Register(T* object, typename HookFunctionWithCallerAndOp<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunctionWithCallerAndOp<T>(object, func), priority);
         }
 
-        // Caller/ParameterType* ‚ğ“n‚·
+        // Caller/ParameterType* ã‚’æ¸¡ã™
         template <typename T>
         void Register(T* object, typename HookFunctionWithCallerAndRawParam<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunctionWithCallerAndRawParam<T>(object, func), priority);
         }
 
-        // OpIterator/ParameterType* ‚ğ“n‚·
+        // OpIterator/ParameterType* ã‚’æ¸¡ã™
         template <typename T>
         void Register(T* object, typename HookFunctionWithOpAndRawParam<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunctionWithOpAndRawParam<T>(object, func), priority);
         }
 
-        // ParameterType* ‚ğ“n‚·
+        // ParameterType* ã‚’æ¸¡ã™
         template <typename T>
         void Register(T* object, typename HookFunctionWithRawParam<T>::FuncType func, int priority, HookType::Type hookType = HookType::HOOK_AFTER)
         {
             Register(GetHookFunction(hookType), new HookFunctionWithRawParam<T>(object, func), priority);
         }
 
-        // ƒƒCƒ“‚Ìˆ—‚Ì‘ã‚í‚è‚É“o˜^‚³‚ê‚Ä‚¢‚éŠÖ”‚ª‚ ‚é‚©‚Ç‚¤‚©
+        // ãƒ¡ã‚¤ãƒ³ã®å‡¦ç†ã®ä»£ã‚ã‚Šã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹é–¢æ•°ãŒã‚ã‚‹ã‹ã©ã†ã‹
         bool HasAround() 
         {
             return !m_aroundFunction.empty();
         }
 
-        // ƒƒCƒ“‚Ìˆ—‚Ì‘ã‚í‚è‚É“o˜^‚³‚ê‚Ä‚¢‚éŠÖ”‚Ì”
+        // ãƒ¡ã‚¤ãƒ³ã®å‡¦ç†ã®ä»£ã‚ã‚Šã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹é–¢æ•°ã®æ•°
         int CountAround()
         {
             return static_cast<int>(m_aroundFunction.size());
         }
 
-        // ˆê‚Â‚Å‚àƒtƒbƒN‚ª“o˜^‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
+        // ä¸€ã¤ã§ã‚‚ãƒ•ãƒƒã‚¯ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹
         INLINE bool IsAnyHookRegistered()
         {
             return m_hookExists;
@@ -470,7 +470,7 @@ namespace Onikiri
             { return lhv.second < rhv.second; }
         };
 
-        // HookFunctionBase* ‚Æ int(—Dæ‡ˆÊ) ‚Ì pair ‚ğŠi”[‚·‚é vector
+        // HookFunctionBase* ã¨ int(å„ªå…ˆé †ä½) ã® pair ã‚’æ ¼ç´ã™ã‚‹ vector
         HookVector m_beforeFunction;
         HookVector m_aroundFunction;
         HookVector m_afterFunction;
@@ -479,16 +479,16 @@ namespace Onikiri
 
         void Register(HookVector& hookVector, HookFunctionBase* hookFunction, int priority)
         {
-            // hook ‚ğ“o˜^
+            // hook ã‚’ç™»éŒ²
             hookVector.push_back( std::make_pair(hookFunction, priority) );
             m_hookExists = true;
 
-            // —Dæ‡ˆÊ‚Åƒ\[ƒg
-            // ƒVƒ~ƒ…ƒŒ[ƒ^‚Ì‰Šú‰»‚ÉŒÄ‚Ô‚à‚Ì‚È‚Ì‚Å–ˆ‰ñƒ\[ƒg‚·‚é–³‘Ê‚Í‹C‚É‚µ‚È‚¢
+            // å„ªå…ˆé †ä½ã§ã‚½ãƒ¼ãƒˆ
+            // ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã®åˆæœŸåŒ–æ™‚ã«å‘¼ã¶ã‚‚ã®ãªã®ã§æ¯å›ã‚½ãƒ¼ãƒˆã™ã‚‹ç„¡é§„ã¯æ°—ã«ã—ãªã„
             sort(hookVector.begin(), hookVector.end(), ComparePriority());
         }
 
-        // “o˜^‚³‚ê‚Ä‚¢‚é Hook ‚ğ‚·‚×‚ÄŒÄ‚ÔŠÖ”
+        // ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ Hook ã‚’ã™ã¹ã¦å‘¼ã¶é–¢æ•°
         void Trigger(HookVector& hookVector, HookParameterType* hookParameter)
         {
             for(typename HookVector::iterator iter = hookVector.begin();

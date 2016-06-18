@@ -61,10 +61,10 @@ namespace Onikiri {
 
         void Initialize(InitPhase phase);
 
-        // PHT‚Ìindex‚ªTaken/NotTaken‚¾‚Á‚½‚±‚Æ‚ğUpdate‚·‚é
+        // PHTã®indexãŒTaken/NotTakenã ã£ãŸã“ã¨ã‚’Updateã™ã‚‹
         void Update(int index, bool taken);
 
-        // PHT‚ÌindexƒGƒ“ƒgƒŠ‚Ì—\‘ªŒ‹‰Ê‚ğ•Ô‚·
+        // PHTã®indexã‚¨ãƒ³ãƒˆãƒªã®äºˆæ¸¬çµæœã‚’è¿”ã™
         bool Predict(int index);
 
         int GetIndexBitSize()

@@ -93,16 +93,16 @@ namespace Onikiri
         virtual void Initialize( InitPhase phase );
         virtual void Finalize();
 
-        // numOp‚¾‚¯Allocate‚Å‚«‚é‚©‚Ç‚¤‚©
+        // numOpã ã‘Allocateã§ãã‚‹ã‹ã©ã†ã‹
         bool CanAllocate( OpIterator* infoArray, int numOp );
 
-        // fetch‚³‚ê‚½‚Æ‚«‚ÉƒGƒ“ƒgƒŠ‚ğì‚é
+        // fetchã•ã‚ŒãŸã¨ãã«ã‚¨ãƒ³ãƒˆãƒªã‚’ä½œã‚‹
         void Allocate( OpIterator op );
         
-        // ÀsI—¹
+        // å®Ÿè¡Œçµ‚äº†
         void Finished( OpIterator op );
 
-        // Op‚Ìaddress‚Ö‚ÌStoreŒ‹‰Ê‚ªMemOrderManager‚ÌOp‚æ‚è‘O•û‚É‚ ‚é‚©‚Ç‚¤‚©
+        // Opã®addressã¸ã®StoreçµæœãŒMemOrderManagerã®Opã‚ˆã‚Šå‰æ–¹ã«ã‚ã‚‹ã‹ã©ã†ã‹
         OpIterator GetProducerStore( OpIterator op, const MemAccess& access ) const;
 
         // Get a finished consumer of a producer store.
@@ -115,8 +115,8 @@ namespace Onikiri
         void Retire( OpIterator op );
         void Flush( OpIterator op );
 
-        // op->Read, Write ‚©‚çŒÄ‚Î‚ê‚é Read, Write
-        // op ‚ğˆø”‚Å“n‚µ‚Ä‚à‚ç‚¤•K—v‚ª‚ ‚é‚Ì‚ÅMemIF‚ÍŒp³‚µ‚È‚¢
+        // op->Read, Write ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ Read, Write
+        // op ã‚’å¼•æ•°ã§æ¸¡ã—ã¦ã‚‚ã‚‰ã†å¿…è¦ãŒã‚ã‚‹ã®ã§MemIFã¯ç¶™æ‰¿ã—ãªã„
         void Read( OpIterator op, MemAccess* access );
         void Write( OpIterator op, MemAccess* access );
 
@@ -140,27 +140,27 @@ namespace Onikiri
         typedef DataPredMissRecovery Recovery;
 
         bool m_unified;             // Unified/dedicated load/store queue(s).
-        int m_unifiedCapacity;      // MemOrderManager‚ªŠÇ—‚Å‚«‚éƒƒ‚ƒŠ–½—ß‚ÌÅ‘å”
-        int m_loadCapacity;         // MemOrderManager‚ªŠÇ—‚Å‚«‚éƒƒ‚ƒŠ–½—ß‚ÌÅ‘å”
-        int m_storeCapacity;        // MemOrderManager‚ªŠÇ—‚Å‚«‚éƒƒ‚ƒŠ–½—ß‚ÌÅ‘å”
+        int m_unifiedCapacity;      // MemOrderManagerãŒç®¡ç†ã§ãã‚‹ãƒ¡ãƒ¢ãƒªå‘½ä»¤ã®æœ€å¤§æ•°
+        int m_loadCapacity;         // MemOrderManagerãŒç®¡ç†ã§ãã‚‹ãƒ¡ãƒ¢ãƒªå‘½ä»¤ã®æœ€å¤§æ•°
+        int m_storeCapacity;        // MemOrderManagerãŒç®¡ç†ã§ãã‚‹ãƒ¡ãƒ¢ãƒªå‘½ä»¤ã®æœ€å¤§æ•°
         bool m_idealPartialLoad;    // Partial load is processed ideally or not.
         bool m_removeOpsOnCommit;   // If this parameter is true, ops are removed on commitment,
                                     // otherwise ops are removed on retirement.
 
-        int m_cacheLatency; // 1ŸƒLƒƒƒbƒVƒ…‚ÌƒŒƒCƒeƒ“ƒV
+        int m_cacheLatency; // 1æ¬¡ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã®ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·
 
         // statistic information
-        s64 m_numExecutedStoreForwarding;   // Load–½—ß‚ÌÀs‚ÉStoreBuffer‚Éƒf[ƒ^‚ª‚ ‚Á‚½‰ñ”
+        s64 m_numExecutedStoreForwarding;   // Loadå‘½ä»¤ã®å®Ÿè¡Œæ™‚ã«StoreBufferã«ãƒ‡ãƒ¼ã‚¿ãŒã‚ã£ãŸå›æ•°
         s64 m_numRetiredStoreForwarding;
 
-        s64 m_numExecutedLoadAccess;        // StoreBuffer‚Ö‚ÌƒAƒNƒZƒX‰ñ”
+        s64 m_numExecutedLoadAccess;        // StoreBufferã¸ã®ã‚¢ã‚¯ã‚»ã‚¹å›æ•°
         s64 m_numRetiredLoadAccess;
 
         // L1D cache
         Cache* m_cache;
         CacheSystem* m_cacheSystem;
 
-        // ƒtƒFƒbƒ`‚³‚ê‚ÄƒŠƒ^ƒCƒA‚µ‚Ä‚È‚¢ƒ[ƒhEƒXƒgƒA–½—ß—ñ
+        // ãƒ•ã‚§ãƒƒãƒã•ã‚Œã¦ãƒªã‚¿ã‚¤ã‚¢ã—ã¦ãªã„ãƒ­ãƒ¼ãƒ‰ãƒ»ã‚¹ãƒˆã‚¢å‘½ä»¤åˆ—
         OpList m_loadList;
         OpList m_storeList;
 
@@ -170,7 +170,7 @@ namespace Onikiri
         // Operations related to detect address intersection.
         MemOrderOperations m_memOperations;
 
-        // ƒGƒ~ƒ…ƒŒ[ƒ^‚ª‚Âƒƒ‚ƒŠƒCƒ[ƒW‚Ö‚Ì“Ç‚İ‘‚«
+        // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ãŒæŒã¤ãƒ¡ãƒ¢ãƒªã‚¤ãƒ¡ãƒ¼ã‚¸ã¸ã®èª­ã¿æ›¸ã
         void ReadMemImage( OpIterator op, MemAccess* access );
         void WriteMemImage( OpIterator op, MemAccess* access );
 

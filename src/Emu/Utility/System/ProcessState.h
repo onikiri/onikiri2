@@ -48,7 +48,7 @@ namespace Onikiri {
         class LoaderIF;
         class SyscallConvIF;
 
-        // Emulator/Processes/Process ‚ğ“Ç‚İo‚·ƒNƒ‰ƒX
+        // Emulator/Processes/Process ã‚’èª­ã¿å‡ºã™ã‚¯ãƒ©ã‚¹
         class ProcessCreateParam : public ParamExchange
         {
         public:
@@ -91,7 +91,7 @@ namespace Onikiri {
             END_PARAM_MAP()
         };
 
-        // ƒvƒƒZƒX‚Ìó‘Ô (‰Šúó‘ÔEƒAƒhƒŒƒX‹óŠÔE•¨—ƒƒ‚ƒŠEƒVƒXƒeƒ€ƒR[ƒ‹) ‚ğ•Û‚·‚é
+        // ãƒ—ãƒ­ã‚»ã‚¹ã®çŠ¶æ…‹ (åˆæœŸçŠ¶æ…‹ãƒ»ã‚¢ãƒ‰ãƒ¬ã‚¹ç©ºé–“ãƒ»ç‰©ç†ãƒ¡ãƒ¢ãƒªãƒ»ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«) ã‚’ä¿æŒã™ã‚‹
         class ProcessState
         {
         public:
@@ -110,21 +110,21 @@ namespace Onikiri {
                 );
             }
 
-            // ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg‚ğ“¾‚é
+            // ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆã‚’å¾—ã‚‹
             u64 GetEntryPoint() const;
-            // ƒŒƒWƒXƒ^‚Ì‰Šú’l‚ğ“¾‚é
+            // ãƒ¬ã‚¸ã‚¹ã‚¿ã®åˆæœŸå€¤ã‚’å¾—ã‚‹
             u64 GetInitialRegValue(int index) const;
 
             int GetPID() const { return m_pid; }
 
-            // ƒR[ƒh—Ìˆæ‚Ì”ÍˆÍ‚ğ•Ô‚· (ŠJnƒAƒhƒŒƒXCƒoƒCƒg”) (Emulator‚ÌÅ“K‰»—p)
+            // ã‚³ãƒ¼ãƒ‰é ˜åŸŸã®ç¯„å›²ã‚’è¿”ã™ (é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ï¼Œãƒã‚¤ãƒˆæ•°) (Emulatorã®æœ€é©åŒ–ç”¨)
             std::pair<u64, size_t> GetCodeRange() const { return m_codeRange; }
 
             SyscallConvIF* GetSyscallConv() { return m_syscallConv; }
             MemorySystem* GetMemorySystem() { return m_memorySystem; }
             VirtualSystem* GetVirtualSystem() { return m_virtualSystem; }
 
-            // ƒXƒŒƒbƒhŒÅ—L’l
+            // ã‚¹ãƒ¬ãƒƒãƒ‰å›ºæœ‰å€¤
             void SetThreadUniqueValue(u64 value);
             u64 GetThreadUniqueValue();
 
@@ -140,10 +140,10 @@ namespace Onikiri {
             LoaderIF* m_loader;
             SyscallConvIF* m_syscallConv;
 
-            // ƒfƒXƒgƒ‰ƒNƒg‚É©“®‚Å•Â‚¶‚éƒtƒ@ƒCƒ‹
+            // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ãƒˆæ™‚ã«è‡ªå‹•ã§é–‰ã˜ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«
             std::vector<FILE*> m_autoCloseFile;
             
-            // rduniq, wruniq ‚ÅƒAƒNƒZƒX‚·‚éƒXƒŒƒbƒhŒÅ—L‚Ì’l
+            // rduniq, wruniq ã§ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰å›ºæœ‰ã®å€¤
             u64 m_threadUniqueValue;
         };
 

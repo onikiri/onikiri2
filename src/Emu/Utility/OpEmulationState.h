@@ -48,13 +48,13 @@ namespace Onikiri {
             OpInfo* m_opInfo;
             EmulatorUtility::ProcessState* m_processState;
 
-            // V‚µ‚¢ƒA[ƒLƒeƒNƒ`ƒƒ‚ğ’Ç‰Á‚µ‚½‚ç’²ß‚·‚é
+            // æ–°ã—ã„ã‚¢ãƒ¼ã‚­ãƒ†ã‚¯ãƒãƒ£ã‚’è¿½åŠ ã—ãŸã‚‰èª¿ç¯€ã™ã‚‹
             static const int MaxSrcCount = 8;   // SrcReg + Imm
             static const int MaxDstCount = 3;
 
-            // E‘¦’l‚Í src ‚É“ü‚ê‚Ä‚¨‚­
-            // Eƒ\[ƒXƒŒƒWƒXƒ^‚ªƒ[ƒƒŒƒWƒXƒ^‚Ìê‡‚Í src ‚É 0 ‚ğ“ü‚ê‚Ä‚¨‚­
-            // EƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“ƒŒƒWƒXƒ^‚ªƒ[ƒƒŒƒWƒXƒ^‚Ìê‡‚ÍCƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“ƒŒƒWƒXƒ^‚ª‚È‚¢‚à‚Ì‚Æ‚µ‚Äˆµ‚¢ dst ‚ğ OpState ‚É”½‰f‚³‚¹‚È‚¢
+            // ãƒ»å³å€¤ã¯ src ã«å…¥ã‚Œã¦ãŠã
+            // ãƒ»ã‚½ãƒ¼ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿ãŒã‚¼ãƒ­ãƒ¬ã‚¸ã‚¹ã‚¿ã®å ´åˆã¯ src ã« 0 ã‚’å…¥ã‚Œã¦ãŠã
+            // ãƒ»ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿ãŒã‚¼ãƒ­ãƒ¬ã‚¸ã‚¹ã‚¿ã®å ´åˆã¯ï¼Œãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿ãŒãªã„ã‚‚ã®ã¨ã—ã¦æ‰±ã„ dst ã‚’ OpState ã«åæ˜ ã•ã›ãªã„
             boost::array<u64, MaxSrcCount> m_src;
             boost::array<u64, MaxDstCount> m_dst;
 
@@ -85,7 +85,7 @@ namespace Onikiri {
                 }
             }
         public:
-            // ƒŒƒWƒXƒ^‚Ì’l‚ğOpState‚©‚çæ“¾‚·‚é
+            // ãƒ¬ã‚¸ã‚¹ã‚¿ã®å€¤ã‚’OpStateã‹ã‚‰å–å¾—ã™ã‚‹
             struct RegFromOpState : public std::unary_function<int, u64>
             {
                 RegFromOpState(Onikiri::OpStateIF* opState) : m_opState(opState) {}
@@ -96,7 +96,7 @@ namespace Onikiri {
                 Onikiri::OpStateIF* m_opState;
             };
 
-            // ƒŒƒWƒXƒ^‚Ì’l‚ğregArray‚©‚çæ“¾‚·‚é
+            // ãƒ¬ã‚¸ã‚¹ã‚¿ã®å€¤ã‚’regArrayã‹ã‚‰å–å¾—ã™ã‚‹
             template<typename TOpInfo>
             struct RegFromRegArray : public std::unary_function<int, u64>
             {
@@ -109,7 +109,7 @@ namespace Onikiri {
                 u64* m_regArray;
             };
 
-            // opInfo‚É]‚Á‚ÄopState‚©‚ç’l‚ğæ“¾‚µ‚Ä‰Šú‰»
+            // opInfoã«å¾“ã£ã¦opStateã‹ã‚‰å€¤ã‚’å–å¾—ã—ã¦åˆæœŸåŒ–
             template<typename TOpInfo>
             OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState)
                 : m_opState(opState), m_opInfo(opInfo), m_processState(processState)
@@ -125,8 +125,8 @@ namespace Onikiri {
                 InitOperands<TOpInfo, RegFromOpState>( RegFromOpState(opState) );
             }
 
-            // ƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚‘¬‰»—p
-            // ƒŒƒWƒXƒ^’l‚ğ regArray ‚©‚çæ“¾‚·‚é
+            // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³é«˜é€ŸåŒ–ç”¨
+            // ãƒ¬ã‚¸ã‚¹ã‚¿å€¤ã‚’ regArray ã‹ã‚‰å–å¾—ã™ã‚‹
             template<typename TOpInfo>
             OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState, PC pc, u64 takenAddr, u64* regArray)
                 : m_opState(opState), m_opInfo(opInfo), m_processState(processState)
@@ -141,7 +141,7 @@ namespace Onikiri {
                 InitOperands<TOpInfo, RegFromRegArray<TOpInfo> >( RegFromRegArray<TOpInfo>(opInfo, regArray) );
             }
 
-            // OpState ‚ÉŒ‹‰Ê‚ğ”½‰f‚³‚¹‚é
+            // OpState ã«çµæœã‚’åæ˜ ã•ã›ã‚‹
             template<typename TOpInfo>
             void ApplyEmulationState()
             {
@@ -149,21 +149,21 @@ namespace Onikiri {
                 m_opState->SetTaken(m_taken);
                 m_opState->SetTakenPC( Addr(m_pid, m_tid, m_takenPC) );
 
-                // opInfo‚É]‚Á‚Ä dst ‚ğİ’è
+                // opInfoã«å¾“ã£ã¦ dst ã‚’è¨­å®š
                 int dstRegNum = opInfo->GetDstRegNum();
                 for (int i = 0; i < dstRegNum; i ++) {
                     m_opState->SetDst( i, m_dst[ opInfo->GetDstRegOpMap(i) ]);
                 }
             }
 
-            // ƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚‘¬‰»—p
-            // regArray ‚ÉŒ‹‰Ê‚ğ”½‰f‚³‚¹‚é
+            // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³é«˜é€ŸåŒ–ç”¨
+            // regArray ã«çµæœã‚’åæ˜ ã•ã›ã‚‹
             template<typename TOpInfo>
             void ApplyEmulationStateToRegArray(u64* regArray)
             {
                 TOpInfo* opInfo = static_cast<TOpInfo*>(m_opInfo);
 
-                // opInfo‚É]‚Á‚Ä dst ‚ğİ’è
+                // opInfoã«å¾“ã£ã¦ dst ã‚’è¨­å®š
                 int dstRegNum = opInfo->GetDstRegNum();
                 for (int i = 0; i < dstRegNum; i ++) {
                     regArray[ opInfo->GetDstReg(i) ] = m_dst[ opInfo->GetDstRegOpMap(i) ];

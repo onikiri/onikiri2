@@ -37,11 +37,11 @@ using namespace std;
 using namespace Onikiri;
 using namespace EmulatorUtility;
 
-// PageTable ‚ğˆø‚­Û‚É TLB ‚ğg—p‚·‚é‚©‚Ç‚¤‚©
+// PageTable ã‚’å¼•ãéš›ã« TLB ã‚’ä½¿ç”¨ã™ã‚‹ã‹ã©ã†ã‹
 #define ENABLED_EMULATOR_UTILITY_TLB 1
 
-// ƒ^[ƒQƒbƒg—p‚Ìmemcpy ‚È‚Ç‚Ìƒwƒ‹ƒp‚ğ ReadMemory ‚â WriteMemory ‚ğg‚í‚¸‚É
-// ‚‘¬‚ÈÀ‘•‚ğg—p‚·‚é‚©‚Ç‚¤‚©
+// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆç”¨ã®memcpy ãªã©ã®ãƒ˜ãƒ«ãƒ‘ã‚’ ReadMemory ã‚„ WriteMemory ã‚’ä½¿ã‚ãšã«
+// é«˜é€Ÿãªå®Ÿè£…ã‚’ä½¿ç”¨ã™ã‚‹ã‹ã©ã†ã‹
 #define ENABLED_VIRTUAL_MEMORY_FAST_HELPER 1
 
 // The initial bucket count of the unordered_map used in PageTable.
@@ -133,7 +133,7 @@ int PageTable::GetOffsetBits() const
     return m_offsetBits;
 }
 
-// ƒAƒhƒŒƒX‚Ìƒy[ƒWŠO•”•ª‚Ì‚İ‚Ìƒ}ƒXƒN
+// ã‚¢ãƒ‰ãƒ¬ã‚¹ã®ãƒšãƒ¼ã‚¸å¤–éƒ¨åˆ†ã®ã¿ã®ãƒã‚¹ã‚¯
 u64 PageTable::GetOffsetMask() const
 {
     return m_offsetMask;
@@ -274,11 +274,11 @@ bool PageTable::IsMapped(u64 targetAddr) const
 // VirtualMemory
 //
 
-// addr ‚©‚ç size ƒoƒCƒg‚Ìƒƒ‚ƒŠ—Ìˆæ‚ğCƒ}ƒbƒv’PˆÊ‹«ŠE‚Å•ªŠ„‚·‚é
-// Œ‹‰Ê‚ÍCMemoryBlock‚ÌƒRƒ“ƒeƒi‚Ö‚ÌƒCƒeƒŒ[ƒ^ Iter ‚ğ’Ê‚µ‚ÄŠi”[‚·‚é
-// –ß‚è’l‚Í•ªŠ„‚³‚ê‚½ŒÂ”
+// addr ã‹ã‚‰ size ãƒã‚¤ãƒˆã®ãƒ¡ãƒ¢ãƒªé ˜åŸŸã‚’ï¼Œãƒãƒƒãƒ—å˜ä½å¢ƒç•Œã§åˆ†å‰²ã™ã‚‹
+// çµæœã¯ï¼ŒMemoryBlockã®ã‚³ãƒ³ãƒ†ãƒŠã¸ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ Iter ã‚’é€šã—ã¦æ ¼ç´ã™ã‚‹
+// æˆ»ã‚Šå€¤ã¯åˆ†å‰²ã•ã‚ŒãŸå€‹æ•°
             
-// ¦ Iter‚ÍC“TŒ^“I‚É‚ÍMemoryBlock‚ÌƒRƒ“ƒeƒi‚Ìinserter
+// â€» Iterã¯ï¼Œå…¸å‹çš„ã«ã¯MemoryBlockã®ã‚³ãƒ³ãƒ†ãƒŠã®inserter
 template <typename Iter>
 int VirtualMemory::SplitAtMapUnitBoundary(u64 addr, u64 size, Iter e) const
 {
@@ -287,13 +287,13 @@ int VirtualMemory::SplitAtMapUnitBoundary(u64 addr, u64 size, Iter e) const
     u64 offsetMask = m_pageTbl.GetOffsetMask();
     int nBlocks = 0;
 
-    // Å‰‚Ì”¼’[‚ÈƒuƒƒbƒN
+    // æœ€åˆã®åŠç«¯ãªãƒ–ãƒ­ãƒƒã‚¯
     u64 firstSize = std::min(unitSize - (addr & ~offsetMask), endAddr - addr);
     *e++ = MemoryBlock(addr, firstSize);
     addr += firstSize;
     nBlocks ++;
 
-    // 1ƒ}ƒbƒv’PˆÊŠÛ‚²‚Æè‚ß‚éƒuƒƒbƒN‚ÆÅŒã
+    // 1ãƒãƒƒãƒ—å˜ä½ä¸¸ã”ã¨å ã‚ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã¨æœ€å¾Œ
     while (addr < endAddr) {
         *e++ = MemoryBlock(addr, std::min(unitSize, endAddr-addr) );
         addr += unitSize;
@@ -305,8 +305,8 @@ int VirtualMemory::SplitAtMapUnitBoundary(u64 addr, u64 size, Iter e) const
 
 
 VirtualMemory::VirtualMemory( int pid, bool bigEndian, SystemIF* simSystem ) : 
-    m_pageTbl( VIRTUAL_MEMORY_PAGE_SIZE_BITS ),     // •ÏŠ·’PˆÊ‚Ìƒrƒbƒg”‚ğw’è
-    m_pool( m_pageTbl.GetPageSize() ),      // m_pageTbl “à‚Å•ÏŠ·’PˆÊ‚ğŒvZ‚µ‚Ä•Ô‚µ‚Ä‚­‚ê‚é
+    m_pageTbl( VIRTUAL_MEMORY_PAGE_SIZE_BITS ),     // å¤‰æ›å˜ä½ã®ãƒ“ãƒƒãƒˆæ•°ã‚’æŒ‡å®š
+    m_pool( m_pageTbl.GetPageSize() ),      // m_pageTbl å†…ã§å¤‰æ›å˜ä½ã‚’è¨ˆç®—ã—ã¦è¿”ã—ã¦ãã‚Œã‚‹
     m_simSystem( simSystem ),
     m_pid(pid),
     m_bigEndian(bigEndian)
@@ -317,7 +317,7 @@ VirtualMemory::~VirtualMemory()
 {
 }
 
-// ƒƒ‚ƒŠŠÇ—
+// ãƒ¡ãƒ¢ãƒªç®¡ç†
 u64 VirtualMemory::GetPageSize() const
 {
     return m_pageTbl.GetPageSize();
@@ -328,14 +328,14 @@ void VirtualMemory::ReadMemory( MemAccess* access )
     u64 addr = access->address.address;
     PageTableEntry page;
 
-    // “Š‹@“I‚È“Ç‚İo‚µ‚ÍCƒAƒNƒZƒXˆá”½‚Æ‚È‚Á‚Ä‚¢‚éê‡‚à‚ ‚é‚Ì‚ÅCI—¹‚µ‚Ä‚Í‚¢‚¯‚È‚¢D
+    // æŠ•æ©Ÿçš„ãªèª­ã¿å‡ºã—ã¯ï¼Œã‚¢ã‚¯ã‚»ã‚¹é•åã¨ãªã£ã¦ã„ã‚‹å ´åˆã‚‚ã‚ã‚‹ã®ã§ï¼Œçµ‚äº†ã—ã¦ã¯ã„ã‘ãªã„ï¼
     if( !m_pageTbl.GetMap( addr, &page ) ) {
         access->result = MemAccess::MAR_READ_INVALID_ADDRESS;
         access->value = 0;
         return;
     }
 
-    // ƒAƒNƒZƒX‚ªƒ}ƒbƒv’PˆÊ‹«ŠE‚ğ‚Ü‚½‚¢‚Å‚¢‚È‚¢‚©
+    // ã‚¢ã‚¯ã‚»ã‚¹ãŒãƒãƒƒãƒ—å˜ä½å¢ƒç•Œã‚’ã¾ãŸã„ã§ã„ãªã„ã‹
     if ((addr ^ (addr+access->size-1)) >> VIRTUAL_MEMORY_PAGE_SIZE_BITS != 0) {
         access->result = MemAccess::MAR_READ_UNALIGNED_ADDRESS;
         access->value = 0;
@@ -390,7 +390,7 @@ void VirtualMemory::WriteMemory( MemAccess* access )
         return;
     }
 
-    // ƒAƒNƒZƒX‚ªƒ}ƒbƒv’PˆÊ‹«ŠE‚ğ‚Ü‚½‚¢‚Å‚¢‚È‚¢‚©
+    // ã‚¢ã‚¯ã‚»ã‚¹ãŒãƒãƒƒãƒ—å˜ä½å¢ƒç•Œã‚’ã¾ãŸã„ã§ã„ãªã„ã‹
     if ((addr ^ (addr+access->size-1)) >> VIRTUAL_MEMORY_PAGE_SIZE_BITS != 0) {
         access->result = MemAccess::MAR_WRITE_UNALIGNED_ADDRESS;
         return;
@@ -402,7 +402,7 @@ void VirtualMemory::WriteMemory( MemAccess* access )
     }
 
     if( CopyPageOnWrite( addr ) ){
-        // copy-on-writ ‚Íƒe[ƒuƒ‹‚ÌQÆæ‚ªXV‚³‚ê‚é‚Ì‚ÅC‚à‚¤ˆê“xƒe[ƒuƒ‹ƒGƒ“ƒgƒŠ‚ğ“¾‚é
+        // copy-on-writ æ™‚ã¯ãƒ†ãƒ¼ãƒ–ãƒ«ã®å‚ç…§å…ˆãŒæ›´æ–°ã•ã‚Œã‚‹ã®ã§ï¼Œã‚‚ã†ä¸€åº¦ãƒ†ãƒ¼ãƒ–ãƒ«ã‚¨ãƒ³ãƒˆãƒªã‚’å¾—ã‚‹
         // Get a page table entry again because a reference in the page table entry
         // is updated on copy-on-write.
         m_pageTbl.GetMap( addr, &page );
@@ -529,7 +529,7 @@ void VirtualMemory::FreePhysicalMemory(u64 addr)
 
     PageTableEntry page;
     if( m_pageTbl.GetMap( addr, &page ) ){
-        // QÆƒJƒEƒ“ƒ^‚ª1‚Ìê‡C‘¼‚ÉŒ©‚Ä‚¢‚él‚Í‹‚È‚¢‚Ì‚Å‰ğ•ú
+        // å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ãŒ1ã®å ´åˆï¼Œä»–ã«è¦‹ã¦ã„ã‚‹äººã¯å±…ãªã„ã®ã§è§£æ”¾
         if( page.phyPage->refCount == 1 && page.phyPage->ptr ){
             m_simSystem->NotifyMemoryAllocation( 
                 Addr( m_pid, TID_INVALID, addr), 
@@ -552,14 +552,14 @@ void VirtualMemory::FreePhysicalMemory(u64 addr, u64 size)
     }
 }
 
-// dstAddr ‚ğŠÜ‚Şƒy[ƒW‚É srcAddr ‚ğŠÜ‚Şƒy[ƒW‚ÉŒ»İŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚é•¨—ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚éD
+// dstAddr ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã« srcAddr ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç¾åœ¨å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹ï¼
 void VirtualMemory::SetPhysicalMemoryMapping( u64 dstAddr, u64 srcAddr, VIRTUAL_MEMORY_ATTR_TYPE attr )
 {
     if( !m_pageTbl.IsMapped( srcAddr ) ){
         THROW_RUNTIME_ERROR( "The specified source address is not mapped." );
     }
 
-    // Šù‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éƒy[ƒW‚ÍƒXƒ‹[
+    // æ—¢ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ãƒšãƒ¼ã‚¸ã¯ã‚¹ãƒ«ãƒ¼
     if( m_pageTbl.IsMapped( dstAddr ) ){
         THROW_RUNTIME_ERROR( "The specified target address is already mapped." );
     }
@@ -567,7 +567,7 @@ void VirtualMemory::SetPhysicalMemoryMapping( u64 dstAddr, u64 srcAddr, VIRTUAL_
     m_pageTbl.CopyMap( dstAddr, srcAddr, attr );
 }
 
-// [dstAddr, dstAddr+size) ‚ğŠÜ‚Şƒy[ƒW‚É•¨—ƒƒ‚ƒŠƒ}ƒbƒsƒ“ƒO‚ğƒRƒs[D“¯ã
+// [dstAddr, dstAddr+size) ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç‰©ç†ãƒ¡ãƒ¢ãƒªãƒãƒƒãƒ”ãƒ³ã‚°ã‚’ã‚³ãƒ”ãƒ¼ï¼åŒä¸Š
 void VirtualMemory::SetPhysicalMemoryMapping( u64 dstAddr, u64 srcAddr, u64 size, VIRTUAL_MEMORY_ATTR_TYPE attr )
 {
     BlockArray blocks;
@@ -577,8 +577,8 @@ void VirtualMemory::SetPhysicalMemoryMapping( u64 dstAddr, u64 srcAddr, u64 size
     }
 }
 
-// ˜_—ƒAƒhƒŒƒX addr ‚ÉV‚µ‚¢•¨—ƒy[ƒW‚ğŠ„‚è“–‚ÄCˆÈ‘Ow‚µ‚Ä‚¢‚½•¨—ƒy[ƒW‚©‚ç“à—e‚ğƒRƒs[D
-// Copy on Write ‚Åg—pD
+// è«–ç†ã‚¢ãƒ‰ãƒ¬ã‚¹ addr ã«æ–°ã—ã„ç‰©ç†ãƒšãƒ¼ã‚¸ã‚’å‰²ã‚Šå½“ã¦ï¼Œä»¥å‰æŒ‡ã—ã¦ã„ãŸç‰©ç†ãƒšãƒ¼ã‚¸ã‹ã‚‰å†…å®¹ã‚’ã‚³ãƒ”ãƒ¼ï¼
+// Copy on Write ã§ä½¿ç”¨ï¼
 void VirtualMemory::AssignAndCopyPhysicalMemory( u64 addr, VIRTUAL_MEMORY_ATTR_TYPE attr )
 {
     PageTableEntry page;
@@ -597,7 +597,7 @@ void VirtualMemory::AssignAndCopyPhysicalMemory( u64 addr, VIRTUAL_MEMORY_ATTR_T
     MemCopyToTarget( addr & m_pageTbl.GetOffsetMask(), page.phyPage->ptr, GetPageSize() );
 }
 
-// [dstAddr, dstAddr+size) ‚ğŠÜ‚Şƒy[ƒW‚É“¯ã
+// [dstAddr, dstAddr+size) ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«åŒä¸Š
 void VirtualMemory::AssignAndCopyPhysicalMemory( u64 addr, u64 size, VIRTUAL_MEMORY_ATTR_TYPE attr )
 {
     BlockArray blocks;

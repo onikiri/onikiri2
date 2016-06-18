@@ -100,7 +100,7 @@ void Renamer::Initialize(InitPhase phase)
             );
         }
 
-        // member •Ï”‚Ìƒ`ƒFƒbƒN
+        // member å¤‰æ•°ã®ãƒã‚§ãƒƒã‚¯
         if( m_renameLatency == 0 ){
             THROW_RUNTIME_ERROR( "rename latency is zero." );
         }
@@ -120,7 +120,7 @@ void Renamer::Finalize()
     ReleaseParam();
 }
 
-// array“à‚Ìop‚ðˆø”‚Æ‚µ‚ÄCƒƒ“ƒoŠÖ”ƒ|ƒCƒ“ƒ^‚©‚çŒÄ‚Ño‚µ‚ðs‚¤
+// arrayå†…ã®opã‚’å¼•æ•°ã¨ã—ã¦ï¼Œãƒ¡ãƒ³ãƒé–¢æ•°ãƒã‚¤ãƒ³ã‚¿ã‹ã‚‰å‘¼ã³å‡ºã—ã‚’è¡Œã†
 inline void Renamer::ForEachOp(
     RenamingOpArray* c, 
     void (Renamer::*func)(OpIterator) )
@@ -141,13 +141,13 @@ inline void Renamer::ForEachOp1(
     }
 }
 
-// ƒŠƒl[ƒ€‚ðs‚¤ŠÖ”
+// ãƒªãƒãƒ¼ãƒ ã‚’è¡Œã†é–¢æ•°
 void Renamer::Rename( OpIterator op )
 {
-    // ˆË‘¶ŠÖŒW‚Ì‰ðŒˆ‚Ì‘O‚ÅŒÄ‚Î‚ê‚éHook
+    // ä¾å­˜é–¢ä¿‚ã®è§£æ±ºã®å‰ã§å‘¼ã°ã‚Œã‚‹Hook
     HOOK_SECTION_OP( s_renameUpdateHook, op ){
         int tid = op->GetLocalTID();
-        // –{—ˆ‚Ìˆ—
+        // æœ¬æ¥ã®å‡¦ç†
         m_regDepPred[ tid ]->Resolve( op );
         m_regDepPred[ tid ]->Allocate( op );
 
@@ -210,7 +210,7 @@ bool Renamer::CanRename( RenamingOpArray* renamingOps )
 
     // Stall rename stages if there are any threads that can not allocate RMT etc.. entries.
     int numOps = 0;
-    int numMemOps = 0;  // ƒƒ‚ƒŠ–½—ß‚Ì”
+    int numMemOps = 0;  // ãƒ¡ãƒ¢ãƒªå‘½ä»¤ã®æ•°
     int localTID = renamingOps->at(0)->GetLocalTID();
 
     for( RenamingOpArray::iterator i = renamingOps->begin(); i != renamingOps->end(); ++i ){
@@ -224,19 +224,19 @@ bool Renamer::CanRename( RenamingOpArray* renamingOps )
         }
     }
     
-    // regDepPred ‚Ìƒ`ƒFƒbƒN
+    // regDepPred ã®ãƒã‚§ãƒƒã‚¯
     if( !m_regDepPred[localTID]->CanAllocate( renamingOps->data(), numOps ) ) {
         ++m_stallCycles.regDepPred;
         return false;
     }
 
-    // memDepPred ‚Ìƒ`ƒFƒbƒN
+    // memDepPred ã®ãƒã‚§ãƒƒã‚¯
     if( !m_memDepPred[localTID]->CanAllocate( renamingOps->data(), numOps ) ) {
         ++m_stallCycles.memDepPred;
         return false;
     }
 
-    // memOrderManager ‚Ìƒ`ƒFƒbƒN
+    // memOrderManager ã®ãƒã‚§ãƒƒã‚¯
     if( !m_memOrderManager[localTID]->CanAllocate( renamingOps->data(), numOps ) ) {
         ++m_stallCycles.memOrderManager;
         return false;

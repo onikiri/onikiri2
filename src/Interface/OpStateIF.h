@@ -37,30 +37,30 @@
 
 namespace Onikiri
 {
-    // Op ‚Ì dynamic ‚Èó‘Ô‚ğ’m‚é‚½‚ß‚ÌƒNƒ‰ƒX
+    // Op ã® dynamic ãªçŠ¶æ…‹ã‚’çŸ¥ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
     class OpStateIF : public MemIF
     {
     public:
-        // ¡‚Ü‚ÅF ’¼Ú‚±‚ÌƒNƒ‰ƒX‚Ìƒƒ“ƒo•Ï”‚ğŒ©‚Ä‚½
-        // ‹Sa‚QF ŠÖ”‚ÅƒVƒ~ƒ…ƒŒ[ƒ^‘¤‚Ìî•ñ‚ğ“Ç‚Ş (‚‘¬‰»‚Ì‚±‚Æ‚Íl‚¦‚È‚¢)
+        // ä»Šã¾ã§ï¼š ç›´æ¥ã“ã®ã‚¯ãƒ©ã‚¹ã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã‚’è¦‹ã¦ãŸ
+        // é¬¼æ–¬ï¼’ï¼š é–¢æ•°ã§ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿å´ã®æƒ…å ±ã‚’èª­ã‚€ (é«˜é€ŸåŒ–ã®ã“ã¨ã¯è€ƒãˆãªã„)
 
         virtual ~OpStateIF(){};
 
         // PC
         virtual PC GetPC() const = 0;
 
-        // ƒGƒ~ƒ…ƒŒ[ƒ^‚ªƒ\[ƒXƒŒƒWƒXƒ^‚Ì’l‚ğ’m‚é‚½‚ß‚ÌŠÖ” 
+        // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ãŒã‚½ãƒ¼ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿ã®å€¤ã‚’çŸ¥ã‚‹ãŸã‚ã®é–¢æ•° 
         virtual const u64 GetSrc(const int index) const = 0;
 
-        // ƒGƒ~ƒ…ƒŒ[ƒ^‚ªÀs‚ÌŒ‹‰Ê‚ğ‹³‚¦‚é 
+        // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ãŒå®Ÿè¡Œã®çµæœã‚’æ•™ãˆã‚‹ 
         virtual void SetDst(const int index, const u64 value) = 0;
         virtual const u64 GetDst(const int index) const       = 0;
 
-        // ƒGƒ~ƒ…ƒŒ[ƒ^‚ªÀs‚ÌŒ‹‰Ê“¾‚ç‚ê‚énext_PC‚ğ‹³‚¦‚é 
+        // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ãŒå®Ÿè¡Œã®çµæœå¾—ã‚‰ã‚Œã‚‹next_PCã‚’æ•™ãˆã‚‹ 
         virtual void SetTakenPC(const PC takenPC) = 0;
         virtual PC GetTakenPC() const = 0;
 
-        // ƒGƒ~ƒ…ƒŒ[ƒ^‚ªtaken/not taken‚ğ‹³‚¦‚é 
+        // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ãŒtaken/not takenã‚’æ•™ãˆã‚‹ 
         virtual void SetTaken(const bool taken) = 0;
         virtual bool GetTaken() const = 0;
         

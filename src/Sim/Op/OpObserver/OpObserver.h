@@ -40,7 +40,7 @@ namespace Onikiri
     class OpObserver;
     class OpNotifier;
 
-    // Opのリタイア/フラッシュを監視するクラス
+    // Op縺ｮ繝ｪ繧ｿ繧､繧｢/繝輔Λ繝�繧ｷ繝･繧堤屮隕悶☆繧九け繝ｩ繧ｹ
     class OpObserver {
     public:
         OpObserver();
@@ -51,7 +51,7 @@ namespace Onikiri
         virtual void Flush(OpIterator op) = 0;
     };
 
-    // OpObserverにOpのリタイア/フラッシュを通知するクラス
+    // OpObserver縺ｫOp縺ｮ繝ｪ繧ｿ繧､繧｢/繝輔Λ繝�繧ｷ繝･繧帝夂衍縺吶ｋ繧ｯ繝ｩ繧ｹ
     class OpNotifier {
     private:
         std::vector<OpObserver*> m_observer;

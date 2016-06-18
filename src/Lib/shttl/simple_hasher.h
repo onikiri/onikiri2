@@ -74,13 +74,13 @@ namespace shttl
             return static_cast<size_type>(t) & m_idx_mask;
         }
 
-        // tag (‚Ó‚Â‚¤ãˆÊbit)
+        // tag (ãµã¤ã†ä¸Šä½bit)
         T tag(const T& key) const
         {
             return key >> m_idx_bit;
         }
         
-        // index‚Ætag‚©‚çkey‚ğ•œŒ³‚·‚é
+        // indexã¨tagã‹ã‚‰keyã‚’å¾©å…ƒã™ã‚‹
         T rebuild(const T& tag, size_type index) const
         {
             return (T)((tag << m_idx_bit) | index);

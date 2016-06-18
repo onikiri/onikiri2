@@ -37,7 +37,7 @@
 namespace Onikiri {
     namespace AlphaLinux {
 
-        // AlphaLinux‚ÌISAî•ñ
+        // AlphaLinuxã®ISAæƒ…å ±
         class Alpha64Info : public ISAInfoIF
         {
         public:

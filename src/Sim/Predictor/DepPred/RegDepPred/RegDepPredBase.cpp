@@ -45,8 +45,8 @@ RegDepPredBase::~RegDepPredBase()
 }
 
 
-// �ˑ��֌W���������āAop�ɃZ�b�g
-// �ǂ��������邩��ResolveReg�̎���
+// 依存関係を解決して、opにセット
+// どう解決するかはResolveRegの実装
 void RegDepPredBase::Resolve(OpIterator op)
 {
     OpInfo* opInfo = op->GetOpInfo();
@@ -63,8 +63,8 @@ void RegDepPredBase::Resolve(OpIterator op)
     }
 }
 
-// �V�������W�X�^�̃C���X�^���X�����蓖�ĂāAop�ɃZ�b�g
-// resolve �̂��߂Ɋ��蓖�Ă��L�����Ă����̂� AllocateReg �̎���
+// 新しいレジスタのインスタンスを割り当てて、opにセット
+// resolve のために割り当てを記憶しておくのは AllocateReg の実装
 void RegDepPredBase::Allocate(OpIterator op)
 {
     OpInfo* opInfo = op->GetOpInfo();
@@ -81,7 +81,7 @@ void RegDepPredBase::Allocate(OpIterator op)
     }
 }
 
-// Commit���A�����_�����W�X�^�ԍ��ɏ������ޒ��O�̖��߂̃f�X�e�B�l�[�V�����E���W�X�^�����
+// Commit時、同じ論理レジスタ番号に書き込む直前の命令のデスティネーション・レジスタを解放
 void RegDepPredBase::Commit(OpIterator op)
 {
     OpInfo* opInfo = op->GetOpInfo();
@@ -92,7 +92,7 @@ void RegDepPredBase::Commit(OpIterator op)
     }
 }
 
-// Op���t���b�V�����ꂽ�̂�Op���g�̃f�X�e�B�l�[�V�����E���W�X�^�����
+// OpがフラッシュされたのでOp自身のデスティネーション・レジスタを解放
 void RegDepPredBase::Flush(OpIterator op)
 {
     if( op->GetStatus() == OpStatus::OS_FETCH ){

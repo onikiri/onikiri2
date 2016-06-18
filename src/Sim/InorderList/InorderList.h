@@ -87,40 +87,40 @@ namespace Onikiri
         InorderList();
         virtual ~InorderList();
 
-        // �������p���\�b�h
+        // 初期化用メソッド
         void Initialize(InitPhase phase);
 
-        // --- Op �̐����A�폜�Ɋւ�郁���o�֐�
+        // --- Op の生成、削除に関わるメンバ関数
         OpIterator ConstructOp(const OpInitArgs& args);
         void DestroyOp(OpIterator op);
 
-        // --- �t�F�b�`�Ɋւ��֐�
-        // Fetcher �ɂ���ăt�F�b�`���ꂽ
+        // --- フェッチに関わる関数
+        // Fetcher によってフェッチされた
         void PushBack(OpIterator op);
 
         // --- Remove a back op from a list.
         void PopBack();
 
-        // --- �擪/�����̖��߂₠�閽�߂̑O/���̖��߂𓾂�֐�
-        // �v���O�����E�I�[�_�Ő擪�̖��߂�Ԃ�
-        OpIterator GetCommittedFrontOp();           // �R�~�b�g���̖��߂��܂ޑS���ߒ��̐擪�̖��߂�Ԃ�
-        OpIterator GetFrontOp();    // ���R�~�b�g���ߒ��̐擪��Ԃ�
-        // �Ō�Ƀt�F�b�`���ꂽ���߂�Ԃ�
+        // --- 先頭/末尾の命令やある命令の前/次の命令を得る関数
+        // プログラム・オーダで先頭の命令を返す
+        OpIterator GetCommittedFrontOp();           // コミット中の命令も含む全命令中の先頭の命令を返す
+        OpIterator GetFrontOp();    // 未コミット命令中の先頭を返す
+        // 最後にフェッチされた命令を返す
         OpIterator GetBackOp();  
 
-        // op�̑O/����Index�������Ă���Op��Ԃ�
-        // PC�ɑ΂��ĕ�����Op������ꍇ�ł��֌W�Ȃ��ɑO/��
+        // opの前/次のIndexを持っているOpを返す
+        // PCに対して複数のOpがある場合でも関係なしに前/次
         OpIterator GetPrevIndexOp(OpIterator op);
         OpIterator GetNextIndexOp(OpIterator op);
         
-        // op�̑O/����PC�������Ă���Op��Ԃ�
-        // PC�ɑ΂��ĕ�����Op������ꍇ�͔�΂��đO/��
+        // opの前/次のPCを持っているOpを返す
+        // PCに対して複数のOpがある場合は飛ばして前/次
         OpIterator GetPrevPCOp(OpIterator op);
         OpIterator GetNextPCOp(OpIterator op);
-        // op�Ɠ���PC�����擪��Op(MicroOp�̐擪)��Ԃ�
+        // opと同じPCを持つ先頭のOp(MicroOpの先頭)を返す
         OpIterator GetFrontOpOfSamePC(OpIterator op);
 
-        // �󂩂ǂ���
+        // 空かどうか
         bool IsEmpty();
 
         // Return whether an in-order list can reserve entries or not.
@@ -134,10 +134,10 @@ namespace Onikiri
 
 
         // 
-        // --- ���߂̑���
+        // --- 命令の操作
         //
 
-        // �n���ꂽ���߂��R�~�b�g���C���^�C�A������
+        // 渡された命令をコミットし，リタイアさせる
         void Commit( OpIterator op );
         void Retire( OpIterator op );
 
@@ -152,7 +152,7 @@ namespace Onikiri
             m_mode = mode;
         }
 
-        // ����\���~�X����op ���t���b�V������ۂ̃t�b�N
+        // 分岐予測ミス時にop をフラッシュする際のフック
         static HookPoint<InorderList> s_opFlushHook;
 
         // Flush all backward ops from 'startOp'.
@@ -197,10 +197,10 @@ namespace Onikiri
         void NotifyRetire( OpIterator op );
         void NotifyFlush( OpIterator op );
 
-        // �n���ꂽ���߂��t���b�V������
-        // �����ł̃t���b�V���Ƃ͕���\���~�X���̂悤��
-        // �p�C�v���C������̖��߂̍폜���Ӗ�����
-        void Flush( OpIterator op );        // �t�b�N���܂߂������
+        // 渡された命令をフラッシュする
+        // ここでのフラッシュとは分岐予測ミス時のような
+        // パイプラインからの命令の削除を意味する
+        void Flush( OpIterator op );        // フックを含めた入り口
 
     };  // class InorderList
 

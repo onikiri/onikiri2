@@ -113,7 +113,7 @@ namespace Onikiri
 
         u64 m_currentAccessID;
 
-        // ƒAƒNƒZƒX’†‚ÌƒAƒNƒZƒX‚ğŠÇ—‚·‚éƒŠƒXƒg
+        // ã‚¢ã‚¯ã‚»ã‚¹ä¸­ã®ã‚¢ã‚¯ã‚»ã‚¹ã‚’ç®¡ç†ã™ã‚‹ãƒªã‚¹ãƒˆ
         AccessList m_list;
 
         // A pipeline for the cache/memory.

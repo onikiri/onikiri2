@@ -91,23 +91,23 @@ void SimulationSystem::Run( SystemContext* context )
             for( int i = 0; i < context->cores.GetSize(); i++ ){
                 Core* core = context->cores[i];
                 if( !core->GetRetirer()->IsEndOfProgram() ){
-                    // Next PC ‚ª 0 ‚É‚È‚é•ªŠò–½—ß‚ªƒŠƒ^ƒCƒA‚µ‚Ä‚¢‚½‚çI—¹
+                    // Next PC ãŒ 0 ã«ãªã‚‹åˆ†å²å‘½ä»¤ãŒãƒªã‚¿ã‚¤ã‚¢ã—ã¦ã„ãŸã‚‰çµ‚äº†
                     exitSimulation = false;
                 }
                 retiredInsns += core->GetRetirer()->GetNumRetiredInsns();
             }
 
-            // I—¹ðŒ
+            // çµ‚äº†æ¡ä»¶
             if(exitSimulation){
                 break;
             }
             else if( numCycles > 0 ){
-                // ŽÀsƒTƒCƒNƒ‹”‚ðŽw’è‚µ‚½ê‡
+                // å®Ÿè¡Œã‚µã‚¤ã‚¯ãƒ«æ•°ã‚’æŒ‡å®šã—ãŸå ´åˆ
                 if( context->executedCycles >= numCycles ) 
                     break;
             }
             else{
-                // ŽÀs–½—ß”‚ðŽw’è‚µ‚½ê‡
+                // å®Ÿè¡Œå‘½ä»¤æ•°ã‚’æŒ‡å®šã—ãŸå ´åˆ
                 if( retiredInsns >= numInsns )
                     break;
             }
@@ -115,7 +115,7 @@ void SimulationSystem::Run( SystemContext* context )
             ++context->executedCycles;
         }
 
-        // ƒŠƒ^ƒCƒA‚µ‚½–½—ß”‚ðupdate
+        // ãƒªã‚¿ã‚¤ã‚¢ã—ãŸå‘½ä»¤æ•°ã‚’update
         context->executedInsns.clear();
         for( int i = 0; i < context->threads.GetSize(); i++ ){
             context->executedInsns.push_back( context->threads[i]->GetInorderList()->GetRetiredInsns() );

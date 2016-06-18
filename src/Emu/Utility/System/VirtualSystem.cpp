@@ -39,8 +39,8 @@ using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::POSIX;
 
 // const int FDConv::InvalidFD;
-// ƒNƒ‰ƒX‚Ìstatic const •Ï”‚ÌƒAƒhƒŒƒX‚ªæ‚ç‚ê‚éê‡‚ÍCã‚Ì‚æ‚¤‚È’è‹`‚ª•K—v‚¾‚ªC
-// ‚±‚Ì’è‹`‚ğ’u‚­‚ÆCVC‚ÌƒoƒO‚Å‘½d’è‹`iƒŠƒ“ƒNƒGƒ‰[j‚É‚È‚Á‚Ä‚µ‚Ü‚¤
+// ã‚¯ãƒ©ã‚¹ã®static const å¤‰æ•°ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒå–ã‚‰ã‚Œã‚‹å ´åˆã¯ï¼Œä¸Šã®ã‚ˆã†ãªå®šç¾©ãŒå¿…è¦ã ãŒï¼Œ
+// ã“ã®å®šç¾©ã‚’ç½®ãã¨ï¼ŒVCã®ãƒã‚°ã§å¤šé‡å®šç¾©ï¼ˆãƒªãƒ³ã‚¯ã‚¨ãƒ©ãƒ¼ï¼‰ã«ãªã£ã¦ã—ã¾ã†
 // http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=99610
 
 
@@ -96,7 +96,7 @@ bool FDConv::RemoveMap(int targetFD)
     if (targetFD < 0)
         return false;
 
-    // targetFD‚É‚Í‘Î‰‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢
+    // targetFDã«ã¯å¯¾å¿œãŒè¨­å®šã•ã‚Œã¦ã„ãªã„
     if (m_FDTargetToHostTable[targetFD] == InvalidFD)
         return false;
 
@@ -105,29 +105,29 @@ bool FDConv::RemoveMap(int targetFD)
     return true;
 }
 
-// target‚Ìfd‚Å‹ó‚¢‚Ä‚¢‚é‚à‚Ì‚ğ’T‚·
+// targetã®fdã§ç©ºã„ã¦ã„ã‚‹ã‚‚ã®ã‚’æ¢ã™
 int FDConv::GetFirstFreeFD()
 {
-    // ‘Î‰•\‚©‚çhost‚Ìfd‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¢‚à‚Ì‚ğ’T‚·
+    // å¯¾å¿œè¡¨ã‹ã‚‰hostã®fdãŒå‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãªã„ã‚‚ã®ã‚’æ¢ã™
     vector<int>::iterator e = find(m_FDTargetToHostTable.begin(), m_FDTargetToHostTable.end(), (int)InvalidFD);
 
     if (e != m_FDTargetToHostTable.end())
         return (int)(e - m_FDTargetToHostTable.begin());
     else {
-        // ‘Î‰•\‚ª–„‚Ü‚Á‚Ä‚¢‚é‚Ì‚ÅŠg’£‚·‚é
+        // å¯¾å¿œè¡¨ãŒåŸ‹ã¾ã£ã¦ã„ã‚‹ã®ã§æ‹¡å¼µã™ã‚‹
         int result = (int)m_FDTargetToHostTable.size();
         ExtendFDMap();
         return result;
     }
 }
 
-// m_FDTargetToHostTable ‚ÌƒTƒCƒY‚ğ‘å‚«‚­‚·‚é
+// m_FDTargetToHostTable ã®ã‚µã‚¤ã‚ºã‚’å¤§ããã™ã‚‹
 void FDConv::ExtendFDMap()
 {
     ExtendFDMap(m_FDTargetToHostTable.size()*2);
 }
 
-// m_FDTargetToHostTable ‚ÌƒTƒCƒY‚ğw’è‚µ‚½ƒTƒCƒY‚Ü‚Å‘å‚«‚­‚·‚é (¬‚³‚­‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢)
+// m_FDTargetToHostTable ã®ã‚µã‚¤ã‚ºã‚’æŒ‡å®šã—ãŸã‚µã‚¤ã‚ºã¾ã§å¤§ããã™ã‚‹ (å°ã•ãã™ã‚‹ã“ã¨ã¯ã§ããªã„)
 void FDConv::ExtendFDMap(size_t size)
 {
     if (size > m_FDTargetToHostTable.size())
@@ -313,7 +313,7 @@ int VirtualSystem::Open(const char* filename, int oflag)
 {
     int hostFD = posix_open(GetHostPath(filename).string().c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
 
-    // FD‚Ì‘Î‰•\‚É’Ç‰Á
+    // FDã®å¯¾å¿œè¡¨ã«è¿½åŠ 
     if (hostFD != -1) {
         int targetFD = m_fdConv.GetFirstFreeFD();
         AddFDMap(targetFD, hostFD, true);
@@ -329,7 +329,7 @@ int VirtualSystem::Dup(int fd)
 {
     int hostFD = FDTargetToHost(fd);
     int dupHostFD = posix_dup(hostFD);
-    // FD‚Ì‘Î‰•\‚É’Ç‰Á
+    // FDã®å¯¾å¿œè¡¨ã«è¿½åŠ 
     if (dupHostFD != -1) {
         int targetFD = m_fdConv.GetFirstFreeFD();
         AddFDMap(targetFD, dupHostFD, true);
@@ -359,7 +359,7 @@ int VirtualSystem::Close(int fd)
     int hostFD = m_fdConv.TargetToHost(fd);
     int result = posix_close(hostFD);
     if (result != -1) {
-        // close‚É¬Œ÷‚µ‚½‚ç©“®ƒNƒ[ƒYƒŠƒXƒg‚©‚çœŠO
+        // closeã«æˆåŠŸã—ãŸã‚‰è‡ªå‹•ã‚¯ãƒ­ãƒ¼ã‚ºãƒªã‚¹ãƒˆã‹ã‚‰é™¤å¤–
         RemoveAutoCloseFD(hostFD);
 
         m_fdConv.RemoveMap(fd);
@@ -403,13 +403,13 @@ int VirtualSystem::Access(const char* path, int mode)
 
 int VirtualSystem::Unlink(const char* path)
 {
-    /* unlink ‚É‚Â‚¢‚Ä
-    Unix ã‚É‚¨‚¢‚ÄA‚¢‚¸‚ê‚©‚ÌƒvƒƒZƒX‚ª open ‚µ‚Ä‚¢‚é
-    ƒtƒ@ƒCƒ‹‚É‘Î‚µ‚Ä unlink ‚·‚é‚ÆA‚·‚×‚Ä‚ÌƒvƒƒZƒX‚ª
-    close ‚µ‚½“_‚Åƒtƒ@ƒCƒ‹‚ªíœ‚³‚ê‚éB
-    ˆê•ûAWindows ‚Å‚Í open ‚µ‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚É‘Î‚·‚é unlink ‚Í
-    ƒGƒ‰[‚ğ•Ô‚·‚Ì‚Å‹““®‚ª•Ï‚í‚Á‚Ä‚µ‚Ü‚¤B
-    ‚±‚±‚Å‚Í Windows ‚Ì‹““®‚ğ Unix ‚É‡‚í‚¹‚é‚½‚ß DelayUnlinker ƒNƒ‰ƒX‚ğ—p‚¢‚é
+    /* unlink ã«ã¤ã„ã¦
+    Unix ä¸Šã«ãŠã„ã¦ã€ã„ãšã‚Œã‹ã®ãƒ—ãƒ­ã‚»ã‚¹ãŒ open ã—ã¦ã„ã‚‹
+    ãƒ•ã‚¡ã‚¤ãƒ«ã«å¯¾ã—ã¦ unlink ã™ã‚‹ã¨ã€ã™ã¹ã¦ã®ãƒ—ãƒ­ã‚»ã‚¹ãŒ
+    close ã—ãŸæ™‚ç‚¹ã§ãƒ•ã‚¡ã‚¤ãƒ«ãŒå‰Šé™¤ã•ã‚Œã‚‹ã€‚
+    ä¸€æ–¹ã€Windows ã§ã¯ open ã—ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã«å¯¾ã™ã‚‹ unlink ã¯
+    ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™ã®ã§æŒ™å‹•ãŒå¤‰ã‚ã£ã¦ã—ã¾ã†ã€‚
+    ã“ã“ã§ã¯ Windows ã®æŒ™å‹•ã‚’ Unix ã«åˆã‚ã›ã‚‹ãŸã‚ DelayUnlinker ã‚¯ãƒ©ã‚¹ã‚’ç”¨ã„ã‚‹
     */
     int unlinkerr = posix_unlink(GetHostPath(path).string().c_str());
 #ifdef HOST_IS_WINDOWS
@@ -453,7 +453,7 @@ boost::filesystem::path VirtualSystem::GetHostPath(const char* targetPath)
 }
 
 //
-// ‚Ìæ“¾
+// æ™‚åˆ»ã®å–å¾—
 //
 
 int VirtualSystem::EmulationModeStrToInt( const std::string& str )

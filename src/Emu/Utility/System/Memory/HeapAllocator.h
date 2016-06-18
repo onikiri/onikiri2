@@ -35,10 +35,10 @@
 namespace Onikiri {
     namespace EmulatorUtility {
 
-        // �^�[�Q�b�g�̃q�[�v�̈���Ǘ�����
+        // ターゲットのヒープ領域を管理する
         // 
-        // �A�h���X��Ԃ݂̂��Ǘ����� (�����������̊��蓖�Ă͍s��Ȃ�)
-        // �̈�̊m�ۂ̓y�[�W�P�ʂōs����
+        // アドレス空間のみを管理する (物理メモリの割り当ては行わない)
+        // 領域の確保はページ単位で行われる
         class HeapAllocator
         {
         private:
@@ -47,32 +47,32 @@ namespace Onikiri {
             // pageSize
             explicit HeapAllocator(u64 pageSize);
 
-            // �A�h���Xstart����length�o�C�g�̗̈���C����HeapAllocator�̎g�p����i�󂫁j�̈�Ƃ��Ēǉ�����
+            // アドレスstartからlengthバイトの領域を，このHeapAllocatorの使用する（空き）領域として追加する
             bool AddMemoryBlock(u64 start, u64 length);
 
-            // addr�̃A�h���X��length�o�C�g�̗̈���m�ۂ���
-            // addr��0�̏ꍇ�C�󂫗̈�̒��œK���ȃA�h���X�Ɋm�ۂ����
+            // addrのアドレスにlengthバイトの領域を確保する
+            // addrが0の場合，空き領域の中で適当なアドレスに確保される
             //
-            // �߂�l: �m�ۂ��ꂽ�̈�̃A�h���X�D0�̏ꍇ�G���[
-            //        �A�h���X�̓y�[�W���E�ɂ��邱�Ƃ��ۏ؂����
+            // 戻り値: 確保された領域のアドレス．0の場合エラー
+            //        アドレスはページ境界にあることが保証される
             u64 Alloc(u64 addr, u64 length);
 
-            // addr�̈ʒu�Ɋm�ۂ��ꂽ�̈�̃T�C�Y�� old_size ���� new_size �ɕύX����
+            // addrの位置に確保された領域のサイズを old_size から new_size に変更する
             //
-            // �߂�l: �̈�̃A�h���X�D0�̏ꍇ�G���[
-            //        �A�h���X�̓y�[�W���E�ɂ��邱�Ƃ��ۏ؂����
+            // 戻り値: 領域のアドレス．0の場合エラー
+            //        アドレスはページ境界にあることが保証される
             u64 ReAlloc(u64 old_addr, u64 old_size, u64 new_size);
 
-            // Alloc�����������̈���J������
-            // �߂�l: ������true�C���s��false (�Ǘ�����Ă��Ȃ��������u���b�N��n������)
+            // Allocしたメモリ領域を開放する
+            // 戻り値: 成功時true，失敗時false (管理されていないメモリブロックを渡した等)
             bool Free(u64 addr);
-            // Alloc�����̈�̈ꕔ�܂��͑S�����J������
+            // Allocした領域の一部または全部を開放する
             bool Free(u64 addr, u64 size);
 
-            // addr ��Alloc���ꂽ�������̈�̃T�C�Y�𓾂�
+            // addr にAllocされたメモリ領域のサイズを得る
             u64 GetBlockSize(u64 addr) const;
 
-            // addr �͊m�ۂ���Ă���̈�ƌ������邩
+            // addr は確保されている領域と交差するか
             u64 IsIntersected(u64 addr, u64 length) const;
 
             u64 GetPageSize() const { return m_pageSize; }
@@ -100,7 +100,7 @@ namespace Onikiri {
             };
             typedef std::list<MemoryBlock> BlockList;
 
-            // m_freeList���̌��ԂȂ��אڂ��Ă��郁�����̈��1�ɂ܂Ƃ߂�
+            // m_freeList中の隙間なく隣接しているメモリ領域を1つにまとめる
             void IntegrateFreeBlocks();
             BlockList::iterator FindMemoryBlock(BlockList& blockList, u64 addr);
             BlockList::const_iterator FindMemoryBlock(const BlockList& blockList, u64 addr) const;
@@ -110,8 +110,8 @@ namespace Onikiri {
                 return (bytes + m_pageSize - 1)/m_pageSize;
             }
 
-            // free list�̓������̈�̒��ɒu���Ȃ�
-            // target���������j�󂵂Ă�����mmap�����ȂȂ��悤��
+            // free listはメモリ領域の中に置かない
+            // targetがメモリ破壊してもこのmmapが死なないように
             BlockList m_freeList;
             BlockList m_allocList;
             u64 m_pageSize;

@@ -43,7 +43,7 @@ u64 Onikiri::EmulatorUtility::TargetStrlen(MemorySystem* mem, u64 targetAddr)
 #if 0
     
     BlockArray blocks;
-    // ‚Æ‚è‚ ‚¦‚¸MapUnitSize ƒoƒCƒg‚Ì”ÍˆÍ‚Åstrlen‚ðs‚¤D•’Ê‚Í‚±‚ê‚Å‘«‚è‚éD
+    // ã¨ã‚Šã‚ãˆãšMapUnitSize ãƒã‚¤ãƒˆã®ç¯„å›²ã§strlenã‚’è¡Œã†ï¼Žæ™®é€šã¯ã“ã‚Œã§è¶³ã‚Šã‚‹ï¼Ž
     SplitAtMapUnitBoundary(targetAddr, m_addrConv.GetMapUnitSize(), back_inserter(blocks) );
 
     u64 result = 0;
@@ -57,7 +57,7 @@ u64 Onikiri::EmulatorUtility::TargetStrlen(MemorySystem* mem, u64 targetAddr)
         }
     }
 
-    // ‚È‚ñ‚ÆMapUnitSizeƒoƒCƒg‚æ‚è‚à’·‚¢•¶Žš—ñ‚¾‚Á‚½‚Ì‚ÅCŽŸ‚ÌMapUnitSizeƒoƒCƒg‚É‘Î‚µ‚Ä‚àstrlen‚ðs‚¤
+    // ãªã‚“ã¨MapUnitSizeãƒã‚¤ãƒˆã‚ˆã‚Šã‚‚é•·ã„æ–‡å­—åˆ—ã ã£ãŸã®ã§ï¼Œæ¬¡ã®MapUnitSizeãƒã‚¤ãƒˆã«å¯¾ã—ã¦ã‚‚strlenã‚’è¡Œã†
     return result + TargetStrlen(targetAddr+m_addrConv.GetMapUnitSize());;
 #else
     u64 length = 0;
@@ -98,14 +98,14 @@ std::string Onikiri::EmulatorUtility::StrCpyToHost(MemorySystem* mem, u64 target
 TargetBuffer::TargetBuffer(MemorySystem* memory, u64 targetAddr, size_t bufSize, bool readOnly)
     : m_memory(memory), m_targetAddr(targetAddr), m_bufSize(bufSize), m_readOnly(readOnly)
 {
-    // host‚Ì˜A‘±—Ìˆæ‚ÉƒRƒs[
+    // hostã®é€£ç¶šé ˜åŸŸã«ã‚³ãƒ”ãƒ¼
     m_buf = new u8[bufSize];
     m_memory->MemCopyToHost(m_buf, m_targetAddr, m_bufSize);
 }
 
 TargetBuffer::~TargetBuffer()
 {
-    // ‘‚«–ß‚·
+    // æ›¸ãæˆ»ã™
     if (!m_readOnly)
         m_memory->MemCopyToTarget(m_targetAddr, m_buf, m_bufSize);
     delete[] m_buf;

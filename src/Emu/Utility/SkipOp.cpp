@@ -32,7 +32,7 @@
 #include <pch.h>
 #include "Emu/Utility/SkipOp.h"
 
-// Read/Write ‚Ì‚İÀ‘•‚µ‚½Op
+// Read/Write ã®ã¿å®Ÿè£…ã—ãŸOp
 
 using namespace std;
 using namespace Onikiri;

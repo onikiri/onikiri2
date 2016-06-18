@@ -41,14 +41,14 @@ namespace Onikiri
     class Core;
     class Scheduler;
 
-    // OpCode ‚¾‚¯‚ğŒ©‚ÄSteering‚ğs‚¤Steerer
+    // OpCode ã ã‘ã‚’è¦‹ã¦Steeringã‚’è¡Œã†Steerer
     class OpCodeDispatchSteerer :
         public DispatchSteererIF,
         public PhysicalResourceNode
     {
     private:
         Core* m_core;
-        // OpCode ‚©‚ç Scheduler ‚ğ‚Ğ‚¯‚é map
+        // OpCode ã‹ã‚‰ Scheduler ã‚’ã²ã‘ã‚‹ map
         std::vector<Scheduler*> m_schedulerMap;
     public:
         BEGIN_RESOURCE_MAP()

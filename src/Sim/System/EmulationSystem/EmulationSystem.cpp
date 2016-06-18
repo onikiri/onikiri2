@@ -42,10 +42,10 @@ void EmulationSystem::Run( SystemContext* context )
     s64 numInsns     = context->executionInsns;
     int processCount = context->emulator->GetProcessCount();
 
-    // ˜_—ƒŒƒWƒXƒ^‚Ì‰Šú’l‚ğ emulator ‚É‹³‚¦‚Ä‚à‚ç‚Á‚ÄƒZƒbƒg
+    // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®åˆæœŸå€¤ã‚’ emulator ã«æ•™ãˆã¦ã‚‚ã‚‰ã£ã¦ã‚»ãƒƒãƒˆ
     ArchitectureStateList& archStateList = context->architectureStateList;
 
-    // Às
+    // å®Ÿè¡Œ
     vector<s64> totalInsnCount;
     u64 executeInsns = numInsns / processCount;
     for( int pid = 0; pid < processCount; pid++ ){

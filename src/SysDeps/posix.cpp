@@ -46,14 +46,14 @@ using namespace Onikiri::POSIX;
 // Windows
 //
 namespace {
-    // ���炩�ɃX���b�h�Z�[�t�ł͂Ȃ����ǂ����V���O���X���b�h�Ȃ̂�
-    // ����}���`�X���b�h�ɂ���悤�Ȃ��Ƃ������TLS�ł��g���ēK�؂�
+    // 明らかにスレッドセーフではないがどうせシングルスレッドなので
+    // 万一マルチスレッドにするようなことがあればTLSでも使って適切に
     int posix_errno = 0;
 
-    // MSDN�ɂ��� errno �̔ԍ���UNIX�Ɠ���
-    // x86_64 Linux��ERANGE=34�܂œ������Ƃ��m�F
+    // MSDNによると errno の番号はUNIXと同じ
+    // x86_64 LinuxとERANGE=34まで同じことを確認
 
-    // �G���[���`�F�b�N���ĕK�v�Ȃ�errno���擾����
+    // エラーをチェックして必要ならerrnoを取得する
     template <typename T, T ErrorVal>
     T check_error(T result)
     {
@@ -124,7 +124,7 @@ namespace Onikiri {
         }
         int posix_lstat(const char* path, posix_struct_stat* s)
         {
-            // Windows �ɂ̓V���{���b�N�����N���Ȃ��̂ŁCstat��lstat�͓���
+            // Windows にはシンボリックリンクがないので，statとlstatは同じ
             return posix_stat(path, s);
         }
 

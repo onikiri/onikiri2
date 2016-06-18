@@ -44,44 +44,44 @@
 
 namespace Onikiri {
 
-    // ƒGƒ~ƒ…ƒŒ[ƒ^‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     class EmulatorIF {
 
     public:
         EmulatorIF() {}
         virtual ~EmulatorIF() {}
 
-        // –ß‚è’l‚Ì first: pc‚É‚ ‚é–½—ß‚ğ•ª‰ğ‚µ‚Ä¶¬‚³‚ê‚½C
-        // OpInfo‚Ö‚Ìƒ|ƒCƒ“ƒ^‚Ì”z—ñ@second: MOp‚Ì”
+        // æˆ»ã‚Šå€¤ã® first: pcã«ã‚ã‚‹å‘½ä»¤ã‚’åˆ†è§£ã—ã¦ç”Ÿæˆã•ã‚ŒãŸï¼Œ
+        // OpInfoã¸ã®ãƒã‚¤ãƒ³ã‚¿ã®é…åˆ—ã€€second: MOpã®æ•°
         virtual std::pair<OpInfo**, int> GetOp(PC pc) = 0;
 
-        // sim‘¤‚Éƒƒ‚ƒŠ‚ÌƒCƒ[ƒW‚ğŒ©‚¹‚é
-        // ƒXƒgƒAƒLƒ…[‚Éƒf[ƒ^‚ª–³‚©‚Á‚½‚É“Ç‚İ‘‚«‚·‚é‚½‚ß
+        // simå´ã«ãƒ¡ãƒ¢ãƒªã®ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’è¦‹ã›ã‚‹
+        // ã‚¹ãƒˆã‚¢ã‚­ãƒ¥ãƒ¼ã«ãƒ‡ãƒ¼ã‚¿ãŒç„¡ã‹ã£ãŸæ™‚ã«èª­ã¿æ›¸ãã™ã‚‹ãŸã‚
         virtual MemIF* GetMemImage() = 0;
 
-        // opInfo ‚Ì–½—ß‚ğÀs‚·‚éDƒ\[ƒXƒIƒyƒ‰ƒ“ƒh“™‚Ìæ“¾CŒ‹‰Ê‚ÌŠi”[‚Í opStateIF ‚É‘Î‚µ‚Äs‚¤
+        // opInfo ã®å‘½ä»¤ã‚’å®Ÿè¡Œã™ã‚‹ï¼ã‚½ãƒ¼ã‚¹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç­‰ã®å–å¾—ï¼Œçµæœã®æ ¼ç´ã¯ opStateIF ã«å¯¾ã—ã¦è¡Œã†
         virtual void Execute(OpStateIF* opStateIF, OpInfo* opInfo) = 0;
 
         // Commit instructions executed in Execute().
         // Currently, CRC calculation of pcs for debugging is done in Commit().
         virtual void Commit(OpStateIF* opStateIF, OpInfo* opInfo) = 0;
 
-        // ¶¬‚³‚ê‚½ƒvƒƒZƒX‚Ì”‚ğæ“¾‚·‚é
+        // ç”Ÿæˆã•ã‚ŒãŸãƒ—ãƒ­ã‚»ã‚¹ã®æ•°ã‚’å–å¾—ã™ã‚‹
         virtual int GetProcessCount() const = 0;
 
-        // pid”Ô‚ÌƒvƒƒZƒX‚ÌƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg‚ğæ“¾‚·‚é
+        // pidç•ªã®ãƒ—ãƒ­ã‚»ã‚¹ã®ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
         virtual PC GetEntryPoint(int pid) const = 0;
 
-        // ƒŒƒWƒXƒ^‚Ì‰Šú’l‚ğæ“¾‚·‚é
+        // ãƒ¬ã‚¸ã‚¹ã‚¿ã®åˆæœŸå€¤ã‚’å–å¾—ã™ã‚‹
         virtual u64 GetInitialRegValue(int pid, int index) const = 0;
 
-        // ISAî•ñ‚Ìæ“¾
+        // ISAæƒ…å ±ã®å–å¾—
         virtual ISAInfoIF* GetISAInfo() = 0;
 
-        // pc ‚©‚ç skipCount –½—ßÀs‚·‚éDÀs‚µ‚½Œã‚ÌPC‚ğ•Ô‚·DexecutedInsnCount, executedOpCount‚ÉÀÛ‚ÉÀs‚Å‚«‚½–½—ß”‚ÆOp”‚ğ•Ô‚· (NULL‰Â)
+        // pc ã‹ã‚‰ skipCount å‘½ä»¤å®Ÿè¡Œã™ã‚‹ï¼å®Ÿè¡Œã—ãŸå¾Œã®PCã‚’è¿”ã™ï¼executedInsnCount, executedOpCountã«å®Ÿéš›ã«å®Ÿè¡Œã§ããŸå‘½ä»¤æ•°ã¨Opæ•°ã‚’è¿”ã™ (NULLå¯)
         virtual PC Skip(PC pc, u64 skipCount, u64* regArray, u64* executedInsnCount, u64* executedOpCount) = 0;
 
-        // ŠO•”–½—ßƒfƒR[ƒ_‚ğƒZƒbƒg‚·‚é
+        // å¤–éƒ¨å‘½ä»¤ãƒ‡ã‚³ãƒ¼ãƒ€ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
         virtual void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder ) = 0;
     };
 

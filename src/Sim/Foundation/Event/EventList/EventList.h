@@ -41,7 +41,7 @@
 namespace Onikiri
 {
 #if 1
-    // vector ‚ðŽg‚Á‚½ƒiƒC[ƒu‚ÈŽÀ‘•
+    // vector ã‚’ä½¿ã£ãŸãƒŠã‚¤ãƒ¼ãƒ–ãªå®Ÿè£…
     class EventList
     {
     public:
@@ -128,7 +128,7 @@ namespace Onikiri
 
     };
 #else
-    // ƒTƒCƒY‚ÆˆÊ’u‚ðŽ©‘O‚ÅŠÇ—
+    // ã‚µã‚¤ã‚ºã¨ä½ç½®ã‚’è‡ªå‰ã§ç®¡ç†
     class EventList
     {
     private:
@@ -161,7 +161,7 @@ namespace Onikiri
             IteratorType end = begin + m_size;
             for( IteratorType i = begin; i != end; ++i ){
                 (*i)->Cancel();
-                *i = NULL;  // ƒ|ƒCƒ“ƒ^‚ðƒNƒŠƒA     
+                *i = NULL;  // ãƒã‚¤ãƒ³ã‚¿ã‚’ã‚¯ãƒªã‚¢     
             }
             m_size = 0;
         }
@@ -176,7 +176,7 @@ namespace Onikiri
             IteratorType begin = m_list.begin();
             IteratorType end = begin + m_size;
             for( IteratorType i = begin; i != end; ++i ){
-                *i = NULL;  // ƒ|ƒCƒ“ƒ^‚ðƒNƒŠƒA     
+                *i = NULL;  // ãƒã‚¤ãƒ³ã‚¿ã‚’ã‚¯ãƒªã‚¢     
             }
             m_size = 0;
         }

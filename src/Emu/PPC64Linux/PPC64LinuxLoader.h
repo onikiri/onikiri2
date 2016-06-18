@@ -38,14 +38,14 @@ namespace Onikiri {
 
     namespace PPC64Linux {
 
-        // PPC64Linux ELF 用のローダー
+        // PPC64Linux ELF 逕ｨ縺ｮ繝ｭ繝ｼ繝繝ｼ
         class PPC64LinuxLoader : public EmulatorUtility::Linux64Loader
         {
         public:
             PPC64LinuxLoader();
             virtual ~PPC64LinuxLoader();
 
-            // LoaderIF の実装
+            // LoaderIF 縺ｮ螳溯｣�
             virtual u64 GetInitialRegValue(int index) const;
         protected:
             virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);

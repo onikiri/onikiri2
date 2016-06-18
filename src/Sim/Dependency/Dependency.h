@@ -40,7 +40,7 @@
 namespace Onikiri {
 
     /* 
-    �ˑ��֌W��\�����邽�߂̊��N���X
+    依存関係を表現するための基底クラス
     */
     class Dependency 
     {
@@ -93,12 +93,12 @@ namespace Onikiri {
 
     protected:
 
-        // �X�P�W���[�����Ƃ� ready ���ǂ����̃t���O
+        // スケジューラごとに ready かどうかのフラグ
         boost::dynamic_bitset<
             u32, boost::fast_pool_allocator<u32> 
         > m_readiness;  
 
-        // �ˑ���̖���
+        // 依存先の命令
         ConsumerListType    m_consumer;
     };
 

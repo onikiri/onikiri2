@@ -50,7 +50,7 @@ void EmulationDebugSystem::Run( SystemContext* context )
         );
     }
 
-    // ƒŒƒWƒXƒ^‚Ì‰Šú‰»
+    // ãƒ¬ã‚¸ã‚¹ã‚¿ã®åˆæœŸåŒ–
     ArchitectureStateList& archStateList = context->architectureStateList;
 
     s64 insnCount = 0;
@@ -77,13 +77,13 @@ void EmulationDebugSystem::Run( SystemContext* context )
 
         EmulationDebugOp op( context->emulator->GetMemImage() );
 
-        // ‚±‚ÌPC
+        // ã“ã®PC
         std::pair<OpInfo**, int> ops = 
             context->emulator->GetOp( curThreadPC );
         OpInfo** opInfoArray = ops.first;
         int opCount          = ops.second;
 
-        // opInfoArray ‚Ì–½—ß‚ğ‘S‚ÄÀs
+        // opInfoArray ã®å‘½ä»¤ã‚’å…¨ã¦å®Ÿè¡Œ
         for(int opIndex = 0; opIndex < opCount; opIndex ++){
             OpInfo* opInfo = opInfoArray[opIndex];
             op.SetPC( curThreadPC );
@@ -91,7 +91,7 @@ void EmulationDebugSystem::Run( SystemContext* context )
             op.SetOpInfo(opInfo);
             op.SetTaken(false);
 
-            // ƒ\[ƒXƒIƒyƒ‰ƒ“ƒh‚ğİ’è
+            // ã‚½ãƒ¼ã‚¹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚’è¨­å®š
             int srcCount = opInfo->GetSrcNum();
             for (int i = 0; i < srcCount; i ++) {
                 op.SetSrc(i, archStateList[curPID].registerValue[ opInfo->GetSrcOperand(i) ] );
@@ -99,7 +99,7 @@ void EmulationDebugSystem::Run( SystemContext* context )
 
             context->emulator->Execute( &op, opInfo );
 
-            // –½—ß‚ÌŒ‹‰Ê‚ğæ“¾
+            // å‘½ä»¤ã®çµæœã‚’å–å¾—
             int dstCount = opInfo->GetDstNum();
             for (int i = 0; i < dstCount; i ++) {
                 archStateList[curPID].registerValue[ opInfo->GetDstOperand(i) ] = op.GetDst(i);
@@ -108,7 +108,7 @@ void EmulationDebugSystem::Run( SystemContext* context )
             ++opID[curPID];
         }
 
-        // Ÿ‚ÌPC
+        // æ¬¡ã®PC
         if (op.GetTaken())
             curThreadPC = op.GetTakenPC();
         else

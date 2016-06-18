@@ -38,7 +38,7 @@ using namespace Onikiri;
 
 void Onikiri::EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_HEADER& h, bool bigEndian)
 {
-    // e_ident ‚Í•ÏŠ·•s—v
+    // e_ident ã¯å¤‰æ›ä¸è¦
     EndianSpecifiedToHostInPlace( h.e_type, bigEndian);
     EndianSpecifiedToHostInPlace( h.e_machine, bigEndian);
     EndianSpecifiedToHostInPlace( h.e_version, bigEndian);

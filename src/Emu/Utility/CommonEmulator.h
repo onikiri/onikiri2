@@ -53,7 +53,7 @@ namespace Onikiri {
 
     namespace EmulatorUtility {
 
-        // ƒGƒ~ƒ…ƒŒ[ƒ^
+        // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿
         template <class Traits>
         class CommonEmulator : 
             public EmulatorIF,
@@ -61,8 +61,8 @@ namespace Onikiri {
             public ParamExchange
         {
         private:
-            // Traits ‚ÍC‚±‚ê‚ç‚ÌŒ^‚ğtypedef‚µ‚½\‘¢‘Ì
-            // ‚±‚ê‚ç‚ÌŒ^‚ğŠeƒVƒXƒeƒ€‚É“Á‰»‚µ‚½Œ^‚É’è‹`‚·‚é‚±‚Æ‚ÅCŠeƒVƒXƒeƒ€ê—p‚ÌƒGƒ~ƒ…ƒŒ[ƒ^‚ğ’è‹`‚Å‚«‚é
+            // Traits ã¯ï¼Œã“ã‚Œã‚‰ã®å‹ã‚’typedefã—ãŸæ§‹é€ ä½“
+            // ã“ã‚Œã‚‰ã®å‹ã‚’å„ã‚·ã‚¹ãƒ†ãƒ ã«ç‰¹åŒ–ã—ãŸå‹ã«å®šç¾©ã™ã‚‹ã“ã¨ã§ï¼Œå„ã‚·ã‚¹ãƒ†ãƒ å°‚ç”¨ã®ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã‚’å®šç¾©ã§ãã‚‹
             typedef typename Traits::ISAInfoType ISAInfoType;
             typedef typename Traits::OpInfoType OpInfoType;
             typedef typename Traits::ConverterType ConverterType;
@@ -74,13 +74,13 @@ namespace Onikiri {
             CommonEmulator( SystemIF* simSystem );
             virtual ~CommonEmulator();
 
-            // ParamExchange ’†‚ÌŠÖ”‚ğéŒ¾
+            // ParamExchange ä¸­ã®é–¢æ•°ã‚’å®£è¨€
             using ParamExchangeType::LoadParam;
             using ParamExchangeType::ReleaseParam;
             using ParamExchangeType::GetRootPath;
             using ParamExchangeType::ParamEntry;
 
-            // EmulatorIF ‚ÌÀ‘•
+            // EmulatorIF ã®å®Ÿè£…
             virtual std::pair<OpInfo**, int> GetOp(PC pc);
             virtual MemIF* GetMemImage();
             virtual void Execute(OpStateIF* op, OpInfo* opinfo);
@@ -92,21 +92,21 @@ namespace Onikiri {
             virtual PC Skip(PC pc, u64 skipCount, u64* regArray, u64* executedInsnCount, u64* executedOpCount);
             virtual void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder );
 
-            // MemIF ‚ÌÀ‘•
+            // MemIF ã®å®Ÿè£…
             virtual void Read( MemAccess* access );
             virtual void Write( MemAccess* access );
 
         private:
             bool CreateProcesses( SystemIF* simSystem );
             
-            // ‚‘¬‰»‚Ì‚½‚ß‚Ì”ñƒo[ƒ`ƒƒƒ‹‚ÈÀ‘•
+            // é«˜é€ŸåŒ–ã®ãŸã‚ã®éãƒãƒ¼ãƒãƒ£ãƒ«ãªå®Ÿè£…
             std::pair<OpInfo**, int> GetOpBody(PC pc);
 
             ISAInfoType m_alpha64Info;
             std::vector<EmulatorUtility::ProcessState*> m_processes;
             ConverterType m_insnConverter;
 
-            // •ÏŠ·‚µ‚½Œ‹‰Ê‚Ì OpInfo ‚ğƒLƒƒƒbƒVƒ…
+            // å¤‰æ›ã—ãŸçµæœã® OpInfo ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥
             boost::pool<> m_opInfoArrayPool;
             boost::object_pool< OpInfoType > m_opInfoPool;
             boost::object_pool< ExtraOpInfoWrapper<ISAInfoType> > m_exOpInfoWrapperPool;
@@ -119,17 +119,17 @@ namespace Onikiri {
                     return (size_t)((value >> 26) ^ value);
                 }
             };
-            // ƒAƒhƒŒƒX‚©‚çC‚»‚ÌƒAƒhƒŒƒX‚Ì–½—ß‚É‘Î‰‚·‚éOpInfo‚ğ“¾‚é
+            // ã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰ï¼Œãã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã®å‘½ä»¤ã«å¯¾å¿œã™ã‚‹OpInfoã‚’å¾—ã‚‹
             typedef std::pair<OpInfo**, int> OpInfoArray;
             std::vector< std::vector< OpInfoArray > > m_ProcessOpInfoCache;
-            // –½—ßŒê‚©‚çCopInfoArray ’†‚Ì‘Î‰‚·‚éOpInfo‚Ìƒ|ƒCƒ“ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^‚Æ OpInfo ‚Ì”‚ğ“¾‚é
+            // å‘½ä»¤èªã‹ã‚‰ï¼ŒopInfoArray ä¸­ã®å¯¾å¿œã™ã‚‹OpInfoã®ãƒã‚¤ãƒ³ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã¨ OpInfo ã®æ•°ã‚’å¾—ã‚‹
             typedef unordered_map<u32, OpInfoArray, CodeWordHash> CodeWordOpInfoMap;
             CodeWordOpInfoMap m_codeWordToOpInfo;
 
             // param_map
             int m_processCount;
             
-            // ŠO•”–½—ßƒfƒR[ƒ_
+            // å¤–éƒ¨å‘½ä»¤ãƒ‡ã‚³ãƒ¼ãƒ€
             ExtraOpDecoderIF* m_extraOpDecoder;
 
             // CRCs of PCs and results of all retired ops.
@@ -168,7 +168,7 @@ namespace Onikiri {
                 m_extraOpDecoder(0),
                 m_enableResultCRC( false )
         {
-            // param, ƒvƒƒZƒXî•ñ“Ç‚İ‚İ
+            // param, ãƒ—ãƒ­ã‚»ã‚¹æƒ…å ±èª­ã¿è¾¼ã¿
             LoadParam();
             if (!CreateProcesses(simSystem)) {
                 THROW_RUNTIME_ERROR("failed to create target processes.");
@@ -211,7 +211,7 @@ namespace Onikiri {
             return true;
         }
 
-        // ŠO•”–½—ßƒfƒR[ƒ_‚ğƒZƒbƒg‚·‚é
+        // å¤–éƒ¨å‘½ä»¤ãƒ‡ã‚³ãƒ¼ãƒ€ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
         template <class Traits>
         void CommonEmulator<Traits>::SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder ) 
         {
@@ -243,9 +243,9 @@ namespace Onikiri {
         {
             ProcessState* process = m_processes[pc.pid];
 
-            // ƒvƒƒZƒX‚²‚Æ‚ÌƒLƒƒƒbƒVƒ…‚ğ‚Ü‚¸Œ©‚é
+            // ãƒ—ãƒ­ã‚»ã‚¹ã”ã¨ã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’ã¾ãšè¦‹ã‚‹
             const std::pair<u64, size_t> codeRange = process->GetCodeRange();
-            // ’Z—“I•]‰¿‚ğ–³Œø‚É‚µ•ªŠò‚ğŒ¸‚ç‚·‚½‚ß‚É && ‚Å‚Í‚È‚­ & ‚ğg—p
+            // çŸ­çµ¡çš„è©•ä¾¡ã‚’ç„¡åŠ¹ã«ã—åˆ†å²ã‚’æ¸›ã‚‰ã™ãŸã‚ã« && ã§ã¯ãªã & ã‚’ä½¿ç”¨
             bool withinCodeRange = (codeRange.first <= pc.address) & (pc.address < codeRange.first+codeRange.second);
 
             OpInfoArray* processOpInfoCacheEntry = NULL;
@@ -255,12 +255,12 @@ namespace Onikiri {
                     return *processOpInfoCacheEntry;
             }
 
-            // –½—ßŒê‚ğæ“¾
+            // å‘½ä»¤èªã‚’å–å¾—
             EmuMemAccess codeAccess( pc.address, 4 );
             process->GetMemorySystem()->ReadMemory( &codeAccess );
             u32 codeWord = (u32)codeAccess.value;
 
-            // –½—ßŒê‚ğƒL[‚Æ‚µ‚½ƒLƒƒƒbƒVƒ…‚ğŒ©‚é
+            // å‘½ä»¤èªã‚’ã‚­ãƒ¼ã¨ã—ãŸã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’è¦‹ã‚‹
             typename CodeWordOpInfoMap::iterator e = m_codeWordToOpInfo.find(codeWord);
             if (e != m_codeWordToOpInfo.end()) {
                 if (processOpInfoCacheEntry)
@@ -268,7 +268,7 @@ namespace Onikiri {
                 return e->second;
             }
             else {
-                // –¢•ÏŠ·‚È‚ç‚Î•ÏŠ·‚ğs‚¤
+                // æœªå¤‰æ›ãªã‚‰ã°å¤‰æ›ã‚’è¡Œã†
                 std::pair<ExtraOpInfoIF**, int> decodedExOps;
                 std::vector<OpInfoType> tempOpInfo;
                 OpInfo** opInfoArray;
@@ -277,10 +277,10 @@ namespace Onikiri {
                 if( m_extraOpDecoder &&
                     m_extraOpDecoder->Decode( codeWord, &decodedExOps ) 
                 ){
-                    // ŠO•”ƒfƒR[ƒ_‚Å–½—ßƒfƒR[ƒh‚ªs‚í‚ê‚½ê‡C
-                    // ExtraOpInfoWrapper ‚ÉƒfƒR[ƒhŒ‹‰Ê‚ğŠi”[
+                    // å¤–éƒ¨ãƒ‡ã‚³ãƒ¼ãƒ€ã§å‘½ä»¤ãƒ‡ã‚³ãƒ¼ãƒ‰ãŒè¡Œã‚ã‚ŒãŸå ´åˆï¼Œ
+                    // ExtraOpInfoWrapper ã«ãƒ‡ã‚³ãƒ¼ãƒ‰çµæœã‚’æ ¼ç´
 
-                    // •ÏŠ·Œ‹‰Ê‚ğŠi”[‚·‚éƒ|ƒCƒ“ƒ^‚Ì”z—ñ‚ğ opInfoArrayPool ‚ÉŠm•Û‚·‚é
+                    // å¤‰æ›çµæœã‚’æ ¼ç´ã™ã‚‹ãƒã‚¤ãƒ³ã‚¿ã®é…åˆ—ã‚’ opInfoArrayPool ã«ç¢ºä¿ã™ã‚‹
                     nOps = decodedExOps.second;
                     opInfoArray = (OpInfo**)m_opInfoArrayPool.ordered_malloc( nOps );
                     for( int i = 0; i < nOps; i++ ){
@@ -292,17 +292,17 @@ namespace Onikiri {
                 else{
                     m_insnConverter.Convert(codeWord, back_inserter(tempOpInfo));
 
-                    // •ÏŠ·Œ‹‰Ê‚ğŠi”[‚·‚éƒ|ƒCƒ“ƒ^‚Ì”z—ñ‚ğ opInfoArrayPool ‚ÉŠm•Û‚·‚é
+                    // å¤‰æ›çµæœã‚’æ ¼ç´ã™ã‚‹ãƒã‚¤ãƒ³ã‚¿ã®é…åˆ—ã‚’ opInfoArrayPool ã«ç¢ºä¿ã™ã‚‹
                     nOps = (int)tempOpInfo.size();
                     opInfoArray = (OpInfo**)m_opInfoArrayPool.ordered_malloc(nOps);
                     for (int i = 0; i < nOps; i ++) {
-                        // opInfoPool ‚É •ÏŠ·Œ‹‰Ê‚Ì opInfo ‚ÌƒRƒs[‚ğì¬‚µCopInfoArray ‚ÉŠi”[
+                        // opInfoPool ã« å¤‰æ›çµæœã® opInfo ã®ã‚³ãƒ”ãƒ¼ã‚’ä½œæˆã—ï¼ŒopInfoArray ã«æ ¼ç´
                         opInfoArray[i] = m_opInfoPool.construct(tempOpInfo[i]);
                     }
                 }
 
 
-                // ƒLƒƒƒbƒVƒ…‚ÉŠi”[‚µ‚ÄŒ‹‰Ê‚ğ•Ô‚·
+                // ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«æ ¼ç´ã—ã¦çµæœã‚’è¿”ã™
                 OpInfoArray result(opInfoArray, nOps);
                 m_codeWordToOpInfo[codeWord] = result;
                 if (processOpInfoCacheEntry)
@@ -331,10 +331,10 @@ namespace Onikiri {
             int pid = op->GetPC().pid;
             ProcessState* process = m_processes[pid];
 
-            // –½—ß‚ğÀs‚·‚é
-            OpEmulationState opState(op, opInfo, process);  // op‚©‚çƒIƒyƒ‰ƒ“ƒh“™‚ğ“Ç‚ñ‚Å OpEmulationState ‚ğ\’z
+            // å‘½ä»¤ã‚’å®Ÿè¡Œã™ã‚‹
+            OpEmulationState opState(op, opInfo, process);  // opã‹ã‚‰ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç­‰ã‚’èª­ã‚“ã§ OpEmulationState ã‚’æ§‹ç¯‰
             opInfo->GetEmulationFunc()(&opState);
-            opState.ApplyEmulationState<OpInfoType>();  // op ‚É’l‚ğİ’è
+            opState.ApplyEmulationState<OpInfoType>();  // op ã«å€¤ã‚’è¨­å®š
             process->GetVirtualSystem()->AddInsnTick();
         }
 
@@ -377,12 +377,12 @@ namespace Onikiri {
                 OpInfo** opInfoArray = ops_pair.first;
                 int opCount = ops_pair.second;
 
-                // opInfoArray ‚Ì–½—ß‚ğ‘S‚ÄÀs
+                // opInfoArray ã®å‘½ä»¤ã‚’å…¨ã¦å®Ÿè¡Œ
                 for (int opIndex = 0; opIndex < opCount; opIndex ++) {
                     totalOpCount++;
                     OpInfoType* opInfo = static_cast<OpInfoType*>( opInfoArray[opIndex] );
                     
-                    OpEmulationState opState(&op, opInfo, process, pc, pc.address + ISAInfoType::InstructionWordBitSize/8, regArray);   // op‚©‚çƒIƒyƒ‰ƒ“ƒh“™‚ğ“Ç‚ñ‚Å OpEmulationState ‚ğ\’z
+                    OpEmulationState opState(&op, opInfo, process, pc, pc.address + ISAInfoType::InstructionWordBitSize/8, regArray);   // opã‹ã‚‰ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç­‰ã‚’èª­ã‚“ã§ OpEmulationState ã‚’æ§‹ç¯‰
                     opInfo->GetEmulationFunc()(&opState);
                     opState.ApplyEmulationStateToRegArray<OpInfoType>(regArray);
 

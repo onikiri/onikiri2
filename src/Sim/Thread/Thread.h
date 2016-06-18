@@ -109,8 +109,8 @@ namespace Onikiri
         bool m_active;
         CheckpointedData<PC> m_fetchPC;
 
-        // ���^�C�A�������ԂɐU����Op�̃C���f�b�N�X
-        // Fetch�̒i�K�ŐU�邽�߁A�`�F�b�N�|�C���g�ŊǗ�����
+        // リタイアした順番に振られるOpのインデックス
+        // Fetchの段階で振るため、チェックポイントで管理する
         CheckpointedData<u64> m_retiredOpID; 
         u64 m_serialOpID; 
 

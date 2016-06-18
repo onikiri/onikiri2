@@ -40,8 +40,8 @@ namespace Onikiri
 {
     class CheckpointMaster;
 
-    // ƒƒ‚ƒŠ‚ÉŠÖ‚·‚éˆË‘¶ŠÖŒW‚Ì—\‘ªŠí
-    // ÅŒã‚Éfetch‚³‚ê‚½æs‚Ìstore–½—ß‚ÉˆË‘¶‚·‚é‚Æ—\‘ª‚·‚é
+    // ãƒ¡ãƒ¢ãƒªã«é–¢ã™ã‚‹ä¾å­˜é–¢ä¿‚ã®äºˆæ¸¬å™¨
+    // æœ€å¾Œã«fetchã•ã‚ŒãŸå…ˆè¡Œã®storeå‘½ä»¤ã«ä¾å­˜ã™ã‚‹ã¨äºˆæ¸¬ã™ã‚‹
     class ConservativeMemDepPred :
         public MemDepPredIF,
         public PhysicalResourceNode

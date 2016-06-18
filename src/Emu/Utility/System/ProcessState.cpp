@@ -171,11 +171,11 @@ void ProcessState::Init(
 
         m_codeRange = m_loader->GetCodeRange();
 
-        // mmap‚Ég‚¤ƒq[ƒv‚ğCƒAƒhƒŒƒX‹óŠÔã‚Å0‚©‚çƒoƒCƒiƒŠƒCƒ[ƒW‚Ì
-        // ’¼‘O‚Ü‚ÅŠm•Û‚·‚é (ƒAƒhƒŒƒX0‚Ìƒ}ƒbƒv’PˆÊ‚ÍŠÜ‚Ü‚È‚¢)
+        // mmapã«ä½¿ã†ãƒ’ãƒ¼ãƒ—ã‚’ï¼Œã‚¢ãƒ‰ãƒ¬ã‚¹ç©ºé–“ä¸Šã§0ã‹ã‚‰ãƒã‚¤ãƒŠãƒªã‚¤ãƒ¡ãƒ¼ã‚¸ã®
+        // ç›´å‰ã¾ã§ç¢ºä¿ã™ã‚‹ (ã‚¢ãƒ‰ãƒ¬ã‚¹0ã®ãƒãƒƒãƒ—å˜ä½ã¯å«ã¾ãªã„)
         //u64 heapBase = m_memorySystem->GetPageSize();
 
-        // ‹Sa‚Å—\–ñ‚³‚ê‚Ä‚¢‚È‚¢‚Æ‚±‚ë‚©‚ç
+        // é¬¼æ–¬ã§äºˆç´„ã•ã‚Œã¦ã„ãªã„ã¨ã“ã‚ã‹ã‚‰
         u64 heapBase = m_memorySystem->GetReservedAddressRange() + 1;
         m_memorySystem->AddHeapBlock(heapBase, m_loader->GetImageBase()-heapBase);
 
@@ -200,7 +200,7 @@ void ProcessState::Init(
 
 void ProcessState::InitStack(const ProcessCreateParam& pcp)
 {
-    // ƒXƒ^ƒbƒN‚ÌŠm•Û
+    // ã‚¹ã‚¿ãƒƒã‚¯ã®ç¢ºä¿
     u64 stackMegaBytes = pcp.GetStackMegaBytes();
     if(stackMegaBytes <= 1){
         THROW_RUNTIME_ERROR("Stack size(%d MB) is too small.", stackMegaBytes);
@@ -209,7 +209,7 @@ void ProcessState::InitStack(const ProcessCreateParam& pcp)
     u64 stackBytes = stackMegaBytes*1024*1024;
     u64 stack = m_memorySystem->MMap(0, stackBytes);
 
-    // ˆø”‚Ìİ’è
+    // å¼•æ•°ã®è¨­å®š
     string targetBase = pcp.GetTargetBasePath();
     m_loader->InitArgs(
         m_memorySystem,
@@ -226,7 +226,7 @@ void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
         CompletePath( pcp.GetTargetWorkPath(), targetBase );
 
 
-    // stdin stdout stderr ‚Ìİ’è
+    // stdin stdout stderr ã®è¨­å®š
     String omode[3] = {"rt", "wt", "wt"};
     int std_fd[3] = 
     {
@@ -241,7 +241,7 @@ void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
         pcp.GetStderrFilename()
     };
 
-    // STDIN ‚Ìƒtƒ@ƒCƒ‹ƒI[ƒvƒ“ƒ‚[ƒh
+    // STDIN ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³ãƒ¢ãƒ¼ãƒ‰
     if( pcp.GetStdinFileOpenMode() == "Text" ){
         omode[0] = "rt";
     }
@@ -254,7 +254,7 @@ void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
 
     for (int i = 0; i < 3; i ++) {
         if (std_filename[i].empty()) {
-            // “üo—Í‚Æ‚µ‚Äw’è‚³‚ê‚½ƒtƒ@ƒCƒ‹–¼‚ª‹ó‚È‚ç‚ÎƒzƒXƒg‚Ì“üo—Í‚ğg—p‚·‚é
+            // å…¥å‡ºåŠ›ã¨ã—ã¦æŒ‡å®šã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«åãŒç©ºãªã‚‰ã°ãƒ›ã‚¹ãƒˆã®å…¥å‡ºåŠ›ã‚’ä½¿ç”¨ã™ã‚‹
             m_virtualSystem->AddFDMap(std_fd[i], std_fd[i], false);
             m_virtualSystem->GetDelayUnlinker()->AddMap(std_fd[i], "HostIO");
         }

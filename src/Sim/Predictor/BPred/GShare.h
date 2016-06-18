@@ -30,9 +30,9 @@
 
 
 //
-// GShare‚ÌŽÀ‘•
-// PHT‚ÆGlobalHistory‚ðŽ‚¿A‚»‚ê‚¼‚ê‚ÌXV‚ð—\‘ªŽž/‚És‚¤
-// —\‘ªƒ~ƒXŽž‚É‚ÍCheckpoint‚É‚æ‚Á‚ÄŽ©“®“I‚ÉXVŒ‹‰Ê‚ªŠª‚«–ß‚³‚ê‚é
+// GShareã®å®Ÿè£…
+// PHTã¨GlobalHistoryã‚’æŒã¡ã€ãã‚Œãžã‚Œã®æ›´æ–°ã‚’äºˆæ¸¬æ™‚/ã«è¡Œã†
+// äºˆæ¸¬ãƒŸã‚¹æ™‚ã«ã¯Checkpointã«ã‚ˆã£ã¦è‡ªå‹•çš„ã«æ›´æ–°çµæžœãŒå·»ãæˆ»ã•ã‚Œã‚‹
 //
 
 #ifndef __GSHARE_H__
@@ -108,24 +108,24 @@ namespace Onikiri
         GShare();
         virtual ~GShare();
 
-        // ‰Šú‰»
+        // åˆæœŸåŒ–
         void Initialize(InitPhase phase);
 
-        // •ªŠò‚Ì•ûŒü‚ð—\‘ª
+        // åˆ†å²ã®æ–¹å‘ã‚’äºˆæ¸¬
         bool Predict(OpIterator op, PC predIndexPC);
 
         //
-        // ŽÀsŠ®—¹
-        // ÄŽÀs‚Å•¡”‰ñŒÄ‚Î‚ê‚é‰Â”\«‚ª‚ ‚é
-        // ‚Ü‚½AŠÔˆá‚Á‚Ä‚¢‚éŒ‹‰Ê‚ðŽ‚Á‚Ä‚¢‚é‰Â”\«‚à‚ ‚é
+        // å®Ÿè¡Œå®Œäº†
+        // å†å®Ÿè¡Œã§è¤‡æ•°å›žå‘¼ã°ã‚Œã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹
+        // ã¾ãŸã€é–“é•ã£ã¦ã„ã‚‹çµæžœã‚’æŒã£ã¦ã„ã‚‹å¯èƒ½æ€§ã‚‚ã‚ã‚‹
         //
-        // op‚ÌŽÀsŠ®—¹Žž‚ÉPHT‚ÌUpdate‚ðs‚¤
+        // opã®å®Ÿè¡Œå®Œäº†æ™‚ã«PHTã®Updateã‚’è¡Œã†
         void Finished(OpIterator op);
 
-        // op‚ÌretireŽž‚Ì“®ì
+        // opã®retireæ™‚ã®å‹•ä½œ
         void Retired(OpIterator op);
 
-        // PC‚É‘Î‰ž‚·‚éPHT‚ÌƒCƒ“ƒfƒbƒNƒX‚ð•Ô‚·
+        // PCã«å¯¾å¿œã™ã‚‹PHTã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¿”ã™
         int GetPHTIndex(int localThreadID, const PC& pc);
 
     };

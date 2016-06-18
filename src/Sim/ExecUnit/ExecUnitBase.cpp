@@ -100,10 +100,10 @@ int ExecUnitBase::GetMappedCodeCount()
 
 void ExecUnitBase::Execute( OpIterator op )
 {
-    // ExecutionBegin() ‚Å‚ÍƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ªs‚í‚ê‚é
-    // Às‚Ì³‚µ‚³‚ÌŒŸØ‚ğs‚¤‚½‚ß--ÀsƒXƒe[ƒW‚ÌÅ‰‚Ì’iŠK‚ÅC
-    // ³‚µ‚¢ƒ\[ƒXEƒIƒyƒ‰ƒ“ƒh‚ª“¾‚ç‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğŠm‚©‚ß‚é‚½‚ß--
-    // execution stages ‚ÌÅ‰‚ÅƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğs‚¤D
+    // ExecutionBegin() ã§ã¯ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ãŒè¡Œã‚ã‚Œã‚‹
+    // å®Ÿè¡Œã®æ­£ã—ã•ã®æ¤œè¨¼ã‚’è¡Œã†ãŸã‚--å®Ÿè¡Œã‚¹ãƒ†ãƒ¼ã‚¸ã®æœ€åˆã®æ®µéšã§ï¼Œ
+    // æ­£ã—ã„ã‚½ãƒ¼ã‚¹ãƒ»ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒå¾—ã‚‰ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’ç¢ºã‹ã‚ã‚‹ãŸã‚--
+    // execution stages ã®æœ€åˆã§ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¡Œã†ï¼
 
     // When a multi-issue mode is enabled, Execute() need to be called more than once,
     // because access order violation is detected from 'executed' load ops.
@@ -131,7 +131,7 @@ void ExecUnitBase::RegisterEvents( OpIterator op, const int latency )
         // Multi issue mode
         const LatPredResult::Scheduling& schd = op->GetLatPredRsult().Get(0);
         if( schd.latency == latency ){
-            RegisterFinishEvent( op, latency ); // ÀsI—¹ƒCƒxƒ“ƒg‚Ì“o˜^
+            RegisterFinishEvent( op, latency ); // å®Ÿè¡Œçµ‚äº†ã‚¤ãƒ™ãƒ³ãƒˆã®ç™»éŒ²
         }
         else{
             RegisterRescheduleEvent( op, latency, &issueState );
@@ -143,8 +143,8 @@ void ExecUnitBase::RegisterEvents( OpIterator op, const int latency )
             THROW_RUNTIME_ERROR( "An op is executed more than once." );
         }
         else{
-            RegisterFinishEvent( op, latency ); // ÀsI—¹ƒCƒxƒ“ƒg‚Ì“o˜^
-            RegisterDetectEvent( op, latency ); // —\‘ªƒ~ƒXŒŸoƒCƒxƒ“ƒg‚Ì“o˜^
+            RegisterFinishEvent( op, latency ); // å®Ÿè¡Œçµ‚äº†ã‚¤ãƒ™ãƒ³ãƒˆã®ç™»éŒ²
+            RegisterDetectEvent( op, latency ); // äºˆæ¸¬ãƒŸã‚¹æ¤œå‡ºã‚¤ãƒ™ãƒ³ãƒˆã®ç™»éŒ²
         }
     }
 
@@ -156,11 +156,11 @@ void ExecUnitBase::RegisterEvents( OpIterator op, const int latency )
 
 void ExecUnitBase::RegisterFinishEvent( OpIterator op, const int latency )
 {
-    // finish ƒCƒxƒ“ƒg‚ğ“o˜^‚·‚é
+    // finish ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™»éŒ²ã™ã‚‹
     EventPtr finishEvent(
         OpFinishEvent::Construct( op ));
-    // RegisterFinishEvent ‚Í–½—ß‚ÌÀsŠJn(OpExecuteEvent)‚ÉŒÄ‚Î‚ê‚é
-    // ‚»‚Ì‚½‚ß Finish ‚·‚é‚Ì‚ÍÀsƒŒƒCƒeƒ“ƒV-1 ƒTƒCƒNƒ‹Œã
+    // RegisterFinishEvent ã¯å‘½ä»¤ã®å®Ÿè¡Œé–‹å§‹æ™‚(OpExecuteEvent)ã«å‘¼ã°ã‚Œã‚‹
+    // ãã®ãŸã‚ Finish ã™ã‚‹ã®ã¯å®Ÿè¡Œãƒ¬ã‚¤ãƒ†ãƒ³ã‚·-1 ã‚µã‚¤ã‚¯ãƒ«å¾Œ
     op->AddEvent( 
         finishEvent,
         op->GetScheduler()->GetLowerPipeline(), 
@@ -258,21 +258,21 @@ void ExecUnitBase::RegisterRescheduleEvent( OpIterator op, const int latency, Is
 
 }
 
-// OpClass ‚©‚çæ‚è‚¤‚éƒŒƒCƒeƒ“ƒV‚Ìí—Ş‚Ì”‚ğ•Ô‚·
+// OpClass ã‹ã‚‰å–ã‚Šã†ã‚‹ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã®ç¨®é¡ã®æ•°ã‚’è¿”ã™
 int ExecUnitBase::GetLatencyCount(const OpClass& opClass)
 {
-    // ’Êí‚Ì‰‰ZŠí‚Å‚ÍƒŒƒCƒeƒ“ƒV‚ÍŒÅ’è
+    // é€šå¸¸ã®æ¼”ç®—å™¨ã§ã¯ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã¯å›ºå®š
     return 1;
 }
 
-// OpClass ‚ÆƒCƒ“ƒfƒNƒX‚©‚çƒŒƒCƒeƒ“ƒV‚ğ•Ô‚·
+// OpClass ã¨ã‚¤ãƒ³ãƒ‡ã‚¯ã‚¹ã‹ã‚‰ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™
 int ExecUnitBase::GetLatency(const OpClass& opClass, int index)
 {
-    // ’P‚ÉExecLatencyInfo‚ğ‚Ğ‚¢‚Ä‚©‚¦‚·
+    // å˜ã«ExecLatencyInfoã‚’ã²ã„ã¦ã‹ãˆã™
     return m_execLatencyInfo->GetLatency(opClass.GetCode());
 }
 
-// –ˆƒTƒCƒNƒ‹ŒÄ‚Î‚ê‚é
+// æ¯ã‚µã‚¤ã‚¯ãƒ«å‘¼ã°ã‚Œã‚‹
 void ExecUnitBase::Begin()
 {
     m_reserver.Begin();

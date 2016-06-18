@@ -81,27 +81,27 @@ namespace Onikiri {
             void Flush();
         };
 
-        // target ‚ÌƒAƒhƒŒƒX‚©‚ç host ‚ÌƒAƒhƒŒƒX‚Ö‚Ì•ÏŠ·‚ğs‚¤ƒNƒ‰ƒX
+        // target ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰ host ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã¸ã®å¤‰æ›ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹
         class PageTable
         {
         public:
-            // ƒ}ƒbƒv’PˆÊ‚ğƒIƒtƒZƒbƒg‚Åw’è‚µ‚Ä PageTable ‚ğ\’z‚·‚é (PageSize = 1 << offsetBits)
+            // ãƒãƒƒãƒ—å˜ä½ã‚’ã‚ªãƒ•ã‚»ãƒƒãƒˆã§æŒ‡å®šã—ã¦ PageTable ã‚’æ§‹ç¯‰ã™ã‚‹ (PageSize = 1 << offsetBits)
             explicit PageTable(int offsetBits);
             ~PageTable();
 
-            // \’z‚Éİ’è‚³‚ê‚½ƒy[ƒWƒTƒCƒY‚ğ“¾‚é
+            // æ§‹ç¯‰æ™‚ã«è¨­å®šã•ã‚ŒãŸãƒšãƒ¼ã‚¸ã‚µã‚¤ã‚ºã‚’å¾—ã‚‹
             size_t GetPageSize() const;
 
-            // \’z‚Éİ’è‚³‚ê‚½ƒIƒtƒZƒbƒg‚Ìƒrƒbƒg”‚ğ“¾‚é
+            // æ§‹ç¯‰æ™‚ã«è¨­å®šã•ã‚ŒãŸã‚ªãƒ•ã‚»ãƒƒãƒˆã®ãƒ“ãƒƒãƒˆæ•°ã‚’å¾—ã‚‹
             int GetOffsetBits() const;
 
-            // ƒAƒhƒŒƒX‚Ìƒy[ƒWŠO•”•ª‚Ì‚İ‚Ìƒ}ƒXƒN
+            // ã‚¢ãƒ‰ãƒ¬ã‚¹ã®ãƒšãƒ¼ã‚¸å¤–éƒ¨åˆ†ã®ã¿ã®ãƒã‚¹ã‚¯
             u64 GetOffsetMask() const;
 
-            // target ‚ÌƒAƒhƒŒƒX addr ‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚é host ‚Ì•¨—ƒƒ‚ƒŠƒAƒhƒŒƒX‚ğ“¾‚é
+            // target ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ addr ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ host ã®ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å¾—ã‚‹
             void *TargetToHost(u64 addr);
 
-            // target ƒAƒhƒŒƒX‹óŠÔ‚ÌtargetAddr‚ğŠÜ‚Şƒ}ƒbƒv’PˆÊ‚ÉChostAddr ‚Ì•¨—ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚é (PageSize ƒoƒCƒg)
+            // target ã‚¢ãƒ‰ãƒ¬ã‚¹ç©ºé–“ã®targetAddrã‚’å«ã‚€ãƒãƒƒãƒ—å˜ä½ã«ï¼ŒhostAddr ã®ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹ (PageSize ãƒã‚¤ãƒˆ)
             // Set an attribute ('attr') to target page.
             void AddMap(u64 targetAddr, u8* hostAddr, VIRTUAL_MEMORY_ATTR_TYPE attr);
             bool IsMapped(u64 targetAddr) const;
@@ -110,15 +110,15 @@ namespace Onikiri {
             // Set an attribute ('dstAttr') to target page.
             void CopyMap( u64 dstTargetAddr, u64 srcTargetAddr, VIRTUAL_MEMORY_ATTR_TYPE dstAttr );
 
-            // targetAddr‚ğŠÜ‚Şƒ}ƒbƒv’PˆÊ‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½ƒGƒ“ƒgƒŠ‚ğ‘‚«‚Ş/“¾‚é
+            // targetAddrã‚’å«ã‚€ãƒãƒƒãƒ—å˜ä½ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸã‚¨ãƒ³ãƒˆãƒªã‚’æ›¸ãè¾¼ã‚€/å¾—ã‚‹
             bool GetMap( u64 targetAddr, PageTableEntry* page );
             bool SetMap( u64 targetAddr, const PageTableEntry& page );
 
             // Get a reference count of a page including targetAddr
             int GetPageReferenceCount( u64 targetAddr ); 
 
-            // targetAddr‚ğŠÜ‚Şƒ}ƒbƒv’PˆÊ‚Ö‚ÌŠ„‚è“–‚Ä‚ğ‰ğœ‚·‚é
-            // •Ô‚è’l‚Í‰ğœŒã‚ÌƒŠƒtƒ@ƒŒƒ“ƒXƒJƒEƒ“ƒg
+            // targetAddrã‚’å«ã‚€ãƒãƒƒãƒ—å˜ä½ã¸ã®å‰²ã‚Šå½“ã¦ã‚’è§£é™¤ã™ã‚‹
+            // è¿”ã‚Šå€¤ã¯è§£é™¤å¾Œã®ãƒªãƒ•ã‚¡ãƒ¬ãƒ³ã‚¹ã‚«ã‚¦ãƒ³ãƒˆ
             int RemoveMap(u64 targetAddr);
 
         private:
@@ -149,7 +149,7 @@ namespace Onikiri {
             VirtualMemory( int pid, bool bigEndian, SystemIF* simSystem );
             ~VirtualMemory();
 
-            // ƒƒ‚ƒŠ“Ç‚İ‘‚«
+            // ãƒ¡ãƒ¢ãƒªèª­ã¿æ›¸ã
             void ReadMemory( MemAccess* access );
             void WriteMemory( MemAccess* access );
 
@@ -161,33 +161,33 @@ namespace Onikiri {
             // Note: These functions ignore page attribute.
             //
 
-            // targetAddr‚©‚çsizeƒoƒCƒg‚Évalue‚Ì’l‚ğ‘‚«‚Ş
+            // targetAddrã‹ã‚‰sizeãƒã‚¤ãƒˆã«valueã®å€¤ã‚’æ›¸ãè¾¼ã‚€
             void TargetMemset(u64 targetAddr, int value, u64 size);
-            // target ‚ÌƒAƒhƒŒƒX src ‚©‚çChost ‚ÌƒAƒhƒŒƒX dst ‚É size ƒoƒCƒg‚ğƒRƒs[‚·‚é
+            // target ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ src ã‹ã‚‰ï¼Œhost ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ dst ã« size ãƒã‚¤ãƒˆã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
             void MemCopyToHost(void* dst, u64 src, u64 size);
-            // host ‚ÌƒAƒhƒŒƒX src ‚©‚çCtarget ‚ÌƒAƒhƒŒƒX dst ‚É size ƒoƒCƒg‚ğƒRƒs[‚·‚é
+            // host ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ src ã‹ã‚‰ï¼Œtarget ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ dst ã« size ãƒã‚¤ãƒˆã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
             void MemCopyToTarget(u64 dst, const void* src, u64 size);
 
-            // ƒƒ‚ƒŠŠÇ—
+            // ãƒ¡ãƒ¢ãƒªç®¡ç†
             u64 GetPageSize() const;
 
-            // addr ‚ğŠÜ‚Şƒy[ƒW‚É•¨—ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚éDAddHeapBlock‚µ‚½—Ìˆæ‚Æd‚È‚Á‚Ä‚¢‚Ä‚Í‚È‚ç‚È‚¢
+            // addr ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹ï¼AddHeapBlockã—ãŸé ˜åŸŸã¨é‡ãªã£ã¦ã„ã¦ã¯ãªã‚‰ãªã„
             void AssignPhysicalMemory(u64 addr, VIRTUAL_MEMORY_ATTR_TYPE attr);
-            // [addr, addr+size) ‚ğŠÜ‚Şƒy[ƒW‚É•¨—ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚éD“¯ã
+            // [addr, addr+size) ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹ï¼åŒä¸Š
             void AssignPhysicalMemory(u64 addr, u64 size, VIRTUAL_MEMORY_ATTR_TYPE attr);
-            // addr ‚ğŠÜ‚Şƒy[ƒW‚ÉŠ„‚è“–‚Ä‚½•¨—ƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚é
+            // addr ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«å‰²ã‚Šå½“ã¦ãŸç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ã™ã‚‹
             void FreePhysicalMemory(u64 addr);
-            // [addr, addr+size) ‚ğŠÜ‚Şƒy[ƒW‚ÉŠ„‚è“–‚Ä‚½•¨—ƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚é
+            // [addr, addr+size) ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«å‰²ã‚Šå½“ã¦ãŸç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ã™ã‚‹
             void FreePhysicalMemory(u64 addr, u64 size);
             
-            // dstAddr ‚ğŠÜ‚Şƒy[ƒW‚É srcAddr ‚ğŠÜ‚Şƒy[ƒW‚ÉŒ»İŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚é•¨—ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚éD
+            // dstAddr ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã« srcAddr ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç¾åœ¨å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹ï¼
             void SetPhysicalMemoryMapping( u64 dstAddr, u64 srcAddr, VIRTUAL_MEMORY_ATTR_TYPE attr );
-            // [dstAddr, dstAddr+size) ‚ğŠÜ‚Şƒy[ƒW‚É•¨—ƒƒ‚ƒŠƒ}ƒbƒsƒ“ƒO‚ğƒZƒbƒg‚·‚éD“¯ã
+            // [dstAddr, dstAddr+size) ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç‰©ç†ãƒ¡ãƒ¢ãƒªãƒãƒƒãƒ”ãƒ³ã‚°ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼åŒä¸Š
             void SetPhysicalMemoryMapping( u64 dstAddr, u64 srcAddr, u64 size, VIRTUAL_MEMORY_ATTR_TYPE attr );
 
-            // addr ‚ğŠÜ‚Şƒy[ƒW‚É•¨—ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚ÄCaddr ‚ğŠÜ‚Şƒy[ƒW‚ÉŒ»İŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚½ƒf[ƒ^‚ğƒRƒs[
+            // addr ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã¦ï¼Œaddr ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç¾åœ¨å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãŸãƒ‡ãƒ¼ã‚¿ã‚’ã‚³ãƒ”ãƒ¼
             void AssignAndCopyPhysicalMemory( u64 addr, VIRTUAL_MEMORY_ATTR_TYPE attr  );
-            // [dstAddr, dstAddr+size) ‚ğŠÜ‚Şƒy[ƒW‚É“¯ã
+            // [dstAddr, dstAddr+size) ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«åŒä¸Š
             void AssignAndCopyPhysicalMemory( u64 addr, u64 size, VIRTUAL_MEMORY_ATTR_TYPE attr );
 
             // Write a page attribute to a page including 'addr'.
@@ -197,16 +197,16 @@ namespace Onikiri {
             // Return whether copy-on-write is done or not.
             bool CopyPageOnWrite( u64 addr );
 
-            // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚©‚Ç‚¤‚©
+            // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‹ã©ã†ã‹
             bool IsBigEndian() const {
                 return m_bigEndian;
             }
 
         private:
-            // addr ‚©‚ç size ƒoƒCƒg‚Ìƒƒ‚ƒŠ—Ìˆæ‚ğCƒ}ƒbƒv’PˆÊ‹«ŠE‚Å•ªŠ„‚·‚é
-            // Œ‹‰Ê‚ÍCMemoryBlock‚ÌƒRƒ“ƒeƒi‚Ö‚ÌƒCƒeƒŒ[ƒ^ Iter ‚ğ’Ê‚µ‚ÄŠi”[‚·‚é
-            // –ß‚è’l‚Í•ªŠ„‚³‚ê‚½ŒÂ”
-            // ¦ Iter‚ÍC“TŒ^“I‚É‚ÍMemoryBlock‚ÌƒRƒ“ƒeƒi‚Ìinserter
+            // addr ã‹ã‚‰ size ãƒã‚¤ãƒˆã®ãƒ¡ãƒ¢ãƒªé ˜åŸŸã‚’ï¼Œãƒãƒƒãƒ—å˜ä½å¢ƒç•Œã§åˆ†å‰²ã™ã‚‹
+            // çµæœã¯ï¼ŒMemoryBlockã®ã‚³ãƒ³ãƒ†ãƒŠã¸ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ Iter ã‚’é€šã—ã¦æ ¼ç´ã™ã‚‹
+            // æˆ»ã‚Šå€¤ã¯åˆ†å‰²ã•ã‚ŒãŸå€‹æ•°
+            // â€» Iterã¯ï¼Œå…¸å‹çš„ã«ã¯MemoryBlockã®ã‚³ãƒ³ãƒ†ãƒŠã®inserter
             template <typename Iter>
             int SplitAtMapUnitBoundary(u64 addr, u64 size, Iter e) const;
 
@@ -221,13 +221,13 @@ namespace Onikiri {
             PageTable m_pageTbl;
             boost::pool<> m_pool;
 
-            // ƒƒ‚ƒŠŠm•ÛC‰ğ•ú‚ÉƒVƒ~ƒ…ƒŒ[ƒ^‚ÉƒR[ƒ‹ƒoƒbƒN‚ğ“Š‚°‚é‚½‚ß‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+            // ãƒ¡ãƒ¢ãƒªç¢ºä¿ï¼Œè§£æ”¾æ™‚ã«ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’æŠ•ã’ã‚‹ãŸã‚ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
             SystemIF* m_simSystem;
 
             // PID
             int m_pid;
 
-            // ƒ^[ƒQƒbƒg‚ªƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚©‚Ç‚¤‚©
+            // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‹ã©ã†ã‹
             bool m_bigEndian;
 
         };

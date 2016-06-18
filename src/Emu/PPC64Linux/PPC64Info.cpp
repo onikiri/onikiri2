@@ -51,7 +51,7 @@ int PPC64Info::GetRegisterSegmentID(int regNum)
         72,     // SPR
         74,     // Flag
         76,     // ADDR
-        77      // Å‘å+1
+        77      // æœ€å¤§+1
     };
     const int nElems = sizeof(segmentRange)/sizeof(segmentRange[0]);
 

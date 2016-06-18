@@ -92,7 +92,7 @@ namespace Onikiri {
                 {
                     s64 a_val;
 
-                    // 32bit/64bit ”Å‚Åƒ|ƒCƒ“ƒ^‚ªˆÙ‚È‚é‚Ì‚ÅCg—p‚µ‚È‚¢D
+                    // 32bit/64bit ç‰ˆã§ãƒã‚¤ãƒ³ã‚¿ãŒç•°ãªã‚‹ã®ã§ï¼Œä½¿ç”¨ã—ãªã„ï¼
                     //void *a_ptr;
                     //void (*a_fcn) (void);
                 } a_un;

@@ -56,7 +56,7 @@ Dependency::~Dependency()
 
 void Dependency::AddConsumer(OpIterator op)
 {
-    // Šù‚É consumer ‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î“o˜^
+    // æ—¢ã« consumer ã¨ã—ã¦ç™»éŒ²ã•ã‚Œã¦ã„ãªã‘ã‚Œã°ç™»éŒ²
     Dependency::ConsumerListType::iterator i = find(m_consumer.begin(), m_consumer.end(), op);
     if( i == m_consumer.end() ) {
         m_consumer.push_back(op);

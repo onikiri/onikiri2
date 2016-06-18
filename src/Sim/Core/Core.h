@@ -69,7 +69,7 @@ namespace Onikiri
 
 
 
-    // ƒRƒA
+    // ã‚³ã‚¢
     class Core : 
         public ClockedResourceBase,
         public PhysicalResourceNode
@@ -129,7 +129,7 @@ namespace Onikiri
         Core();
         virtual ~Core();
 
-        // ‰Šú‰»—pƒƒ\ƒbƒh
+        // åˆæœŸåŒ–ç”¨ãƒ¡ã‚½ãƒƒãƒ‰
         void Initialize(InitPhase phase);
 
         // accessors
@@ -169,13 +169,13 @@ namespace Onikiri
 
         int GetTimeWheelSize() const { return m_timeWheelSize; };
 
-        // ƒŠƒJƒoƒŠ•û–@
-        // ‚±‚Ì–½—ß‚ªƒtƒFƒbƒ`‚³‚ê‚é‘O‚ÌƒCƒ“ƒI[ƒ_[‚ÈƒXƒe[ƒg‚ğƒ`ƒFƒbƒNƒ|ƒCƒ“ƒeƒBƒ“ƒO‚·‚é•K—v‚ª‚ ‚é
-        // ƒAƒNƒZƒXƒI[ƒ_[ƒoƒCƒIƒŒ[ƒVƒ‡ƒ“‚©‚ç‚ÌÄƒtƒFƒbƒ`‚É‚æ‚éƒŠƒJƒoƒŠ‚É•K—v
+        // ãƒªã‚«ãƒãƒªæ–¹æ³•
+        // ã“ã®å‘½ä»¤ãŒãƒ•ã‚§ãƒƒãƒã•ã‚Œã‚‹å‰ã®ã‚¤ãƒ³ã‚ªãƒ¼ãƒ€ãƒ¼ãªã‚¹ãƒ†ãƒ¼ãƒˆã‚’ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒ†ã‚£ãƒ³ã‚°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+        // ã‚¢ã‚¯ã‚»ã‚¹ã‚ªãƒ¼ãƒ€ãƒ¼ãƒã‚¤ã‚ªãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‹ã‚‰ã®å†ãƒ•ã‚§ãƒƒãƒã«ã‚ˆã‚‹ãƒªã‚«ãƒãƒªã«å¿…è¦
         bool IsRequiredCheckpointBefore( const PC& pc, const OpInfo* const info );
 
-            // ‚±‚Ì–½—ß‚ªƒtƒFƒbƒ`‚³‚ê‚½Œã‚ÌƒCƒ“ƒI[ƒ_[‚ÈƒXƒe[ƒg‚ğƒ`ƒFƒbƒNƒ|ƒCƒ“ƒeƒBƒ“ƒO‚·‚é•K—v‚ª‚ ‚é
-        // •ªŠò—\‘ªƒ~ƒX‚©‚ç‚ÌƒŠƒJƒoƒŠ‚É•K—v
+            // ã“ã®å‘½ä»¤ãŒãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸå¾Œã®ã‚¤ãƒ³ã‚ªãƒ¼ãƒ€ãƒ¼ãªã‚¹ãƒ†ãƒ¼ãƒˆã‚’ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒ†ã‚£ãƒ³ã‚°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+        // åˆ†å²äºˆæ¸¬ãƒŸã‚¹ã‹ã‚‰ã®ãƒªã‚«ãƒãƒªã«å¿…è¦
         bool IsRequiredCheckpointAfter( const PC& pc, const OpInfo* const info );
 
         // Cycle handler
@@ -203,7 +203,7 @@ namespace Onikiri
     protected:
 
         // member variables
-        int m_opArrayCapacity;      // OpArray ‚Ì Å‘åƒTƒCƒY
+        int m_opArrayCapacity;      // OpArray ã® æœ€å¤§ã‚µã‚¤ã‚º
         int m_timeWheelSize;        // The size of a time wheel.
 
         GlobalClock* m_globalClock;
@@ -225,7 +225,7 @@ namespace Onikiri
         EmulatorIF*     m_emulator;
         BPred*          m_bPred;
 
-        ExecLatencyInfo* m_execLatencyInfo; // –½—ß‚ÌÀsƒŒƒCƒeƒ“ƒV‚Ìî•ñ
+        ExecLatencyInfo* m_execLatencyInfo; // å‘½ä»¤ã®å®Ÿè¡Œãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã®æƒ…å ±
 
         DataPredMissRecovery m_latencyPredRecv;
         DataPredMissRecovery m_addrMatchPredRecv;

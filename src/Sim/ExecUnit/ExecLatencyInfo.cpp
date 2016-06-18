@@ -60,10 +60,10 @@ void ExecLatencyInfo::Initialize(InitPhase phase)
     }
 }
 /*
-// system �ɏ��������Ƀ��C�e���V�������Ă��炤�֐�
+// system に初期化時にレイテンシを教えてもらう関数
 void ExecLatencyInfo::SetLatency(int code, int latency)
 {
-    // code ���ő�̃C���f�b�N�X�ɂȂ�悤�Ɋg������
+    // code が最大のインデックスになるように拡張する
     while(code >= static_cast<int>(m_latency.size())) {
         m_latency.push_back(-1);
     }
@@ -73,11 +73,11 @@ void ExecLatencyInfo::SetLatency(int code, int latency)
 */
 int ExecLatencyInfo::GetLatency( int code ) const 
 {
-    // �͈̓`�F�b�N
+    // 範囲チェック
     ASSERT(code >= 0 && code < static_cast<int>(m_latency.size()), 
         "illegal code %d.", code);
 
-    // ���C�e���V���Z�b�g����Ă��邩�ǂ����̃`�F�b�N
+    // レイテンシがセットされているかどうかのチェック
     ASSERT(m_latency[code] > 0, 
         "latency not set for code %d.", code);
 

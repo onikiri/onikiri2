@@ -41,9 +41,9 @@ namespace Onikiri {
         explicit EmulatorFactory();
         ~EmulatorFactory();
 
-        // Emulator �̃R���X�g���N�^�����Ńv���Z�X�ǂݍ��݂��s�����C
-        // ���̍ۂɃ������m�ۂȂǂ� Notify �� system �ɓ����邽�߂ɁC
-        // ���̎��_��system ��n���Ă����K�v������D
+        // Emulator のコンストラクタ無いでプロセス読み込みを行うが，
+        // その際にメモリ確保などの Notify を system に投げるために，
+        // この時点でsystem を渡しておく必要がある．
         EmulatorIF* Create(const String& systemName, SystemIF* simSystem);
     };
 

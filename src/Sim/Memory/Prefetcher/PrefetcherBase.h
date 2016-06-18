@@ -110,7 +110,7 @@ namespace Onikiri
         //--- CacheAccessNotifieeIF
         // 
 
-        // PendingAccess から各種アクセス終了の通知をうける
+        // PendingAccess 縺九ｉ蜷�遞ｮ繧｢繧ｯ繧ｻ繧ｹ邨ゆｺ�縺ｮ騾夂衍繧偵≧縺代ｋ
         virtual void AccessFinished( 
             const CacheAccess& access, 
             const CacheAccessNotificationParam& param 

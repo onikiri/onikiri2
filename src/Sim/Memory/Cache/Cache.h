@@ -129,36 +129,36 @@ namespace Onikiri
         // --- PendingAccessNotifeeIF
         //
 
-        // PendingAccess ‚©‚çŠeíƒAƒNƒZƒXI—¹‚Ì’Ê’m‚ğ‚¤‚¯‚é
+        // PendingAccess ã‹ã‚‰å„ç¨®ã‚¢ã‚¯ã‚»ã‚¹çµ‚äº†ã®é€šçŸ¥ã‚’ã†ã‘ã‚‹
         void AccessFinished( const Access& addr, const NotifyParam& param );
 
         //
         // --- Cache
         //
 
-        // perfect ‚©‚Ç‚¤‚©‚ğ•Ô‚·
+        // perfect ã‹ã©ã†ã‹ã‚’è¿”ã™
         bool IsPerfect() { return m_perfect > 0; }
         
-        // ƒqƒbƒg‚µ‚½‚ÌƒŒƒCƒeƒ“ƒV‚ğ•Ô‚·
+        // ãƒ’ãƒƒãƒˆã—ãŸæ™‚ã®ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™
         const int GetStaticLatency() const { return m_latency; }
         
-        // ƒŠ[ƒh‚µ‚ÄƒŒƒCƒeƒ“ƒV‚ğ•Ô‚·
+        // ãƒªãƒ¼ãƒ‰ã—ã¦ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™
         Result Read( const Access& access, CacheAccessNotifieeIF* notifiee );
         
-        // ƒ‰ƒCƒg‚µ‚ÄƒŒƒCƒeƒ“ƒV‚ğ•Ô‚·
-        // ƒŒƒCƒeƒ“ƒV‚ÍCƒ‰ƒCƒgƒ~ƒX‚Éƒ‰ƒCƒgƒAƒƒP[ƒg‚É‚©‚©‚Á‚½ŠÔ‚ğŠÜ‚Ş
+        // ãƒ©ã‚¤ãƒˆã—ã¦ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™
+        // ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã¯ï¼Œãƒ©ã‚¤ãƒˆãƒŸã‚¹æ™‚ã«ãƒ©ã‚¤ãƒˆã‚¢ãƒ­ã‚±ãƒ¼ãƒˆã«ã‹ã‹ã£ãŸæ™‚é–“ã‚’å«ã‚€
         Result Write( const Access& access, CacheAccessNotifieeIF* notifiee );
         
         // Invalidate line
         void Invalidate( const Addr& addr );
 
-        // ƒLƒƒƒbƒVƒ…‚Ìƒ‰ƒCƒ“ƒTƒCƒY‚ğƒIƒtƒZƒbƒg‚Ìƒrƒbƒg”‚Å•Ô‚·
+        // ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã®ãƒ©ã‚¤ãƒ³ã‚µã‚¤ã‚ºã‚’ã‚ªãƒ•ã‚»ãƒƒãƒˆã®ãƒ“ãƒƒãƒˆæ•°ã§è¿”ã™
         int GetOffsetBitSize() const;
 
-        // Ÿ‚ÌƒŒƒxƒ‹‚ÌCache‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
+        // æ¬¡ã®ãƒ¬ãƒ™ãƒ«ã®Cacheã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
         Cache* GetNextCache();
 
-        // Ÿ‚ÌƒŒƒxƒ‹‚ÌCache‚ğƒZƒbƒg‚·‚é
+        // æ¬¡ã®ãƒ¬ãƒ™ãƒ«ã®Cacheã‚’ã‚»ãƒƒãƒˆã™ã‚‹
         void SetNextCache( PhysicalResourceArray<Cache>& next );
 
         // Add previous level cache
@@ -174,7 +174,7 @@ namespace Onikiri
         // --- PipelineNodeIF/PipelineNodeBase
         //
 
-        // ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì–{‘Ì
+        // ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®æœ¬ä½“
         virtual void Update();
 
 
@@ -226,13 +226,13 @@ namespace Onikiri
         typedef CacheExtraStateTable< LineState, std::vector<LineState> > ExtraStateTableType;
         ExtraStateTableType* m_lineState;
 
-        // Ÿ‚ÌLevel‚ÌƒLƒƒƒbƒVƒ…Eƒƒ‚ƒŠ
+        // æ¬¡ã®Levelã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãƒ»ãƒ¡ãƒ¢ãƒª
         Cache*  m_nextLevelCache;
 
         // Previous level caches
         PhysicalResourceArray<Cache> m_prevLevelCaches;
 
-        // ƒvƒŠƒtƒFƒbƒ`ƒƒ
+        // ãƒ—ãƒªãƒ•ã‚§ãƒƒãƒãƒ£
         PrefetcherIF* m_prefetcher;
 
         int m_perfect;
@@ -261,8 +261,8 @@ namespace Onikiri
         // This queue is for band width simulation of caches/memories.
         CacheAccessRequestQueue* m_accessQueue;
 
-        int m_level;                    // ‰½ŸƒLƒƒƒbƒVƒ…‚©
-        std::string m_name;             // ‚±‚ÌƒLƒƒƒbƒVƒ…‚Ì–¼‘O
+        int m_level;                    // ä½•æ¬¡ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‹
+        std::string m_name;             // ã“ã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã®åå‰
 
         // table information
         int m_indexBitSize;
@@ -274,25 +274,25 @@ namespace Onikiri
         int m_missedAccessListSize;
 
         // Statistic Information
-        s64 m_numReadHit;           // Read‚Ìƒqƒbƒg‰ñ”
-        s64 m_numReadMiss;          // Read‚Ìƒ~ƒX‰ñ”
-        s64 m_numReadAccess;        // Read‚Ì‰ñ”
-        s64 m_numReadPendingHit;    // PendingAccess‚ÉHit‚µ‚½‰ñ”
+        s64 m_numReadHit;           // Readæ™‚ã®ãƒ’ãƒƒãƒˆå›æ•°
+        s64 m_numReadMiss;          // Readæ™‚ã®ãƒŸã‚¹å›æ•°
+        s64 m_numReadAccess;        // Readã®å›æ•°
+        s64 m_numReadPendingHit;    // PendingAccessã«Hitã—ãŸå›æ•°
 
-        s64 m_numPrefetchHit;       // Prefetch‚Ìƒqƒbƒg‰ñ”
-        s64 m_numPrefetchMiss;      // Prefetch‚Ìƒ~ƒX‰ñ”
-        s64 m_numPrefetchPendingHit;// Prefetch‚ªPendingAccess‚ÉHit‚µ‚½‰ñ”
-        s64 m_numPrefetchAccess;    // Prefetch‚Ì‰ñ”
+        s64 m_numPrefetchHit;       // Prefetchæ™‚ã®ãƒ’ãƒƒãƒˆå›æ•°
+        s64 m_numPrefetchMiss;      // Prefetchæ™‚ã®ãƒŸã‚¹å›æ•°
+        s64 m_numPrefetchPendingHit;// PrefetchãŒPendingAccessã«Hitã—ãŸå›æ•°
+        s64 m_numPrefetchAccess;    // Prefetchã®å›æ•°
 
-        s64 m_numWriteHit;          // Write‚Ìƒqƒbƒg‰ñ”
-        s64 m_numWriteMiss;         // Write‚Ìƒ~ƒX‰ñ”
-        s64 m_numWriteAccess;       // Write‚Ì‰ñ”
-        s64 m_numWritePendingHit;   // PendingAccess‚ÉHit‚µ‚½‰ñ”
+        s64 m_numWriteHit;          // Writeæ™‚ã®ãƒ’ãƒƒãƒˆå›æ•°
+        s64 m_numWriteMiss;         // Writeæ™‚ã®ãƒŸã‚¹å›æ•°
+        s64 m_numWriteAccess;       // Writeã®å›æ•°
+        s64 m_numWritePendingHit;   // PendingAccessã«Hitã—ãŸå›æ•°
 
         s64 m_numWrittenBackLines;  // The number of cache lines written back
 
         s64 m_numInvalidated;       // The number of invalidated lines.
-        s64 m_capacityKB;           // —e—Ê(ƒLƒƒoƒCƒg)
+        s64 m_capacityKB;           // å®¹é‡(ã‚­ãƒ­ãƒã‚¤ãƒˆ)
 
         // Returns whether an access is prefetch or not.
         bool IsPrefetch( const Access& access );
@@ -363,7 +363,7 @@ namespace Onikiri
         void ReadBody( CacheHookParam* param );
 
         // Cache write
-        // ƒŒƒCƒeƒ“ƒV‚ÍCƒ‰ƒCƒgƒ~ƒX‚Éƒ‰ƒCƒgƒAƒƒP[ƒg‚É‚©‚©‚Á‚½ŠÔ‚ğŠÜ‚Ş
+        // ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã¯ï¼Œãƒ©ã‚¤ãƒˆãƒŸã‚¹æ™‚ã«ãƒ©ã‚¤ãƒˆã‚¢ãƒ­ã‚±ãƒ¼ãƒˆã«ã‹ã‹ã£ãŸæ™‚é–“ã‚’å«ã‚€
         void WriteBody( CacheHookParam* param );
 
         // Invalidate line

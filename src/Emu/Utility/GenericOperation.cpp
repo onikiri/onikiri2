@@ -71,7 +71,7 @@ u64 Onikiri::EmulatorUtility::Operation::UnsignedMulHigh64(u64 lhs, u64 rhs)
 
 s64 Onikiri::EmulatorUtility::Operation::SignedMulHigh64(s64 lhs, s64 rhs)
 {
-    // •ª‚©‚è‚â‚·‚¢•û–@‚Æ‚µ‚ÄCæ”E”íæ”‚ğ‚Ç‚¿‚ç‚à³‚É‚µ‚ÄæZ‚ğs‚¢CÅŒã‚É•„†‚ğ’²ß‚·‚é
+    // åˆ†ã‹ã‚Šã‚„ã™ã„æ–¹æ³•ã¨ã—ã¦ï¼Œä¹—æ•°ãƒ»è¢«ä¹—æ•°ã‚’ã©ã¡ã‚‰ã‚‚æ­£ã«ã—ã¦ä¹—ç®—ã‚’è¡Œã„ï¼Œæœ€å¾Œã«ç¬¦å·ã‚’èª¿ç¯€ã™ã‚‹
     s64 resultSign = 1;
     if (lhs < 0) {
         lhs = -lhs;

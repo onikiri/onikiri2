@@ -66,15 +66,15 @@ namespace Onikiri
 
 
 
-    // PendingAccess‚ÌI—¹ƒ^ƒCƒ~ƒ“ƒO‚ğƒLƒƒƒbƒVƒ…‚É“`‚¦‚é‚½‚ß‚ÌƒNƒ‰ƒX
-    // ‘¼‚ÌEvent‚ÆˆÙ‚È‚èAop‚ªflush‚³‚ê‚Ä‚àƒLƒƒƒbƒVƒ…ƒAƒNƒZƒX‚ÍƒLƒƒƒ“ƒZƒ‹‚³‚ê‚È‚¢‚Ì‚ÅA
-    // ‚±‚ÌEvent‚ªƒLƒƒƒ“ƒZƒ‹‚³‚ê‚é‚±‚Æ‚Í‚È‚¢
-    // ‚»‚Ì‚½‚ßop‚Ìm_event‚É‚ÍMemoryAccessEndEvent‚Í’Ç‰Á‚¹‚¸ACache‚Ì’†‚Å‚±‚ÌEvent‚ğŠÇ—‚·‚é
+    // PendingAccessã®çµ‚äº†ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«ä¼ãˆã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
+    // ä»–ã®Eventã¨ç•°ãªã‚Šã€opãŒflushã•ã‚Œã¦ã‚‚ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚¢ã‚¯ã‚»ã‚¹ã¯ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œãªã„ã®ã§ã€
+    // ã“ã®EventãŒã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã‚‹ã“ã¨ã¯ãªã„
+    // ãã®ãŸã‚opã®m_eventã«ã¯MemoryAccessEndEventã¯è¿½åŠ ã›ãšã€Cacheã®ä¸­ã§ã“ã®Eventã‚’ç®¡ç†ã™ã‚‹
     class MissedAccessRearchEvent :
         public EventBase<MissedAccessRearchEvent>
     {
     private:
-        // PendingAccess‚ğŠJn‚µ‚½ƒAƒhƒŒƒX
+        // PendingAccessã‚’é–‹å§‹ã—ãŸã‚¢ãƒ‰ãƒ¬ã‚¹
         CacheAccess         m_access;       
         CacheMissedAccessList::AccessListIterator
                             m_target;
@@ -87,7 +87,7 @@ namespace Onikiri
             CacheMissedAccessList* accessList 
         );
 
-        // m_addr‚ÌPendingAccess‚ªI—¹‚·‚é‚±‚Æ‚ğƒLƒƒƒbƒVƒ…‚É’Ê’m
+        // m_addrã®PendingAccessãŒçµ‚äº†ã™ã‚‹ã“ã¨ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«é€šçŸ¥
         virtual void Update(); 
     };
 

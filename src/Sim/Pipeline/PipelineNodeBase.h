@@ -152,19 +152,19 @@ namespace Onikiri
             m_lowerPipelineNode = lower;
         }
 
-        // ‰º—¬‚ÌPipeline‚ğæ“¾
+        // ä¸‹æµã®Pipelineã‚’å–å¾—
         virtual Pipeline* GetLowerPipeline()
         {
             return &m_lowerPipeline;
         }
 
-        // ‰º—¬‚ÌPipelineNode‚ğæ“¾
+        // ä¸‹æµã®PipelineNodeã‚’å–å¾—
         virtual PipelineNodeIF* GetLowerPipelineNode()
         {
             return m_lowerPipelineNode;
         }
 
-        // ã—¬‚ÌƒpƒCƒvƒ‰ƒCƒ“ƒm[ƒh‚ğæ“¾
+        // ä¸Šæµã®ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ãƒãƒ¼ãƒ‰ã‚’å–å¾—
         virtual PipelineNodeIF* GetUpperPipelineNode()
         {
             return m_upperPipelineNode;

@@ -119,7 +119,7 @@ void Core::Initialize(InitPhase phase)
             m_thread[localTID]->SetLocalThreadID( localTID );
         }
 
-        // scheduler ‚Ì index ‚ªd•¡‚µ‚Ä‚¢‚È‚¢‚©ƒ`ƒFƒbƒN
+        // scheduler ã® index ãŒé‡è¤‡ã—ã¦ã„ãªã„ã‹ãƒã‚§ãƒƒã‚¯
         for(int i = 0; i < GetNumScheduler(); ++i) {
             for(int k = i + 1; k < GetNumScheduler(); ++k) {
                 if( GetScheduler(i)->GetIndex() == GetScheduler(k)->GetIndex() ) {
@@ -185,10 +185,10 @@ int Core::GetThreadCount()
 }
 
 //
-// -- ƒŠƒJƒoƒŠ•û–@
+// -- ãƒªã‚«ãƒãƒªæ–¹æ³•
 //
-// ‚±‚Ì–½—ß‚ªƒtƒFƒbƒ`‚³‚ê‚é‘O‚ÌƒCƒ“ƒI[ƒ_[‚ÈƒXƒe[ƒg‚ğƒ`ƒFƒbƒNƒ|ƒCƒ“ƒeƒBƒ“ƒO‚·‚é•K—v‚ª‚ ‚é
-// ƒAƒNƒZƒXƒI[ƒ_[ƒoƒCƒIƒŒ[ƒVƒ‡ƒ“‚©‚ç‚ÌÄƒtƒFƒbƒ`‚É‚æ‚éƒŠƒJƒoƒŠ‚É•K—v
+// ã“ã®å‘½ä»¤ãŒãƒ•ã‚§ãƒƒãƒã•ã‚Œã‚‹å‰ã®ã‚¤ãƒ³ã‚ªãƒ¼ãƒ€ãƒ¼ãªã‚¹ãƒ†ãƒ¼ãƒˆã‚’ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒ†ã‚£ãƒ³ã‚°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+// ã‚¢ã‚¯ã‚»ã‚¹ã‚ªãƒ¼ãƒ€ãƒ¼ãƒã‚¤ã‚ªãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‹ã‚‰ã®å†ãƒ•ã‚§ãƒƒãƒã«ã‚ˆã‚‹ãƒªã‚«ãƒãƒªã«å¿…è¦
 bool Core::IsRequiredCheckpointBefore( const PC& pc, const OpInfo* const info)
 {
     CheckpointDecisionHookParam param = { &pc, info, true/*before*/, false/*reqruired*/ } ;
@@ -213,8 +213,8 @@ bool Core::IsRequiredCheckpointBefore( const PC& pc, const OpInfo* const info)
     return param.requried;
 }
 
-    // ‚±‚Ì–½—ß‚ªƒtƒFƒbƒ`‚³‚ê‚½Œã‚ÌƒCƒ“ƒI[ƒ_[‚ÈƒXƒe[ƒg‚ğƒ`ƒFƒbƒNƒ|ƒCƒ“ƒeƒBƒ“ƒO‚·‚é•K—v‚ª‚ ‚é
-// •ªŠò—\‘ªƒ~ƒX‚©‚ç‚ÌƒŠƒJƒoƒŠ‚É•K—v
+    // ã“ã®å‘½ä»¤ãŒãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸå¾Œã®ã‚¤ãƒ³ã‚ªãƒ¼ãƒ€ãƒ¼ãªã‚¹ãƒ†ãƒ¼ãƒˆã‚’ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒ†ã‚£ãƒ³ã‚°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+// åˆ†å²äºˆæ¸¬ãƒŸã‚¹ã‹ã‚‰ã®ãƒªã‚«ãƒãƒªã«å¿…è¦
 bool Core::IsRequiredCheckpointAfter( const PC& pc, const OpInfo* const info)
 {
     CheckpointDecisionHookParam param = { &pc, info, false/*before*/, false/*reqruired*/ } ;

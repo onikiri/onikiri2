@@ -85,12 +85,12 @@ void ElfReader::ReadELFHeader()
     if (m_file.fail())
         throw runtime_error("cannot read ELF header");
 
-    // ELF64‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+    // ELF64ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
     static const int CLASS_ELF64 = 2;
     if (!equal(&m_elfHeader.e_ident[0], &m_elfHeader.e_ident[3], "\177ELF") && m_elfHeader.e_ident[4] != CLASS_ELF64)
         throw runtime_error("not a valid ELF file");
 
-    // ƒGƒ“ƒfƒBƒAƒ“‚ÌŒŸo
+    // ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã®æ¤œå‡º
     static const int DATA_LE = 1;
     static const int DATA_BE = 2;
     switch (m_elfHeader.e_ident[5]) {
@@ -106,7 +106,7 @@ void ElfReader::ReadELFHeader()
 
     EndianSpecifiedToHostInPlace(m_elfHeader, m_bigEndian);
 
-    // ƒwƒbƒ_‚ÌƒTƒCƒY‚ª‘z’è’l‚Éˆê’v‚µ‚È‚¢‚È‚çƒGƒ‰[‚É‚µ‚Ä‚µ‚Ü‚¤è”²‚«
+    // ãƒ˜ãƒƒãƒ€ã®ã‚µã‚¤ã‚ºãŒæƒ³å®šå€¤ã«ä¸€è‡´ã—ãªã„ãªã‚‰ã‚¨ãƒ©ãƒ¼ã«ã—ã¦ã—ã¾ã†æ‰‹æŠœã
     if (m_elfHeader.e_ehsize != sizeof(m_elfHeader) ||
         m_elfHeader.e_shentsize != sizeof(Elf_Shdr) ||
         m_elfHeader.e_phentsize != sizeof(Elf_Phdr))
@@ -119,7 +119,7 @@ void ElfReader::ReadSectionHeaders()
 {
     const char* readError = "cannot read section headers";
 
-    // ƒZƒNƒVƒ‡ƒ“ƒwƒbƒ_‚ª‚È‚¢
+    // ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ˜ãƒƒãƒ€ãŒãªã„
     if (m_elfHeader.e_shoff == 0)
         return;
 
@@ -145,7 +145,7 @@ void ElfReader::ReadProgramHeaders()
 {
     const char* readError = "cannot read program headers";
 
-    // ƒvƒƒOƒ‰ƒ€ƒwƒbƒ_‚ª‚È‚¢
+    // ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãƒ˜ãƒƒãƒ€ãŒãªã„
     if (m_elfHeader.e_phoff == 0)
         return;
 
@@ -282,7 +282,7 @@ ElfReader::Elf_Off ElfReader::GetProgramHeaderOffset() const
 
 int ElfReader::GetSectionHeaderCount() const
 {
-    // Œ³XElf32_Half = 16bit‚È‚Ì‚Å
+    // å…ƒã€…Elf32_Half = 16bitãªã®ã§
     return (int)m_elfSectionHeaders.size();
 }
 

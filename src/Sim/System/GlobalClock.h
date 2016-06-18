@@ -38,12 +38,12 @@
 namespace Onikiri 
 {
 
-    // システム全体の経過時間を表すクラス
+    // 繧ｷ繧ｹ繝�繝蜈ｨ菴薙�ｮ邨碁℃譎る俣繧定｡ｨ縺吶け繝ｩ繧ｹ
     class GlobalClock : public PhysicalResourceNode
     {
     protected:
-        s64 m_now;      // 時間
-        u64 m_insnID;   // Insn のグローバルなID
+        s64 m_now;      // 譎る俣
+        u64 m_insnID;   // Insn 縺ｮ繧ｰ繝ｭ繝ｼ繝舌Ν縺ｪID
 
     public:
         BEGIN_RESOURCE_MAP()

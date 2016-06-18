@@ -56,7 +56,7 @@ ConservativeMemDepPred::~ConservativeMemDepPred()
 void ConservativeMemDepPred::Initialize(InitPhase phase)
 {
     if(phase == INIT_POST_CONNECTION){
-        // checkpointMaster ‚ªƒZƒbƒg‚³‚ê‚Ä‚¢‚é‚©‚Ìƒ`ƒFƒbƒN
+        // checkpointMaster ãŒã‚»ãƒƒãƒˆã•ã‚Œã¦ã„ã‚‹ã‹ã®ãƒã‚§ãƒƒã‚¯
         CheckNodeInitialized( "checkpointMaster", m_checkpointMaster );
 
         m_latestStoreDst.Initialize(
@@ -84,12 +84,12 @@ void ConservativeMemDepPred::Initialize(InitPhase phase)
     }
 }
 
-// ƒAƒhƒŒƒXˆê’v/•sˆê’v—\‘ª
-// load –½—ß‚Í ÅV‚Ìstore‚ÉˆË‘¶‚·‚é‚Æ—\‘ª‚·‚é
-// store –½—ß‚Í ÅV‚Ì load/store ‚ÉˆË‘¶‚·‚é‚Æ—\‘ª‚·‚é
+// ã‚¢ãƒ‰ãƒ¬ã‚¹ä¸€è‡´/ä¸ä¸€è‡´äºˆæ¸¬
+// load å‘½ä»¤ã¯ æœ€æ–°ã®storeã«ä¾å­˜ã™ã‚‹ã¨äºˆæ¸¬ã™ã‚‹
+// store å‘½ä»¤ã¯ æœ€æ–°ã® load/store ã«ä¾å­˜ã™ã‚‹ã¨äºˆæ¸¬ã™ã‚‹
 void ConservativeMemDepPred::Resolve(OpIterator op)
 {
-    // memory–½—ß‚Å‚È‚¯‚ê‚ÎI—¹
+    // memoryå‘½ä»¤ã§ãªã‘ã‚Œã°çµ‚äº†
     if( !op->GetOpClass().IsMem() ) {
         return;
     }
@@ -113,15 +113,15 @@ void ConservativeMemDepPred::Resolve(OpIterator op)
     }
 }
 
-// ©•ª‚ªÅŒã‚Éfetch‚³‚ê‚½load/store‚Å‚ ‚é‚±‚Æ‚ğ“o˜^‚·‚é
+// è‡ªåˆ†ãŒæœ€å¾Œã«fetchã•ã‚ŒãŸload/storeã§ã‚ã‚‹ã“ã¨ã‚’ç™»éŒ²ã™ã‚‹
 void ConservativeMemDepPred::Allocate(OpIterator op)
 {
-    // memory–½—ß‚Å‚È‚¯‚ê‚ÎI—¹
+    // memoryå‘½ä»¤ã§ãªã‘ã‚Œã°çµ‚äº†
     if( !op->GetOpClass().IsMem() ) {
         return;
     }
 
-    // op ‚Ì dstMem‚ÉMemDependency‚ğŠ„‚è“–‚Ä‚é
+    // op ã® dstMemã«MemDependencyã‚’å‰²ã‚Šå½“ã¦ã‚‹
     if( op->GetDstMem(0) == NULL ) {
         MemDependencyPtr tmpMem(
             m_memDepPool.construct(m_core->GetNumScheduler()) );
@@ -135,7 +135,7 @@ void ConservativeMemDepPred::Allocate(OpIterator op)
     }
 }
 
-// ÅŒã‚É“o˜^‚³‚ê‚½ˆË‘¶‚ª©•ª©g‚Å‚ ‚éê‡‚Í‰ğ•ú‚·‚é
+// æœ€å¾Œã«ç™»éŒ²ã•ã‚ŒãŸä¾å­˜ãŒè‡ªåˆ†è‡ªèº«ã§ã‚ã‚‹å ´åˆã¯è§£æ”¾ã™ã‚‹
 void ConservativeMemDepPred::Deallocate(OpIterator op)
 {
     MemDependencyPtr dstMem = op->GetDstMem(0);
@@ -165,15 +165,15 @@ void ConservativeMemDepPred::Flush(OpIterator op)
     }
 }
 
-// MemOrderManager‚É‚æ‚Á‚ÄAMemOrder‚Ìconflict‚ğ‹N‚±‚µ‚½op‚Ì‘g(producer, consumer)‚ğ‹³‚¦‚Ä‚à‚ç‚¤
-// ConservativeMemDepPred‚Å‚Í‰½‚à‚µ‚È‚¢
+// MemOrderManagerã«ã‚ˆã£ã¦ã€MemOrderã®conflictã‚’èµ·ã“ã—ãŸopã®çµ„(producer, consumer)ã‚’æ•™ãˆã¦ã‚‚ã‚‰ã†
+// ConservativeMemDepPredã§ã¯ä½•ã‚‚ã—ãªã„
 void ConservativeMemDepPred::OrderConflicted(OpIterator producer, OpIterator consumer)
 {
     THROW_RUNTIME_ERROR("Access order violation must not occur with Conservative MemDepPred");
 }
 
-// ÀÛ‚É‚ÍPhyReg‚Å‚Í–³‚­ƒƒ‚ƒŠã‚ÌˆË‘¶‚Å‚ ‚é‚½‚ßA•¨—ƒŒƒWƒXƒ^‚ÌŠ„‚è“–‚Ä‚Ís‚í‚ê‚È‚¢
-// ‚»‚Ì‚½‚ßA•K‚¸true‚ğ•Ô‚·
+// å®Ÿéš›ã«ã¯PhyRegã§ã¯ç„¡ããƒ¡ãƒ¢ãƒªä¸Šã®ä¾å­˜ã§ã‚ã‚‹ãŸã‚ã€ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®å‰²ã‚Šå½“ã¦ã¯è¡Œã‚ã‚Œãªã„
+// ãã®ãŸã‚ã€å¿…ãštrueã‚’è¿”ã™
 bool ConservativeMemDepPred::CanAllocate(OpIterator* infoArray, int numOp)
 {
     return true;

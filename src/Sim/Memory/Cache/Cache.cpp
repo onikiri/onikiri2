@@ -359,7 +359,7 @@ Cache::Result Cache::OnReadMiss(
     const Access& access,
     CacheAccessNotifieeIF* notifee
 ){
-    // Ÿ‚ÌƒŒƒxƒ‹‚ÌƒLƒƒƒbƒVƒ…‚ÉƒŒƒCƒeƒ“ƒV‚ğ–â‚¢‡‚í‚¹‚é
+    // æ¬¡ã®ãƒ¬ãƒ™ãƒ«ã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’å•ã„åˆã‚ã›ã‚‹
     Result nextResult = m_nextLevelCache->Read( access, NULL );
     int nextLatency = nextResult.latency;
 
@@ -372,7 +372,7 @@ Cache::Result Cache::OnReadMiss(
 }
 
 
-// ƒŠ[ƒh‚µ‚ÄƒŒƒCƒeƒ“ƒV‚ğ•Ô‚·
+// ãƒªãƒ¼ãƒ‰ã—ã¦ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™
 // A implementation body of Read/ReadInorder.
 void Cache::ReadBody( CacheHookParam* param )
 {
@@ -495,8 +495,8 @@ Cache::Result Cache::OnWriteMiss(
 }
 
 
-// Store‚ÌRetire‚Ém_cache‚ÉWrite‚ğ‚·‚é
-// ƒŒƒCƒeƒ“ƒV‚ÍCƒ‰ƒCƒgƒ~ƒX‚Éƒ‰ƒCƒgƒAƒƒP[ƒg‚É‚©‚©‚Á‚½ŠÔ‚ğŠÜ‚Ş
+// Storeã®Retireæ™‚ã«m_cacheã«Writeã‚’ã™ã‚‹
+// ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã¯ï¼Œãƒ©ã‚¤ãƒˆãƒŸã‚¹æ™‚ã«ãƒ©ã‚¤ãƒˆã‚¢ãƒ­ã‚±ãƒ¼ãƒˆã«ã‹ã‹ã£ãŸæ™‚é–“ã‚’å«ã‚€
 Cache::Result Cache::Write( const Access& access, NotifieeIF* notifiee )
 {
     CacheHookParam param;
@@ -643,7 +643,7 @@ void Cache::InvalidateBody( CacheHookParam* param )
     param->line = line;
 }
 
-// PendingAccess ‚©‚çŠeíƒAƒNƒZƒXI—¹‚Ì’Ê’m‚ğ‚¤‚¯‚é
+// PendingAccess ã‹ã‚‰å„ç¨®ã‚¢ã‚¯ã‚»ã‚¹çµ‚äº†ã®é€šçŸ¥ã‚’ã†ã‘ã‚‹
 void Cache::AccessFinished( const Access& access, const NotifyParam& param ) 
 {
     CheckValidAddress( access.address );

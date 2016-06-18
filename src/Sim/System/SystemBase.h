@@ -48,11 +48,11 @@ namespace Onikiri
 {
     class ForwardEmulator;
 
-    // Notify ‚ğ SystemManager Œo—R‚Åó‚¯æ‚é‚½‚ßCSystemBase —R—ˆƒNƒ‰ƒX‚Í
-    // SystemManagerIF::SetSystem ‚ğŒo—R‚µ‚Ä©g‚ğ SystemManager ‚É“o˜^‚·‚é•K—v‚ª‚ ‚éD
-    // ‚Ü‚½C©g‚Ì”j‰ó‚É‚Í SystemManagerIF::SetSystem Œo—R‚Å©g‚Ì“o˜^‚ğ‰ğœ‚·‚é•K—v‚ª‚ ‚éD
-    // ‚±‚ê‚É‚æ‚èC—áŠO‚É‚æ‚Á‚ÄSystemBase —R—ˆƒNƒ‰ƒX‚ª”j‰ó‚³‚ê‚½ê‡‚Å‚àC“KØ‚É
-    // SystemManager ‚Ì“o˜^‚ğ‰ğœ‚·‚é‚±‚Æ‚ªo—ˆ‚éD
+    // Notify ã‚’ SystemManager çµŒç”±ã§å—ã‘å–ã‚‹ãŸã‚ï¼ŒSystemBase ç”±æ¥ã‚¯ãƒ©ã‚¹ã¯
+    // SystemManagerIF::SetSystem ã‚’çµŒç”±ã—ã¦è‡ªèº«ã‚’ SystemManager ã«ç™»éŒ²ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼
+    // ã¾ãŸï¼Œè‡ªèº«ã®ç ´å£Šæ™‚ã«ã¯ SystemManagerIF::SetSystem çµŒç”±ã§è‡ªèº«ã®ç™»éŒ²ã‚’è§£é™¤ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼
+    // ã“ã‚Œã«ã‚ˆã‚Šï¼Œä¾‹å¤–ã«ã‚ˆã£ã¦SystemBase ç”±æ¥ã‚¯ãƒ©ã‚¹ãŒç ´å£Šã•ã‚ŒãŸå ´åˆã§ã‚‚ï¼Œé©åˆ‡ã«
+    // SystemManager ã®ç™»éŒ²ã‚’è§£é™¤ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã‚‹ï¼
     class SystemManagerIF
     {
     public:
@@ -60,7 +60,7 @@ namespace Onikiri
         virtual void SetSystem( SystemIF* system ) = 0;
     };
 
-    // ƒvƒƒZƒbƒT‘S‘Ì‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+    // ãƒ—ãƒ­ã‚»ãƒƒã‚µå…¨ä½“ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
     class SystemBase : public SystemIF
     {
     public:

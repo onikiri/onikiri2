@@ -47,7 +47,7 @@ CacheAccessEndEvent::CacheAccessEndEvent(
 {
 }
 
-// m_addr‚ÌPendingAccess‚ªI—¹‚µ‚½‚Ì‚ÅPendingAccess‚©‚çœŠO‚·‚é
+// m_addrã®PendingAccessãŒçµ‚äº†ã—ãŸã®ã§PendingAccessã‹ã‚‰é™¤å¤–ã™ã‚‹
 void CacheAccessEndEvent::Update()
 {
     m_accessReqQueue->Pop( m_access, m_target );
@@ -66,7 +66,7 @@ MissedAccessRearchEvent::MissedAccessRearchEvent(
 {
 }
 
-// m_addr‚ÌPendingAccess‚ªI—¹‚µ‚½‚Ì‚ÅPendingAccess‚©‚çœŠO‚·‚é
+// m_addrã®PendingAccessãŒçµ‚äº†ã—ãŸã®ã§PendingAccessã‹ã‚‰é™¤å¤–ã™ã‚‹
 void MissedAccessRearchEvent::Update()
 {
     m_pendingAccess->Remove( m_access, m_target );

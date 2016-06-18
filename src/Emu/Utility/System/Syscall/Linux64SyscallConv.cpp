@@ -91,7 +91,7 @@ void Linux64SyscallConv::SetSystem(SystemIF* system)
 
 
 //
-// ã§í ÇÃé¿ëï
+// ÂÖ±ÈÄö„ÅÆÂÆüË£Ö
 //
 
 
@@ -200,7 +200,7 @@ void Linux64SyscallConv::syscall_brk(OpEmulationState* opState)
         SetResult(false, ENOMEM);
     }
     else {
-        // Linux ÇÃbrkÉVÉXÉeÉÄÉRÅ[ÉãÇÕÅCê¨å˜éûÇ…êVÇµÇ¢breakÇï‘Ç∑
+        // Linux „ÅÆbrk„Ç∑„Çπ„ÉÜ„É†„Ç≥„Éº„É´„ÅØÔºåÊàêÂäüÊôÇ„Å´Êñ∞„Åó„ÅÑbreak„ÇíËøî„Åô
         SetResult(true, GetMemorySystem()->Brk(0));
     }
 }
@@ -216,7 +216,7 @@ void Linux64SyscallConv::syscall_mmap(OpEmulationState* opState)
     }
 
     if (result == (u64)-1)
-        SetResult(false, ENOMEM);   // <TODO> errnoÇÃê›íË
+        SetResult(false, ENOMEM);   // <TODO> errno„ÅÆË®≠ÂÆö
     else
         SetResult(true, result);
 }
@@ -444,14 +444,14 @@ void Linux64SyscallConv::syscall_fstat64(OpEmulationState* opState)
     else {
 #ifdef HOST_IS_WINDOWS
         /*
-        st.st_rdev ÇÕ Windows Ç≈ÇÕ st.st_dev Ç∆ìØÇ∂ÇæÇ™ÅA
+        st.st_rdev „ÅØ Windows „Åß„ÅØ st.st_dev „Å®Âêå„Åò„Å†„Åå„ÄÅ
         (http://msdn.microsoft.com/ja-jp/library/14h5k7ff.aspx)
-        Linux Ç≈ÇÕì¡éÍÇ»ÉtÉ@ÉCÉãÇÃèÍçáÇ±Ç±ÇÃílÇ™ïœÇÌÇÈÅB
-        ïWèÄèoóÕÇæÇ∆Ç«Ç§Ç‚ÇÁ 0x8801 Ç…Ç»ÇÈÇÁÇµÇ¢ÅHÅióvèoìTÅj
-        Ç±ÇÃ st_rdev Ç≈é¿çsÉpÉXÇ™ïœÇÌÇÈÇ±Ç∆Ç™Ç†ÇÈÇΩÇﬂÅAÉzÉXÉgÇÃì¸èoóÕÇégópÇ∑ÇÈèÍçáÇÕ
-        Ç∆ÇËÇ†Ç¶Ç∏ 0x8801 Ç∆Ç∑ÇÈÅB
-        Åió·Ç¶ÇŒ mcf Ç≈ÇÕ if(st.st_rdev >> 4) Ç≈ Copyright ÇÃèëçûÇ›êÊÇïœÇ¶ÇÈÇÊÇ§Ç≈ÅA
-        ÇªÇÃÇΩÇﬂÇ…Ç±Ç±ÇÃílÇ™ê≥ÇµÇ≠Ç»Ç¢Ç∆é¿çsÉpÉXÇ™ïœÇÌÇÈÅj
+        Linux „Åß„ÅØÁâπÊÆä„Å™„Éï„Ç°„Ç§„É´„ÅÆÂ†¥Âêà„Åì„Åì„ÅÆÂÄ§„ÅåÂ§â„Çè„Çã„ÄÇ
+        Ê®ôÊ∫ñÂá∫Âäõ„Å†„Å®„Å©„ÅÜ„ÇÑ„Çâ 0x8801 „Å´„Å™„Çã„Çâ„Åó„ÅÑÔºüÔºàË¶ÅÂá∫ÂÖ∏Ôºâ
+        „Åì„ÅÆ st_rdev „ÅßÂÆüË°å„Éë„Çπ„ÅåÂ§â„Çè„Çã„Åì„Å®„Åå„ÅÇ„Çã„Åü„ÇÅ„ÄÅ„Éõ„Çπ„Éà„ÅÆÂÖ•Âá∫Âäõ„Çí‰ΩøÁî®„Åô„ÇãÂ†¥Âêà„ÅØ
+        „Å®„Çä„ÅÇ„Åà„Åö 0x8801 „Å®„Åô„Çã„ÄÇ
+        Ôºà‰æã„Åà„Å∞ mcf „Åß„ÅØ if(st.st_rdev >> 4) „Åß Copyright „ÅÆÊõ∏Ëæº„ÅøÂÖà„ÇíÂ§â„Åà„Çã„Çà„ÅÜ„Åß„ÄÅ
+        „Åù„ÅÆ„Åü„ÇÅ„Å´„Åì„Åì„ÅÆÂÄ§„ÅåÊ≠£„Åó„Åè„Å™„ÅÑ„Å®ÂÆüË°å„Éë„Çπ„ÅåÂ§â„Çè„ÇãÔºâ
         */
         if(GetVirtualSystem()->GetDelayUnlinker()->GetMapPath((int)m_args[1]) == "HostIO"){
             st.st_rdev = 0x8801;
@@ -595,7 +595,7 @@ void Linux64SyscallConv::syscall_times(OpEmulationState* opState)
 void Linux64SyscallConv::syscall_gettimeofday(OpEmulationState* opState)
 {
     if (m_args[2] != 0) {
-        // timezone à¯êîÇÕobsoleteÇ»ÇÃÇ≈ÉTÉ|Å[ÉgÇµÇ»Ç¢
+        // timezone ÂºïÊï∞„ÅØobsolete„Å™„ÅÆ„Åß„Çµ„Éù„Éº„Éà„Åó„Å™„ÅÑ
         SetResult(false, EINVAL);
         return;
     }
@@ -613,12 +613,12 @@ void Linux64SyscallConv::syscall_ioctl(OpEmulationState* opState)
 {
     const int LINUX_TCGETS = 0x402c7413;
 
-    // LINUX_TCGETSÇÃÇ∆Ç´ÅCisatty
-    // isatty ÇÕÅCÉGÉâÅ[Ç©Ç«Ç§Ç©ÇÃÇ›å©ÇƒÇ¢ÇÈ
+    // LINUX_TCGETS„ÅÆ„Å®„ÅçÔºåisatty
+    // isatty „ÅØÔºå„Ç®„É©„Éº„Åã„Å©„ÅÜ„Åã„ÅÆ„ÅøË¶ã„Å¶„ÅÑ„Çã
     if ((int)m_args[2] == LINUX_TCGETS) {
         const int ERRNO_ENOTTY = 25;
-        // èÌÇ…ÉtÉ@ÉCÉã
-        // TTYÇ≈Ç†ÇÈ(success)Ç∆ï‘Ç∑Ç∆ÅCglibcÇ™TTYÇÃÉfÉoÉCÉXñºÇéÊìæÇ∑ÇÈÇΩÇﬂÇ…readlinkÇåƒÇ—èoÇ∑Ç±Ç∆Ç™Ç†ÇÈ (ttynameä÷êî)
+        // Â∏∏„Å´„Éï„Ç°„Ç§„É´
+        // TTY„Åß„ÅÇ„Çã(success)„Å®Ëøî„Åô„Å®Ôºåglibc„ÅåTTY„ÅÆ„Éá„Éê„Ç§„ÇπÂêç„ÇíÂèñÂæó„Åô„Çã„Åü„ÇÅ„Å´readlink„ÇíÂëº„Å≥Âá∫„Åô„Åì„Å®„Åå„ÅÇ„Çã (ttynameÈñ¢Êï∞)
         if (false) {
             SetResult(true, 0);
         }
@@ -718,10 +718,10 @@ void Linux64SyscallConv::write_stat64(u64 dest, const HostStat &src)
     t_buf->linux64_stmtime = src.st_mtime;
     t_buf->linux64_stctime = src.st_ctime;
 
-    // st_blksize : å¯ó¶ìIÇ…ÉtÉ@ÉCÉãÅEÉVÉXÉeÉÄIO Ç™çsÇ¶ÇÈ"çDÇ‹ÇµÇ¢"ÉuÉçÉbÉNÅEÉTÉCÉY
-    //              CentOS4 Ç≈ÇÕ32768
-    // st_blocks  : ÉtÉ@ÉCÉãÇ…äÑÇËìñÇƒÇÁÇÍÇΩ512B ÇÃêî
-    //              CentOS4 Ç≈ÇÕ8 çèÇ›Ç…Ç»ÇÈÅH
+    // st_blksize : ÂäπÁéáÁöÑ„Å´„Éï„Ç°„Ç§„É´„Éª„Ç∑„Çπ„ÉÜ„É†IO „ÅåË°å„Åà„Çã"Â•Ω„Åæ„Åó„ÅÑ"„Éñ„É≠„ÉÉ„ÇØ„Éª„Çµ„Ç§„Ç∫
+    //              CentOS4 „Åß„ÅØ32768
+    // st_blocks  : „Éï„Ç°„Ç§„É´„Å´Ââ≤„ÇäÂΩì„Å¶„Çâ„Çå„Åü512B „ÅÆÊï∞
+    //              CentOS4 „Åß„ÅØ8 Âàª„Åø„Å´„Å™„ÇãÔºü
 
 #if defined(HOST_IS_WINDOWS) || defined(HOST_IS_CYGWIN)
     static const int BLOCK_UNIT = 512*8;
@@ -734,7 +734,7 @@ void Linux64SyscallConv::write_stat64(u64 dest, const HostStat &src)
     t_buf->linux64_stblksize = src.st_blksize;
 #endif
 
-    // hostÇÃstat(src)ÇÃóvëfÇ∆targetÇÃstatÇÃóvëfÇÃÉTÉCÉYÇ™àŸÇ»ÇÈÇ©Ç‡ÇµÇÍÇ»Ç¢ÇÃÇ≈ÅCàÍíUtargetÇÃstatÇ…ë„ì¸ÇµÇƒÇ©ÇÁÉGÉìÉfÉBÉAÉìÇïœä∑Ç∑ÇÈ
+    // host„ÅÆstat(src)„ÅÆË¶ÅÁ¥†„Å®target„ÅÆstat„ÅÆË¶ÅÁ¥†„ÅÆ„Çµ„Ç§„Ç∫„ÅåÁï∞„Å™„Çã„Åã„ÇÇ„Åó„Çå„Å™„ÅÑ„ÅÆ„ÅßÔºå‰∏ÄÊó¶target„ÅÆstat„Å´‰ª£ÂÖ•„Åó„Å¶„Åã„Çâ„Ç®„É≥„Éá„Ç£„Ç¢„É≥„ÇíÂ§âÊèõ„Åô„Çã
     bool bigEndian = GetMemorySystem()->IsBigEndian();
     EndianHostToSpecifiedInPlace(t_buf->linux64_stdev, bigEndian);
     EndianHostToSpecifiedInPlace(t_buf->linux64_stino, bigEndian);

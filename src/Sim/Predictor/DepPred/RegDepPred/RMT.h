@@ -45,8 +45,8 @@
 namespace Onikiri 
 {
 
-    // ƒŒƒWƒXƒ^ˆË‘¶ŠÖŒW—\‘ªŠí‚ÌÀ‘•
-    // •¨—ƒŒƒWƒXƒ^‚Ì‰ğ•úƒ^ƒCƒ~ƒ“ƒO‚ğ³Šm‚ÉŠÇ—
+    // ãƒ¬ã‚¸ã‚¹ã‚¿ä¾å­˜é–¢ä¿‚äºˆæ¸¬å™¨ã®å®Ÿè£…
+    // ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®è§£æ”¾ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚’æ­£ç¢ºã«ç®¡ç†
 
     class RMT :
         public RegDepPredBase, public PhysicalResourceNode
@@ -62,23 +62,23 @@ namespace Onikiri
         // emulator
         EmulatorIF* m_emulator;
 
-        // ƒŒƒWƒXƒ^–{‘Ì
+        // ãƒ¬ã‚¸ã‚¹ã‚¿æœ¬ä½“
         RegisterFile* m_registerFile;
 
-        // ˜_—ƒŒƒWƒXƒ^‚ÌƒZƒOƒƒ“ƒgî•ñ‚ğŠi”[‚·‚éƒe[ƒuƒ‹
+        // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ã‚»ã‚°ãƒ¡ãƒ³ãƒˆæƒ…å ±ã‚’æ ¼ç´ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
         boost::array<int, SimISAInfo::MAX_REG_COUNT> m_segmentTable;
 
-        // ƒtƒŠ[ƒŠƒXƒg
-        // Allocation‚ª‰Â”\‚È•¨—ƒŒƒWƒXƒ^‚Ì”Ô†‚ğŠÇ—‚·‚é
+        // ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆ
+        // AllocationãŒå¯èƒ½ãªç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç•ªå·ã‚’ç®¡ç†ã™ã‚‹
         RegisterFreeList* m_regFreeList;
 
-        // ˜_—ƒŒƒWƒXƒ^”Ô†‚ğƒL[‚Æ‚µ‚½A•¨—ƒŒƒWƒXƒ^‚Ìƒ}ƒbƒsƒ“ƒOƒe[ƒuƒ‹
+        // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’ã‚­ãƒ¼ã¨ã—ãŸã€ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ãƒãƒƒãƒ”ãƒ³ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«
         CheckpointedData<
             boost::array< int, SimISAInfo::MAX_REG_COUNT >
         > m_allocationTable;
 
-        // op‚ÌƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“EƒŒƒWƒXƒ^‚ÌƒRƒ~ƒbƒg‚É‰ğ•ú‚³‚ê‚é•¨—ƒŒƒWƒXƒ^‚Ìƒ}ƒbƒsƒ“ƒOƒe[ƒuƒ‹
-        // op‚ÌƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“EƒŒƒWƒXƒ^‚Ì•¨—ƒŒƒWƒXƒ^”Ô†‚ğƒL[‚Æ‚·‚é
+        // opã®ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿ã®ã‚³ãƒŸãƒƒãƒˆæ™‚ã«è§£æ”¾ã•ã‚Œã‚‹ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ãƒãƒƒãƒ”ãƒ³ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«
+        // opã®ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’ã‚­ãƒ¼ã¨ã™ã‚‹
         std::vector<int> m_releaseTable;
 
         // member methods
@@ -88,8 +88,8 @@ namespace Onikiri
         }
 
     public:
-        // s_releaseRegHook ‚Ìop ‚ÍC‰ğ•ú‚³‚ê‚éƒŒƒWƒXƒ^‚Ì‚¿å‚Å‚Í‚È‚­C
-        // ‚»‚ÌƒŒƒWƒXƒ^‚Ì‰ğ•ú‚ğƒgƒŠƒK‚µ‚½–½—ß‚Ìop
+        // s_releaseRegHook æ™‚ã®op ã¯ï¼Œè§£æ”¾ã•ã‚Œã‚‹ãƒ¬ã‚¸ã‚¹ã‚¿ã®æŒã¡ä¸»ã§ã¯ãªãï¼Œ
+        // ãã®ãƒ¬ã‚¸ã‚¹ã‚¿ã®è§£æ”¾ã‚’ãƒˆãƒªã‚¬ã—ãŸå‘½ä»¤ã®op
         struct HookParam
         {   
             OpIterator op;
@@ -98,7 +98,7 @@ namespace Onikiri
         };
 
     protected:
-        // AllocateReg/ReleaseReg/DeallocateReg ‚ÌÀ‘•
+        // AllocateReg/ReleaseReg/DeallocateReg ã®å®Ÿè£…
         virtual void AllocateRegBody( HookParam* param );
         virtual void ReleaseRegBody ( HookParam* param );
         virtual void DeallocateRegBody( HookParam* param ); 
@@ -117,26 +117,26 @@ namespace Onikiri
 
         virtual void Initialize(InitPhase phase);
 
-        // ƒ\[ƒXEƒŒƒWƒXƒ^‚É‘Î‰‚·‚é•¨—ƒŒƒWƒXƒ^”Ô†‚ğ•Ô‚·
+        // ã‚½ãƒ¼ã‚¹ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿ã«å¯¾å¿œã™ã‚‹ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’è¿”ã™
         virtual int ResolveReg(const int lno);
 
-        // ResolveReg ‚Æ“¯—l‚É•¨—ƒŒƒWƒXƒ^”Ô†‚ğ•Ô‚·D
-        // ‚½‚¾‚µCŒ»İ‚ÌŠ„‚è“–‚Äó‘Ô‚ğŠÏ‘ª‚·‚é‚Ì‚İ‚ÅC
-        // •›ì—p‚ª‚È‚¢‚±‚Æ‚ğ•ÛØ‚·‚éD
+        // ResolveReg ã¨åŒæ§˜ã«ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’è¿”ã™ï¼
+        // ãŸã ã—ï¼Œç¾åœ¨ã®å‰²ã‚Šå½“ã¦çŠ¶æ…‹ã‚’è¦³æ¸¬ã™ã‚‹ã®ã¿ã§ï¼Œ
+        // å‰¯ä½œç”¨ãŒãªã„ã“ã¨ã‚’ä¿è¨¼ã™ã‚‹ï¼
         virtual int PeekReg(const int lno) const;
 
-        // ƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“EƒŒƒWƒXƒ^‚É•¨—ƒŒƒWƒXƒ^”Ô†‚ğŠ„‚è“–‚Ä‚é
+        // ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿ã«ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’å‰²ã‚Šå½“ã¦ã‚‹
         virtual int AllocateReg(OpIterator op, const int lno);
 
-        // retire‚µ‚½‚Ì‚ÅAop‚ª‰ğ•ú‚·‚×‚«•¨—ƒŒƒWƒXƒ^‚ğ‰ğ•ú
+        // retireã—ãŸã®ã§ã€opãŒè§£æ”¾ã™ã¹ãç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’è§£æ”¾
         virtual void ReleaseReg(OpIterator op, const int lno, int phyRegNo);
-        // flush‚³‚ê‚½‚Ì‚ÅAop‚ÌƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“EƒŒƒWƒXƒ^‚ğ‰ğ•ú
+        // flushã•ã‚ŒãŸã®ã§ã€opã®ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’è§£æ”¾
         virtual void DeallocateReg(OpIterator op, const int lno, int phyRegNo); 
 
-        // numŒÂ•¨—ƒŒƒWƒXƒ^‚ğŠ„‚è“–‚Ä‚é‚±‚Æ‚ª‚Å‚«‚é‚©‚Ç‚¤‚©
+        // numå€‹ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒã§ãã‚‹ã‹ã©ã†ã‹
         virtual bool CanAllocate(OpIterator* infoArray, int numOp);
 
-        // ˜_—/•¨—ƒŒƒWƒXƒ^‚ÌŒÂ”
+        // è«–ç†/ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®å€‹æ•°
         virtual int GetRegSegmentCount();
         virtual int GetLogicalRegCount(int segment);
         virtual int GetTotalLogicalRegCount();

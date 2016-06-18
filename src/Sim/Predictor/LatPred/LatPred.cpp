@@ -75,9 +75,9 @@ void LatPred::Initialize(InitPhase phase)
     }
 }
 
-// ���C�e���V�\��
-// ����2���x���iL1/L2�j�̗\���ɂ̂ݑΉ�
-// L1�~�X��́C���L2�q�b�g�Ɨ\�������
+// レイテンシ予測
+// 現在2レベル（L1/L2）の予測にのみ対応
+// L1ミス後は，常にL2ヒットと予測される
 void LatPred::Predict(OpIterator op)
 {
     const OpClass& opClass = op->GetOpClass();
@@ -87,9 +87,9 @@ void LatPred::Predict(OpIterator op)
     s_latencyPredictionHook.Trigger(op, this, HookType::HOOK_BEFORE);
 
     if( !s_latencyPredictionHook.HasAround() ) {
-        // �{���̏���
+        // 本来の処理
         // Load/store hit miss prediction
-        // ���C�e���V�\���ƃX�P�W���[�����O�̃��f���ɂ��Ă͂��̃t�@�C���̖������Q��
+        // レイテンシ予測とスケジューリングのモデルについてはこのファイルの末尾を参照
         ExecUnitIF* execUnit = op->GetExecUnit();
         int latencyCount = execUnit->GetLatencyCount(opClass);
         
@@ -168,7 +168,7 @@ void LatPred::Predict(OpIterator op)
 }
 
 //
-// predictionHit : ���C�e���V�\���̌��ʂ��I���������ǂ���(L1�q�b�g�̈Ӗ��ł͂Ȃ�)
+// predictionHit : レイテンシ予測の結果が的中したかどうか(L1ヒットの意味ではない)
 //
 void LatPred::Commit( OpIterator op )
 {
@@ -221,17 +221,17 @@ void LatPred::Finished( OpIterator op )
 
 /*
 
---- ���C�e���V�\���ƃX�P�W���[�����O�̃��f��
+--- レイテンシ予測とスケジューリングのモデル
 
-���C�e���V�\�����s������(Ip:producer)�ƁC�\�����s�������߂�
-�ˑ����閽��(Ic:consumer)���ǂ̂悤�ɃX�P�W���[�����邩�D
+レイテンシ予測を行う命令(Ip:producer)と，予測を行った命令に
+依存する命令(Ic:consumer)をどのようにスケジュールするか．
 
-��F
+例：
     Ip: load r1 = [A]
     Ic: add  r2 = r1 + 4
 
-���CIp ���L���b�V���Ƀ~�X����Ɨ\�������ꍇ���l����
-�����̘_���ł�Ip ��Ic �͈ȉ��̂悤�ɃX�P�W���[�������Ƃ��Ă���
+今，Ip がキャッシュにミスすると予測した場合を考える
+多くの論文ではIp とIc は以下のようにスケジュールされるとしている
 
     time: 0  1  2  3  4  5  6  7  8
     --------------------------------
@@ -250,18 +250,18 @@ void LatPred::Finished( OpIterator op )
     L2 latency    : 3cycle
 
 
-���C�e���V�\�����s�������߂������s�I�����邩�i�q�b�g/�~�X�̔����j��
-��{�I�Ɏ��s�I�����܂ŕs���ł���D
-Ip ��6cycle �ڈȍ~�̃t�H���[�f�B���O�|�[�g�A7cycle �ڂ̃��W�X�^
-�������݃|�[�g�𗘗p���邽�߂ɂ́C�����ƃ|�[�g��\��
-���Ă����Ȃ��Ă͂Ȃ�Ȃ����A���̂悤�Ȏ����͑Ó��Ƃ͍l���ɂ����D
-�i�|�[�g��\�񂵂Ă����Ȃ��ƁC���̎����s����Ă������̖��߂Ǝ����������N�����D
+レイテンシ予測を行った命令がいつ実行終了するか（ヒット/ミスの判明）は
+基本的に実行終了時まで不明である．
+Ip が6cycle 目以降のフォワーディングポート、7cycle 目のレジスタ
+書き込みポートを利用するためには，ずっとポートを予約
+しておかなくてはならないが、このような実装は妥当とは考えにくい．
+（ポートを予約しておかないと，その時発行されてきた他の命令と資源競合を起こす．
 
-���ۂ̃n�[�h�E�F�A�ł́C�ȉ��̂悤�Ƀ~�X����Ɨ\�������ꍇ�ɂ�
-Ip ��2�񔭍s���s�������ɂȂ��Ă���ƍl������D
-�ȉ��̗�ł́CIp0 �Ń~�X����������3�T�C�N���ڈȍ~��L2 �̃A�N�Z�X���J�n���C
-���傤��L1 �Ƀf�[�^�����Ă���^�C�~���O��2��ڂ�Ip1 �𔭍s����D
-Ic �́CIp1 �̎��s��ɂ��킹��`�Ŕ��s���s���D
+実際のハードウェアでは，以下のようにミスすると予測した場合には
+Ip を2回発行を行う実装になっていると考えられる．
+以下の例では，Ip0 でミスが判明した3サイクル目以降にL2 のアクセスを開始し，
+ちょうどL1 にデータが取れてくるタイミングで2回目のIp1 を発行する．
+Ic は，Ip1 の実行後にあわせる形で発行を行う．
 
     time: 0  1  2  3  4  5  6  7  8  9
     -----------------------------------

@@ -52,7 +52,7 @@ void EmulationTraceSystem::Run( SystemContext* context )
         ofsList[pid] = new ofstream( fileName );
     }
 
-    // ƒŒƒWƒXƒ^‚Ì‰Šú‰»
+    // ãƒ¬ã‚¸ã‚¹ã‚¿ã®åˆæœŸåŒ–
     ArchitectureStateList& archStateList = context->architectureStateList;
 
     s64 totalInsnCount = 0;
@@ -81,13 +81,13 @@ void EmulationTraceSystem::Run( SystemContext* context )
         ofstream& ofs = *ofsList[curPID];
         EmulationOp op( context->emulator->GetMemImage() );
 
-        // ‚±‚ÌPC
+        // ã“ã®PC
         std::pair<OpInfo**, int> ops = 
             context->emulator->GetOp( curThreadPC );
         OpInfo** opInfoArray = ops.first;
         int opCount          = ops.second;
 
-        // opInfoArray ‚Ì–½—ß‚ğ‘S‚ÄÀs
+        // opInfoArray ã®å‘½ä»¤ã‚’å…¨ã¦å®Ÿè¡Œ
         for(int opIndex = 0; opIndex < opCount; opIndex ++){
             OpInfo* opInfo = opInfoArray[opIndex];
             op.SetPC( curThreadPC );
@@ -95,7 +95,7 @@ void EmulationTraceSystem::Run( SystemContext* context )
             op.SetOpInfo(opInfo);
             op.SetTaken(false);
 
-            // ƒ\[ƒXƒIƒyƒ‰ƒ“ƒh‚ğİ’è
+            // ã‚½ãƒ¼ã‚¹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚’è¨­å®š
             int srcCount = opInfo->GetSrcNum();
             for (int i = 0; i < srcCount; i ++) {
                 op.SetSrc(i, archStateList[curPID].registerValue[ opInfo->GetSrcOperand(i) ] );
@@ -104,13 +104,13 @@ void EmulationTraceSystem::Run( SystemContext* context )
             context->emulator->Execute( &op, opInfo );
             context->emulator->Commit( &op, opInfo );
 
-            // –½—ß‚ÌŒ‹‰Ê‚ğæ“¾
+            // å‘½ä»¤ã®çµæœã‚’å–å¾—
             int dstCount = opInfo->GetDstNum();
             for (int i = 0; i < dstCount; i ++) {
                 archStateList[curPID].registerValue[ opInfo->GetDstOperand(i) ] = op.GetDst(i);
             }
 
-            // o—Í
+            // å‡ºåŠ›
             ofs << "ID: " << opID[curPID] << "\tPC: " << curThreadPC.pid << "/" << hex << curThreadPC.address << dec << "[" << opIndex << "]\t";
             for (int i = 0; i < opInfo->GetDstNum(); ++i) {
                 ofs << "d" << i << ": " << opInfo->GetDstOperand(i) << "\t";
@@ -161,7 +161,7 @@ void EmulationTraceSystem::Run( SystemContext* context )
             ++opID[curPID];
         }
 
-        // Ÿ‚ÌPC
+        // æ¬¡ã®PC
         if (op.GetTaken())
             curThreadPC = op.GetTakenPC();
         else

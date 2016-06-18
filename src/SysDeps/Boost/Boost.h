@@ -56,17 +56,17 @@
 
 #   pragma warning(push)
 
-// Some boost files cause warnings 4244/4245/4267/4819 in MSVC 2013.
+// Some boost files cause warnings in MSVC 2015.
 #   pragma warning(disable:4244)
 #   pragma warning(disable:4245)
-#   pragma warning(disable:4819)
-#   pragma warning(disable:4267)
+#   pragma warning(disable:4828)
+
 
 #elif defined COMPILER_IS_GCC
 
 // push & pop is available since gcc 4.6
 #   pragma GCC diagnostic push
-    
+
 #   pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #   pragma GCC diagnostic ignored "-Wunused-variable"
 

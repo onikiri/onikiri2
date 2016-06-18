@@ -37,30 +37,30 @@ namespace Onikiri {
 
         class MemorySystem;
 
-        // ƒ^[ƒQƒbƒg‚ÌƒoƒCƒiƒŠ‚ğƒƒ‚ƒŠ‚Éƒ[ƒh‚µCˆø”‚ğİ’è‚·‚éƒCƒ“ƒ^[ƒtƒFƒCƒX
-        // Linux —p‚©‚à‚µ‚ê‚È‚¢
+        // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒã‚¤ãƒŠãƒªã‚’ãƒ¡ãƒ¢ãƒªã«ãƒ­ãƒ¼ãƒ‰ã—ï¼Œå¼•æ•°ã‚’è¨­å®šã™ã‚‹ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹
+        // Linux ç”¨ã‹ã‚‚ã—ã‚Œãªã„
         class LoaderIF
         {
         public:
             virtual ~LoaderIF() {}
 
-            // ƒoƒCƒiƒŠ command ‚ğ memory ‚Éƒ[ƒh‚·‚é
+            // ãƒã‚¤ãƒŠãƒª command ã‚’ memory ã«ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
             virtual void LoadBinary(MemorySystem* memory, const String& command) = 0;
 
-            // ƒXƒ^ƒbƒN [stackHead, stackHead+stackSize) ‚Éˆø”‚ğİ’è‚·‚é
+            // ã‚¹ã‚¿ãƒƒã‚¯ [stackHead, stackHead+stackSize) ã«å¼•æ•°ã‚’è¨­å®šã™ã‚‹
             virtual void InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize, const String& command, const String& commandArgs) = 0;
 
-            // ƒoƒCƒiƒŠ‚Ìƒ[ƒh‚³‚ê‚½—Ìˆæ‚Ìæ“ªƒAƒhƒŒƒX‚ğ“¾‚é
-            // ¦ƒoƒCƒiƒŠ‚ª˜A‘±—Ìˆæ‚Éƒ[ƒh‚³‚ê‚é‚±‚Æ‚ğ‰¼’è‚µ‚Ä‚¢‚é
+            // ãƒã‚¤ãƒŠãƒªã®ãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸé ˜åŸŸã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å¾—ã‚‹
+            // â€»ãƒã‚¤ãƒŠãƒªãŒé€£ç¶šé ˜åŸŸã«ãƒ­ãƒ¼ãƒ‰ã•ã‚Œã‚‹ã“ã¨ã‚’ä»®å®šã—ã¦ã„ã‚‹
             virtual u64 GetImageBase() const = 0;
 
-            // ƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg‚ğ“¾‚é
+            // ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã‚’å¾—ã‚‹
             virtual u64 GetEntryPoint() const = 0;
 
-            // ƒR[ƒh—Ìˆæ‚Ì”ÍˆÍ‚ğ•Ô‚· (ŠJnƒAƒhƒŒƒXCƒoƒCƒg”) (Emulator‚ÌÅ“K‰»—p)
+            // ã‚³ãƒ¼ãƒ‰é ˜åŸŸã®ç¯„å›²ã‚’è¿”ã™ (é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ï¼Œãƒã‚¤ãƒˆæ•°) (Emulatorã®æœ€é©åŒ–ç”¨)
             virtual std::pair<u64, size_t> GetCodeRange() const = 0;
 
-            // ƒŒƒWƒXƒ^‚Ì‰Šú’l‚ğ“¾‚é
+            // ãƒ¬ã‚¸ã‚¹ã‚¿ã®åˆæœŸå€¤ã‚’å¾—ã‚‹
             virtual u64 GetInitialRegValue(int index) const = 0;
         };
 

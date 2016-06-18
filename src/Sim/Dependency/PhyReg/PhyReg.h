@@ -38,7 +38,7 @@ namespace Onikiri
 {
 
     //
-    // 物理レジスタのクラス
+    // 迚ｩ逅�繝ｬ繧ｸ繧ｹ繧ｿ縺ｮ繧ｯ繝ｩ繧ｹ
     // 
 
     class PhyReg : public Dependency 
@@ -72,10 +72,10 @@ namespace Onikiri
 
     private:
         
-        // 値
+        // 蛟､
         u64 m_val;
 
-        // 物理レジスタ番号
+        // 迚ｩ逅�繝ｬ繧ｸ繧ｹ繧ｿ逡ｪ蜿ｷ
         int m_phyRegNo;
         
     };

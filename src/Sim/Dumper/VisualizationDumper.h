@@ -49,7 +49,7 @@ namespace Onikiri
     class Core;
     class Thread;
 
-    // simulation‚ÌŒ‹‰Ê‚ğVisualize‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX
+    // simulationã®çµæœã‚’Visualizeã™ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
     class VisualizationDumper : public ParamExchange
     {
     public:
@@ -70,13 +70,13 @@ namespace Onikiri
         void Finalize();
         bool IsEnabled();
 
-        // VisDump‚ğ‘‚«‚¾‚·‚½‚ß‚ÉŠO‚©‚çŒÄ‚Î‚ê‚éŠÖ”
+        // VisDumpã‚’æ›¸ãã ã™ãŸã‚ã«å¤–ã‹ã‚‰å‘¼ã°ã‚Œã‚‹é–¢æ•°
 
-        // VisualizationDumper‚ÉŒ»İ‚Ìcycle/insn”‚ğ‹³‚¦‚é‚½‚ß‚ÌŠÖ”
+        // VisualizationDumperã«ç¾åœ¨ã®cycle/insnæ•°ã‚’æ•™ãˆã‚‹ãŸã‚ã®é–¢æ•°
         void SetCurrentCycle( const s64 cycle );
         void SetCurrentInsnCount( Thread* thread, const s64 count );
 
-        // op‚ÌŒ»İ‚ÌState(PipelineStage/Retire/Flush‚È‚Ç)‚ğ•\¦‚·‚é
+        // opã®ç¾åœ¨ã®State(PipelineStage/Retire/Flushãªã©)ã‚’è¡¨ç¤ºã™ã‚‹
         void PrintOpState( OpIterator op, DUMP_STATE state );
 
         // Dump the begin/end of stall.
@@ -106,9 +106,9 @@ namespace Onikiri
         // Each op has OpState, a extra state for dump.
         struct OpState 
         {
-            DUMP_STATE dumpState;   // Op‚ÌÅŒã‚ÌState
-            u64 visSerialID;        // o—Íƒtƒ@ƒCƒ‹“à‚Å‚ÌƒVƒŠƒAƒ‹
-            bool inPipeline;        // iKanata‚Å•\¦‰Â”\‚È”ÍˆÍ‚ÌjƒpƒCƒvƒ‰ƒCƒ“’†‚É‚¢‚é‚©‚Ç‚¤‚©
+            DUMP_STATE dumpState;   // Opã®æœ€å¾Œã®State
+            u64 visSerialID;        // å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«å†…ã§ã®ã‚·ãƒªã‚¢ãƒ«
+            bool inPipeline;        // ï¼ˆKanataã§è¡¨ç¤ºå¯èƒ½ãªç¯„å›²ã®ï¼‰ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ä¸­ã«ã„ã‚‹ã‹ã©ã†ã‹
             bool stalled;           // Op is stalled or not.
 
             struct Stage
@@ -151,23 +151,23 @@ namespace Onikiri
         
         s64 GetTotalRetiredInsnCount();
 
-        bool m_enabled;     // VisDump‚ğ‘‚«‚¾‚·‚©‚Ç‚¤‚©
-        bool m_gzipEnabled; // VisDump‚ğgzipˆ³k‚·‚é‚©‚Ç‚¤‚©
-        int  m_gzipLevel;   // gzip‚Ìˆ³kƒŒƒxƒ‹
+        bool m_enabled;     // VisDumpã‚’æ›¸ãã ã™ã‹ã©ã†ã‹
+        bool m_gzipEnabled; // VisDumpã‚’gzipåœ§ç¸®ã™ã‚‹ã‹ã©ã†ã‹
+        int  m_gzipLevel;   // gzipã®åœ§ç¸®ãƒ¬ãƒ™ãƒ«
 
-        std::string m_visFileName; // visDump‚ğo—Í‚·‚éƒtƒ@ƒCƒ‹–¼
-        boost::iostreams::filtering_ostream m_visStream;    // visDump‚ğo—Í‚·‚éƒtƒ@ƒCƒ‹ƒXƒgƒŠ[ƒ€
+        std::string m_visFileName; // visDumpã‚’å‡ºåŠ›ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«å
+        boost::iostreams::filtering_ostream m_visStream;    // visDumpã‚’å‡ºåŠ›ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã‚¹ãƒˆãƒªãƒ¼ãƒ 
 
-        s64 m_visCurrentCycle;  // ƒVƒ~ƒ…ƒŒ[ƒ^‚ÌŒ»İ‚Ì
+        s64 m_visCurrentCycle;  // ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã®ç¾åœ¨ã®æ™‚åˆ»
         s64 m_visLastPrintCycle;
         s64 m_skipInsns;        // The count of insns for skipping dump.
 
-        u64 m_visSerialID;      // ƒƒOƒtƒ@ƒCƒ‹“à‚Å‚ÌƒVƒŠƒAƒ‹ID
+        u64 m_visSerialID;      // ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«å†…ã§ã®ã‚·ãƒªã‚¢ãƒ«ID
 
-        // ƒ_ƒ“ƒv‚ÌƒXƒLƒbƒv”»’è
+        // ãƒ€ãƒ³ãƒ—ã®ã‚¹ã‚­ãƒƒãƒ—åˆ¤å®š
         bool IsDumpSkipped( OpIterator op );
 
-        // DUMP_STATE <> •\¦–¼•ÏŠ·
+        // DUMP_STATE <> è¡¨ç¤ºåå¤‰æ›
         const char* ToStringFromDumpState( DUMP_STATE state );
 
         // Print initialization of 'op'.
@@ -182,17 +182,17 @@ namespace Onikiri
         };
         void PrintOpLabel( const OpIterator op, OpLabelType type, const std::string& label );
 
-        // Œ»İ‚ÌƒTƒCƒNƒ‹‚ğ•\¦
+        // ç¾åœ¨ã®ã‚µã‚¤ã‚¯ãƒ«ã‚’è¡¨ç¤º
         void PrintCycle();
 
-        // op‚ª‘O‚ÌPipelineStage‚©‚ço‚½‚±‚Æ‚ğ•\¦
+        // opãŒå‰ã®PipelineStageã‹ã‚‰å‡ºãŸã“ã¨ã‚’è¡¨ç¤º
         void PrintLastPipelineStage( const OpIterator op, DUMP_STATE lastState );
 
-        // op‚ªRetire/Flush‚³‚ê‚½‚±‚Æ‚ğ•\¦
+        // opãŒRetire/Flushã•ã‚ŒãŸã“ã¨ã‚’è¡¨ç¤º
         void PrintOpEnd( const OpIterator op, DUMP_STATE lastState );
         void PrintOpEndLabel( const OpIterator op );
 
-        // op‚ªV‚µ‚¢PipelineStage‚É“ü‚Á‚½‚±‚Æ‚ğ•\¦
+        // opãŒæ–°ã—ã„PipelineStageã«å…¥ã£ãŸã“ã¨ã‚’è¡¨ç¤º
         void PrintNextPipelineStage( const OpIterator op, DUMP_STATE state );
         
         // Print stall states.

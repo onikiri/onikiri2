@@ -332,10 +332,10 @@ namespace shttl
 
             assert_valid_way(way);
 
-            // key‚Ìd•¡H
+            // keyã®é‡è¤‡ï¼Ÿ
             SHTTL_ASSERT( find(tag) == invalid_way || find( tag ) == way );
 
-            // ‘‚«‚İ
+            // æ›¸ãè¾¼ã¿
             at( way ) = line_type( tag, val, true );
         }
 
@@ -478,7 +478,7 @@ namespace shttl
         {
         }
 
-        // tag‚É‘Î‰‚·‚éway”Ô†‚ğ•Ô‚·
+        // tagã«å¯¾å¿œã™ã‚‹wayç•ªå·ã‚’è¿”ã™
         size_type find( const tag_type tag ) const
         {
             line_map_type& strage_set = m_strage->get_line_map( m_index );
@@ -505,7 +505,7 @@ namespace shttl
             return found;
         }
 
-        // ‹ó‚«way‚ğ•Ô‚·
+        // ç©ºãwayã‚’è¿”ã™
         size_type find_free_way() const
         {
 
@@ -530,7 +530,7 @@ namespace shttl
             return found;
         }
 
-        // way”Ô–Ú‚Ìway‚ğ–³Œø‚É‚·‚é
+        // wayç•ªç›®ã®wayã‚’ç„¡åŠ¹ã«ã™ã‚‹
         void invalidate( const size_type way )
         {
             if( way == invalid_way )
@@ -564,10 +564,10 @@ namespace shttl
 
             assert_valid_way(way);
 
-            // key‚Ìd•¡H
+            // keyã®é‡è¤‡ï¼Ÿ
             SHTTL_ASSERT( find(tag) == invalid_way || find( tag ) == way );
 
-            // ‘‚«‚İ
+            // æ›¸ãè¾¼ã¿
             typename strage_type::strage_type::iterator line =
                 m_strage->get_set_strage_iterator( m_index ) + way;
 

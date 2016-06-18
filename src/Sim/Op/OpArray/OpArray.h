@@ -96,21 +96,21 @@ namespace Onikiri
         OpArray( int capacity );
         virtual ~OpArray();
         
-        // copy ‹Ö~
+        // copy ç¦æ­¢
         OpArray( const OpArray& opArray )
         {
             THROW_RUNTIME_ERROR("cannot create OpArray copy");
         };
         
-        // V‚µ‚¢Op‚ğì‚Á‚ÄAOpIterator‚ğ•Ô‚·
+        // æ–°ã—ã„Opã‚’ä½œã£ã¦ã€OpIteratorã‚’è¿”ã™
         OpIterator CreateOp();
 
-        // OpIterator‚Ìw‚·Op‚ğ‰ğ•ú‚·‚é
+        // OpIteratorã®æŒ‡ã™Opã‚’è§£æ”¾ã™ã‚‹
         void ReleaseOp(const OpIterator& opIterator);
-        // OpIterator‚Ìw‚·Op‚ğCopy‚àŠÜ‚ß‚Ä‘S‚Ä‰ğ•ú‚·‚é
+        // OpIteratorã®æŒ‡ã™Opã‚’Copyã‚‚å«ã‚ã¦å…¨ã¦è§£æ”¾ã™ã‚‹
         void ReleaseAll(const OpIterator& opIterator);
 
-        // OpIterator‚Ìw‚·Op‚ªŠ„‚è“–‚ÄÏ‚İ‚©‚Ç‚¤‚©‚ğ•Ô‚·
+        // OpIteratorã®æŒ‡ã™OpãŒå‰²ã‚Šå½“ã¦æ¸ˆã¿ã‹ã©ã†ã‹ã‚’è¿”ã™
         bool IsAlive(const OpIterator& opIterator) const;
         bool IsAlive( ID id ) const
         {
@@ -145,18 +145,18 @@ namespace Onikiri
         }
 
     protected:
-        // Op ‚Ì pool 
-        // ID‚Ì”z—ñ
+        // Op ã® pool 
+        // IDã®é…åˆ—
         std::vector<OpArray::ArrayID*> m_body;
 
-        // g—p’†‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
-        // Copy•ûŒü‚Ì”z—ñ
+        // ä½¿ç”¨ä¸­ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
+        // Copyæ–¹å‘ã®é…åˆ—
         boost::dynamic_bitset<> m_alive;
 
-        // Š„‚è“–‚Ä‰Â”\‚©‚Ç‚¤‚©‚ÌƒŠƒXƒg
+        // å‰²ã‚Šå½“ã¦å¯èƒ½ã‹ã©ã†ã‹ã®ãƒªã‚¹ãƒˆ
         pool_vector<ID> m_freeList;
 
-        // Šm•Û‚·‚éƒTƒCƒY
+        // ç¢ºä¿ã™ã‚‹ã‚µã‚¤ã‚º
         int m_capacity;
     };
 
@@ -204,7 +204,7 @@ namespace Onikiri
             return m_arrayID == 0 || GetOp() == 0;
         }
         
-        // pointer ‚ÆŒİŠ·‚ğæ‚é‚½‚ß‚Ì operator
+        // pointer ã¨äº’æ›ã‚’å–ã‚‹ãŸã‚ã® operator
         Op& operator*() const
         {
             return *m_arrayID->GetOp();

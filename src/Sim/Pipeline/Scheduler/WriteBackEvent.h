@@ -47,7 +47,7 @@ namespace Onikiri
         
     private:
         OpIterator m_op;
-        Scheduler* m_scheduler;         // issueされるスケジューラ
+        Scheduler* m_scheduler;         // issue縺輔ｌ繧九せ繧ｱ繧ｸ繝･繝ｼ繝ｩ
         bool m_wbBegin;
     };
 

@@ -42,9 +42,9 @@ namespace Onikiri {
         public:
             struct DecodedInsn
             {
-                // ‘¦’l
+                // å³å€¤
                 boost::array<u64, 2> Imm;
-                // ƒIƒyƒ‰ƒ“ƒhEƒŒƒWƒXƒ^(dest, src1..3)
+                // ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿(dest, src1..3)
                 boost::array<int, 4> Reg;
 
                 u32 CodeWord;
@@ -54,7 +54,7 @@ namespace Onikiri {
             };
         public:
             Alpha64Decoder();
-            // –½—ßcodeWord‚ğƒfƒR[ƒh‚µCout‚ÉŠi”[‚·‚é
+            // å‘½ä»¤codeWordã‚’ãƒ‡ã‚³ãƒ¼ãƒ‰ã—ï¼Œoutã«æ ¼ç´ã™ã‚‹
             void Decode(u32 codeWord, DecodedInsn* out);
         private:
 

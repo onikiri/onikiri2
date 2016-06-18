@@ -42,8 +42,8 @@ namespace Onikiri
 {
     
     //
-    // ƒ^ƒCƒ€ƒzƒC[ƒ‹‚ÌŠî’êƒNƒ‰ƒX
-    // ƒCƒxƒ“ƒg‚ğ“o˜^/ˆ—‚·‚éd‘g‚İ
+    // ã‚¿ã‚¤ãƒ ãƒ›ã‚¤ãƒ¼ãƒ«ã®åŸºåº•ã‚¯ãƒ©ã‚¹
+    // ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™»éŒ²/å‡¦ç†ã™ã‚‹ä»•çµ„ã¿
     // 
     class TimeWheelBase : 
         public ParamExchange,
@@ -94,7 +94,7 @@ namespace Onikiri
 
     protected:
 
-        // ŠeƒTƒCƒNƒ‹—p‚ÌƒCƒxƒ“ƒg
+        // å„ã‚µã‚¤ã‚¯ãƒ«ç”¨ã®ã‚¤ãƒ™ãƒ³ãƒˆ
         EventWheel m_eventWheel;
 
         int IndexAfterTime( int time ) 
@@ -107,10 +107,10 @@ namespace Onikiri
         }
 
     private:
-        // m_event ‚Ì‚Ç‚±‚ğˆ—‚·‚é‚©
+        // m_event ã®ã©ã“ã‚’å‡¦ç†ã™ã‚‹ã‹
         int m_current;
         
-        // Šm•Û‚·‚éƒTƒCƒY
+        // ç¢ºä¿ã™ã‚‹ã‚µã‚¤ã‚º
         int m_size;
 
         // Time tick

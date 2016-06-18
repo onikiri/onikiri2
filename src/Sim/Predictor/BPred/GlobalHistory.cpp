@@ -59,26 +59,26 @@ void GlobalHistory::Initialize(InitPhase phase)
     }
 }
 
-// dirpred ‚Ì—\‘ª‚É—\‘ªŒ‹‰Ê‚ğ bpred ‚©‚ç‹³‚¦‚Ä‚à‚ç‚¤
+// dirpred ã®äºˆæ¸¬æ™‚ã«äºˆæ¸¬çµæœã‚’ bpred ã‹ã‚‰æ•™ãˆã¦ã‚‚ã‚‰ã†
 void GlobalHistory::Predicted(bool taken)
 {
     *m_globalHistory = ( (*m_globalHistory) << 1 ) | (taken ? 1 : 0);
 }
 
-// •ªŠò‚ÌRetire‚ÉTaken/NotTaken‚ğ bpred ‚©‚ç‹³‚¦‚Ä‚à‚ç‚¤
-// GlobalHistory‚ÌXV‚Í—\‘ª/—\‘ªƒ~ƒX”­Šo‚És‚¤‚Ì‚ÅAÀ‘•‚Í‚µ‚È‚¢
+// åˆ†å²ã®Retireæ™‚ã«Taken/NotTakenã‚’ bpred ã‹ã‚‰æ•™ãˆã¦ã‚‚ã‚‰ã†
+// GlobalHistoryã®æ›´æ–°ã¯äºˆæ¸¬æ™‚/äºˆæ¸¬ãƒŸã‚¹ç™ºè¦šæ™‚ã«è¡Œã†ã®ã§ã€å®Ÿè£…ã¯ã—ãªã„
 void GlobalHistory::Retired(bool taken)
 {
 }
 
-// Å‰ºˆÊƒrƒbƒg(1”ÔÅV‚Ì‚à‚Ì)‚ğ(‹­§“I‚É)•ÏX‚·‚é
-// •ªŠò•ûŒü—\‘ªƒ~ƒX‚É³‚µ‚¢—\‘ª‚ğŠwK‚·‚é‚Ì‚Ég‚¤
+// æœ€ä¸‹ä½ãƒ“ãƒƒãƒˆ(1ç•ªæœ€æ–°ã®ã‚‚ã®)ã‚’(å¼·åˆ¶çš„ã«)å¤‰æ›´ã™ã‚‹
+// åˆ†å²æ–¹å‘äºˆæ¸¬ãƒŸã‚¹æ™‚ã«æ­£ã—ã„äºˆæ¸¬ã‚’å­¦ç¿’ã™ã‚‹ã®ã«ä½¿ã†
 void GlobalHistory::SetLeastSignificantBit(bool taken)
 {
     *m_globalHistory = shttl::deposit(*m_globalHistory, 0, 1, taken);
 }
 
-// GlobalHistory‚ğ•Ô‚·
+// GlobalHistoryã‚’è¿”ã™
 u64 GlobalHistory::GetHistory()
 {
     return *m_globalHistory;

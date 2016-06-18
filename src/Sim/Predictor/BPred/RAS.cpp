@@ -58,12 +58,12 @@ void RAS::Initialize(InitPhase phase)
         ASSERT(MAX_BACKUP_SIZE > 0,
             "MAX_BACKUP_SIZE must be larger than 0.");
 
-        // ‹ó‚ÌpcStack‚ğ¶¬‚·‚é
+        // ç©ºã®pcStackã‚’ç”Ÿæˆã™ã‚‹
         m_stack.resize( m_stackSize, PC() );
     }
     else if(phase == INIT_POST_CONNECTION){
 
-        // checkpointMaster ‚ªƒZƒbƒg‚³‚ê‚Ä‚¢‚é‚©‚Ìƒ`ƒFƒbƒN
+        // checkpointMaster ãŒã‚»ãƒƒãƒˆã•ã‚Œã¦ã„ã‚‹ã‹ã®ãƒã‚§ãƒƒã‚¯
         CheckNodeInitialized( "checkpointMaster", m_checkpointMaster );
 
         m_stackTop.Initialize(
@@ -86,7 +86,7 @@ void RAS::Initialize(InitPhase phase)
     
 }
 
-// call–½—ß‚ÌPC‚ğPush‚·‚é
+// callå‘½ä»¤ã®PCã‚’Pushã™ã‚‹
 void RAS::Push(const SimPC& pc)
 {
     if (m_enableBackup)
@@ -105,7 +105,7 @@ void RAS::Push(const SimPC& pc)
     *m_stackTop = PointStackPos(*m_stackTop, GetStackSize(), 1);
 }
 
-// return–½—ß‚È‚Ì‚ÅPC‚ğPOP‚·‚é
+// returnå‘½ä»¤ãªã®ã§PCã‚’POPã™ã‚‹
 SimPC RAS::Pop()
 {
     // Pop the latest PC.

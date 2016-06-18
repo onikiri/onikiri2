@@ -155,7 +155,7 @@ namespace Onikiri
         virtual void Update();
         virtual void Commit(OpIterator op);
 
-        // ÀsI—¹‚ÉŒÄ‚Î‚ê‚é
+        // å®Ÿè¡Œçµ‚äº†æ™‚ã«å‘¼ã°ã‚Œã‚‹
         void Finished(OpIterator op);
 
         // accessors
@@ -186,29 +186,29 @@ namespace Onikiri
     protected:
         typedef PipelineNodeBase BaseType;
 
-        // ƒtƒFƒbƒ`Ï‚İOp‚ğŠi”[‚·‚é”z—ñ
+        // ãƒ•ã‚§ãƒƒãƒæ¸ˆã¿Opã‚’æ ¼ç´ã™ã‚‹é…åˆ—
         typedef 
             fixed_sized_buffer< OpIterator, SimISAInfo::MAX_OP_INFO_COUNT_PER_PC, Fetcher >
             FetchedOpArray;
 
-        int m_fetchWidth;       // fetch•
-        int m_fetchLatency;     // fetchƒŒƒCƒeƒ“ƒV
+        int m_fetchWidth;       // fetchå¹…
+        int m_fetchLatency;     // fetchãƒ¬ã‚¤ãƒ†ãƒ³ã‚·
 
-        // ƒtƒFƒbƒ`‚µ‚½Op‚Ì”
+        // ãƒ•ã‚§ãƒƒãƒã—ãŸOpã®æ•°
         u64 m_numFetchedOp;
-        // ƒtƒFƒbƒ`‚µ‚½PC‚Ì”
+        // ãƒ•ã‚§ãƒƒãƒã—ãŸPCã®æ•°
         u64 m_numFetchedPC;
-        // ƒtƒFƒbƒ`‚µ‚½ƒtƒFƒbƒ`ƒOƒ‹[ƒv‚Ì” (1ŒÂˆÈã‚Ì–½—ß‚ğƒtƒFƒbƒ`‚µ‚½‰ñ”)
+        // ãƒ•ã‚§ãƒƒãƒã—ãŸãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—ã®æ•° (1å€‹ä»¥ä¸Šã®å‘½ä»¤ã‚’ãƒ•ã‚§ãƒƒãƒã—ãŸå›æ•°)
         u64 m_numFetchGroup;
-        // ƒtƒFƒbƒ`ƒOƒ‹[ƒv“à‚Ì•ªŠò”
+        // ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—å†…ã®åˆ†å²æ•°
         int m_numBranchInFetchGroup;
-        // ƒtƒFƒbƒ`ƒOƒ‹[ƒv“à‚Ì•ªŠò”‚ÌÅ‘å (Œ»ó1ŒÅ’è)
+        // ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—å†…ã®åˆ†å²æ•°ã®æœ€å¤§ (ç¾çŠ¶1å›ºå®š)
         static const int m_maxBranchInFetchGroup = 1;
-        // –‚–@‚ÌƒtƒFƒbƒ`‚ğs‚¤ (1–½—ß‚¸‚ÂƒtƒFƒbƒ`‚ğfetchWidth”{‘¬)
+        // é­”æ³•ã®ãƒ•ã‚§ãƒƒãƒã‚’è¡Œã† (1å‘½ä»¤ãšã¤ãƒ•ã‚§ãƒƒãƒã‚’fetchWidthå€é€Ÿ)
         bool m_idealMode;
         // Check whether the number of fetch stages and the latency of a L1 cache match or not.
         bool m_checkLatencyMismatch;
-        // Ÿ‚ÉƒtƒFƒbƒ`‚ğs‚¤ƒXƒŒƒbƒh‚ÌƒCƒ“ƒfƒbƒNƒX
+        // æ¬¡ã«ãƒ•ã‚§ãƒƒãƒã‚’è¡Œã†ã‚¹ãƒ¬ãƒƒãƒ‰ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
         int m_currentFetchThread;
 
         // Updated content decided by Evaluate() in this cycle.
@@ -234,16 +234,16 @@ namespace Onikiri
             }
         } m_evaluated;
 
-        // •ªŠò—\‘ªŠí
+        // åˆ†å²äºˆæ¸¬å™¨
         BPred* m_bpred;                 
 
         // CacheSystem
         CacheSystem* m_cacheSystem;
 
-        // –½—ß‚Ìî•ñ‚ğ‹³‚¦‚Ä‚­‚ê‚éƒGƒ~ƒ…ƒŒ[ƒ^
+        // å‘½ä»¤ã®æƒ…å ±ã‚’æ•™ãˆã¦ãã‚Œã‚‹ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿
         EmulatorIF* m_emulator;
 
-        // ƒOƒ[ƒoƒ‹ƒNƒƒbƒN
+        // ã‚°ãƒ­ãƒ¼ãƒãƒ«ã‚¯ãƒ­ãƒƒã‚¯
         GlobalClock* m_globalClock;
 
         // Forward Emulator.
@@ -252,12 +252,12 @@ namespace Onikiri
         // FetchThreadSteerer
         FetchThreadSteererIF* m_fetchThreadSteerer;
 
-        // “Œv—p‚ÌƒJƒEƒ“ƒ^
+        // çµ±è¨ˆç”¨ã®ã‚«ã‚¦ãƒ³ã‚¿
         struct StallCycles
         {
-            s64 currentSyscall; // ã—¬‚ÉƒVƒXƒeƒ€ƒR[ƒ‹‚ª‚¢‚é‚Ì‚ÅƒXƒg[ƒ‹
-            s64 nextSyscall;    // Ÿ‚ÉƒtƒFƒbƒ`‚·‚é–½—ß‚ªƒVƒXƒeƒ€ƒR[ƒ‹‚È‚Ì‚ÅƒXƒg[ƒ‹
-            s64 checkpoint;     // ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚Ì”‚ª‘«‚è‚È‚¢‚Ì‚ÅƒXƒg[ƒ‹
+            s64 currentSyscall; // ä¸Šæµã«ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ãŒã„ã‚‹ã®ã§ã‚¹ãƒˆãƒ¼ãƒ«
+            s64 nextSyscall;    // æ¬¡ã«ãƒ•ã‚§ãƒƒãƒã™ã‚‹å‘½ä»¤ãŒã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ãªã®ã§ã‚¹ãƒˆãƒ¼ãƒ«
+            s64 checkpoint;     // ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆã®æ•°ãŒè¶³ã‚Šãªã„ã®ã§ã‚¹ãƒˆãƒ¼ãƒ«
             s64 inorderList;    // Stalled by the shortage of the entries of InorderList.
             s64 total;          // Total stalled cycles.
             s64 others;         
@@ -270,7 +270,7 @@ namespace Onikiri
         // Statistics of ops.
         OpClassStatistics m_opClassStat;
 
-        // ã—¬‘¤‚Ì–½—ß‚ğƒŠƒ^ƒCƒA‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢–½—ß‚©‚Ç‚¤‚©
+        // ä¸Šæµå´ã®å‘½ä»¤ã‚’ãƒªã‚¿ã‚¤ã‚¢ã—ãªã„ã¨ã„ã‘ãªã„å‘½ä»¤ã‹ã©ã†ã‹
         bool IsSerializingRequired( const OpInfo* const info ) const;
         bool IsSerializingRequired( OpIterator op ) const;
         bool IsSerializingRequired( Thread* thread ) const;
@@ -278,28 +278,28 @@ namespace Onikiri
         void CreateCheckpoint(OpIterator op);
         void BackupOnCheckpoint( OpIterator op, bool before );
 
-        // infoArray‚ÆnumOp‚©‚ç Op ‚ğ fetch ‚µ‚Ä fetchedOp ‚ÉŠi”[‚·‚éŠÖ”
+        // infoArrayã¨numOpã‹ã‚‰ Op ã‚’ fetch ã—ã¦ fetchedOp ã«æ ¼ç´ã™ã‚‹é–¢æ•°
         void Fetch( Thread* thread, FetchedOpArray& fetchedOp, PC pc, OpInfo** infoArray, int numOp );  
 
-        // •ªŠò—\‘ª‚ğs‚¤ŠÖ”
+        // åˆ†å²äºˆæ¸¬ã‚’è¡Œã†é–¢æ•°
         void PredictNextPC(OpIterator op, PC fetchGroupPC);
         void PredictNextPCBody( BranchPredictionHookParam* param );
 
-        // iCache‚ÉƒAƒNƒZƒX‚µ‚ÄƒŒƒCƒeƒ“ƒV‚ğ•Ô‚·ŠÖ”
+        // iCacheã«ã‚¢ã‚¯ã‚»ã‚¹ã—ã¦ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™é–¢æ•°
         const int GetICacheReadLatency(const PC& pc);
 
         // Enter an op to the fetcher pipeline.
         // An op is send to the renamer automatically when the op exits the fetch pipeline.
         void EnterPipeline( OpIterator op, int nextEventCycle );
 
-        // array“à‚Ìop‚ğˆø”‚Æ‚µ‚ÄCƒƒ“ƒoŠÖ”ƒ|ƒCƒ“ƒ^‚©‚çŒÄ‚Ño‚µ‚ğs‚¤
+        // arrayå†…ã®opã‚’å¼•æ•°ã¨ã—ã¦ï¼Œãƒ¡ãƒ³ãƒé–¢æ•°ãƒã‚¤ãƒ³ã‚¿ã‹ã‚‰å‘¼ã³å‡ºã—ã‚’è¡Œã†
         void ForEachOp(FetchedOpArray& c, int size, void (Fetcher::*func)(OpIterator));
 
-        // ã‚Æ“¯‚¶‚¾‚ªˆø”‚ğˆê‚Â‚Æ‚ê‚é
+        // ä¸Šã¨åŒã˜ã ãŒå¼•æ•°ã‚’ä¸€ã¤ã¨ã‚Œã‚‹
         template <typename T1>
         void ForEachOpArg1(FetchedOpArray& c, int size, T1 arg1, void (Fetcher::*func)(OpIterator, T1));
 
-        // infoArray ‚ğƒtƒFƒbƒ`‚Å‚«‚é‚©‚Ç‚¤‚©
+        // infoArray ã‚’ãƒ•ã‚§ãƒƒãƒã§ãã‚‹ã‹ã©ã†ã‹
         void CanFetchBody( FetchDecisionHookParam* param );
         bool CanFetch( Thread* thread, PC pc, OpInfo** infoArray, int numOp );
 

@@ -159,8 +159,8 @@ namespace Onikiri
 
     enum CacheAccessEventType
     {
-        // ƒ~ƒX‚Ì‚ŸƒLƒƒƒbƒVƒ…‚Ö‚ÌƒAƒNƒZƒX‚ª‹A‚Á‚Ä‚«‚½Û‚ÉCPendingAccess ‚©‚çŒÄ‚Î‚ê‚éD
-        // AccessFinished ‚ÌÀ‘•‚Å‚Í addr ‚ÉŠY“–‚·‚éƒ‰ƒCƒ“‚Ö‘‚«‚İ‚ğ”½‰f‚³‚¹‚éD
+        // ãƒŸã‚¹æ™‚ã®é«˜æ¬¡ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ãŒå¸°ã£ã¦ããŸéš›ã«ï¼ŒPendingAccess ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ï¼
+        // AccessFinished ã®å®Ÿè£…ã§ã¯ addr ã«è©²å½“ã™ã‚‹ãƒ©ã‚¤ãƒ³ã¸æ›¸ãè¾¼ã¿ã‚’åæ˜ ã•ã›ã‚‹ï¼
         CAET_FILL_FROM_NEXT_CACHE_FINISHED,     
         CAET_FILL_FROM_MAL_FINISHED,        // From a missed access list
 
@@ -190,7 +190,7 @@ namespace Onikiri
     public:
         virtual ~CacheAccessNotifieeIF(){};
 
-        // PendingAccess ‚©‚çŠeíƒAƒNƒZƒXI—¹‚Ì’Ê’m‚ğ‚¤‚¯‚é
+        // PendingAccess ã‹ã‚‰å„ç¨®ã‚¢ã‚¯ã‚»ã‚¹çµ‚äº†ã®é€šçŸ¥ã‚’ã†ã‘ã‚‹
         virtual void AccessFinished( 
             const CacheAccess&     access, 
             const CacheAccessNotificationParam &param 

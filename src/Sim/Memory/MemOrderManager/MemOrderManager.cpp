@@ -90,7 +90,7 @@ void MemOrderManager::Initialize( InitPhase phase )
     }
     else if( phase == INIT_POST_CONNECTION ){
 
-        // ƒƒ“ƒo•Ï”‚ªƒZƒbƒg‚³‚ê‚Ä‚¢‚é‚©‚Ìƒ`ƒFƒbƒN
+        // ãƒ¡ãƒ³ãƒå¤‰æ•°ãŒã‚»ãƒƒãƒˆã•ã‚Œã¦ã„ã‚‹ã‹ã®ãƒã‚§ãƒƒã‚¯
         CheckNodeInitialized( "core", m_core );
         CheckNodeInitialized( "emulator", m_emulator );
         CheckNodeInitialized( "cacheSystem", m_cacheSystem );
@@ -98,7 +98,7 @@ void MemOrderManager::Initialize( InitPhase phase )
         m_cache = m_cacheSystem->GetFirstLevelDataCache();
         m_cacheLatency = m_cache->GetStaticLatency();
 
-        // List‚È‚Ç‚Ì‰Šú‰»
+        // Listãªã©ã®åˆæœŸåŒ–
         m_loadList.resize(*m_core->GetOpArray());
         m_storeList.resize(*m_core->GetOpArray());
         m_memOperations.SetTargetEndian( m_emulator->GetISAInfo()->IsLittleEndian() );
@@ -129,22 +129,22 @@ void MemOrderManager::Finalize()
 void MemOrderManager::DetectAccessOrderViolation( OpIterator store )
 {
     /*
-    —áF
-    ƒvƒƒOƒ‰ƒ€ƒI[ƒ_‚Åã—¬‘¤‚ªã‚É‘‚¢‚Ä‚ ‚é
+    ä¾‹ï¼š
+    ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚ªãƒ¼ãƒ€ã§ä¸Šæµå´ãŒä¸Šã«æ›¸ã„ã¦ã‚ã‚‹
 
     store1   [A] = Y --- op
     load1    U   = [A]
     store2   [A] = Z
     load2    V   = [A]
     
-    ‚Å store1 ‚ªÄƒXƒPƒWƒ…[ƒŠƒ“ƒO‚³‚ê‚½‚Æ‚«Aload1, load2‚ğÄƒXƒPƒWƒ…[ƒŠƒ“ƒO‚·‚é
-    ‚Ü‚½Aload1‚ªstore1‚æ‚è‚àæ‚ÉÀs‚³‚ê‚Ä‚¢‚½‚Æ‚«‚àAload1, load2‚ğÄƒXƒPƒWƒ…[ƒŠƒ“ƒO‚·‚é
+    ã§ store1 ãŒå†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°ã•ã‚ŒãŸã¨ãã€load1, load2ã‚’å†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°ã™ã‚‹
+    ã¾ãŸã€load1ãŒstore1ã‚ˆã‚Šã‚‚å…ˆã«å®Ÿè¡Œã•ã‚Œã¦ã„ãŸã¨ãã‚‚ã€load1, load2ã‚’å†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°ã™ã‚‹
     */
 
-    // store ‚Å‚È‚¯‚ê‚ÎƒGƒ‰[
+    // store ã§ãªã‘ã‚Œã°ã‚¨ãƒ©ãƒ¼
     ASSERT( store->GetOpClass().IsStore(), "Not store op." );
 
-    // ’m‚ç‚È‚¢ store ‚Å‚ ‚ê‚ÎƒGƒ‰[
+    // çŸ¥ã‚‰ãªã„ store ã§ã‚ã‚Œã°ã‚¨ãƒ©ãƒ¼
     ASSERT( m_storeList.count(store) == 1, "unknown op." );
 
     OpIterator conflictedConsumer = GetConsumerLoad( store, store->GetMemAccess(), 0 );
@@ -157,10 +157,10 @@ void MemOrderManager::DetectAccessOrderViolation( OpIterator store )
         
         g_dumper.Dump( DS_ADDRESS_PREDICTION_MISS, conflictedConsumer );
         
-        // MemDepPred ‚Éˆá”½‚ğ’Ê’m
+        // MemDepPred ã«é•åã‚’é€šçŸ¥
         store->GetThread()->GetMemDepPred()->OrderConflicted( store, conflictedConsumer );
 
-        // ‰ñ•œ‚µ‚Ä‚à‚ç‚¤
+        // å›å¾©ã—ã¦ã‚‚ã‚‰ã†
         Recoverer* recoverer = store->GetThread()->GetRecoverer();
         recoverer->RecoverDataPredMiss( 
             store, 
@@ -230,7 +230,7 @@ void MemOrderManager::Allocate(OpIterator op)
     }
 }
 
-// ÀsI—¹
+// å®Ÿè¡Œçµ‚äº†
 void MemOrderManager::Finished( OpIterator op )
 {
     const OpClass& opClass = op->GetOpClass();
@@ -246,14 +246,14 @@ void MemOrderManager::Finished( OpIterator op )
     }
 }
 
-// ƒAƒhƒŒƒX‚ªˆê’v‚·‚éæs‚Ìstore‚ªMemOrderManager‚Ì’†‚É‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’f‚·‚é
-// InnerAccess‚Ìƒ`ƒFƒbƒN‚Ís‚í‚È‚¢
+// ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒä¸€è‡´ã™ã‚‹å…ˆè¡Œã®storeãŒMemOrderManagerã®ä¸­ã«ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤æ–­ã™ã‚‹
+// InnerAccessã®ãƒã‚§ãƒƒã‚¯ã¯è¡Œã‚ãªã„
 OpIterator MemOrderManager::GetProducerStore( OpIterator consumer, const MemAccess& access ) const
 {
     ASSERT( access.address.pid != PID_INVALID );
 
-    // ƒAƒhƒŒƒX‚ªˆê’v‚·‚éæs‚Ìstore‚ªMemOrderManager‚Ì’†‚É‚¢‚éê‡AMemOrderManager‚©‚çRead‚ğs‚¤
-    // m_list‚ğop‚ÌˆÊ’u‚©‚ç‘O•û‚É’Tõ
+    // ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒä¸€è‡´ã™ã‚‹å…ˆè¡Œã®storeãŒMemOrderManagerã®ä¸­ã«ã„ã‚‹å ´åˆã€MemOrderManagerã‹ã‚‰Readã‚’è¡Œã†
+    // m_listã‚’opã®ä½ç½®ã‹ã‚‰å‰æ–¹ã«æ¢ç´¢
     ASSERT( m_loadList.count(consumer) == 1, "unknown load:\n%s", consumer->ToString().c_str() );
 
     OpIterator producer = OpIterator(0);
@@ -272,7 +272,7 @@ OpIterator MemOrderManager::GetProducerStore( OpIterator consumer, const MemAcce
             continue;
         }
 
-        // ƒGƒ“ƒgƒŠ[‚É“ü‚Á‚Ä‚¢‚éOp‚ªƒXƒgƒA‚ÅƒAƒhƒŒƒX‚ªd‚È‚Á‚Ä‚¢‚½‚ç
+        // ã‚¨ãƒ³ãƒˆãƒªãƒ¼ã«å…¥ã£ã¦ã„ã‚‹OpãŒã‚¹ãƒˆã‚¢ã§ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒé‡ãªã£ã¦ã„ãŸã‚‰
         if( op->GetOpClass().IsStore() &&
             m_memOperations.IsOverlapped( access, op->GetMemAccess() ) 
         ){
@@ -323,11 +323,11 @@ OpIterator MemOrderManager::GetConsumerLoad( OpIterator producer, const MemAcces
 
 void MemOrderManager::Commit(OpIterator op)
 {
-    // •‚Ì§ŒÀ‚ÍŠO‘¤‚Å
+    // å¹…ã®åˆ¶é™ã¯å¤–å´ã§
     const OpClass& opClass = op->GetOpClass();
     if( opClass.IsStore() ){
 
-        // ƒGƒ~ƒ…ƒŒ[ƒ^‚Ì‚Âƒƒ‚ƒŠƒCƒ[ƒW‚Ö‚Ì“Ç‚İ‘‚«
+        // ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã®æŒã¤ãƒ¡ãƒ¢ãƒªã‚¤ãƒ¡ãƒ¼ã‚¸ã¸ã®èª­ã¿æ›¸ã
         MemAccess writeAccess = op->GetMemAccess();
         WriteMemImage( op, &writeAccess );
 
@@ -341,7 +341,7 @@ void MemOrderManager::Commit(OpIterator op)
         if( m_cache )   {
             CacheAccess access( op->GetMemAccess(), op, CacheAccess::OT_WRITE );
             CacheAccessResult result = 
-                m_cache->Write( access, NULL ); // ƒLƒƒƒbƒVƒ…‚É‘‚«‚Ş
+                m_cache->Write( access, NULL ); // ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«æ›¸ãè¾¼ã‚€
             op->SetCacheAccessResult( result );
         }
     }
@@ -404,7 +404,7 @@ void MemOrderManager::Read( OpIterator op, MemAccess* access )
 
     if( !producer.IsNull() ){
 
-        // ƒAƒhƒŒƒX‚ªˆê’v‚·‚éæs‚Ìstore‚ªMemOrderManager‚Ì’†‚É‚¢‚éê‡AMemOrderManager‚©‚çRead‚ğs‚¤
+        // ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒä¸€è‡´ã™ã‚‹å…ˆè¡Œã®storeãŒMemOrderManagerã®ä¸­ã«ã„ã‚‹å ´åˆã€MemOrderManagerã‹ã‚‰Readã‚’è¡Œã†
         const MemAccess& producerAccess = producer->GetMemAccess();
         if( m_memOperations.IsInnerAccess( *access, producerAccess ) ){
             // Normal forwarding
@@ -438,7 +438,7 @@ void MemOrderManager::Read( OpIterator op, MemAccess* access )
     }
     else{
 
-        // ƒAƒhƒŒƒX‚ªˆê’v‚·‚éæs‚Ìstore‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½‚Æ‚«‚ÍAemulator ‚Ì‚à‚Á‚Ä‚¢‚éƒCƒ[ƒW‚©‚ç“Ç‚Ş
+        // ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒä¸€è‡´ã™ã‚‹å…ˆè¡Œã®storeãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã¨ãã¯ã€emulator ã®ã‚‚ã£ã¦ã„ã‚‹ã‚¤ãƒ¡ãƒ¼ã‚¸ã‹ã‚‰èª­ã‚€
         ReadMemImage( op, access );
     }
 
@@ -450,7 +450,7 @@ void MemOrderManager::Write( OpIterator op, MemAccess* access )
     op->SetMemAccess( *access );
 }
 
-// ƒGƒ~ƒ…ƒŒ[ƒ^‚Ì‚Âƒƒ‚ƒŠƒCƒ[ƒW‚Ö‚Ì“Ç‚İ‘‚«
+// ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã®æŒã¤ãƒ¡ãƒ¢ãƒªã‚¤ãƒ¡ãƒ¼ã‚¸ã¸ã®èª­ã¿æ›¸ã
 void MemOrderManager::ReadMemImage( OpIterator op, MemAccess* access )
 {
     MemImageAccessParam param = { GetMemImage(), access };

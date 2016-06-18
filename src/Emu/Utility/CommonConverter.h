@@ -38,27 +38,27 @@ namespace Onikiri {
 
     namespace EmulatorUtility {
 
-        // ŒÅ’è’·‚Ì–½—ß‚ğ OpInfo ‚Ì—ñ‚É•ÏŠ·‚·‚é
+        // å›ºå®šé•·ã®å‘½ä»¤ã‚’ OpInfo ã®åˆ—ã«å¤‰æ›ã™ã‚‹
         template <class Traits>
         class CommonConverter : public ParamExchange
         {
         public:
-            // Traits ‚ÍˆÈ‰º‚Ì typedef ‚Æ’è”‚ğ’è‹`‚µ‚½ struct
+            // Traits ã¯ä»¥ä¸‹ã® typedef ã¨å®šæ•°ã‚’å®šç¾©ã—ãŸ struct
             typedef typename Traits::OpInfoType OpInfoType;
             typedef typename Traits::DecoderType DecoderType;
             typedef typename Traits::CodeWordType CodeWordType;
 
-            static const int MaxOpInfoInCode = Traits::MaxOpInfoDefs;       // 1‚Â‚Ì–½—ß‚ğ•ÏŠ·‚µ‚½‚Æ‚«‚É¶¬‚³‚ê‚éOpInfo‚ÌÅ‘å”
+            static const int MaxOpInfoInCode = Traits::MaxOpInfoDefs;       // 1ã¤ã®å‘½ä»¤ã‚’å¤‰æ›ã—ãŸã¨ãã«ç”Ÿæˆã•ã‚Œã‚‹OpInfoã®æœ€å¤§æ•°
 
             CommonConverter();
             virtual ~CommonConverter();
 
-            // –½—ßŒê codeWord ‚ğOpInfoType‚É•ÏŠ·‚µ‚ÄCinserter ‚Ì¦‚·ƒRƒ“ƒeƒi‚ÉŠi”[‚·‚é
+            // å‘½ä»¤èª codeWord ã‚’OpInfoTypeã«å¤‰æ›ã—ã¦ï¼Œinserter ã®ç¤ºã™ã‚³ãƒ³ãƒ†ãƒŠã«æ ¼ç´ã™ã‚‹
             // ex.) Iter = back_insert_iterator<OpInfoType>
             template<typename Iter>
             void Convert(CodeWordType codeWord, Iter out) const;
 
-            // ParamExchange ’†‚ÌŠÖ”‚ğéŒ¾
+            // ParamExchange ä¸­ã®é–¢æ•°ã‚’å®£è¨€
             typedef ParamExchange ParamExchangeType;
             using ParamExchangeType::LoadParam;
             using ParamExchangeType::ReleaseParam;
@@ -73,11 +73,11 @@ namespace Onikiri {
 
         protected:
 
-            static const int MaxOpInfoDefs = Traits::MaxOpInfoDefs;     // OpDef ’†‚Ì OpInfoDef ”z—ñ‚ÌƒTƒCƒY
-            static const int MaxDstOperands = Traits::MaxDstOperands;   // ƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“‚ÌÅ‘å”
-            static const int MaxSrcOperands = Traits::MaxSrcOperands;   // SrcReg ‚Æ SrcImm ‚Ì‡Œv‚ÌÅ‘å
+            static const int MaxOpInfoDefs = Traits::MaxOpInfoDefs;     // OpDef ä¸­ã® OpInfoDef é…åˆ—ã®ã‚µã‚¤ã‚º
+            static const int MaxDstOperands = Traits::MaxDstOperands;   // ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ã®æœ€å¤§æ•°
+            static const int MaxSrcOperands = Traits::MaxSrcOperands;   // SrcReg ã¨ SrcImm ã®åˆè¨ˆã®æœ€å¤§
 
-            // •Ö—˜‚Ég‚¤‚½‚ß‚Ìtypedef
+            // ä¾¿åˆ©ã«ä½¿ã†ãŸã‚ã®typedef
             typedef typename DecoderType::DecodedInsn DecodedInsn;
             typedef typename OpInfoType::OperandType OperandType;
 
@@ -85,20 +85,20 @@ namespace Onikiri {
             {
                 OpClassCode::OpClassCode Iclass;
 
-                // ƒIƒyƒ‰ƒ“ƒhƒeƒ“ƒvƒŒ[ƒg
+                // ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
                 int DstTemplate[MaxDstOperands];
                 int SrcTemplate[MaxSrcOperands];
 
-                // ‚±‚Ì–½—ß‚ğˆ—‚·‚éŠÖ”
+                // ã“ã®å‘½ä»¤ã‚’å‡¦ç†ã™ã‚‹é–¢æ•°
                 typename OpInfoType::EmulationFunc Func;
             };
 
             struct OpDef {
-                const char* Name;           // –½—ß‚Ì–¼‘O (ƒRƒƒ“ƒg‚É‚Ì‚İg—p)
-                u32         Mask;           // ƒ}ƒXƒN
-                u32         Opcode;         // –½—ß & mask == opcode ‚Ì–½—ß‚É‘Î‚µ‚Ä‚±‚ÌOpDef‚ªƒ}ƒbƒ`‚·‚é
-                int         nOpInfoDefs;    // ƒ}ƒCƒNƒ–½—ß”
-                OpInfoDef   OpInfoDefs[MaxOpInfoDefs];  // ƒ}ƒCƒNƒ–½—ß’è‹`
+                const char* Name;           // å‘½ä»¤ã®åå‰ (ã‚³ãƒ¡ãƒ³ãƒˆã«ã®ã¿ä½¿ç”¨)
+                u32         Mask;           // ãƒã‚¹ã‚¯
+                u32         Opcode;         // å‘½ä»¤ & mask == opcode ã®å‘½ä»¤ã«å¯¾ã—ã¦ã“ã®OpDefãŒãƒãƒƒãƒã™ã‚‹
+                int         nOpInfoDefs;    // ãƒã‚¤ã‚¯ãƒ­å‘½ä»¤æ•°
+                OpInfoDef   OpInfoDefs[MaxOpInfoDefs];  // ãƒã‚¤ã‚¯ãƒ­å‘½ä»¤å®šç¾©
             };
 
 
@@ -117,18 +117,18 @@ namespace Onikiri {
             // Note: this must be an 'ordered' map
             typedef std::map<CodeWordType, OpcodeMap, std::greater<CodeWordType> > MaskMap;
 
-            // ƒJƒXƒ^ƒ}ƒCƒYƒ|ƒCƒ“ƒg
+            // ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚ºãƒã‚¤ãƒ³ãƒˆ
 
-            // ƒŒƒWƒXƒ^”Ô†reg‚ªƒ[ƒƒŒƒWƒXƒ^‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
+            // ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·regãŒã‚¼ãƒ­ãƒ¬ã‚¸ã‚¹ã‚¿ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹
             virtual bool IsZeroReg(int reg) const = 0;
 
-            // srcTemplate ‚É‘Î‰‚·‚éƒIƒyƒ‰ƒ“ƒh‚Ìí—Ş‚ÆCƒŒƒWƒXƒ^‚È‚ç‚Î”Ô†‚ğC‘¦’l‚È‚ç‚Îindex‚ğ•Ô‚·
+            // srcTemplate ã«å¯¾å¿œã™ã‚‹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®ç¨®é¡ã¨ï¼Œãƒ¬ã‚¸ã‚¹ã‚¿ãªã‚‰ã°ç•ªå·ã‚’ï¼Œå³å€¤ãªã‚‰ã°indexã‚’è¿”ã™
             virtual std::pair<OperandType, int> GetActualSrcOperand(int srcTemplate, const DecodedInsn& decoded) const = 0;
 
-            // regTemplate ‚©‚çÀÛ‚ÌƒŒƒWƒXƒ^”Ô†‚ğæ“¾‚·‚é
+            // regTemplate ã‹ã‚‰å®Ÿéš›ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’å–å¾—ã™ã‚‹
             virtual int GetActualRegNumber(int regTemplate, const DecodedInsn& decoded) const = 0;
 
-            // –¢’è‹`–½—ß‚É‘Î‰‚·‚éOpDef‚ğ“¾‚é
+            // æœªå®šç¾©å‘½ä»¤ã«å¯¾å¿œã™ã‚‹OpDefã‚’å¾—ã‚‹
             virtual const OpDef* GetOpDefUnknown() const = 0;
 
         private:
@@ -188,11 +188,11 @@ namespace Onikiri {
             }
         }
 
-        // codeWord ‚É‘Î‰‚·‚é opDef ‚ğ’T‚·
+        // codeWord ã«å¯¾å¿œã™ã‚‹ opDef ã‚’æ¢ã™
         template <class Traits>
         const typename CommonConverter<Traits>::OpDef* CommonConverter<Traits>::FindOpDef(CodeWordType codeWord) const
         {
-            // Mask ‚ÌŒµ‚µ‚¢‚à‚Ì‚©‚ç‡‚É’T‚·
+            // Mask ã®å³ã—ã„ã‚‚ã®ã‹ã‚‰é †ã«æ¢ã™
             for (typename MaskMap::const_iterator e = m_opMap.begin(); e != m_opMap.end(); ++e) {
                 u32 mask = e->first;
                 typename OpcodeMap::const_iterator i = e->second.find(codeWord & mask);
@@ -203,7 +203,7 @@ namespace Onikiri {
             return GetOpDefUnknown();
         }
 
-        // opInfoDef ‚É]‚Á‚Ä–½—ß‚ğOpInfo‚É•ÏŠ·‚·‚é
+        // opInfoDef ã«å¾“ã£ã¦å‘½ä»¤ã‚’OpInfoã«å¤‰æ›ã™ã‚‹
         template <class Traits>
         typename CommonConverter<Traits>::OpInfoType 
             CommonConverter<Traits>::ConvertOneOpInfo(
@@ -216,13 +216,13 @@ namespace Onikiri {
         {
             OpInfoType opInfo(OpClass(opInfoDef.Iclass));
 
-            ASSERT(opInfoDef.Func != 0, "opInfoDef.Func is null");  // ‚±‚ê‚Éˆø‚Á‚©‚©‚é‚Æ‚«‚Í nOpInfoDefs ‚ª•s³
+            ASSERT(opInfoDef.Func != 0, "opInfoDef.Func is null");  // ã“ã‚Œã«å¼•ã£ã‹ã‹ã‚‹ã¨ãã¯ nOpInfoDefs ãŒä¸æ­£
             opInfo.SetEmulationFunc(opInfoDef.Func);
             opInfo.SetMicroOpNum( microNum );
             opInfo.SetMicroOpIndex( microOpIndex );
             opInfo.SetMnemonic(mnemonic);
 
-            // –¢’è‹`–½—ß‚Ìê‡C–½—ßŒê‚ğ‘¦’l‚Æ‚µ‚Ä“ü‚ê‚é
+            // æœªå®šç¾©å‘½ä»¤ã®å ´åˆï¼Œå‘½ä»¤èªã‚’å³å€¤ã¨ã—ã¦å…¥ã‚Œã‚‹
             if (opInfoDef.Iclass == OpClassCode::UNDEF) {
                 opInfo.SetDstOpNum(0);
                 opInfo.SetSrcOpNum(1);
@@ -236,10 +236,10 @@ namespace Onikiri {
                 return opInfo;
             }
 
-            // xxxMap“™‚ÌˆÓ–¡‚É‚Â‚¢‚Ä‚Í CommonOpInfo.h ‚ğQÆ
+            // xxxMapç­‰ã®æ„å‘³ã«ã¤ã„ã¦ã¯ CommonOpInfo.h ã‚’å‚ç…§
 
-            // Dst ƒIƒyƒ‰ƒ“ƒhƒŒƒWƒXƒ^‚Ìİ’è
-            // Dstƒeƒ“ƒvƒŒ[ƒg‚©‚çdecoded’†‚Ì‘Î‰‚·‚éƒŒƒWƒXƒ^”Ô†‚ğæ“¾‚µ‚Äİ’è
+            // Dst ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒ¬ã‚¸ã‚¹ã‚¿ã®è¨­å®š
+            // Dstãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã‹ã‚‰decodedä¸­ã®å¯¾å¿œã™ã‚‹ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’å–å¾—ã—ã¦è¨­å®š
             int dstRegNum = 0;
             int dstOpNum = 0;
             for (int i = 0; i < MaxDstOperands; i ++) {
@@ -261,7 +261,7 @@ namespace Onikiri {
             opInfo.SetDstOpNum(dstOpNum);
             opInfo.SetDstRegNum(dstRegNum);
 
-            // Src ƒIƒyƒ‰ƒ“ƒh (ƒŒƒWƒXƒ^E‘¦’l) ‚Ìİ’è
+            // Src ã‚ªãƒšãƒ©ãƒ³ãƒ‰ (ãƒ¬ã‚¸ã‚¹ã‚¿ãƒ»å³å€¤) ã®è¨­å®š
             int srcRegNum = 0;
             int srcOpNum = 0;
             int immNum = 0;
@@ -278,7 +278,7 @@ namespace Onikiri {
                         ASSERT(srcReg != -1);
 
                         if (IsZeroReg(srcReg)) {
-                            // ‘¦’l‚Æ‚µ‚Ä 0 ‚ğ“ü‚ê‚Ä‚¨‚­
+                            // å³å€¤ã¨ã—ã¦ 0 ã‚’å…¥ã‚Œã¦ãŠã
                             opInfo.SetImmOpMap(immNum, i);
 
                             opInfo.SetImm(immNum, 0);

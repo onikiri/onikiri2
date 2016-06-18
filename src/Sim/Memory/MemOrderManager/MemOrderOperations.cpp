@@ -159,7 +159,7 @@ u64 MemOrderOperations::CorrectEndian( u64 src, int size )
 
 }
     
-// ƒAƒNƒZƒX‚µ‚Ä‚¢‚é”ÍˆÍ‚Éd‚È‚è‚ª‚ ‚é‚©‚Ç‚¤‚©
+// ã‚¢ã‚¯ã‚»ã‚¹ã—ã¦ã„ã‚‹ç¯„å›²ã«é‡ãªã‚ŠãŒã‚ã‚‹ã‹ã©ã†ã‹
 bool MemOrderOperations::IsOverlapped(const MemAccess& access1, const MemAccess& access2) const
 {
     return IsOverlapped(access1.address.address, access1.size, access2.address.address, access2.size);

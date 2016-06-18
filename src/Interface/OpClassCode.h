@@ -36,7 +36,7 @@
 
 namespace Onikiri {
 
-    // –½—ß‚Ìí—Ş
+    // å‘½ä»¤ã®ç¨®é¡
     namespace OpClassCode
     {
         enum OpClassCode
@@ -82,7 +82,7 @@ namespace Onikiri {
 
             ADDR,               // address calculation
 
-            // EXEC_END = ADDR, // Às‚³‚ê‚éinsncode‚ÌÅŒã
+            // EXEC_END = ADDR, // å®Ÿè¡Œã•ã‚Œã‚‹insncodeã®æœ€å¾Œ
 
             iNOP,               // NOP
             fNOP,               // floating NOP
@@ -94,23 +94,23 @@ namespace Onikiri {
             Code_MAX = other
         };
 
-        // OpClassCode c ‚ğC•¶š—ñ‚É•ÏŠ·‚·‚é
+        // OpClassCode c ã‚’ï¼Œæ–‡å­—åˆ—ã«å¤‰æ›ã™ã‚‹
         const char* ToString(int c);
 
-        // •¶š—ñ s ‚ğCOpClassCode ‚É•ÏŠ·‚·‚éD‘Î‰‚·‚éOpClassCode ‚ª‘¶İ‚µ‚È‚¯‚ê‚Î—áŠO‚ğ“Š‚°‚é
+        // æ–‡å­—åˆ— s ã‚’ï¼ŒOpClassCode ã«å¤‰æ›ã™ã‚‹ï¼å¯¾å¿œã™ã‚‹OpClassCode ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ä¾‹å¤–ã‚’æŠ•ã’ã‚‹
         int FromString(const char *s);
 
 
-        // •ªŠòijump‚ğŠÜ‚Şj‚©‚Ç‚¤‚©
+        // åˆ†å²ï¼ˆjumpã‚’å«ã‚€ï¼‰ã‹ã©ã†ã‹
         bool IsBranch( int code );
 
-        // Note: •ªŠò‚ÉŠÖ‚µ‚ÄCConditional, IndirectJump, Call ‚Í”r‘¼‚Å‚Í‚È‚¢
-        //       Return‚ÆCall/Jump‚Í”r‘¼‚¾‚ªCConditional Return‚Í‘¶İ‚·‚é
-        // ğŒ•ªŠò‚©‚Ç‚¤‚©
+        // Note: åˆ†å²ã«é–¢ã—ã¦ï¼ŒConditional, IndirectJump, Call ã¯æ’ä»–ã§ã¯ãªã„
+        //       Returnã¨Call/Jumpã¯æ’ä»–ã ãŒï¼ŒConditional Returnã¯å­˜åœ¨ã™ã‚‹
+        // æ¡ä»¶åˆ†å²ã‹ã©ã†ã‹
         bool IsConditionalBranch( int code );
         bool IsUnconditionalBranch( int code );
 
-        // jump ‚©‚Ç‚¤‚©
+        // jump ã‹ã©ã†ã‹
         bool IsIndirectJump( int code );
 
         // call
@@ -119,33 +119,33 @@ namespace Onikiri {
         // return
         bool IsReturn( int code );
 
-        // ƒTƒuƒ‹[ƒ`ƒ“
+        // ã‚µãƒ–ãƒ«ãƒ¼ãƒãƒ³
         bool IsSubroutine( int code );
 
-        // ƒƒ‚ƒŠ
+        // ãƒ¡ãƒ¢ãƒª
         bool IsMem( int code );
 
-        // ƒ[ƒh
+        // ãƒ­ãƒ¼ãƒ‰
         bool IsLoad( int code );
         
-        // ƒXƒgƒA
+        // ã‚¹ãƒˆã‚¢
         bool IsStore( int code );
 
         // Address calculation
         bool IsAddr( int code );
 
-        // ®”
+        // æ•´æ•°
         bool IsInt( int code );
 
-        // •‚“®¬”“_”
+        // æµ®å‹•å°æ•°ç‚¹æ•°
         bool IsFloat( int code );
 
-        // ®” <-> •‚“®¬”“_”•ÏŠ·
+        // æ•´æ•° <-> æµ®å‹•å°æ•°ç‚¹æ•°å¤‰æ›
         bool IsIFConversion( int code );
 
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚Í’P‘Ì‚ÅÀs‚·‚éB‚·‚È‚í‚¿A
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚ğÀs‚·‚é‘O‚Éã—¬‚Ì–½—ß‚ğ‚·‚×‚ÄƒŠƒ^ƒCƒA‚³‚¹‚ÄA
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚ªƒŠƒ^ƒCƒA‚·‚é‚Ü‚Å‰º—¬‚àƒtƒFƒbƒ`‚µ‚È‚¢
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ã¯å˜ä½“ã§å®Ÿè¡Œã™ã‚‹ã€‚ã™ãªã‚ã¡ã€
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ã‚’å®Ÿè¡Œã™ã‚‹å‰ã«ä¸Šæµã®å‘½ä»¤ã‚’ã™ã¹ã¦ãƒªã‚¿ã‚¤ã‚¢ã•ã›ã¦ã€
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ãŒãƒªã‚¿ã‚¤ã‚¢ã™ã‚‹ã¾ã§ä¸‹æµã‚‚ãƒ•ã‚§ãƒƒãƒã—ãªã„
         bool IsSyscall( int code );
 
         // Nop

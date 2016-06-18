@@ -131,8 +131,8 @@ void InorderList::Initialize(InitPhase phase)
 }
 
 
-// --- Op ‚Ì¶¬E”jŠü‚ÉŠÖ‚·‚éŠÖ”
-// Op ‚Ì¶¬
+// --- Op ã®ç”Ÿæˆãƒ»ç ´æ£„ã«é–¢ã™ã‚‹é–¢æ•°
+// Op ã®ç”Ÿæˆ
 OpIterator InorderList::ConstructOp(const OpInitArgs& args)
 {
     OpIterator op = m_opArray->CreateOp();
@@ -141,18 +141,18 @@ OpIterator InorderList::ConstructOp(const OpInitArgs& args)
     return op;
 }
         
-// Op ‚Ì”jŠü
+// Op ã®ç ´æ£„
 void InorderList::DestroyOp(OpIterator op)
 {
     m_opArray->ReleaseOp(op);
 }
 
 
-// --- ƒtƒFƒbƒ`‚ÉŠÖŒW‚·‚éŠÖ”
-// op‚ªfetch‚³‚ê‚½‚Æ‚«‚Ìˆ—
+// --- ãƒ•ã‚§ãƒƒãƒã«é–¢ä¿‚ã™ã‚‹é–¢æ•°
+// opãŒfetchã•ã‚ŒãŸã¨ãã®å‡¦ç†
 void InorderList::PushBack(OpIterator op)
 {
-    // ––”ö‚ÉƒGƒ“ƒgƒŠ‚ğì‚é
+    // æœ«å°¾ã«ã‚¨ãƒ³ãƒˆãƒªã‚’ä½œã‚‹
     m_inorderList.push_back(op);
 }
 
@@ -163,8 +163,8 @@ void InorderList::PopBack()
 }
 
 
-// --- æ“ª/––”ö‚Ì–½—ß‚â‚ ‚é–½—ß‚Ì‘O/Ÿ‚Ì–½—ß‚ğ“¾‚éŠÖ”
-// –¢ƒRƒ~ƒbƒg–½—ß‚Ì‚¤‚¿CƒvƒƒOƒ‰ƒ€ƒI[ƒ_‚Åæ“ª‚É–½—ß
+// --- å…ˆé ­/æœ«å°¾ã®å‘½ä»¤ã‚„ã‚ã‚‹å‘½ä»¤ã®å‰/æ¬¡ã®å‘½ä»¤ã‚’å¾—ã‚‹é–¢æ•°
+// æœªã‚³ãƒŸãƒƒãƒˆå‘½ä»¤ã®ã†ã¡ï¼Œãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚ªãƒ¼ãƒ€ã§å…ˆé ­ã«å‘½ä»¤
 OpIterator InorderList::GetCommittedFrontOp()
 {
     if( m_committedList.empty() ){
@@ -183,7 +183,7 @@ OpIterator InorderList::GetFrontOp()
     return m_inorderList.front();
 }
 
-// ƒvƒƒOƒ‰ƒ€ƒI[ƒ_‚ÅÅŒã‚É‚ ‚é–½—ß
+// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚ªãƒ¼ãƒ€ã§æœ€å¾Œã«ã‚ã‚‹å‘½ä»¤
 OpIterator InorderList::GetBackOp()
 {
     if(m_inorderList.empty())
@@ -192,7 +192,7 @@ OpIterator InorderList::GetBackOp()
         return m_inorderList.back();
 }
 
-// ’¼‘O‚ÌIndex‚ÌOp‚ğ•Ô‚·
+// ç›´å‰ã®Indexã®Opã‚’è¿”ã™
 /*
 op1 ( PC = PC0, No = 0 )
 op2 ( PC = PC0, No = 1 )
@@ -210,7 +210,7 @@ OpIterator InorderList::GetPrevIndexOp(OpIterator op)
     return *(--m_inorderList.get_iterator(op));
 }
 
-// ’¼Œã‚ÌIndex‚ÌOp‚ğ•Ô‚·
+// ç›´å¾Œã®Indexã®Opã‚’è¿”ã™
 /*
 op1 ( PC = PC0, No = 0 )
 op2 ( PC = PC0, No = 1 )
@@ -228,7 +228,7 @@ OpIterator InorderList::GetNextIndexOp(OpIterator op)
     return *(++m_inorderList.get_iterator(op));
 }
 
-// ’¼‘O‚ÌPC‚ÌOp‚ğ•Ô‚·
+// ç›´å‰ã®PCã®Opã‚’è¿”ã™
 /*
 op1 ( PC = PC0, No = 0 )
 op2 ( PC = PC0, No = 1 )
@@ -244,8 +244,8 @@ OpIterator InorderList::GetPrevPCOp(OpIterator op)
     
     OpIterator prev = op;
 
-    // opNo + 1 ‰ñ GetPrevIndexOp ‚ğŒÄ‚Ô‚Æ’¼‘O‚ÌPC‚Ì–½—ß‚ª“¾‚ç‚ê‚é
-    // ã‚Ì—á‚Å‚Í op3 ‚¾‚Æ 1‰ñAop4 ‚¾‚Æ2‰ñ
+    // opNo + 1 å› GetPrevIndexOp ã‚’å‘¼ã¶ã¨ç›´å‰ã®PCã®å‘½ä»¤ãŒå¾—ã‚‰ã‚Œã‚‹
+    // ä¸Šã®ä¾‹ã§ã¯ op3 ã ã¨ 1å›ã€op4 ã ã¨2å›
     for(int i = 0; i <= opNo; ++i) {
         prev = GetPrevIndexOp(prev);
         
@@ -256,7 +256,7 @@ OpIterator InorderList::GetPrevPCOp(OpIterator op)
     return prev;
 }
 
-// ’¼Œã‚ÌPC‚Ìæ“ª‚ÌOp‚ğ•Ô‚·
+// ç›´å¾Œã®PCã®å…ˆé ­ã®Opã‚’è¿”ã™
 /*
 op1 ( PC = PC0, No = 0 )
 op2 ( PC = PC0, No = 1 )
@@ -269,7 +269,7 @@ OpIterator InorderList::GetNextPCOp(OpIterator op)
 
     OpIterator next = GetNextIndexOp(op);
 
-    // Ÿ‚É No == 0 ‚Å‚ ‚é–½—ß‚ğ’T‚·
+    // æ¬¡ã« No == 0 ã§ã‚ã‚‹å‘½ä»¤ã‚’æ¢ã™
     while( (!next.IsNull()) && (next->GetNo() != 0) ) {
         next = GetNextIndexOp(next);
     }
@@ -277,7 +277,7 @@ OpIterator InorderList::GetNextPCOp(OpIterator op)
     return next;
 }
 
-// “¯‚¶PC ‚Ìæ“ª‚ÌOp‚ğ•Ô‚·(“¯ˆê MicroOp ‚Ìæ“ª‚Ì–½—ß)
+// åŒã˜PC ã®å…ˆé ­ã®Opã‚’è¿”ã™(åŒä¸€ MicroOp ã®å…ˆé ­ã®å‘½ä»¤)
 /*
 op1 ( PC = PC0, No = 0 )
 op2 ( PC = PC0, No = 1 )
@@ -297,7 +297,7 @@ OpIterator InorderList::GetFrontOpOfSamePC(OpIterator op)
     }
 }
 
-// ‹ó‚©‚Ç‚¤‚©
+// ç©ºã‹ã©ã†ã‹
 bool InorderList::IsEmpty()
 {
     return m_inorderList.empty() && m_committedList.empty();
@@ -367,12 +367,12 @@ void InorderList::Retire( OpIterator op )
 // This method flushes ops including 'startOp'.
 int InorderList::FlushBackward( OpIterator startOp )
 {
-    // ƒ~ƒX‚µ‚½–½—ß‚ªÅŒã‚ÉƒtƒFƒbƒ`‚³‚ê‚½–½—ß‚¾‚Á‚½ê‡‚Í‚È‚É‚à‚µ‚È‚¢
+    // ãƒŸã‚¹ã—ãŸå‘½ä»¤ãŒæœ€å¾Œã«ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸå‘½ä»¤ã ã£ãŸå ´åˆã¯ãªã«ã‚‚ã—ãªã„
     if( startOp.IsNull() ){
         return 0;
     }
 
-    // back() ‚©‚ç startOp ‚ğ”­Œ©‚·‚é‚Ü‚ÅFlush‚·‚é
+    // back() ã‹ã‚‰ startOp ã‚’ç™ºè¦‹ã™ã‚‹ã¾ã§Flushã™ã‚‹
     int flushedInsns = 0;
     while( true ){
         OpIterator op = GetBackOp();
@@ -383,7 +383,7 @@ int InorderList::FlushBackward( OpIterator startOp )
 
         bool end = ( op == startOp ) ? true : false;
 
-        // op ‚Ì¶‘¶ŠÔ‚Í‚±‚±‚Ü‚Å
+        // op ã®ç”Ÿå­˜æ™‚é–“ã¯ã“ã“ã¾ã§
         DestroyOp( op );
 
         if( end ){
@@ -406,7 +406,7 @@ void InorderList::Flush(OpIterator op)
 
 void InorderList::NotifyCommit(OpIterator op)
 {
-    // ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚ğ‚Á‚Ä‚¢‚½‚çƒRƒ~ƒbƒg
+    // ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆã‚’æŒã£ã¦ã„ãŸã‚‰ã‚³ãƒŸãƒƒãƒˆ
     if( op->GetBeforeCheckpoint() ) {
         m_checkpointMaster->Commit(op->GetBeforeCheckpoint());
     }
@@ -448,7 +448,7 @@ void InorderList::NotifyRetire( OpIterator op )
     m_renamer->Retire( op );
     m_fetcher->Retire( op );
 
-    // src ‚Ì dependency ‚É‚¢‚È‚­‚È‚é‚±‚Æ‚ğ“`‚¦‚é
+    // src ã® dependency ã«ã„ãªããªã‚‹ã“ã¨ã‚’ä¼ãˆã‚‹
     op->DissolveSrcReg();
     op->DissolveSrcMem();
 }
@@ -477,7 +477,7 @@ void InorderList::NotifyFlush( OpIterator op )
     m_regDepPred->Flush(op);
     m_memDepPred->Flush(op);
 
-    op->DissolveSrcReg();   // src ‚Ì dependency ‚É‚¢‚È‚­‚È‚é‚±‚Æ‚ğ“`‚¦‚é
+    op->DissolveSrcReg();   // src ã® dependency ã«ã„ãªããªã‚‹ã“ã¨ã‚’ä¼ãˆã‚‹
     op->DissolveSrcMem();
 
     m_notifier->NotifyFlush( op );

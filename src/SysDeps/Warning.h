@@ -40,18 +40,18 @@
 
 #ifdef COMPILER_IS_MSVC
 
-#pragma warning( disable: 4100 )    // ˆø”‚ÍŠÖ”‚Ì–{‘Ì•”‚Å 1 “x‚àQÆ‚³‚ê‚Ü‚¹‚ñ
-#pragma warning( disable: 4127 )    // ğŒ®‚ª’è”‚Å‚·
-#pragma warning( disable: 4512 )    // ‘ã“ü‰‰Zq‚ğ¶¬‚Å‚«‚Ü‚¹‚ñ
-#pragma warning( disable: 4702 )    // §Œä‚ª“n‚ç‚È‚¢ƒR[ƒh‚Å‚·
-#pragma warning( disable: 4714 )    // ƒCƒ“ƒ‰ƒCƒ“ŠÖ”‚Å‚Í‚È‚­A__forceinline ‚Æ‚µ‚Ä‹Lq‚³‚ê‚Ä‚¢‚Ü‚·
+#pragma warning( disable: 4100 )    // å¼•æ•°ã¯é–¢æ•°ã®æœ¬ä½“éƒ¨ã§ 1 åº¦ã‚‚å‚ç…§ã•ã‚Œã¾ã›ã‚“
+#pragma warning( disable: 4127 )    // æ¡ä»¶å¼ãŒå®šæ•°ã§ã™
+#pragma warning( disable: 4512 )    // ä»£å…¥æ¼”ç®—å­ã‚’ç”Ÿæˆã§ãã¾ã›ã‚“
+#pragma warning( disable: 4702 )    // åˆ¶å¾¡ãŒæ¸¡ã‚‰ãªã„ã‚³ãƒ¼ãƒ‰ã§ã™
+#pragma warning( disable: 4714 )    // ã‚¤ãƒ³ãƒ©ã‚¤ãƒ³é–¢æ•°ã§ã¯ãªãã€__forceinline ã¨ã—ã¦è¨˜è¿°ã•ã‚Œã¦ã„ã¾ã™
 
 // declaration of 'identifier' hides previous local declaration
 // This warning is disabled for ParamDB macros.
 #pragma warning(disable: 4456)
 
-// ˆÈ‰º‚ÌŒx‚ÍC++•W€’Ê‚è‚Ì“®ì‚ğs‚¤‚±‚Æ‚ğ¦‚µ‚Ä‚¢‚é‚É‚·‚¬‚È‚¢‚Ì‚Ådisable
-#pragma warning( disable: 4345 )    // PODŒ^‚ÌƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÉŠÖ‚·‚éŒx
+// ä»¥ä¸‹ã®è­¦å‘Šã¯C++æ¨™æº–é€šã‚Šã®å‹•ä½œã‚’è¡Œã†ã“ã¨ã‚’ç¤ºã—ã¦ã„ã‚‹ã«ã™ããªã„ã®ã§disable
+#pragma warning( disable: 4345 )    // PODå‹ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã«é–¢ã™ã‚‹è­¦å‘Š
 
 #endif
 

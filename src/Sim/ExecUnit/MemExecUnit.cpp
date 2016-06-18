@@ -71,7 +71,7 @@ void MemExecUnit::Initialize(InitPhase phase)
         CheckNodeInitialized( "memOrderManager", m_memOrderManager );
         CheckNodeInitialized( "cacheSystem", m_cacheSystem );
 
-        // ƒLƒƒƒbƒVƒ…‚Ì”‚ð”‚¦‚é
+        // ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã®æ•°ã‚’æ•°ãˆã‚‹
         m_cache = m_cacheSystem->GetFirstLevelDataCache();
         m_cacheCount = 0;
         Cache* cache = m_cache;
@@ -83,7 +83,7 @@ void MemExecUnit::Initialize(InitPhase phase)
 }
 
 
-// ŽÀsƒŒƒCƒeƒ“ƒVŒã‚É FinishEvent ‚ð“o˜^‚·‚é
+// å®Ÿè¡Œãƒ¬ã‚¤ãƒ†ãƒ³ã‚·å¾Œã« FinishEvent ã‚’ç™»éŒ²ã™ã‚‹
 void MemExecUnit::Execute( OpIterator op )
 {
     ExecUnitBase::Execute( op );    // Not PipelinedExecUnit
@@ -107,15 +107,15 @@ int MemExecUnit::GetExecutedLatency( OpIterator op )
 }
 
 
-// Read ‚ÌŽÀsƒŒƒCƒeƒ“ƒV‚ð•Ô‚·
-// float ‚Ìê‡‚É‚ÍAISA ‚É‚æ‚Á‚Ä‹K’è‚³‚ê‚é•ÏŠ·ƒŒƒCƒeƒ“ƒV‚ð‰Á‚¦‚½‚à‚Ì‚ð•Ô‚·
-// ‚½‚Æ‚¦‚Îalpha21264‚È‚Ç‚Å‚Í float ‚Ì load ‚Ì•ÏŠ·‚É1ƒTƒCƒNƒ‹‚©‚©‚é
+// Read ã®å®Ÿè¡Œãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™
+// float ã®å ´åˆã«ã¯ã€ISA ã«ã‚ˆã£ã¦è¦å®šã•ã‚Œã‚‹å¤‰æ›ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’åŠ ãˆãŸã‚‚ã®ã‚’è¿”ã™
+// ãŸã¨ãˆã°alpha21264ãªã©ã§ã¯ float ã® load ã®å¤‰æ›ã«1ã‚µã‚¤ã‚¯ãƒ«ã‹ã‹ã‚‹
 int MemExecUnit::GetExecutedReadLatency( OpIterator op )
 {
     int readLatency = 0;
 
-    // ‚Ü‚¸ StoreBuffer ‚ÉƒAƒhƒŒƒX‚ªˆê’v‚·‚éæs Store ‚ª‚¢‚È‚¢‚©•·‚­
-    // ‚¢‚È‚¢ê‡‚Í cache ‚ÉƒAƒNƒZƒX
+    // ã¾ãš StoreBuffer ã«ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒä¸€è‡´ã™ã‚‹å…ˆè¡Œ Store ãŒã„ãªã„ã‹èžã
+    // ã„ãªã„å ´åˆã¯ cache ã«ã‚¢ã‚¯ã‚»ã‚¹
     OpIterator producer = GetProducerStore( op );
 
     // Only the first access is set to op, because the second or later cache 
@@ -140,7 +140,7 @@ int MemExecUnit::GetExecutedReadLatency( OpIterator op )
             op->SetCacheAccessResult( result );
         }
 
-        // float ‚Ì Load ‚¾‚Á‚½‚ç•ÏŠ·ƒŒƒCƒeƒ“ƒV‚ð‰Á‚¦‚é
+        // float ã® Load ã ã£ãŸã‚‰å¤‰æ›ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’åŠ ãˆã‚‹
         if( op->GetOpClass().IsFloat() ) {
             readLatency += m_floatConversionLatency;
         }
@@ -149,35 +149,35 @@ int MemExecUnit::GetExecutedReadLatency( OpIterator op )
     return readLatency;
 }
 
-// Write‚ÌŽÀsƒŒƒCƒeƒ“ƒV‚ð•Ô‚·
+// Writeã®å®Ÿè¡Œãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™
 int MemExecUnit::GetExecutedWriteLatency(OpIterator op)
 {
-    // StoreBuffer ‚Ö‚Ì Write ƒŒƒCƒeƒ“ƒV( ISA ‚Å‹K’è)‚ð•Ô‚·
+    // StoreBuffer ã¸ã® Write ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·( ISA ã§è¦å®š)ã‚’è¿”ã™
     int code = op->GetOpClass().GetCode();
     int writeLatency = m_execLatencyInfo->GetLatency(code);
 
     return writeLatency; 
 }
 
-// OpCode ‚©‚çŽæ‚è‚¤‚éƒŒƒCƒeƒ“ƒV‚ÌŽí—Þ‚Ì”‚ð•Ô‚·
+// OpCode ã‹ã‚‰å–ã‚Šã†ã‚‹ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã®ç¨®é¡žã®æ•°ã‚’è¿”ã™
 int MemExecUnit::GetLatencyCount(const OpClass& opClass)
 {
     ASSERT(opClass.IsMem(), "not mem op");
     if( opClass.IsStore() ) {
-        // store ‚ÍŒÅ’èƒŒƒCƒeƒ“ƒV
+        // store ã¯å›ºå®šãƒ¬ã‚¤ãƒ†ãƒ³ã‚·
         return 1;
     }
 
-    // load ‚ÍƒLƒƒƒbƒVƒ…‚Ì”‚¾‚¯Žæ‚è‚¤‚é‰Â”\«‚ª‚ ‚é
+    // load ã¯ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã®æ•°ã ã‘å–ã‚Šã†ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹
     return m_cacheCount;
 }
 
-// OpCode ‚ÆƒCƒ“ƒfƒNƒX‚©‚çƒŒƒCƒeƒ“ƒV‚ð•Ô‚·
+// OpCode ã¨ã‚¤ãƒ³ãƒ‡ã‚¯ã‚¹ã‹ã‚‰ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’è¿”ã™
 int MemExecUnit::GetLatency(const OpClass& opClass, int index)
 {
     ASSERT( opClass.IsMem(), "not mem op");
     if( opClass.IsStore() ) {
-        // store ‚ÌƒŒƒCƒeƒ“ƒV‚Í ExecLatencyInfo ‚É•·‚­
+        // store ã®ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã¯ ExecLatencyInfo ã«èžã
         return m_execLatencyInfo->GetLatency(opClass.GetCode());
     }
     

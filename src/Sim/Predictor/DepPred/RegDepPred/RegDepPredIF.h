@@ -37,33 +37,33 @@
 namespace Onikiri 
 {
 
-    // ���W�X�^�̈ˑ��֌W�\����̃C���^�[�t�F�[�X
+    // レジスタの依存関係予測器のインターフェース
     class RegDepPredIF : public DepPredIF 
     {
     public:
         virtual ~RegDepPredIF(){};
 
-        // �\�[�X�E���W�X�^�ɑΉ����镨�����W�X�^�ԍ���Ԃ�
+        // ソース・レジスタに対応する物理レジスタ番号を返す
         virtual int ResolveReg(const int lno) = 0;
 
-        // ResolveReg �Ɠ��l�ɕ������W�X�^�ԍ���Ԃ��D
-        // ���������̃��\�b�h�̌Ăяo���ɂ�蕛��p���Ȃ������ۏ؂����D
-        // �G�~�����[�V����<>�V�~�����[�V�������Ȃǂ�
-        // �R���e�L�X�g�擾���ȂǂɎg�p
+        // ResolveReg と同様に物理レジスタ番号を返す．
+        // ただしこのメソッドの呼び出しにより副作用がない事が保証される．
+        // エミュレーション<>シミュレーション時などの
+        // コンテキスト取得時などに使用
         virtual int PeekReg(const int lno) const = 0;
         
-        // �f�X�e�B�l�[�V�����E���W�X�^�ɕ������W�X�^�ԍ������蓖�Ă�
+        // デスティネーション・レジスタに物理レジスタ番号を割り当てる
         virtual int AllocateReg(OpIterator op, const int lno) = 0;
 
-        // retire�����̂ŁAop��������ׂ��������W�X�^�����
+        // retireしたので、opが解放すべき物理レジスタを解放
         virtual void ReleaseReg(OpIterator op, const int lno, int phyRegNo) = 0;
-        // flush���ꂽ�̂ŁAop�̃f�X�e�B�l�[�V�����E���W�X�^�����
+        // flushされたので、opのデスティネーション・レジスタを解放
         virtual void DeallocateReg(OpIterator op, const int lno, int phyRegNo) = 0; 
 
-        // num�������W�X�^�����蓖�Ă邱�Ƃ��ł��邩�ǂ���
+        // num個物理レジスタを割り当てることができるかどうか
         virtual bool CanAllocate(OpIterator* infoArray, int numOp) = 0;
 
-        // �_��/�������W�X�^�̌�
+        // 論理/物理レジスタの個数
         virtual int GetRegSegmentCount() = 0;
         virtual int GetLogicalRegCount(int segment) = 0;
         virtual int GetTotalLogicalRegCount() = 0;

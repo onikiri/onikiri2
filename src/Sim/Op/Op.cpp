@@ -121,7 +121,7 @@ void Op::Initialize(const OpInitArgs& args)
     SetTID( args.pc->tid );
 
     //m_id            = id;
-    // m_event ‚Í retire/flush ‚É‰Šú‰»‚³‚ê‚Ä‚¢‚é
+    // m_event ã¯ retire/flush æ™‚ã«åˆæœŸåŒ–ã•ã‚Œã¦ã„ã‚‹
     // m_event.clear();
     // m_event.reserve(8);
 
@@ -288,7 +288,7 @@ void Op::ClearEvent()
 }
 
 
-// dependency ‚ğ reset ‚·‚é
+// dependency ã‚’ reset ã™ã‚‹
 void Op::ResetDependency()
 {
     int dstDepNum = GetDstDepNum();
@@ -297,18 +297,18 @@ void Op::ResetDependency()
     }
 }
 
-// Op©g‚ğÄƒXƒPƒWƒ…[ƒ‹‚·‚é
+// Opè‡ªèº«ã‚’å†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«ã™ã‚‹
 void Op::RescheduleSelf( bool clearIssueState )
 {
-    // ƒXƒPƒWƒ…[ƒ‰‚É“ü‚Á‚Ä‚¢‚È‚¯‚ê‚ÎÄƒXƒPƒWƒ…[ƒ‹‚µ‚È‚¢
+    // ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©ã«å…¥ã£ã¦ã„ãªã‘ã‚Œã°å†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«ã—ãªã„
     if( !IsDispatched() ) {
         return;
     }
 
-    // dependency ‚ÌƒŠƒZƒbƒg
+    // dependency ã®ãƒªã‚»ãƒƒãƒˆ
     ResetDependency();
     
-    // event ‚ÌƒLƒƒƒ“ƒZƒ‹
+    // event ã®ã‚­ãƒ£ãƒ³ã‚»ãƒ«
     CancelEvent();
 
     // Reset an issue state.
@@ -317,7 +317,7 @@ void Op::RescheduleSelf( bool clearIssueState )
     }
 }
 
-// –½—ßÀs
+// å‘½ä»¤å®Ÿè¡Œ
 void Op::ExecutionBegin()
 {
     m_core->GetEmulator()->Execute(this, m_opInfo);
@@ -361,13 +361,13 @@ void Op::DissolveSrcMem()
     }
 }
 
-// consumer –½—ß‚Ì’†‚Å‚à‚Á‚Æ‚àÅ‰‚ÉƒtƒFƒbƒ`‚³‚ê‚½–½—ß‚ğ•Ô‚·
-// consumer –½—ß‚ª‚¢‚È‚¯‚ê‚Î0‚ğ•Ô‚·
+// consumer å‘½ä»¤ã®ä¸­ã§ã‚‚ã£ã¨ã‚‚æœ€åˆã«ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸå‘½ä»¤ã‚’è¿”ã™
+// consumer å‘½ä»¤ãŒã„ãªã‘ã‚Œã°0ã‚’è¿”ã™
 OpIterator Op::GetFirstConsumer()
 {
     OpIterator result(0);
 
-    // •¨—ƒŒƒWƒXƒ^‚Ì’†‚©‚ç‚à‚Á‚Æ‚àæ‚ÉƒtƒFƒbƒ`‚³‚ê‚½consumer‚ğ’T‚·
+    // ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ä¸­ã‹ã‚‰ã‚‚ã£ã¨ã‚‚å…ˆã«ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸconsumerã‚’æ¢ã™
     int dstRegNum = m_dstNum;
     for( int i = 0; i < dstRegNum; ++i ) {
         if(m_dstReg[i] == UNSET_REG) continue;
@@ -377,15 +377,15 @@ OpIterator Op::GetFirstConsumer()
         
         if( consumers.empty() ) continue;
         
-        // ƒvƒƒOƒ‰ƒ€EƒI[ƒ_‚ÅƒŠƒl[ƒ€‚ªs‚í‚êƒŠƒXƒg‚É“ü‚ê‚ç‚ê‚Ä‚¢‚é‚Ì‚Å
-        // ƒŠƒXƒg‚Ìæ“ª‚É‚ ‚é–½—ß‚ªˆê”Ôæ‚ÉƒtƒFƒbƒ`‚³‚ê‚½
+        // ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãƒ»ã‚ªãƒ¼ãƒ€ã§ãƒªãƒãƒ¼ãƒ ãŒè¡Œã‚ã‚Œãƒªã‚¹ãƒˆã«å…¥ã‚Œã‚‰ã‚Œã¦ã„ã‚‹ã®ã§
+        // ãƒªã‚¹ãƒˆã®å…ˆé ­ã«ã‚ã‚‹å‘½ä»¤ãŒä¸€ç•ªå…ˆã«ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸ
         OpIterator frontOp = consumers.front();
         if( result.IsNull() || result->GetSerialID() > frontOp->GetSerialID() ) {
             result = frontOp;
         }
     }
 
-    // •¨—ƒŒƒWƒXƒ^‚Ì’†‚©‚ç‚à‚Á‚Æ‚àæ‚ÉƒtƒFƒbƒ`‚³‚ê‚½consumer‚ğ’T‚·
+    // ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ä¸­ã‹ã‚‰ã‚‚ã£ã¨ã‚‚å…ˆã«ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸconsumerã‚’æ¢ã™
     int dstMemNum = MAX_DST_MEM_NUM;
     for( int i = 0; i < dstMemNum; ++i ) {
         MemDependencyPtr memDependency = m_dstMem[i];
@@ -394,8 +394,8 @@ OpIterator Op::GetFirstConsumer()
         const Dependency::ConsumerListType& consumers = memDependency->GetConsumers();
         if( consumers.empty() ) continue;
         
-        // ƒvƒƒOƒ‰ƒ€EƒI[ƒ_‚ÅƒŠƒl[ƒ€‚ªs‚í‚êƒŠƒXƒg‚É“ü‚ê‚ç‚ê‚Ä‚¢‚é‚Ì‚Å
-        // ƒŠƒXƒg‚Ìæ“ª‚É‚ ‚é–½—ß‚ªˆê”Ôæ‚ÉƒtƒFƒbƒ`‚³‚ê‚½
+        // ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãƒ»ã‚ªãƒ¼ãƒ€ã§ãƒªãƒãƒ¼ãƒ ãŒè¡Œã‚ã‚Œãƒªã‚¹ãƒˆã«å…¥ã‚Œã‚‰ã‚Œã¦ã„ã‚‹ã®ã§
+        // ãƒªã‚¹ãƒˆã®å…ˆé ­ã«ã‚ã‚‹å‘½ä»¤ãŒä¸€ç•ªå…ˆã«ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸ
         OpIterator frontOp = consumers.front();
         if( result.IsNull() || result->GetSerialID() > frontOp->GetSerialID() ) {
             result = frontOp;
@@ -417,7 +417,7 @@ OpIterator Op::GetFirstConsumer()
 
 }
 
-// ƒ\[ƒXƒŒƒWƒXƒ^‚ğƒZƒbƒg‚µ‚ÄA•¨—ƒŒƒWƒXƒ^‚Ìconsumer‚É’Ç‰Á
+// ã‚½ãƒ¼ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’ã‚»ãƒƒãƒˆã—ã¦ã€ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®consumerã«è¿½åŠ 
 void Op::SetSrcReg(int index, int phyRegNo)
 {
     m_srcReg[index] = phyRegNo;
@@ -425,14 +425,14 @@ void Op::SetSrcReg(int index, int phyRegNo)
     GetPhyReg(phyRegNo)->AddConsumer(m_iterator);
 }
 
-// ƒ\[ƒX‚Ìƒƒ‚ƒŠ‚ğƒZƒbƒg‚µ‚ÄAconsumer‚É’Ç‰Á
+// ã‚½ãƒ¼ã‚¹ã®ãƒ¡ãƒ¢ãƒªã‚’ã‚»ãƒƒãƒˆã—ã¦ã€consumerã«è¿½åŠ 
 void Op::SetSrcMem(int index, MemDependencyPtr memDep)
 {
     m_srcMem[index] = memDep;
     memDep->AddConsumer(m_iterator);
 }
 
-// index ”Ô–Ú‚Ì destination ‚Ì•¨—ƒŒƒWƒXƒ^”Ô†‚ğƒZƒbƒg
+// index ç•ªç›®ã® destination ã®ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’ã‚»ãƒƒãƒˆ
 void Op::SetDstReg(int index, int phyRegNo)
 {
     m_dstReg[index] = phyRegNo; 
@@ -445,13 +445,13 @@ void Op::SetDstMem(int index, MemDependencyPtr dstMem)
     m_dstMem[index] = dstMem; 
 }
 
-// index ”Ô–Ú‚Ì destination ‚Ì•¨—ƒŒƒWƒXƒ^”Ô†‚ğ•Ô‚·
+// index ç•ªç›®ã® destination ã®ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’è¿”ã™
 int Op::GetDstReg(int index)
 {
     return m_dstReg[index];
 }
 
-// index ”Ô–Ú‚Ì source ‚Ì•¨—ƒŒƒWƒXƒ^”Ô†‚ğ•Ô‚·
+// index ç•ªç›®ã® source ã®ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’è¿”ã™
 int Op::GetSrcReg(int index)
 {
     return m_srcReg[index];
@@ -493,7 +493,7 @@ std::string Op::ToString(int detail, bool valDetail, const char* delim)
 {
     ostringstream oss;
 
-    // PC‚Ü‚Å
+    // PCã¾ã§
     oss 
         << "GID: " << GetGlobalSerialID() << delim
         << "TID: " << GetTID() << delim
@@ -506,7 +506,7 @@ std::string Op::ToString(int detail, bool valDetail, const char* delim)
 
     if(detail == 0) return oss.str();
 
-    // status ‚Ü‚Å
+    // status ã¾ã§
     oss << GetStatus().ToString() << delim;
 
     if(detail == 1) return oss.str();
@@ -514,7 +514,7 @@ std::string Op::ToString(int detail, bool valDetail, const char* delim)
     oss << GetOpInfo()->GetMnemonic() << delim;
     oss << GetOpClass().ToString() << delim;
 
-    // ˜_—ƒŒƒWƒXƒ^‚Ü‚Å
+    // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã¾ã§
     int dstNum = GetOpInfo()->GetDstNum();
     for(int i = 0; i < dstNum; ++i) {
         oss << "d" << i << ": " ;
@@ -539,13 +539,13 @@ std::string Op::ToString(int detail, bool valDetail, const char* delim)
 
     if(detail == 2) return oss.str();
 
-    // next pc ‚Ü‚Å
+    // next pc ã¾ã§
     oss << "TPC: " << GetTakenPC().pid << "/"
         << hex << GetTakenPC().address << dec
         << ( GetTaken() ? "(t)" : "(n)" ) << delim;
 
     if(detail == 3) return oss.str();
-    // •¨—ƒŒƒWƒXƒ^‚ÌŠ„‚è“–‚Ä
+    // ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®å‰²ã‚Šå½“ã¦
     for(int i = 0; i < SimISAInfo::MAX_DST_REG_COUNT; ++i) {
         if( m_dstReg[i] != UNSET_REG) {
             oss << "r" << GetOpInfo()->GetDstOperand(i)
@@ -568,7 +568,7 @@ std::string Op::ToString(int detail, bool valDetail, const char* delim)
 
     if(detail == 4) return oss.str();
 
-    // •¨—ƒŒƒWƒXƒ^‚Ì’l‚Ü‚Å
+    // ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®å€¤ã¾ã§
     for(int i = 0; i < SimISAInfo::MAX_DST_REG_COUNT; ++i) {
         if( m_dstReg[i] != UNSET_REG) {
             oss << "r" << GetOpInfo()->GetDstOperand(i)
@@ -599,7 +599,7 @@ std::string Op::ToString(int detail, bool valDetail, const char* delim)
 
     if(detail == 5) return oss.str();
 
-    // MemAccess ‚Ì’†g‚Ü‚Å
+    // MemAccess ã®ä¸­èº«ã¾ã§
     oss << "Mem: " << hex << GetMemAccess().address.address << dec << "/"
         << GetMemAccess().size << "/"
         << (GetMemAccess().sign ? "s" : "u") << "/"

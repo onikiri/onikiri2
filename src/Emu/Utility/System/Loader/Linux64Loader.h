@@ -41,14 +41,14 @@ namespace Onikiri {
         class MemorySystem;
         class ElfReader;
         
-        // 64-bit Linux (ELF) —p‚Ìƒ[ƒ_[
+        // 64-bit Linux (ELF) ç”¨ã®ãƒ­ãƒ¼ãƒ€ãƒ¼
         class Linux64Loader : public LoaderIF
         {
         public:
             Linux64Loader(u16 machine);
             virtual ~Linux64Loader();
 
-            // LoaderIF ‚ÌÀ‘•
+            // LoaderIF ã®å®Ÿè£…
             virtual void LoadBinary(EmulatorUtility::MemorySystem* memory, const String& command);
             virtual void InitArgs(EmulatorUtility::MemorySystem* memory, u64 stackHead, u64 stackSize, const String& command, const String& commandArgs);
             virtual u64 GetImageBase() const;
@@ -68,17 +68,17 @@ namespace Onikiri {
 
             // Endian
             bool m_bigEndian;
-            // Àsƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚ñ‚¾ƒAƒhƒŒƒX
+            // å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚“ã ã‚¢ãƒ‰ãƒ¬ã‚¹
             u64 m_imageBase;
-            // ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg
+            // ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆ
             u64 m_entryPoint;
-            // SP‚Ì‰Šú’l
+            // SPã®åˆæœŸå€¤
             u64 m_initialSp;
 
             u64 m_elfProgramHeaderOffset;
             u64 m_elfProgramHeaderCount;
 
-            // “Ç‚İ‚ŞELFƒtƒ@ƒCƒ‹‚ÌELFƒ}ƒVƒ“í•Ê
+            // èª­ã¿è¾¼ã‚€ELFãƒ•ã‚¡ã‚¤ãƒ«ã®ELFãƒã‚·ãƒ³ç¨®åˆ¥
             u16 m_machine;
         };
 

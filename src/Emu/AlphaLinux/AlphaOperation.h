@@ -57,7 +57,7 @@ inline void AlphaPALHalt(EmulatorUtility::OpEmulationState* opState)
 // memory barrier
 inline void AlphaPALIMB(EmulatorUtility::OpEmulationState* opState)
 {
-    // ƒVƒ“ƒOƒ‹ƒXƒŒƒbƒh‚È‚Ì‚Å‰½‚à‚µ‚È‚¢
+    // ã‚·ãƒ³ã‚°ãƒ«ã‚¹ãƒ¬ãƒƒãƒ‰ãªã®ã§ä½•ã‚‚ã—ãªã„
 }
 
 // read thread-unique value
@@ -164,7 +164,7 @@ struct AlphaAddr : public std::unary_function<EmulatorUtility::OpEmulationState,
     }
 };
 
-// ldq_u, stq_u —pƒAƒhƒŒƒXŒvZ
+// ldq_u, stq_u ç”¨ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®—
 template<typename TSrc1, typename TSrc2>
 struct AlphaAddrUnaligned : public std::unary_function<EmulatorUtility::OpEmulationState, RegisterType>
 {
@@ -557,7 +557,7 @@ struct AlphaRoundModeFromFPCR : public std::unary_function<EmulatorUtility::OpEm
     {
         u64 fpcr = TSrcFPCR()(opState);
 
-        switch ((fpcr >> 58) & 0x3) {   // FPCR ‚Ì58:59ƒrƒbƒg‚ªŠÛ‚ßƒ‚[ƒh
+        switch ((fpcr >> 58) & 0x3) {   // FPCR ã®58:59ãƒ“ãƒƒãƒˆãŒä¸¸ã‚ãƒ¢ãƒ¼ãƒ‰
         case 0x0:
             return FE_TOWARDZERO;
         case 0x1:

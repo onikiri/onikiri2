@@ -40,8 +40,8 @@ using namespace Onikiri;
 
 // OpObserver
 
-// OpObserver �̃f�t�H���g�R���X�g���N�^
-// OpNotifier ���󂯎��Ȃ��̂ŊO����OpNotifier::Add���Ă�
+// OpObserver のデフォルトコンストラクタ
+// OpNotifier を受け取らないので外側でOpNotifier::Addを呼ぶ
 OpObserver::OpObserver()
 {
 }

@@ -40,37 +40,37 @@ namespace Onikiri
     class Pipeline;
     class Core;
 
-    // PipelineNode‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+    // PipelineNodeã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
     class PipelineNodeIF/*  : public ClockedResourceIF*/
     {
     public:
         PipelineNodeIF(){}
         virtual ~PipelineNodeIF(){}
 
-        // Op‚ªCommit‚·‚é‚Æ‚«
+        // OpãŒCommitã™ã‚‹ã¨ã
         virtual void Commit( OpIterator op ) = 0;
 
-        // Op‚ªCancel‚³‚ê‚é‚Æ‚«
+        // OpãŒCancelã•ã‚Œã‚‹ã¨ã
         virtual void Cancel( OpIterator op ) = 0;
 
-        // ©•ª‚Ì’†‚©‚çOp‚ğÁ‚·
+        // è‡ªåˆ†ã®ä¸­ã‹ã‚‰Opã‚’æ¶ˆã™
         virtual void Retire( OpIterator op ) = 0;
 
-        // Op‚ªFlush‚³‚ê‚é‚Æ‚«
+        // OpãŒFlushã•ã‚Œã‚‹ã¨ã
         virtual void Flush( OpIterator op ) = 0;
 
-        // ƒpƒCƒvƒ‰ƒCƒ“‚ğƒXƒg[ƒ‹‚³‚¹‚é
+        // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚’ã‚¹ãƒˆãƒ¼ãƒ«ã•ã›ã‚‹
         virtual void StallThisCycle() = 0;
-        // ƒpƒCƒvƒ‰ƒCƒ“‚ğcycle”ƒXƒg[ƒ‹‚·‚é
+        // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã‚’cycleæ•°ã‚¹ãƒˆãƒ¼ãƒ«ã™ã‚‹
         virtual void StallNextCycle(int cycle) = 0;
 
-        // ‰º—¬‚ÌPipeline‚ğæ“¾
+        // ä¸‹æµã®Pipelineã‚’å–å¾—
         virtual Pipeline* GetLowerPipeline() = 0;
 
-        // ‰º—¬‚ÌPipelineNode‚ğæ“¾
+        // ä¸‹æµã®PipelineNodeã‚’å–å¾—
         virtual PipelineNodeIF* GetLowerPipelineNode() = 0;
 
-        // ã—¬‚ÌƒpƒCƒvƒ‰ƒCƒ“ƒm[ƒh‚ğæ“¾
+        // ä¸Šæµã®ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ãƒãƒ¼ãƒ‰ã‚’å–å¾—
         virtual PipelineNodeIF* GetUpperPipelineNode() = 0;
 
         // Set lower pipeline nodes.

@@ -40,26 +40,26 @@ namespace Onikiri {
     namespace EmulatorUtility {
         class OpEmulationState;
 
-        // �^�[�Q�b�g����̃V�X�e���R�[����ϊ�����N���X
+        // ターゲットからのシステムコールを変換するクラス
         //
-        // SetArg, GetResult �̈Ӗ���target�̃V�X�e���ɂ���ĕω����邪�C�T�^�I�ɂ͎��̂悤�Ȃ��̂�z��F
-        // �ESetArg : �V�X�e���R�[���̔ԍ��C�V�X�e���R�[���̈���
-        // �EGetResult : �V�X�e���R�[���̖߂�l�C�G���[�R�[�h
+        // SetArg, GetResult の意味はtargetのシステムによって変化するが，典型的には次のようなものを想定：
+        // ・SetArg : システムコールの番号，システムコールの引数
+        // ・GetResult : システムコールの戻り値，エラーコード
         class SyscallConvIF
         {
         public:
             virtual ~SyscallConvIF() {}
 
-            // �V�X�e���R�[���̈��� (index�Ԗ�) ��ݒ肷��
+            // システムコールの引数 (index番目) を設定する
             virtual void SetArg(int index, u64 value) = 0;
 
-            // SetArg �ɂ���ė^����ꂽ�����ɏ]���ăV�X�e���R�[�����s��
+            // SetArg によって与えられた引数に従ってシステムコールを行う
             virtual void Execute(OpEmulationState* opState) = 0;
 
-            // Exec �������ʂ𓾂�
+            // Exec した結果を得る
             virtual u64 GetResult(int index) = 0;
 
-            // callback ����system���Z�b�g
+            // callback するsystemをセット
             virtual void SetSystem(SystemIF* system) = 0;
 
             static const int RetValueIndex = 0;

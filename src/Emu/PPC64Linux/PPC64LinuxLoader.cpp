@@ -80,7 +80,7 @@ u64 PPC64LinuxLoader::GetInitialRegValue(int index) const
 
 u64 PPC64LinuxLoader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
 {
-    // ELF‚ÌƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg‚É‚Í_startŠÖ”‚ÌŠÖ”ƒfƒXƒNƒŠƒvƒ^‚ªŠi”[‚³‚ê‚Ä‚¨‚èCoffset 0‚ÉŠÖ”ƒ|ƒCƒ“ƒ^‚ªŠi”[‚³‚ê‚Ä‚¢‚é
+    // ELFã®ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã«ã¯_starté–¢æ•°ã®é–¢æ•°ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãŒæ ¼ç´ã•ã‚Œã¦ãŠã‚Šï¼Œoffset 0ã«é–¢æ•°ãƒã‚¤ãƒ³ã‚¿ãŒæ ¼ç´ã•ã‚Œã¦ã„ã‚‹
     //return memory->ReadMemory(elfReader.GetEntryPoint(), 8);
     EmuMemAccess access( elfReader.GetEntryPoint(), 8 );
     memory->ReadMemory( &access );
@@ -90,7 +90,7 @@ u64 PPC64LinuxLoader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory,
 
 void PPC64LinuxLoader::CalculateOthers(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
 {
-    // ŠÖ”ƒfƒXƒNƒŠƒvƒ^‚Ìoffset 8‚ªtoc
+    // é–¢æ•°ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®offset 8ãŒtoc
     //m_startTocPointer = memory->ReadMemory(elfReader.GetEntryPoint()+8, 8);
 
     EmuMemAccess access( elfReader.GetEntryPoint()+8, 8 );

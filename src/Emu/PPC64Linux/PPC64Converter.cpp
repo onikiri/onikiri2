@@ -50,35 +50,35 @@ using namespace Onikiri::EmulatorUtility::Operation;
 using namespace Onikiri::PPC64Linux::Operation;
 
 //
-// –½—ß‚Ì’è‹`
+// å‘½ä»¤ã®å®šç¾©
 //
 //
 namespace {
     // XO = extra opcode
 
-    // Še–½—ßŒ`®‚É‘Î‚·‚éƒIƒyƒR[ƒh‚ğ“¾‚é‚½‚ß‚Ìƒ}ƒXƒN (0‚Ìƒrƒbƒg‚ªˆø”)
-    const u32 MASK_EXACT  = 0xffffffff; // ‘Sbit‚ªˆê’v
-    const u32 MASK_OP     = 0xfc000000; // opcode ‚Ì‚İ
-    const u32 MASK_OPF    = 0xfc000001; // opcode ‚Æ Rc
+    // å„å‘½ä»¤å½¢å¼ã«å¯¾ã™ã‚‹ã‚ªãƒšã‚³ãƒ¼ãƒ‰ã‚’å¾—ã‚‹ãŸã‚ã®ãƒã‚¹ã‚¯ (0ã®ãƒ“ãƒƒãƒˆãŒå¼•æ•°)
+    const u32 MASK_EXACT  = 0xffffffff; // å…¨bitãŒä¸€è‡´
+    const u32 MASK_OP     = 0xfc000000; // opcode ã®ã¿
+    const u32 MASK_OPF    = 0xfc000001; // opcode ã¨ Rc
     const u32 MASK_B      = 0xfc000003; // I-Form unconditional branch
     const u32 MASK_MD     = 0xfc00001d; // MD-Form (opcode, 3-bit XO, Rc)
     const u32 MASK_MDS    = 0xfc00001f; // MDS-Form (opcode, 4-bit XO, Rc)
-    const u32 MASK_X2     = 0xfc000003; // 2ƒrƒbƒg‚ÌXO‚Ì‚İ (DS-Form)
+    const u32 MASK_X2     = 0xfc000003; // 2ãƒ“ãƒƒãƒˆã®XOã®ã¿ (DS-Form)
     const u32 MASK_XS9    = 0xfc0007fc; // XS-Form (9-bit XO)
-//  const u32 MASK_X10SH  = 0xfc0007fc; // XO10 - sh (XO ‚Ì‚¤‚¿‰ºˆÊ1ƒrƒbƒg‚ğ sh ‚Ég—p)
-    const u32 MASK_X10    = 0xfc0007fe; // 10ƒrƒbƒg‚ÌXO‚Ì‚İ
+//  const u32 MASK_X10SH  = 0xfc0007fc; // XO10 - sh (XO ã®ã†ã¡ä¸‹ä½1ãƒ“ãƒƒãƒˆã‚’ sh ã«ä½¿ç”¨)
+    const u32 MASK_X10    = 0xfc0007fe; // 10ãƒ“ãƒƒãƒˆã®XOã®ã¿
 
 //  const u32 MASK_X10LK  = 0xfc0007ff; // XO10 + LK (Link Register write)
 
-    const u32 MASK_X10OE  = 0xfc0003fe; // XO10 - OE (XO ‚Ì‚¤‚¿ãˆÊ1ƒrƒbƒg‚ğ OE ‚Ég—p)
-    const u32 MASK_X10MB  = 0xfc00001e; // XO10 - MB (XO ‚Ì‚¤‚¿ãˆÊ6ƒrƒbƒg‚ğ MB/ME ‚Ég—p)
+    const u32 MASK_X10OE  = 0xfc0003fe; // XO10 - OE (XO ã®ã†ã¡ä¸Šä½1ãƒ“ãƒƒãƒˆã‚’ OE ã«ä½¿ç”¨)
+    const u32 MASK_X10MB  = 0xfc00001e; // XO10 - MB (XO ã®ã†ã¡ä¸Šä½6ãƒ“ãƒƒãƒˆã‚’ MB/ME ã«ä½¿ç”¨)
     const u32 MASK_X10MBSH = 0xfc00001c;    // XO10 - MB - SH
 
     const u32 MASK_X5F    = 0xfc00003f; // XO5 + Rc (FP A-Form instructions)
     const u32 MASK_X10F   = 0xfc0007ff; // XO10 + Rc (flag write)
     const u32 MASK_X10FOE = 0xfc0003ff; // XO10 - OE + Rc
     const u32 MASK_X10FSH = 0xfc0007fd; // XO10 - sh + Rc
-    const u32 MASK_X10FMB = 0xfc00001f; // XO10 - MB (XO ‚Ì‚¤‚¿ãˆÊ6ƒrƒbƒg‚ğ MB/ME ‚Ég—p)
+    const u32 MASK_X10FMB = 0xfc00001f; // XO10 - MB (XO ã®ã†ã¡ä¸Šä½6ãƒ“ãƒƒãƒˆã‚’ MB/ME ã«ä½¿ç”¨)
     const u32 MASK_X10FMBSH = 0xfc00001d;   // XO10 - MB - SH + Rc
 
     const u32 MASK_MTFSPR = 0xfc1ffffe; // mtspr/mfspr
@@ -86,7 +86,7 @@ namespace {
     const u32 MASK_DCMP   = 0xfc200000; // D-Form compare (opcode, 32/64-bit flag)
     const u32 MASK_X10CMP = 0xfc2007fe; // X-Form compare (opcode, 32/64-bit flag, 10-bit XO)
 
-    const u32 MASK_RA     = 0x001f0000; // RA‚ÌˆÊ’u (RA=0 ‚ğ“Á•Êˆµ‚¢‚·‚éê‡‚Ég—p)
+    const u32 MASK_RA     = 0x001f0000; // RAã®ä½ç½® (RA=0 ã‚’ç‰¹åˆ¥æ‰±ã„ã™ã‚‹å ´åˆã«ä½¿ç”¨)
 }
 #define MASK_BC(mask_bo) (MASK_B | (mask_bo) << 21)
 #define MASK_BCLR(mask_bo) (MASK_X10 | (mask_bo) << 21 | 0x3 << 11 | 0x1)
@@ -117,15 +117,15 @@ namespace {
 #define OPCODE_MTCRF(c, xo, crf) (u32)(OPCODE_X10(c, xo) | (crf) << 12)
 
 namespace {
-    // ƒIƒyƒ‰ƒ“ƒh‚Ìƒeƒ“ƒvƒŒ[ƒg
-    // [RegTemplateBegin, RegTemplateEnd] ‚ÍC–½—ß’†‚ÌƒIƒyƒ‰ƒ“ƒhƒŒƒWƒXƒ^”Ô†‚É’u‚«Š·‚¦‚ç‚ê‚é
-    // [ImmTemplateBegin, RegTemplateEnd] ‚ÍC‘¦’l‚É’u‚«Š·‚¦‚ç‚ê‚é
+    // ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
+    // [RegTemplateBegin, RegTemplateEnd] ã¯ï¼Œå‘½ä»¤ä¸­ã®ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã«ç½®ãæ›ãˆã‚‰ã‚Œã‚‹
+    // [ImmTemplateBegin, RegTemplateEnd] ã¯ï¼Œå³å€¤ã«ç½®ãæ›ãˆã‚‰ã‚Œã‚‹
 
-    // ƒŒƒWƒXƒ^Eƒeƒ“ƒvƒŒ[ƒg‚Ég—p‚·‚é”Ô†
-    // –{•¨‚ÌƒŒƒWƒXƒ^”Ô†‚ğg‚Á‚Ä‚Í‚È‚ç‚È‚¢
-    static const int RegTemplateBegin = -20;    // –½—ß’†‚ÌƒŒƒWƒXƒ^”Ô†‚É•ÏŠ· (”’l‚ÉˆÓ–¡‚Í‚È‚¢D–{•¨‚ÌƒŒƒWƒXƒ^”Ô†‚Æd‚È‚ç‚¸‚©‚ÂˆêˆÓ‚Å‚ ‚ê‚Î‚æ‚¢)
+    // ãƒ¬ã‚¸ã‚¹ã‚¿ãƒ»ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã«ä½¿ç”¨ã™ã‚‹ç•ªå·
+    // æœ¬ç‰©ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’ä½¿ã£ã¦ã¯ãªã‚‰ãªã„
+    static const int RegTemplateBegin = -20;    // å‘½ä»¤ä¸­ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã«å¤‰æ› (æ•°å€¤ã«æ„å‘³ã¯ãªã„ï¼æœ¬ç‰©ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã¨é‡ãªã‚‰ãšã‹ã¤ä¸€æ„ã§ã‚ã‚Œã°ã‚ˆã„)
     static const int RegTemplateEnd = RegTemplateBegin+4-1;
-    static const int ImmTemplateBegin = -30;    // ‘¦’l‚É•ÏŠ·
+    static const int ImmTemplateBegin = -30;    // å³å€¤ã«å¤‰æ›
     static const int ImmTemplateEnd = ImmTemplateBegin+4-1;
 
     const int R0 = RegTemplateBegin+0;
@@ -186,13 +186,13 @@ namespace {
 
 // no trap implemented
 
-// “Š‹@“I‚ÉƒtƒFƒbƒ`‚³‚ê‚½‚Æ‚«‚É‚ÍƒGƒ‰[‚É‚¹‚¸CÀs‚³‚ê‚½‚Æ‚«‚ÉƒGƒ‰[‚É‚·‚é
-// syscall‚É‚·‚é‚±‚Æ‚É‚æ‚èC’¼‘O‚Ü‚Å‚Ì–½—ß‚ªŠ®—¹‚µ‚Ä‚©‚çÀs‚³‚ê‚é (Às‚Í“Š‹@“I‚Å‚È‚¢)
+// æŠ•æ©Ÿçš„ã«ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸã¨ãã«ã¯ã‚¨ãƒ©ãƒ¼ã«ã›ãšï¼Œå®Ÿè¡Œã•ã‚ŒãŸã¨ãã«ã‚¨ãƒ©ãƒ¼ã«ã™ã‚‹
+// syscallã«ã™ã‚‹ã“ã¨ã«ã‚ˆã‚Šï¼Œç›´å‰ã¾ã§ã®å‘½ä»¤ãŒå®Œäº†ã—ã¦ã‹ã‚‰å®Ÿè¡Œã•ã‚Œã‚‹ (å®Ÿè¡Œã¯æŠ•æ©Ÿçš„ã§ãªã„)
 PPC64Converter::OpDef PPC64Converter::m_OpDefUnknown = 
     {"unknown", MASK_EXACT, 0,  1, {{OpClassCode::UNDEF,    { -1, -1, -1}, {I0, -1, -1, -1, -1, -1},    PPC64Converter::PPC64UnknownOperation}}};
 
 
-// branch‚ÍCOpInfo —ñ‚ÌÅŒã‚¶‚á‚È‚¢‚Æ‚¾‚ß
+// branchã¯ï¼ŒOpInfo åˆ—ã®æœ€å¾Œã˜ã‚ƒãªã„ã¨ã ã‚
 PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] = 
 {
     // system call
@@ -217,12 +217,12 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     // integer
     //
 
-    // - Ÿ‚Ì–½—ß‚Íg—p‚³‚ê‚È‚¢H : td, tdi, tw, twi, isel, div, lmw, smw, string load/store, byte-reversal load/store
-    //                              OE=1 ‚Ì‚à‚Ì
+    // - æ¬¡ã®å‘½ä»¤ã¯ä½¿ç”¨ã•ã‚Œãªã„ï¼Ÿ : td, tdi, tw, twi, isel, div, lmw, smw, string load/store, byte-reversal load/store
+    //                              OE=1 ã®ã‚‚ã®
 
     // arithmetic
 
-    // addi, adds ‚Ì RA=0 ”Å
+    // addi, adds ã® RA=0 ç‰ˆ
     {"li",      MASK_OP | MASK_RA, OPCODE_OP(14), 1, {{OpClassCode::iIMM,  { R0, -1, -1}, { I0, -1, -1, -1, -1, -1}, Set< D0, S0 >}}},
     {"lis",     MASK_OP | MASK_RA, OPCODE_OP(15), 1, {{OpClassCode::iIMM,  { R0, -1, -1}, { I0, -1, -1, -1, -1, -1}, Set< D0, LShiftL< u64, S0, IntConst<unsigned int,16>, 63> >}}},
 
@@ -248,7 +248,7 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
         >
     }}},
 
-    // Carry Flag ‚Í Borrow Flag ‚Ì”Û’è‚Æ‚µ‚Äg—p‚³‚ê‚é
+    // Carry Flag ã¯ Borrow Flag ã®å¦å®šã¨ã—ã¦ä½¿ç”¨ã•ã‚Œã‚‹
     {"subfic",  MASK_OP, OPCODE_OP(8), 1, {{OpClassCode::iALU,  { R0, CA, -1}, { R1, I0, -1, -1, -1, -1}, 
         Sequence2<
                   Set< D1,     BitXor< u64, BorrowOfSub< u64, S1, S0>, IntConst<u64, (u64)1> > >,
@@ -365,7 +365,7 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     {"mullw",   MASK_X10FOE, OPCODE_X10FOE(31, 235, 0, 0), 1, {{OpClassCode::iALU,  { R0, -1, -1}, { R1, R2, -1, -1, -1, -1},       Set< D0,     IntMul< s64, Cast<s32, S0>, Cast<s32, S1> > >}}},
     {"mullw.",  MASK_X10FOE, OPCODE_X10FOE(31, 235, 0, 1), 1, {{OpClassCode::iALU,  { R0,CR0, -1}, { R1, R2, -1, -1, -1, -1}, PPC64SetF< D0, D1, IntMul< s64, Cast<s32, S0>, Cast<s32, S1> > >}}},
 
-    // AShiftR: d—l‚Å‚ÍãˆÊ32ƒrƒbƒg‚Íundefined‚¾‚ªCÀ‹@ (PS3) ‚Å‚Í•„†Šg’£‚µ‚Ä‚é‚æ‚¤‚È‚Ì‚Å
+    // AShiftR: ä»•æ§˜ã§ã¯ä¸Šä½32ãƒ“ãƒƒãƒˆã¯undefinedã ãŒï¼Œå®Ÿæ©Ÿ (PS3) ã§ã¯ç¬¦å·æ‹¡å¼µã—ã¦ã‚‹ã‚ˆã†ãªã®ã§
     {"mulhw",   MASK_X10FOE, OPCODE_X10FOE(31,  75, 0, 0), 1, {{OpClassCode::iALU,  { R0, -1, -1}, { R1, R2, -1, -1, -1, -1},       Set< D0,     AShiftR< s64, IntMul< s64, Cast<s32, S0>, Cast<s32, S1> >, IntConst<unsigned int, 32>, 63 > >}}},
     {"mulhw.",  MASK_X10FOE, OPCODE_X10FOE(31,  75, 0, 1), 1, {{OpClassCode::iALU,  { R0,CR0, -1}, { R1, R2, -1, -1, -1, -1}, PPC64SetF< D0, D1, AShiftR< s64, IntMul< s64, Cast<s32, S0>, Cast<s32, S1> >, IntConst<unsigned int, 32>, 63 > >}}},
 
@@ -532,13 +532,13 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     {"mflr",    MASK_MTFSPR, OPCODE_MTFSPR(31, 339, 8), 1, {{OpClassCode::iALU,  { R0, -1, -1}, { LR, -1, -1, -1 -1, -1}, Set< D0, S0 >}}},
     {"mfctr",   MASK_MTFSPR, OPCODE_MTFSPR(31, 339, 9), 1, {{OpClassCode::iALU,  { R0, -1, -1}, {CTR, -1, -1, -1 -1, -1}, Set< D0, S0 >}}},
 
-    // move from time base : –¢À‘•
+    // move from time base : æœªå®Ÿè£…
     {"mftb",    MASK_MTFSPR, OPCODE_MTFSPR(31, 371, 268), 1, {{OpClassCode::iMOV,  { R0, -1, -1}, { -1, -1, -1, -1, -1, -1}, Set< D0, IntConst<u64, 0> >}}},
     {"mftbu",   MASK_MTFSPR, OPCODE_MTFSPR(31, 371, 269), 1, {{OpClassCode::iMOV,  { R0, -1, -1}, { -1, -1, -1, -1, -1, -1}, Set< D0, IntConst<u64, 0> >}}},
 
     // condition register
 
-    // ‚Æ‚è‚ ‚¦‚¸Cmtcrf ‚Í1‚Â‚ÌCR‚Ü‚½‚Í‘S‘Ì‚Ö‚Ì‘‚«‚İ‚Ì‚İƒTƒ|[ƒg
+    // ã¨ã‚Šã‚ãˆãšï¼Œmtcrf ã¯1ã¤ã®CRã¾ãŸã¯å…¨ä½“ã¸ã®æ›¸ãè¾¼ã¿ã®ã¿ã‚µãƒãƒ¼ãƒˆ
     {"mtcrf",   MASK_MTCRF, OPCODE_MTCRF(31, 144, 0x01), 1, {{OpClassCode::iALU,  {CR7, -1, -1}, { R0, -1, -1, -1 -1, -1}, Set< D0, BitExtract< u64, S0, IntConst<unsigned int,  0>, IntConst<unsigned int, 4> > >}}},
     {"mtcrf",   MASK_MTCRF, OPCODE_MTCRF(31, 144, 0x02), 1, {{OpClassCode::iALU,  {CR6, -1, -1}, { R0, -1, -1, -1 -1, -1}, Set< D0, BitExtract< u64, S0, IntConst<unsigned int,  4>, IntConst<unsigned int, 4> > >}}},
     {"mtcrf",   MASK_MTCRF, OPCODE_MTCRF(31, 144, 0x04), 1, {{OpClassCode::iALU,  {CR5, -1, -1}, { R0, -1, -1, -1 -1, -1}, Set< D0, BitExtract< u64, S0, IntConst<unsigned int,  8>, IntConst<unsigned int, 4> > >}}},
@@ -596,7 +596,7 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     //
     // FP instructions
     //
-    // FX (FPSCR[32]) ‚ÍƒTƒ|[ƒg‚µ‚È‚¢DFP–½—ß‚Ì•À—ñÀs‚ª‚Å‚«‚È‚­‚È‚é‚½‚ßD
+    // FX (FPSCR[32]) ã¯ã‚µãƒãƒ¼ãƒˆã—ãªã„ï¼FPå‘½ä»¤ã®ä¸¦åˆ—å®Ÿè¡ŒãŒã§ããªããªã‚‹ãŸã‚ï¼
 
     // move
     {"fmr",     MASK_X10F, OPCODE_X10F(63,  72, 0), 1, {{OpClassCode::fMOV,  { R0, -1, -1}, {FPC, R1, -1, -1, -1, -1},         Set< D0,         S1 >}}},
@@ -640,7 +640,7 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     //fre
     //fsqrtre
 
-    // ‚±‚ê‚ç‚Ì OpClassCode ‚ÍH
+    // ã“ã‚Œã‚‰ã® OpClassCode ã¯ï¼Ÿ
     {"fmadd",   MASK_X5F, OPCODE_X5F(63,  29, 0), 1, {{OpClassCode::fMUL,  { R0, -1, -1}, {FPC, R1, R2, R3, -1, -1},       SetFP< D0,                       FPAdd< double, FPMul< double, SD1, SD3, PPC64FPSCRRoundMode<S0> >, SD2, PPC64FPSCRRoundMode<S0> > >}}},
     {"fmadd.",  MASK_X5F, OPCODE_X5F(63,  29, 1), 1, {{OpClassCode::fMUL,  { R0,CR1, -1}, {FPC, R1, R2, R3, -1, -1}, PPC64SetFPF< D0, D1, S0,               FPAdd< double, FPMul< double, SD1, SD3, PPC64FPSCRRoundMode<S0> >, SD2, PPC64FPSCRRoundMode<S0> > >}}},
     {"fmadds",  MASK_X5F, OPCODE_X5F(59,  29, 0), 1, {{OpClassCode::fMUL,  { R0, -1, -1}, {FPC, R1, R2, R3, -1, -1},       SetFP< D0,         Cast< double, FPAdd<  float, FPMul<  float, SF1, SF3, PPC64FPSCRRoundMode<S0> >, SF2, PPC64FPSCRRoundMode<S0> > > >}}},
@@ -682,7 +682,7 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     {"fcfid",   MASK_X10F, OPCODE_X10F(63, 846, 0), 1, {{OpClassCode::fCONV,  { R0, -1, -1}, {FPC, R1, -1, -1, -1, -1},       SetFP< D0,         Cast< double, Cast< s64, S1 > > >}}},
     {"fcfid.",  MASK_X10F, OPCODE_X10F(63, 846, 1), 1, {{OpClassCode::fCONV,  { R0,CR1, -1}, {FPC, R1, -1, -1, -1, -1}, PPC64SetFPF< D0, D1, S0, Cast< double, Cast< s64, S1 > > >}}},
 
-    // doubleŒ^‚Ì’†g‚ğ®”‚É‚·‚éŒn
+    // doubleå‹ã®ä¸­èº«ã‚’æ•´æ•°ã«ã™ã‚‹ç³»
     {"frin",    MASK_X10F, OPCODE_X10F(63, 392, 0), 1, {{OpClassCode::fCONV,  { R0, -1, -1}, {FPC, R1, -1, -1, -1, -1},       SetFP< D0,         PPC64FRIN< SD1> >}}},
     {"frin.",   MASK_X10F, OPCODE_X10F(63, 392, 1), 1, {{OpClassCode::fCONV,  { R0,CR1, -1}, {FPC, R1, -1, -1, -1, -1}, PPC64SetFPF< D0, D1, S0, PPC64FRIN< SD1> >}}},
 
@@ -696,7 +696,7 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     {"frim.",   MASK_X10F, OPCODE_X10F(63, 488, 1), 1, {{OpClassCode::fCONV,  { R0,CR1, -1}, {FPC, R1, -1, -1, -1, -1}, PPC64SetFPF< D0, D1, S0, PPC64FRIM< SD1> >}}},
 
     // compare
-    // <TODO> FPSCR‚Ìƒtƒ‰ƒOƒZƒbƒg
+    // <TODO> FPSCRã®ãƒ•ãƒ©ã‚°ã‚»ãƒƒãƒˆ
     {"fcmpu",   MASK_X10, OPCODE_X10(63,   0), 1, {{OpClassCode::fADD,  { R0, -1, -1}, {FPC, R1, R2, -1, -1, -1}, Set< D0, PPC64FPCompare< double, SD1, SD2 > >}}},
     {"fcmpo",   MASK_X10, OPCODE_X10(63,  32), 1, {{OpClassCode::fADD,  { R0, -1, -1}, {FPC, R1, R2, -1, -1, -1}, Set< D0, PPC64FPCompare< double, SD1, SD2 > >}}},
 
@@ -724,10 +724,10 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     // branch
     //
 
-    // gcc 4.2.1‚ÅƒRƒ“ƒpƒCƒ‹‚µ‚½ƒoƒCƒiƒŠ‚Ìê‡
-    // - â‘Î•ªŠò‚Íg—p‚³‚ê‚È‚¢H
-    // - CALL‚É‚Íbctrl ‚Ì‚İg—p‚³‚ê‚éH (LK=1”Å‚Íbctrl‚Ì‚İ‚Å‚æ‚¢H)
-    // - blr, bctr ‚Ì BH ‚Í 0‚Ì‚à‚Ì‚Ì‚İ‘¶İH
+    // gcc 4.2.1ã§ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ãŸãƒã‚¤ãƒŠãƒªã®å ´åˆ
+    // - çµ¶å¯¾åˆ†å²ã¯ä½¿ç”¨ã•ã‚Œãªã„ï¼Ÿ
+    // - CALLã«ã¯bctrl ã®ã¿ä½¿ç”¨ã•ã‚Œã‚‹ï¼Ÿ (LK=1ç‰ˆã¯bctrlã®ã¿ã§ã‚ˆã„ï¼Ÿ)
+    // - blr, bctr ã® BH ã¯ 0ã®ã‚‚ã®ã®ã¿å­˜åœ¨ï¼Ÿ
     {"b",       MASK_B, OPCODE_B(18, 0, 0), 1, {{OpClassCode::iBU,   { -1, -1, -1}, { I0, -1, -1, -1, -1, -1}, PPC64BranchRelUncond< S0 >}}},
     {"ba",      MASK_B, OPCODE_B(18, 1, 0), 1, {{OpClassCode::iBU,   { -1, -1, -1}, { I0, -1, -1, -1, -1, -1}, PPC64BranchAbsUncond< S0 >}}},
     {"bl",      MASK_B, OPCODE_B(18, 0, 1), 1, {{OpClassCode::CALL,  { LR, -1, -1}, { I0, -1, -1, -1, -1, -1}, PPC64CallRelUncond< D0, S0 >}}},
@@ -810,13 +810,13 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
 
     {"mcrf",    MASK_X10, OPCODE_X10(19,   0), 1, {{OpClassCode::iALU,  { R0, -1, -1}, { R1, -1, -1, -1, -1, -1}, Set< D0, S0 >}}},
 
-    // instruction synchronize : ƒVƒ“ƒOƒ‹ƒXƒŒƒbƒh‚È‚Ì‚Å–³‹
+    // instruction synchronize : ã‚·ãƒ³ã‚°ãƒ«ã‚¹ãƒ¬ãƒƒãƒ‰ãªã®ã§ç„¡è¦–
     {"isync",   MASK_X10, OPCODE_X10(19, 150), 1, {{OpClassCode::iNOP,  { -1, -1, -1}, { -1, -1, -1, -1, -1, -1}, NoOperation}}},
     
-    //// ÀÛ‚É“¯Šú‚·‚éê‡
+    //// å®Ÿéš›ã«åŒæœŸã™ã‚‹å ´åˆ
     //{"isync",   MASK_X10, OPCODE_X10(19, 150), 1, {{OpClassCode::syscall,  { -1, -1, -1}, { -1, -1, -1, -1, -1, -1}, NoOperation}}},
 
-    // memory barrier : ƒVƒ“ƒOƒ‹ƒXƒŒƒbƒh‚È‚Ì‚Å–³‹
+    // memory barrier : ã‚·ãƒ³ã‚°ãƒ«ã‚¹ãƒ¬ãƒƒãƒ‰ãªã®ã§ç„¡è¦–
     {"sync",    MASK_X10, OPCODE_X10(31, 598), 1, {{OpClassCode::iNOP,  { -1, -1, -1}, { -1, -1, -1, -1, -1, -1}, NoOperation}}},
     {"eieio",   MASK_X10, OPCODE_X10(31, 854), 1, {{OpClassCode::iNOP,  { -1, -1, -1}, { -1, -1, -1, -1, -1, -1}, NoOperation}}},
 
@@ -824,17 +824,17 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsBase[] =
     // cache management
     //
 
-    // cache management –½—ß‚Åg—p‚·‚éƒLƒƒƒbƒVƒ…ƒuƒƒbƒNƒTƒCƒY‚Í auxv, AT_DCACHEBSIZE ‚©‚çæ“¾
+    // cache management å‘½ä»¤ã§ä½¿ç”¨ã™ã‚‹ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãƒ–ãƒ­ãƒƒã‚¯ã‚µã‚¤ã‚ºã¯ auxv, AT_DCACHEBSIZE ã‹ã‚‰å–å¾—
     // cf.) glibc/sysdeps/unix/sysv/linux/powerpc/libc-start.c
-    // ‚±‚ê‚ğİ’è‚µ‚È‚¢i0‚É‚·‚éj‚ÆCglibc‚Ådcbz‚ğg—p‚·‚é—Bˆê‚ÌŠÖ”‚Å‚ ‚émemset‚ªdcbz‚ğg—p‚µ‚È‚­‚È‚é
+    // ã“ã‚Œã‚’è¨­å®šã—ãªã„ï¼ˆ0ã«ã™ã‚‹ï¼‰ã¨ï¼Œglibcã§dcbzã‚’ä½¿ç”¨ã™ã‚‹å”¯ä¸€ã®é–¢æ•°ã§ã‚ã‚‹memsetãŒdcbzã‚’ä½¿ç”¨ã—ãªããªã‚‹
 
-    // –³‹‚·‚é
+    // ç„¡è¦–ã™ã‚‹
     // data cache block touch
     {"dcbt",    MASK_X10, OPCODE_X10(31, 278), 1, {{OpClassCode::iNOP,  { -1, -1, -1}, { -1, -1, -1, -1, -1, -1}, NoOperation}}},
     // data cache block touch for store
     {"dcbtst",  MASK_X10, OPCODE_X10(31, 246), 1, {{OpClassCode::iNOP,  { -1, -1, -1}, { -1, -1, -1, -1, -1, -1}, NoOperation}}},
 
-    // data cache block set to zero : ÀÛ‚É0‚ğƒXƒgƒA
+    // data cache block set to zero : å®Ÿéš›ã«0ã‚’ã‚¹ãƒˆã‚¢
     //{"dcbz",    MASK_X10, OPCODE_X10(31,1014), 1, {{OpClassCode::iST,  { -1, -1, -1}, { -1, -1, -1, -1, -1, -1}, }}},
 };
 
@@ -851,7 +851,7 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsSplitLoadStore[] =
 //
 PPC64Converter::OpDef PPC64Converter::m_OpDefsNonSplitLoadStore[] =
 {
-    // <FIXME> RA=0”Å? ‘½•ªg‚í‚ê‚È‚¢‚¯‚Ç
+    // <FIXME> RA=0ç‰ˆ? å¤šåˆ†ä½¿ã‚ã‚Œãªã„ã‘ã©
     // integer load
     {"lbz",   MASK_OP, OPCODE_OP(34), 1, {
         {OpClassCode::iLD,  { R0, -1, -1}, { R1, I0, -1, -1, -1, -1}, Set< D0,                Load< u8,     IntAdd< u64, S0, S1 > > >}
@@ -1084,7 +1084,7 @@ PPC64Converter::OpDef PPC64Converter::m_OpDefsNonSplitLoadStore[] =
         {OpClassCode::iST,  { -1, -1, -1}, { R0, R2, -1, -1, -1, -1},                Store< u32,     S0, S1 >}
     }},
 
-    // lwarx, stwcx‚Í•K‚¸¬Œ÷‚·‚é
+    // lwarx, stwcxã¯å¿…ãšæˆåŠŸã™ã‚‹
     {"lwarx",  MASK_X10, OPCODE_X10(31,  20), 1, {
         {OpClassCode::iLD,  { R0, -1, -1}, { R1, R2, -1, -1, -1, -1}, Set< D0,                Load< u32,     IntAdd< u64, S0, S1 > > >}
     }},
@@ -1155,7 +1155,7 @@ PPC64Converter::~PPC64Converter()
 {
 }
 
-// srcTemplate ‚É‘Î‰‚·‚éƒIƒyƒ‰ƒ“ƒh‚Ìí—Ş‚ÆCƒŒƒWƒXƒ^‚È‚ç‚Î”Ô†‚ğC‘¦’l‚È‚ç‚Îindex‚ğ•Ô‚·
+// srcTemplate ã«å¯¾å¿œã™ã‚‹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®ç¨®é¡ã¨ï¼Œãƒ¬ã‚¸ã‚¹ã‚¿ãªã‚‰ã°ç•ªå·ã‚’ï¼Œå³å€¤ãªã‚‰ã°indexã‚’è¿”ã™
 std::pair<PPC64Converter::OperandType, int> PPC64Converter::GetActualSrcOperand(int srcTemplate, const DecodedInsn& decoded) const
 {
     typedef std::pair<OperandType, int> RetType;
@@ -1170,7 +1170,7 @@ std::pair<PPC64Converter::OperandType, int> PPC64Converter::GetActualSrcOperand(
     }
 }
 
-// regTemplate ‚©‚çÀÛ‚ÌƒŒƒWƒXƒ^”Ô†‚ğæ“¾‚·‚é
+// regTemplate ã‹ã‚‰å®Ÿéš›ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’å–å¾—ã™ã‚‹
 int PPC64Converter::GetActualRegNumber(int regTemplate, const DecodedInsn& decoded) const
 {
     if (regTemplate == -1) {
@@ -1188,10 +1188,10 @@ int PPC64Converter::GetActualRegNumber(int regTemplate, const DecodedInsn& decod
     }
 }
 
-// ƒŒƒWƒXƒ^”Ô†regNum‚ªƒ[ƒƒŒƒWƒXƒ^‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
+// ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·regNumãŒã‚¼ãƒ­ãƒ¬ã‚¸ã‚¹ã‚¿ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹
 bool PPC64Converter::IsZeroReg(int regNum) const
 {
-    // PowerPC ‚É‚Íƒ[ƒƒŒƒWƒXƒ^‚ª‚È‚¢
+    // PowerPC ã«ã¯ã‚¼ãƒ­ãƒ¬ã‚¸ã‚¹ã‚¿ãŒãªã„
     return false;
 }
 

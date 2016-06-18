@@ -97,11 +97,11 @@ void Dispatcher::Initialize( InitPhase phase )
             m_schedInfo[i].dispatchingOps.resize( *GetCore()->GetOpArray() );
         }
     
-        // V‚½‚ÉƒCƒ“ƒXƒ^ƒ“ƒX‚ªì¬‚³‚ê‚½iresize‚É‚æ‚èjSchedulerSaturateCount‚ğ
-        // ParamDB‚É“o˜^‚·‚é‚½‚ß‚É‚à‚¤ˆê“xŒÄ‚Ô
+        // æ–°ãŸã«ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒä½œæˆã•ã‚ŒãŸï¼ˆresizeã«ã‚ˆã‚Šï¼‰SchedulerSaturateCountã‚’
+        // ParamDBã«ç™»éŒ²ã™ã‚‹ãŸã‚ã«ã‚‚ã†ä¸€åº¦å‘¼ã¶
         LoadParam();
 
-        // member •Ï”‚Ìƒ`ƒFƒbƒN
+        // member å¤‰æ•°ã®ãƒã‚§ãƒƒã‚¯
         if ( m_dispatchLatency == 0 ) {
             THROW_RUNTIME_ERROR( "A dispatch latency must be more than 0." );
         }

@@ -54,7 +54,7 @@ MemorySystem::MemorySystem( int pid, bool bigEndian, SystemIF* simSystem ) :
 {
     u64 pageSize = GetPageSize();
 
-    // ƒƒ‚ƒŠŠm•Û‚Ì0‰Šú‰»ƒy[ƒW
+    // ãƒ¡ãƒ¢ãƒªç¢ºä¿æ™‚ã®0åˆæœŸåŒ–ãƒšãƒ¼ã‚¸
     u64 zeroPageAddr = RESERVED_PAGE_ZERO_FILLED * pageSize;
     m_virtualMemory.AssignPhysicalMemory( zeroPageAddr, VIRTUAL_MEMORY_ATTR_READ ); // Read only    
     m_virtualMemory.TargetMemset( zeroPageAddr, 0, pageSize );  // TargetMemset ignores page attribute.
@@ -66,14 +66,14 @@ MemorySystem::MemorySystem( int pid, bool bigEndian, SystemIF* simSystem ) :
 
 MemorySystem::~MemorySystem()
 {
-    // ƒƒ‚ƒŠŠm•Û‚Ì0‰Šú‰»ƒy[ƒW
+    // ãƒ¡ãƒ¢ãƒªç¢ºä¿æ™‚ã®0åˆæœŸåŒ–ãƒšãƒ¼ã‚¸
     u64 zeroPageAddr = RESERVED_PAGE_ZERO_FILLED * GetPageSize();
     m_virtualMemory.FreePhysicalMemory( zeroPageAddr );
 }
 
 
 //
-// ƒƒ‚ƒŠŠÇ—
+// ãƒ¡ãƒ¢ãƒªç®¡ç†
 //
 u64 MemorySystem::GetPageSize()
 {
@@ -169,7 +169,7 @@ u64 MemorySystem::MRemap(u64 old_addr, u64 old_size, u64 new_size, bool mayMove)
 
     if (new_size <= 0)
         return (u64)-1;
-    // ‚»‚ñ‚È—Ìˆæ‚Í‚È‚¢
+    // ãã‚“ãªé ˜åŸŸã¯ãªã„
     if (m_heapAlloc.GetBlockSize(old_addr) != old_size)
         return (u64)-1;
 
@@ -183,7 +183,7 @@ u64 MemorySystem::MRemap(u64 old_addr, u64 old_size, u64 new_size, bool mayMove)
             
             u64 pageMask = GetPageSize() - 1;
             if( ( ( result + old_size ) & pageMask) != 0 ){
-                // ŒÃ‚¢—Ìˆæ‚ÌÅŒã”ö‚ªƒy[ƒW‹«ŠE‚É–³‚©‚Á‚½ê‡Cƒy[ƒW‚ªŠù‚ÉŠm•ÛÏ‚İ
+                // å¤ã„é ˜åŸŸã®æœ€å¾Œå°¾ãŒãƒšãƒ¼ã‚¸å¢ƒç•Œã«ç„¡ã‹ã£ãŸå ´åˆï¼Œãƒšãƒ¼ã‚¸ãŒæ—¢ã«ç¢ºä¿æ¸ˆã¿
                 s64 length = (s64)new_size - (s64)(( old_size + pageMask ) & ~pageMask);
                 u64 addr   = result + new_size - length;
                 if( length > 0 ){
@@ -198,8 +198,8 @@ u64 MemorySystem::MRemap(u64 old_addr, u64 old_size, u64 new_size, bool mayMove)
         else if( new_size < old_size ){
             u64 pageMask = GetPageSize() - 1;
             if( ( ( result + new_size ) & pageMask ) != 0 ){
-                // V‚µ‚¢—Ìˆæ‚ÌÅŒã”ö‚ªƒy[ƒW‹«ŠE‚É–³‚©‚Á‚½ê‡Cƒy[ƒW‚ğ‰ğ•ú‚µ‚¿‚á‘Ê–Ú
-                // Todo: ŒÃ‚¢—Ìˆæ‚ÌÅŒã”ö‚ª‹«ŠE‚É–³‚©‚Á‚½ê‡H
+                // æ–°ã—ã„é ˜åŸŸã®æœ€å¾Œå°¾ãŒãƒšãƒ¼ã‚¸å¢ƒç•Œã«ç„¡ã‹ã£ãŸå ´åˆï¼Œãƒšãƒ¼ã‚¸ã‚’è§£æ”¾ã—ã¡ã‚ƒé§„ç›®
+                // Todo: å¤ã„é ˜åŸŸã®æœ€å¾Œå°¾ãŒå¢ƒç•Œã«ç„¡ã‹ã£ãŸå ´åˆï¼Ÿ
                 s64 length = (s64)old_size - (s64)(( new_size + pageMask ) & ~pageMask);
                 u64 addr   = result + old_size - length;
                 if( length > 0 ){
@@ -214,7 +214,7 @@ u64 MemorySystem::MRemap(u64 old_addr, u64 old_size, u64 new_size, bool mayMove)
         return result;
     }
     else if (mayMove) {
-        // •Ê‚ÌˆÊ’u‚É—Ìˆæ‚ğŠm•Û
+        // åˆ¥ã®ä½ç½®ã«é ˜åŸŸã‚’ç¢ºä¿
         ASSERT(old_size < new_size, "HeapAlloc::ReAlloc Logic Error");
         result = m_heapAlloc.Alloc(0, new_size);
         CheckValueOnPageBoundary( result, "mremap/move" );
@@ -222,7 +222,7 @@ u64 MemorySystem::MRemap(u64 old_addr, u64 old_size, u64 new_size, bool mayMove)
         if (result) {
             m_virtualMemory.AssignPhysicalMemory(result, new_size, VIRTUAL_MEMORY_ATTR_READ|VIRTUAL_MEMORY_ATTR_WRITE );
 
-            // Œ³‚Ì—Ìˆæ‚Ìƒf[ƒ^‚ğV‚µ‚¢—Ìˆæ‚ÉƒRƒs[
+            // å…ƒã®é ˜åŸŸã®ãƒ‡ãƒ¼ã‚¿ã‚’æ–°ã—ã„é ˜åŸŸã«ã‚³ãƒ”ãƒ¼
             // Note: The destructor of TargetBuffer must be called before memory pages are freed.
             {
                 TargetBuffer buf(this, old_addr, static_cast<size_t>(old_size));
@@ -251,7 +251,7 @@ int MemorySystem::MUnmap(u64 addr, u64 length)
         return -1;
 
     if (m_heapAlloc.Free(addr, length)) {
-        // —Ìˆæ‚ÌÅŒã”ö‚ªƒy[ƒW‹«ŠE‚É–³‚©‚Á‚½ê‡Cƒy[ƒW‚ğ‰ğ•ú‚µ‚¿‚á‘Ê–Ú
+        // é ˜åŸŸã®æœ€å¾Œå°¾ãŒãƒšãƒ¼ã‚¸å¢ƒç•Œã«ç„¡ã‹ã£ãŸå ´åˆï¼Œãƒšãƒ¼ã‚¸ã‚’è§£æ”¾ã—ã¡ã‚ƒé§„ç›®
         u64 pageMask = GetPageSize() - 1;
         if( ( ( addr + length ) & pageMask ) != 0 ){
             length = length & ~pageMask;

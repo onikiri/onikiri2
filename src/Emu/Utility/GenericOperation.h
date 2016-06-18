@@ -40,7 +40,7 @@ namespace Onikiri {
 namespace EmulatorUtility {
 namespace Operation {
 
-// ‚»‚Ì‘¼ŠÖ”
+// ãã®ä»–é–¢æ•°
 
 // high-order 64 bits of the 128-bit product of unsigned lhs and rhs
 u64 UnsignedMulHigh64(u64 lhs, u64 rhs);
@@ -49,8 +49,8 @@ s64 SignedMulHigh64(s64 lhs, s64 rhs);
 
 typedef u64 RegisterType;
 
-// Dest‚É‚Í•K‚¸‘ã“ü‚·‚é‚±‚Æ
-// Dest‚É‘‚©‚È‚¢‚±‚Æ‚ÍDest‚Ì’l‚ª•Û‚³‚ê‚é‚±‚Æ‚ğˆÓ–¡‚µ‚È‚¢iDest‚ÍV‹K‚Éì¬‚³‚ê‚½PhyReg‚È‚Ì‚ÅƒSƒ~‚ª“ü‚Á‚Ä‚¢‚éj
+// Destã«ã¯å¿…ãšä»£å…¥ã™ã‚‹ã“ã¨
+// Destã«æ›¸ã‹ãªã„ã“ã¨ã¯Destã®å€¤ãŒä¿æŒã•ã‚Œã‚‹ã“ã¨ã‚’æ„å‘³ã—ãªã„ï¼ˆDestã¯æ–°è¦ã«ä½œæˆã•ã‚ŒãŸPhyRegãªã®ã§ã‚´ãƒŸãŒå…¥ã£ã¦ã„ã‚‹ï¼‰
 
 // interface
 inline void do_branch(OpEmulationState* opState, u64 target)
@@ -96,7 +96,7 @@ inline T ReadMemory(OpEmulationState* opState, u64 addr)
 
 // utility
 
-// ®”Œ^‚Ìvalue‚ğC“¯‚¶ƒrƒbƒg•\Œ»‚ğ‚Â•‚“®¬”“_Œ^‚É•ÏŠ·‚·‚é
+// æ•´æ•°å‹ã®valueã‚’ï¼ŒåŒã˜ãƒ“ãƒƒãƒˆè¡¨ç¾ã‚’æŒã¤æµ®å‹•å°æ•°ç‚¹å‹ã«å¤‰æ›ã™ã‚‹
 template <typename FPType, typename IntType>
 inline FPType AsFPFunc(IntType value)
 {
@@ -111,7 +111,7 @@ inline FPType AsFPFunc(IntType value)
     return intfp.f;
 }
 
-// •‚“®¬”“_Œ^‚Ìvalue‚ğC“¯‚¶ƒrƒbƒg•\Œ»‚ğ‚Â®”Œ^‚É•ÏŠ·‚·‚é
+// æµ®å‹•å°æ•°ç‚¹å‹ã®valueã‚’ï¼ŒåŒã˜ãƒ“ãƒƒãƒˆè¡¨ç¾ã‚’æŒã¤æ•´æ•°å‹ã«å¤‰æ›ã™ã‚‹
 template <typename IntType, typename FPType>
 inline IntType AsIntFunc(FPType value)
 {
@@ -125,7 +125,7 @@ inline IntType AsIntFunc(FPType value)
     return intfp.i;
 }
 
-// ®”‚Ìƒrƒbƒg—ñ‚ğ•‚“®¬”“_”‚Æ‚µ‚ÄÄ‰ğß ( reinterpret as fp )
+// æ•´æ•°ã®ãƒ“ãƒƒãƒˆåˆ—ã‚’æµ®å‹•å°æ•°ç‚¹æ•°ã¨ã—ã¦å†è§£é‡ˆ ( reinterpret as fp )
 template <typename Type, typename TSrc>
 struct AsFP : public std::unary_function<OpEmulationState*, Type>
 {
@@ -135,7 +135,7 @@ struct AsFP : public std::unary_function<OpEmulationState*, Type>
     }
 };
 
-// •‚“®¬”“_‚Ìƒrƒbƒg—ñ‚ğ®”‚Æ‚µ‚ÄÄ‰ğß ( reinterpret as int )
+// æµ®å‹•å°æ•°ç‚¹ã®ãƒ“ãƒƒãƒˆåˆ—ã‚’æ•´æ•°ã¨ã—ã¦å†è§£é‡ˆ ( reinterpret as int )
 template <typename Type, typename TSrc>
 struct AsInt : public std::unary_function<OpEmulationState*, Type>
 {
@@ -149,7 +149,7 @@ struct AsInt : public std::unary_function<OpEmulationState*, Type>
 // operands
 // **********************************
 
-// operand ‚Íunsigned‚Ì’l‚ğ•Ô‚·‚±‚Æ
+// operand ã¯unsignedã®å€¤ã‚’è¿”ã™ã“ã¨
 
 template <int OperandIndex>
 class DstOperand
@@ -392,7 +392,7 @@ inline void NoOperation(OpEmulationState* opState)
     // no operation
 }
 
-// ŠÖ”Func1, Func2, ... ‚ğ’P‚É˜A‘±‚µ‚ÄŒÄ‚Ô
+// é–¢æ•°Func1, Func2, ... ã‚’å˜ã«é€£ç¶šã—ã¦å‘¼ã¶
 template <
     void (*Func1)(OpEmulationState *),
     void (*Func2)(OpEmulationState *)
@@ -450,7 +450,7 @@ struct Select : public std::unary_function<OpEmulationState*, Type>
     }
 };
 
-// TValue ‚ğ Type ‚É•ÏŠ·‚·‚é
+// TValue ã‚’ Type ã«å¤‰æ›ã™ã‚‹
 template <typename Type, typename TValue>
 struct Cast : public std::unary_function<OpEmulationState*, Type>
 {
@@ -460,7 +460,7 @@ struct Cast : public std::unary_function<OpEmulationState*, Type>
     }
 };
 
-// ŠÛ‚ßƒ‚[ƒh‚ğw’è‚µ‚Ä TValue ‚ğ Type ‚É•ÏŠ·‚·‚éD
+// ä¸¸ã‚ãƒ¢ãƒ¼ãƒ‰ã‚’æŒ‡å®šã—ã¦ TValue ã‚’ Type ã«å¤‰æ›ã™ã‚‹ï¼
 template <typename Type, typename TValue, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
 struct CastFP : public std::unary_function<OpEmulationState*, Type>
 {
@@ -541,7 +541,7 @@ struct IntDiv : public std::unary_function<OpEmulationState*, Type>
     }
 };
 
-// Src1 ‚ğ shift_count‚¾‚¯¶ƒVƒtƒg‚µ‚Ä‰ÁZ
+// Src1 ã‚’ shift_countã ã‘å·¦ã‚·ãƒ•ãƒˆã—ã¦åŠ ç®—
 template <typename Type, int shift_count, typename TSrc1, typename TSrc2>
 struct IntScaledAdd : public std::unary_function<OpEmulationState*, Type>
 {
@@ -551,7 +551,7 @@ struct IntScaledAdd : public std::unary_function<OpEmulationState*, Type>
     }
 };
 
-// Src1 ‚ğ shift_count‚¾‚¯¶ƒVƒtƒg‚µ‚ÄŒ¸Z
+// Src1 ã‚’ shift_countã ã‘å·¦ã‚·ãƒ•ãƒˆã—ã¦æ¸›ç®—
 template <typename Type, int shift_count, typename TSrc1, typename TSrc2>
 struct IntScaledSub : public std::unary_function<OpEmulationState*, Type>
 {
@@ -609,7 +609,7 @@ struct CarryOfAddWithCarry : public std::unary_function<OpEmulationState*, Regis
 
         ASSERT(carry == 0 || carry == 1);
 
-        if (lhs + rhs < rhs || lhs + rhs + carry < rhs) // lhs, rhs ‚ª‚Æ‚à‚É~0‚Ìê‡ lhs + rhs + 1 < rhs ‚Í¬—§‚µ‚È‚¢ (ex. 255 + 255 + 1 = 255)
+        if (lhs + rhs < rhs || lhs + rhs + carry < rhs) // lhs, rhs ãŒã¨ã‚‚ã«~0ã®å ´åˆ lhs + rhs + 1 < rhs ã¯æˆç«‹ã—ãªã„ (ex. 255 + 255 + 1 = 255)
             return 1;
         else
             return 0;
@@ -764,7 +764,7 @@ struct RotateR : public std::unary_function<OpEmulationState*, Type>
 //    logical operations
 // **********************************
 
-// and, or, xor, ... ‚ÍC++‚Ì—\–ñŒê (‘ã‘Ö•\‹L)
+// and, or, xor, ... ã¯C++ã®äºˆç´„èª (ä»£æ›¿è¡¨è¨˜)
 
 // src1 & src2
 template <typename Type, typename TSrc1, typename TSrc2>

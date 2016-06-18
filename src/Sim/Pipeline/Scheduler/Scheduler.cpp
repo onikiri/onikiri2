@@ -96,7 +96,7 @@ Scheduler::~Scheduler()
 
 void Scheduler::Initialize(InitPhase phase)
 {
-    // Šî’êƒNƒ‰ƒX‚Ì‰Šú‰»
+    // åŸºåº•ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–
     BaseType::Initialize(phase);
 
     if(phase == INIT_PRE_CONNECTION){
@@ -106,7 +106,7 @@ void Scheduler::Initialize(InitPhase phase)
 
         CheckNodeInitialized( "selector", m_selector );
 
-        // OpList ‚Ì‰Šú‰»
+        // OpList ã®åˆæœŸåŒ–
         OpArray* opArray = GetCore()->GetOpArray();
         m_notReadyOp.resize( *opArray );
         m_readyOp.resize( *opArray );
@@ -125,7 +125,7 @@ void Scheduler::Initialize(InitPhase phase)
             for(int j = 0; j < codeCount; j++){
                 int code = m_execUnit[i]->GetMappedCode( j );
             
-                // code ‚ª––”ö‚ÌƒCƒ“ƒfƒbƒNƒX‚É‚È‚é‚æ‚¤‚ÉŠg’£
+                // code ãŒæœ«å°¾ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«ãªã‚‹ã‚ˆã†ã«æ‹¡å¼µ
                 if((int)m_execUnitCodeMap.size() <= code)
                     m_execUnitCodeMap.resize(code + 1);
 
@@ -180,7 +180,7 @@ void Scheduler::Initialize(InitPhase phase)
             }
         }
 
-        // communication latency ‚Ì”‚Ìƒ`ƒFƒbƒN
+        // communication latency ã®æ•°ã®ãƒã‚§ãƒƒã‚¯
         if( static_cast<int>(m_communicationLatency.size()) != GetCore()->GetNumScheduler() ) {
             THROW_RUNTIME_ERROR("communication latency count != scheduler count");
         }
@@ -190,14 +190,14 @@ void Scheduler::Initialize(InitPhase phase)
 
 void Scheduler::SetExecUnit( PhysicalResourceArray<ExecUnitIF>& execUnit )
 {
-    // Œ©‚Â‚©‚ç‚È‚©‚Á‚½‚ç“o˜^
+    // è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã‚‰ç™»éŒ²
     if( find(m_execUnit.begin(), m_execUnit.end(), execUnit[0]) != m_execUnit.end() ){
         THROW_RUNTIME_ERROR("Same exec unit is set twice");
     }
     m_execUnit.push_back( execUnit[0] );
 }
 
-// code ‚É‘Î‰‚·‚éExecUnit‚ğ•Ô‚·
+// code ã«å¯¾å¿œã™ã‚‹ExecUnitã‚’è¿”ã™
 ExecUnitIF* Scheduler::GetExecUnit(int code)
 {
     ASSERT(code >= 0 && code < static_cast<int>(m_execUnitCodeMap.size()),
@@ -354,7 +354,7 @@ void Scheduler::Cancel( OpIterator op )
     }
 }
 
-// dispatch‚³‚ê‚Ä‚«‚½ op ‚ğ‚¤‚¯‚Æ‚é
+// dispatchã•ã‚Œã¦ããŸ op ã‚’ã†ã‘ã¨ã‚‹
 void Scheduler::ExitUpperPipeline( OpIterator op )
 {
     HookEntry(
@@ -399,7 +399,7 @@ void Scheduler::RegisterWakeUpEvent( OpIterator op, int latencyFromOp )
     for(int i = 0; i < numScheduler; ++i) {
         Cluster* cluster = &m_clusters[i];
         
-        // communication latency ‚ª -1 ‚È‚ç wakeup ‚µ‚È‚¢
+        // communication latency ãŒ -1 ãªã‚‰ wakeup ã—ãªã„
         int comLatency = cluster->communicationLatency;
         if (comLatency == -1) 
             continue;
@@ -408,8 +408,8 @@ void Scheduler::RegisterWakeUpEvent( OpIterator op, int latencyFromOp )
         Pipeline* targetPipeline   = targetScheduler->GetLowerPipeline();
         int targetIssueLatency     = cluster->issueLatency;
 
-        // back to back ‚ÉÀs‚·‚é‚½‚ßAScheduler ŠÔ‚Ì issue latency ‚Ì·‚àl—¶‚·‚é
-        // ‚½‚¾‚µAwakeup ‚É‚ÍÅ’á‚Å‚à communication latency or 1ƒTƒCƒNƒ‹‚ÌŠÔ‚Í‚©‚©‚é
+        // back to back ã«å®Ÿè¡Œã™ã‚‹ãŸã‚ã€Scheduler é–“ã® issue latency ã®å·®ã‚‚è€ƒæ…®ã™ã‚‹
+        // ãŸã ã—ã€wakeup ã«ã¯æœ€ä½ã§ã‚‚ communication latency or 1ã‚µã‚¤ã‚¯ãƒ«ã®æ™‚é–“ã¯ã‹ã‹ã‚‹
         int wakeupLatency = latencyFromOp + m_issueLatency - targetIssueLatency;
         if( wakeupLatency < comLatency ){
             wakeupLatency = comLatency;
@@ -554,7 +554,7 @@ bool Scheduler::Reschedule( OpIterator op )
 
     HOOK_SECTION_OP_PARAM( s_rescheduleHook, op, param )
     {
-        // ÄƒXƒPƒWƒ…[ƒŠƒ“ƒO‚Ìƒ|ƒŠƒV[‚²‚Æ‚É‚±‚±‚Í‘‚«Š·‚¦‚ç‚ê‚é‚æ‚¤‚É‚·‚é
+        // å†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°ã®ãƒãƒªã‚·ãƒ¼ã”ã¨ã«ã“ã“ã¯æ›¸ãæ›ãˆã‚‰ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹
 
         bool clearIssueState = m_loadPipelineModel == LPM_SINGLE_ISSUE;
         op->RescheduleSelf( clearIssueState );
@@ -564,7 +564,7 @@ bool Scheduler::Reschedule( OpIterator op )
 
         param.canceled = false;
         if( m_issuedOp.find_and_erase(op) ) {
-            // ”­sÏ‚İ‚Ì–½—ß‚ªÄƒXƒPƒWƒ…[ƒŠƒ“ƒO‚³‚ê‚½
+            // ç™ºè¡Œæ¸ˆã¿ã®å‘½ä»¤ãŒå†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°ã•ã‚ŒãŸ
 
             if(op->IsSrcReady(GetIndex())) {
                 m_readyOp.push_inorder(op);
@@ -575,14 +575,14 @@ bool Scheduler::Reschedule( OpIterator op )
             param.canceled = true;
         }
         else if (m_readyOp.count(op)) {
-            // ”­s‘O‚¾‚ªready‚É‚È‚Á‚Ä‚¢‚½–½—ß‚ªÄƒXƒPƒWƒ…[ƒŠƒ“ƒO‚³‚ê‚½
+            // ç™ºè¡Œå‰ã ãŒreadyã«ãªã£ã¦ã„ãŸå‘½ä»¤ãŒå†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°ã•ã‚ŒãŸ
             if( !op->IsSrcReady(GetIndex()) ) {
                 m_readyOp.erase(op);
                 m_notReadyOp.push_back(op);
             }
         }
         else {
-            // not ready ‚¾‚Á‚½–½—ß‚ÍÄƒXƒPƒWƒ…[ƒŠƒ“ƒO‚³‚ê‚Ä‚à‚È‚É‚à‚µ‚È‚¢ 
+            // not ready ã ã£ãŸå‘½ä»¤ã¯å†ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°ã•ã‚Œã¦ã‚‚ãªã«ã‚‚ã—ãªã„ 
         }
 
         op->SetStatus(OpStatus::OS_DISPATCHED);
@@ -606,14 +606,14 @@ void Scheduler::ClearEvaluated()
     m_evaluated.wokeUp.clear();
 }
 
-// dispatch ‚³‚ê‚Ä‚«‚½ op ‚ğ‚¤‚¯‚Æ‚é
+// dispatch ã•ã‚Œã¦ããŸ op ã‚’ã†ã‘ã¨ã‚‹
 void Scheduler::DispatchEnd( OpIterator op )
 {
     if( GetOpCount() >= m_windowCapacity ) {
         THROW_RUNTIME_ERROR("scheduler cannot receive");
     }
 
-    // ‚·‚Å‚É ready ‚É‚È‚Á‚Ä‚¢‚é‚©‚Ì”»’è
+    // ã™ã§ã« ready ã«ãªã£ã¦ã„ã‚‹ã‹ã®åˆ¤å®š
     if( op->IsSrcReady( GetIndex(), &m_evaluated.deps ) ) {
         m_readyOp.push_inorder(op);
     }

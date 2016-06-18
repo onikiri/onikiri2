@@ -58,7 +58,7 @@ OpExecuteEvent::OpExecuteEvent( OpIterator op ) : m_op( op )
 void OpExecuteEvent::Update()
 {
     HOOK_SECTION_OP( s_executeHook, m_op ){
-        // 演算器に実行終了のタイミングで FinishEvent を追加してもらう
+        // 貍皮ｮ怜勣縺ｫ螳溯｡檎ｵゆｺ�縺ｮ繧ｿ繧､繝溘Φ繧ｰ縺ｧ FinishEvent 繧定ｿｽ蜉縺励※繧ゅｉ縺�
         m_op->GetExecUnit()->Execute( m_op );
     }
 }

@@ -37,8 +37,8 @@ using namespace Onikiri;
 
 const char* OpStatus::ToString()
 {
-    // �f�o�b�O���̏o�͂Ȃǂɗp���Ă��܂�
-    // Op::Status�Ɠ������Ԃɗ񋓂��Ă�������
+    // デバッグ情報の出力などに用いています
+    // Op::Statusと同じ順番に列挙してください
     static const char* STATUS_STR[ OpStatus::OS_MAX ] =
     {
         "INVALID",

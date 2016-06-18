@@ -102,17 +102,17 @@ namespace Onikiri
         SystemContext m_context;
         SystemIF*     m_system;
 
-        s64 m_simulationCycles; // simulation ‚ğs‚¤ƒTƒCƒNƒ‹”
-        s64 m_executedCycles;   // ÀÛ‚ÉÀs‚³‚ê‚½ƒTƒCƒNƒ‹”
+        s64 m_simulationCycles; // simulation ã‚’è¡Œã†ã‚µã‚¤ã‚¯ãƒ«æ•°
+        s64 m_executedCycles;   // å®Ÿéš›ã«å®Ÿè¡Œã•ã‚ŒãŸã‚µã‚¤ã‚¯ãƒ«æ•°
         
-        s64 m_simulationInsns;  // simulation ‚ğs‚¤–½—ß”
-        s64 m_skipInsns;        // ‚Í‚¶‚ß‚Éskip‚·‚é–½—ß”
+        s64 m_simulationInsns;  // simulation ã‚’è¡Œã†å‘½ä»¤æ•°
+        s64 m_skipInsns;        // ã¯ã˜ã‚ã«skipã™ã‚‹å‘½ä»¤æ•°
 
-        std::vector<s64> m_executedInsns;   // ÀÛ‚ÉÀs‚³‚ê‚½–½—ß”
-        std::vector<s64> m_skippedInsns;    // ÀÛ‚ÉƒXƒLƒbƒvÀs‚³‚ê‚½ƒTƒCƒNƒ‹”
+        std::vector<s64> m_executedInsns;   // å®Ÿéš›ã«å®Ÿè¡Œã•ã‚ŒãŸå‘½ä»¤æ•°
+        std::vector<s64> m_skippedInsns;    // å®Ÿéš›ã«ã‚¹ã‚­ãƒƒãƒ—å®Ÿè¡Œã•ã‚ŒãŸã‚µã‚¤ã‚¯ãƒ«æ•°
 
         std::vector<double> m_ipc;          // ipc
-        std::vector<u64> m_processMemoryUsage;  // ƒvƒƒZƒX–ˆ‚Ìƒƒ‚ƒŠg—p—Ê
+        std::vector<u64> m_processMemoryUsage;  // ãƒ—ãƒ­ã‚»ã‚¹æ¯ã®ãƒ¡ãƒ¢ãƒªä½¿ç”¨é‡
         ExtraOpDecoder m_extraOpDecoder;
 
         virtual void InitializeEmulator();

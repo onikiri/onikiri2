@@ -129,7 +129,7 @@ namespace shttl
 
     }
 
-    // value ‚ğCbit_num ƒrƒbƒg‚Ì’l‚¾‚Æl‚¦‚Ä count ƒrƒbƒg‚¾‚¯¶ƒ[ƒe[ƒg‚·‚é
+    // value ã‚’ï¼Œbit_num ãƒ“ãƒƒãƒˆã®å€¤ã ã¨è€ƒãˆã¦ count ãƒ“ãƒƒãƒˆã ã‘å·¦ãƒ­ãƒ¼ãƒ†ãƒ¼ãƒˆã™ã‚‹
     inline static u64 rotate_left(u64 value, ssize_t bit_num, int count)
     {
         value &= mask(0, bit_num);
@@ -141,7 +141,7 @@ namespace shttl
             return ((value << count) | (value >> (bit_num-count))) & mask(0, bit_num);
     }
 
-    // value ‚ğCbit_num ƒrƒbƒg‚Ì’l‚¾‚Æl‚¦‚Ä count ƒrƒbƒg‚¾‚¯‰Eƒ[ƒe[ƒg‚·‚é
+    // value ã‚’ï¼Œbit_num ãƒ“ãƒƒãƒˆã®å€¤ã ã¨è€ƒãˆã¦ count ãƒ“ãƒƒãƒˆã ã‘å³ãƒ­ãƒ¼ãƒ†ãƒ¼ãƒˆã™ã‚‹
     inline static u64 rotate_right(u64 value, ssize_t bit_num, int count)
     {
         value &= mask(0, bit_num);
@@ -153,7 +153,7 @@ namespace shttl
             return ((value >> count) | (value << (bit_num-count))) & mask(0, bit_num);
     }
 
-    // value ‚ğ, bit_length •ªXOR‚Åô‚İ‚Ş
+    // value ã‚’, bit_length åˆ†XORã§ç•³ã¿è¾¼ã‚€
     inline static u64 xor_convolute(u64 value, int bit_length)
     {
         SHTTL_ASSERT(bit_length <= u64_limits.digits);

@@ -51,13 +51,13 @@ namespace Onikiri {
             Linux64SyscallConv(EmulatorUtility::ProcessState* processState);
             virtual ~Linux64SyscallConv();
 
-            // ƒVƒXƒeƒ€ƒR[ƒ‹‚Ìˆø” (index”Ô–Ú) ‚ğİ’è‚·‚é
+            // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ã®å¼•æ•° (indexç•ªç›®) ã‚’è¨­å®šã™ã‚‹
             virtual void SetArg(int index, u64 value);
 
-            // SetArg ‚É‚æ‚Á‚Ä—^‚¦‚ç‚ê‚½ˆø”‚É]‚Á‚ÄƒVƒXƒeƒ€ƒR[ƒ‹‚ğs‚¤
+            // SetArg ã«ã‚ˆã£ã¦ä¸ãˆã‚‰ã‚ŒãŸå¼•æ•°ã«å¾“ã£ã¦ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ã‚’è¡Œã†
             virtual void Execute(EmulatorUtility::OpEmulationState* opState) = 0;
 
-            // Exec ‚µ‚½Œ‹‰Ê‚ğ“¾‚é
+            // Exec ã—ãŸçµæœã‚’å¾—ã‚‹
             virtual u64 GetResult(int index);
             virtual void SetSystem(SystemIF* system);
 

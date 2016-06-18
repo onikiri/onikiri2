@@ -32,8 +32,8 @@
 #ifndef __HOST_TYPE_H__
 #define __HOST_TYPE_H__
 
-// ŠÈˆÕ“I‚É”»’è
-// –{“–‚Íconfigures‚¤
+// ç°¡æ˜“çš„ã«åˆ¤å®š
+// æœ¬å½“ã¯configureè¡Œã†
 
 #if defined( __CYGWIN__ )
 #   define HOST_IS_CYGWIN

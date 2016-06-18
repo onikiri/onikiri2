@@ -30,11 +30,11 @@
 
 
 //
-// GlobalHistory‚ÌŠî’êƒNƒ‰ƒX
+// GlobalHistoryã®åŸºåº•ã‚¯ãƒ©ã‚¹
 //
-// •ªŠò‚ÌƒOƒ[ƒoƒ‹‚È—š—ğ‚ğ‚¿A•ªŠò—\‘ª/•ªŠò–½—ß‚ÌRetire‚ÉUpdate‚ğs‚¤
-// ‚±‚ÌƒNƒ‰ƒX‚Å‚ÍA•ªŠò—\‘ª‚É“Š‹@“I‚ÉUpdate‚ğ‚µA•ªŠòƒ~ƒX‚É‚ÍCheckpoint‚É‚æ‚è
-// ©“®“I‚ÉGlobalHistory‚ÌŠª‚«–ß‚µ‚ªs‚í‚ê‚é
+// åˆ†å²ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ãªå±¥æ­´ã‚’æŒã¡ã€åˆ†å²äºˆæ¸¬æ™‚/åˆ†å²å‘½ä»¤ã®Retireæ™‚ã«Updateã‚’è¡Œã†
+// ã“ã®ã‚¯ãƒ©ã‚¹ã§ã¯ã€åˆ†å²äºˆæ¸¬æ™‚ã«æŠ•æ©Ÿçš„ã«Updateã‚’ã—ã€åˆ†å²ãƒŸã‚¹æ™‚ã«ã¯Checkpointã«ã‚ˆã‚Š
+// è‡ªå‹•çš„ã«GlobalHistoryã®å·»ãæˆ»ã—ãŒè¡Œã‚ã‚Œã‚‹
 //
 
 #ifndef __GLOBALHISTORY_H__
@@ -52,7 +52,7 @@ namespace Onikiri
     {
     protected:
         CheckpointMaster* m_checkpointMaster;
-        CheckpointedData<u64> m_globalHistory; // •ªŠò—š—ğ: 1bit‚ª•ªŠò‚ÌTaken/NotTaken‚É‘Î‰
+        CheckpointedData<u64> m_globalHistory; // åˆ†å²å±¥æ­´: 1bitãŒåˆ†å²ã®Taken/NotTakenã«å¯¾å¿œ
 
     public:
         GlobalHistory();
@@ -62,15 +62,15 @@ namespace Onikiri
             RESOURCE_ENTRY( CheckpointMaster, "checkpointMaster", m_checkpointMaster )
         END_RESOURCE_MAP()
 
-        // ‰Šú‰»
+        // åˆæœŸåŒ–
         void Initialize(InitPhase phase);
 
-        // dirpred ‚Ì—\‘ª‚É—\‘ªŒ‹‰Ê‚ğ bpred ‚©‚ç‹³‚¦‚Ä‚à‚ç‚¤
+        // dirpred ã®äºˆæ¸¬æ™‚ã«äºˆæ¸¬çµæœã‚’ bpred ã‹ã‚‰æ•™ãˆã¦ã‚‚ã‚‰ã†
         void Predicted(bool taken);
-        // •ªŠò‚ÌRetire‚ÉTaken/NotTaken‚ğ bpred ‚©‚ç‹³‚¦‚Ä‚à‚ç‚¤
+        // åˆ†å²ã®Retireæ™‚ã«Taken/NotTakenã‚’ bpred ã‹ã‚‰æ•™ãˆã¦ã‚‚ã‚‰ã†
         void Retired(bool taken);
 
-        // Å‰ºˆÊƒrƒbƒg(1”ÔÅV‚Ì‚à‚Ì)‚ğ(‹­§“I‚É)•ÏX‚·‚é
+        // æœ€ä¸‹ä½ãƒ“ãƒƒãƒˆ(1ç•ªæœ€æ–°ã®ã‚‚ã®)ã‚’(å¼·åˆ¶çš„ã«)å¤‰æ›´ã™ã‚‹
         void SetLeastSignificantBit(bool taken);
 
         // accessors

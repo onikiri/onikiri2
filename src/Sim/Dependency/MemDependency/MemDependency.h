@@ -37,7 +37,7 @@
 namespace Onikiri 
 {
     
-    // ƒƒ‚ƒŠã‚ÌˆË‘¶ŠÖŒW‚ğ•\Œ»‚·‚éƒNƒ‰ƒX
+    // ãƒ¡ãƒ¢ãƒªä¸Šã®ä¾å­˜é–¢ä¿‚ã‚’è¡¨ç¾ã™ã‚‹ã‚¯ãƒ©ã‚¹
     typedef Dependency MemDependency;
 
     // Use shared_ptr for a memory dependency because 

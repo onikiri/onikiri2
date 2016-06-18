@@ -44,7 +44,7 @@ namespace Onikiri
 {
     class Core;
     
-    // ƒŒƒCƒeƒ“ƒV—\‘ª‚ÆƒXƒPƒWƒ…[ƒŠƒ“ƒO‚Ìƒ‚ƒfƒ‹‚É‚Â‚¢‚Ä‚ÍLatPred.cpp‚Ì––”ö‚ğQÆ
+    // ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·äºˆæ¸¬ã¨ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°ã®ãƒ¢ãƒ‡ãƒ«ã«ã¤ã„ã¦ã¯LatPred.cppã®æœ«å°¾ã‚’å‚ç…§
     // Latency predictor
     class LatPred :
         public PhysicalResourceNode
@@ -62,14 +62,14 @@ namespace Onikiri
             RESULT_RATE_SUM_ENTRY(
                 "@PredictionHitRatePredToHit", 
                 m_numLoadHitPredToHit, m_numLoadHitPredToHit, m_numLoadMissPredToHit
-            )   // L1ƒqƒbƒg‚Æ—\‘ª‚µ‚½—\‘ª‚Ì“I’†—¦
+            )   // L1ãƒ’ãƒƒãƒˆã¨äºˆæ¸¬ã—ãŸäºˆæ¸¬ã®çš„ä¸­ç‡
             
             PARAM_ENTRY("@NumLoadMissPredToHit",    m_numLoadMissPredToHit )    
             PARAM_ENTRY("@NumLoadMissPredToMiss",   m_numLoadMissPredToMiss )
             RESULT_RATE_SUM_ENTRY(
                 "@PredictionHitRatePredAsMiss",
                 m_numLoadMissPredToMiss, m_numLoadHitPredToMiss, m_numLoadMissPredToMiss
-            )   // L1ƒ~ƒX‚Æ—\‘ª‚µ‚½—\‘ª‚Ì“I’†—¦
+            )   // L1ãƒŸã‚¹ã¨äºˆæ¸¬ã—ãŸäºˆæ¸¬ã®çš„ä¸­ç‡
         END_PARAM_MAP()
 
         BEGIN_RESOURCE_MAP()
@@ -89,9 +89,9 @@ namespace Onikiri
         static HookPoint<LatPred> s_latencyPredictionHook;
 
     protected:
-        // –½—ßƒZƒbƒg‚Å‹K’è‚³‚ê‚Ä‚¢‚éÀsƒŒƒCƒeƒ“ƒV
+        // å‘½ä»¤ã‚»ãƒƒãƒˆã§è¦å®šã•ã‚Œã¦ã„ã‚‹å®Ÿè¡Œãƒ¬ã‚¤ãƒ†ãƒ³ã‚·
         ExecLatencyInfo* m_execLatencyInfo;
-        // ƒLƒƒƒbƒVƒ…Hit/Miss—\‘ªŠí
+        // ã‚­ãƒ£ãƒƒã‚·ãƒ¥Hit/Missäºˆæ¸¬å™¨
         HitMissPredIF* m_hmPredictor;
 
         Core* m_core;

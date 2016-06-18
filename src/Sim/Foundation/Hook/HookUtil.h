@@ -30,7 +30,7 @@
 
 
 //
-// Hook ‚ÌŒÄ‚Ño‚µ‚ðŠÈ—ª‰»
+// Hook ã®å‘¼ã³å‡ºã—ã‚’ç°¡ç•¥åŒ–
 //
 
 
@@ -64,10 +64,10 @@ namespace Onikiri
         hookPoint->Trigger(obj, HookType::HOOK_BEFORE);
 
         if( !hookPoint->HasAround() ) {
-            // –{—ˆ‚Ìˆ—
+            // æœ¬æ¥ã®å‡¦ç†
             (obj->*MethodPtr)(); 
         } else {
-            // ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
+            // ä»£ã‚ã‚Šã®å‡¦ç†ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹æ™‚ã¯ãã¡ã‚‰ã‚’å‘¼ã¶
             hookPoint->Trigger(obj, HookType::HOOK_AROUND);
         }
 
@@ -88,7 +88,7 @@ namespace Onikiri
             HookEntryBody( obj, MethodPtr, hookPoint );
         }
         else{
-            // –{—ˆ‚Ìˆ—
+            // æœ¬æ¥ã®å‡¦ç†
             (obj->*MethodPtr)(); 
         }
     }
@@ -120,10 +120,10 @@ namespace Onikiri
         hookPoint->Trigger(obj, hookParam, HookType::HOOK_BEFORE);
 
         if( !hookPoint->HasAround() ) {
-            // –{—ˆ‚Ìˆ—
+            // æœ¬æ¥ã®å‡¦ç†
             (obj->*MethodPtr)(hookParam); 
         } else {
-            // ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
+            // ä»£ã‚ã‚Šã®å‡¦ç†ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹æ™‚ã¯ãã¡ã‚‰ã‚’å‘¼ã¶
             hookPoint->Trigger(obj, hookParam, HookType::HOOK_AROUND);
         }
 
@@ -145,7 +145,7 @@ namespace Onikiri
             HookEntryBody( obj, MethodPtr, hookPoint, hookParam );
         }
         else{
-            // –{—ˆ‚Ìˆ—
+            // æœ¬æ¥ã®å‡¦ç†
             (obj->*MethodPtr)(hookParam); 
         }
     }
@@ -175,10 +175,10 @@ namespace Onikiri
         hookPoint->Trigger( op, obj, HookType::HOOK_BEFORE);
 
         if( !hookPoint->HasAround() ) {
-            // –{—ˆ‚Ìˆ—
+            // æœ¬æ¥ã®å‡¦ç†
             (obj->*MethodPtr)( op ); 
         } else {
-            // ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
+            // ä»£ã‚ã‚Šã®å‡¦ç†ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹æ™‚ã¯ãã¡ã‚‰ã‚’å‘¼ã¶
             hookPoint->Trigger( op, obj, HookType::HOOK_AROUND);
         }
 
@@ -199,7 +199,7 @@ namespace Onikiri
             HookEntryBody( obj, MethodPtr, hookPoint, op ); 
         }
         else{
-            // –{—ˆ‚Ìˆ—
+            // æœ¬æ¥ã®å‡¦ç†
             (obj->*MethodPtr)( op ); 
         }
     }
@@ -233,10 +233,10 @@ namespace Onikiri
         hookPoint->Trigger( op, obj, param, HookType::HOOK_BEFORE);
 
         if( !hookPoint->HasAround() ) {
-            // –{—ˆ‚Ìˆ—
+            // æœ¬æ¥ã®å‡¦ç†
             (obj->*MethodPtr)( op, param ); 
         } else {
-            // ‘ã‚í‚è‚Ìˆ—‚ª“o˜^‚³‚ê‚Ä‚¢‚éŽž‚Í‚»‚¿‚ç‚ðŒÄ‚Ô
+            // ä»£ã‚ã‚Šã®å‡¦ç†ãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹æ™‚ã¯ãã¡ã‚‰ã‚’å‘¼ã¶
             hookPoint->Trigger( op, obj, param, HookType::HOOK_AROUND);
         }
 
@@ -259,7 +259,7 @@ namespace Onikiri
             HookEntryBody( obj, MethodPtr, hookPoint, op, param ); 
         }
         else{
-            // –{—ˆ‚Ìˆ—
+            // æœ¬æ¥ã®å‡¦ç†
             (obj->*MethodPtr)( op, param ); 
         }
     }

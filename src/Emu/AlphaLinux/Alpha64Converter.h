@@ -48,10 +48,10 @@ namespace Onikiri {
             typedef u32 CodeWordType;
             static const int MaxOpInfoDefs = 3;
             static const int MaxDstOperands = OpInfoType::MaxDstRegCount;
-            static const int MaxSrcOperands = 4;    // SrcReg ‚Æ SrcImm ‚Ì‡Œv
+            static const int MaxSrcOperands = 4;    // SrcReg ã¨ SrcImm ã®åˆè¨ˆ
         };
 
-        // Alpha‚Ì–½—ß‚ğCOpInfo ‚Ì—ñ‚É•ÏŠ·‚·‚é
+        // Alphaã®å‘½ä»¤ã‚’ï¼ŒOpInfo ã®åˆ—ã«å¤‰æ›ã™ã‚‹
         class Alpha64Converter : public EmulatorUtility::CommonConverter<Alpha64ConverterTraits>
         {
         public:
@@ -59,7 +59,7 @@ namespace Onikiri {
             virtual ~Alpha64Converter();
 
         private:
-            // CommonConverter ‚ÌƒJƒXƒ^ƒ}ƒCƒY
+            // CommonConverter ã®ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º
             virtual bool IsZeroReg(int reg) const;
             virtual std::pair<OperandType, int> GetActualSrcOperand(int srcTemplate, const DecodedInsn& decoded) const;
             virtual int GetActualRegNumber(int regTemplate, const DecodedInsn& decoded) const;

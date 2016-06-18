@@ -42,31 +42,31 @@ namespace Onikiri {
 
         class MemorySystem
         {
-            static const int RESERVED_PAGES = 256; // ‹Sa‚è‚Å—\–ñ‚·‚éƒy[ƒW
+            static const int RESERVED_PAGES = 256; // é¬¼æ–¬ã‚Šã§äºˆç´„ã™ã‚‹ãƒšãƒ¼ã‚¸
             static const int RESERVED_PAGE_NULL = 0;
             static const int RESERVED_PAGE_ZERO_FILLED = 1;
         public:
             MemorySystem( int pid, bool bigEndian, SystemIF* simSystem );
             ~MemorySystem();
 
-            // ƒƒ‚ƒŠŠÇ—
-            // ƒVƒXƒeƒ€‚©‚çŒ©‚¦‚éƒy[ƒWƒTƒCƒY
+            // ãƒ¡ãƒ¢ãƒªç®¡ç†
+            // ã‚·ã‚¹ãƒ†ãƒ ã‹ã‚‰è¦‹ãˆã‚‹ãƒšãƒ¼ã‚¸ã‚µã‚¤ã‚º
             u64 GetPageSize();
 
-            // ƒAƒhƒŒƒX0‚©‚ç‚±‚ê‚Å•Ô‚·ƒAƒhƒŒƒX‚Ü‚Å‚Í—\–ñD
+            // ã‚¢ãƒ‰ãƒ¬ã‚¹0ã‹ã‚‰ã“ã‚Œã§è¿”ã™ã‚¢ãƒ‰ãƒ¬ã‚¹ã¾ã§ã¯äºˆç´„ï¼
             u64 GetReservedAddressRange(){ return GetPageSize() * RESERVED_PAGES - 1; };
 
-            // mmap‚Ég‚¤ƒq[ƒv‚ÉC[addr, addr+size) ‚Ì—Ìˆæ‚ğ’Ç‰Á‚·‚é
+            // mmapã«ä½¿ã†ãƒ’ãƒ¼ãƒ—ã«ï¼Œ[addr, addr+size) ã®é ˜åŸŸã‚’è¿½åŠ ã™ã‚‹
             void AddHeapBlock(u64 addr, u64 size);
 
-            // brk‚Ì‰Šú’l (ƒ[ƒh‚³‚ê‚½ƒCƒ[ƒW‚Ì––”ö) ‚ğİ’è‚·‚é
+            // brkã®åˆæœŸå€¤ (ãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸã‚¤ãƒ¡ãƒ¼ã‚¸ã®æœ«å°¾) ã‚’è¨­å®šã™ã‚‹
             void SetInitialBrk(u64 initialBrk);
             u64 Brk(u64 addr);
             u64 MMap(u64 addr, u64 length);
             u64 MRemap(u64 old_addr, u64 old_size, u64 new_size, bool mayMove = false);
             int MUnmap(u64 addr, u64 length);
 
-            // ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚©‚Ç‚¤‚©
+            // ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‹ã©ã†ã‹
             bool IsBigEndian() const 
             {
                 return m_bigEndian;
@@ -77,13 +77,13 @@ namespace Onikiri {
                 return m_virtualMemory.GetPageSize();
             }
 
-            // [addr, addr+size) ‚ğŠÜ‚Şƒy[ƒW‚É•¨—ƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚éD“¯ã
+            // [addr, addr+size) ã‚’å«ã‚€ãƒšãƒ¼ã‚¸ã«ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹ï¼åŒä¸Š
             void AssignPhysicalMemory(u64 addr, u64 size, VIRTUAL_MEMORY_ATTR_TYPE attr )
             {
                 m_virtualMemory.AssignPhysicalMemory( addr, size, attr );
             }
 
-            // ƒƒ‚ƒŠ“Ç‚İ‘‚«
+            // ãƒ¡ãƒ¢ãƒªèª­ã¿æ›¸ã
             void ReadMemory( MemAccess* access ) 
             {
                 m_virtualMemory.ReadMemory( access );
@@ -95,18 +95,18 @@ namespace Onikiri {
             }
 
 
-            // ƒƒ‚ƒŠŠÖ˜A‚Ìƒwƒ‹ƒp
-            // targetAddr‚©‚çsizeƒoƒCƒg‚Évalue‚Ì’l‚ğ‘‚«‚Ş
+            // ãƒ¡ãƒ¢ãƒªé–¢é€£ã®ãƒ˜ãƒ«ãƒ‘
+            // targetAddrã‹ã‚‰sizeãƒã‚¤ãƒˆã«valueã®å€¤ã‚’æ›¸ãè¾¼ã‚€
             void TargetMemset(u64 targetAddr, int value, u64 size )
             {
                 m_virtualMemory.TargetMemset( targetAddr, value, size );
             }
-            // target ‚ÌƒAƒhƒŒƒX src ‚©‚çChost ‚ÌƒAƒhƒŒƒX dst ‚É size ƒoƒCƒg‚ğƒRƒs[‚·‚é
+            // target ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ src ã‹ã‚‰ï¼Œhost ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ dst ã« size ãƒã‚¤ãƒˆã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
             void MemCopyToHost(void* dst, u64 src, u64 size)
             {
                 m_virtualMemory.MemCopyToHost( dst, src, size );
             }
-            // host ‚ÌƒAƒhƒŒƒX src ‚©‚çCtarget ‚ÌƒAƒhƒŒƒX dst ‚É size ƒoƒCƒg‚ğƒRƒs[‚·‚é
+            // host ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ src ã‹ã‚‰ï¼Œtarget ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ dst ã« size ãƒã‚¤ãƒˆã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
             void MemCopyToTarget(u64 dst, const void* src, u64 size)
             {
                 m_virtualMemory.MemCopyToTarget( dst, src, size );
@@ -120,16 +120,16 @@ namespace Onikiri {
             VirtualMemory m_virtualMemory;
             HeapAllocator m_heapAlloc;
 
-            // Àsƒtƒ@ƒCƒ‹‚ªè‚ß‚é—Ìˆæ‚ÌI’[ (currentBrk‚ğŠÜ‚Ü‚¸) Brk ‚ÅŠg’£
+            // å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ãŒå ã‚ã‚‹é ˜åŸŸã®çµ‚ç«¯ (currentBrkã‚’å«ã¾ãš) Brk ã§æ‹¡å¼µ
             u64 m_currentBrk;
 
-            // ƒƒ‚ƒŠŠm•ÛC‰ğ•ú‚ÉƒVƒ~ƒ…ƒŒ[ƒ^‚ÉƒR[ƒ‹ƒoƒbƒN‚ğ“Š‚°‚é‚½‚ß‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+            // ãƒ¡ãƒ¢ãƒªç¢ºä¿ï¼Œè§£æ”¾æ™‚ã«ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’æŠ•ã’ã‚‹ãŸã‚ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
             SystemIF* m_simSystem;
 
             // PID
             int m_pid;
 
-            // ƒ^[ƒQƒbƒg‚ªƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚©‚Ç‚¤‚©
+            // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‹ã©ã†ã‹
             bool m_bigEndian;
         };
 

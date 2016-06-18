@@ -46,9 +46,9 @@ namespace Onikiri {
         int m_detail;
         int m_valDetail;
 
-        bool m_gzipEnabled; // Dump‚ğgzipˆ³k‚·‚é‚©‚Ç‚¤‚©
-        int  m_gzipLevel;   // gzip‚Ìˆ³kƒŒƒxƒ‹
-        bool m_flush;       // o—Í–ˆ‚Éƒtƒ‰ƒbƒVƒ…‚ğs‚¤‚©‚Ç‚¤‚©
+        bool m_gzipEnabled; // Dumpã‚’gzipåœ§ç¸®ã™ã‚‹ã‹ã©ã†ã‹
+        int  m_gzipLevel;   // gzipã®åœ§ç¸®ãƒ¬ãƒ™ãƒ«
+        bool m_flush;       // å‡ºåŠ›æ¯ã«ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã‚’è¡Œã†ã‹ã©ã†ã‹
 
         std::string m_filename;
         boost::iostreams::filtering_ostream m_dumpStream;

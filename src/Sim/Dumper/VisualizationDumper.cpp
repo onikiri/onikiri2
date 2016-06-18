@@ -79,7 +79,7 @@ VisualizationDumper::~VisualizationDumper()
 }
 
 //
-// m_coreStateTable ‚Ö‚ÌƒAƒNƒZƒT
+// m_coreStateTable ã¸ã®ã‚¢ã‚¯ã‚»ã‚µ
 //
 
 VisualizationDumper::OpState* VisualizationDumper::GetOpState( OpIterator op )
@@ -113,13 +113,13 @@ bool VisualizationDumper::IsEnabled()
     return m_enabled;
 }
 
-// ƒ_ƒ“ƒv‚ÌƒXƒLƒbƒv”»’è
+// ãƒ€ãƒ³ãƒ—ã®ã‚¹ã‚­ãƒƒãƒ—åˆ¤å®š
 bool VisualizationDumper::IsDumpSkipped( OpIterator op )
 {
     return ( GetTotalRetiredInsnCount() < m_skipInsns ) ? true : false;
 }
 
-// DUMP_STATE <> •\¦–¼•ÏŠ·
+// DUMP_STATE <> è¡¨ç¤ºåå¤‰æ›
 const char* VisualizationDumper::ToStringFromDumpState( DUMP_STATE state )
 {
     return g_visualizerDumperStrTbl[state];
@@ -128,8 +128,8 @@ const char* VisualizationDumper::ToStringFromDumpState( DUMP_STATE state )
 //
 // Additional label information is printed by 'L' command.
 //
-// ”CˆÓ‚Ì–½—ß‚Ìî•ñi–½—ßƒAƒhƒŒƒX‚âOpƒR[ƒhCƒŒƒWƒXƒ^”Ô†‚È‚ÇjD
-// ‚±‚ê‚Í‚»‚Ì‚Ü‚ÜKanata ‚É•\¦‚³‚ê‚éD
+// ä»»æ„ã®å‘½ä»¤ã®æƒ…å ±ï¼ˆå‘½ä»¤ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚„Opã‚³ãƒ¼ãƒ‰ï¼Œãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ãªã©ï¼‰ï¼
+// ã“ã‚Œã¯ãã®ã¾ã¾Kanata ã«è¡¨ç¤ºã•ã‚Œã‚‹ï¼
 //
 void VisualizationDumper::PrintOpInitLabel( const OpIterator op )
 {
@@ -140,7 +140,7 @@ void VisualizationDumper::PrintOpInitLabel( const OpIterator op )
 
     OpInfo* opInfo = op->GetOpInfo();
 
-    // dst operand‚ÉŠÖ‚·‚é•\¦
+    // dst operandã«é–¢ã™ã‚‹è¡¨ç¤º
     int dstNum = op->GetOpInfo()->GetDstNum();
     if( dstNum != 0 ){
         if( dstNum == 1 ){
@@ -163,12 +163,12 @@ void VisualizationDumper::PrintOpInitLabel( const OpIterator op )
         label << " = ";
     }
 
-    // op class‚ğ•\¦
+    // op classã‚’è¡¨ç¤º
     //label << OpClassCode::ToString(op->GetOpClass().GetCode()) << "(";
-    // ƒj[ƒ‚ƒjƒbƒN‚ğ•\¦
+    // ãƒ‹ãƒ¼ãƒ¢ãƒ‹ãƒƒã‚¯ã‚’è¡¨ç¤º
     label << opInfo->GetMnemonic() << "(";
 
-    // src operand‚ÉŠÖ‚·‚é•\¦
+    // src operandã«é–¢ã™ã‚‹è¡¨ç¤º
     bool first = true;
     for (int j = 0; j < opInfo->GetSrcNum(); j++)
     {
@@ -182,14 +182,14 @@ void VisualizationDumper::PrintOpInitLabel( const OpIterator op )
 }
 
 //
-// Fetch‚³‚ê‚½op‚Ìî•ñ‚ğ•\¦‚·‚é
+// Fetchã•ã‚ŒãŸopã®æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
 //
-// o—Í—áF
+// å‡ºåŠ›ä¾‹ï¼š
 // >> I 0 0 0
-// –½—ß‚ÉŠÖ‚·‚éƒƒO‚ğo—Í‚·‚é‘O‚É‚±‚ê‚ª•K—v 
-// 2—ñ–Ú : ƒtƒ@ƒCƒ‹“à‚ÅˆêˆÓ‚ÌID 
-// 3—ñ–Ú : –½—ß‚ÌˆêˆÓ‚ÌID 
-// 4—ñ–Ú : TIDiƒXƒŒƒbƒh¯•Êqj 
+// å‘½ä»¤ã«é–¢ã™ã‚‹ãƒ­ã‚°ã‚’å‡ºåŠ›ã™ã‚‹å‰ã«ã“ã‚ŒãŒå¿…è¦ 
+// 2åˆ—ç›® : ãƒ•ã‚¡ã‚¤ãƒ«å†…ã§ä¸€æ„ã®ID 
+// 3åˆ—ç›® : å‘½ä»¤ã®ä¸€æ„ã®ID 
+// 4åˆ—ç›® : TIDï¼ˆã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­ï¼‰ 
 //
 void VisualizationDumper::PrintOpInit(OpIterator op)
 {
@@ -242,7 +242,7 @@ void VisualizationDumper::PrintCycle()
 }
 
 
-// op‚ªV‚µ‚¢PipelineStage‚É“ü‚Á‚½‚±‚Æ‚ğ•\¦
+// opãŒæ–°ã—ã„PipelineStageã«å…¥ã£ãŸã“ã¨ã‚’è¡¨ç¤º
 void VisualizationDumper::PrintNextPipelineStage( const OpIterator op, DUMP_STATE state )
 {
     m_visStream <<
@@ -252,7 +252,7 @@ void VisualizationDumper::PrintNextPipelineStage( const OpIterator op, DUMP_STAT
         ToStringFromDumpState(state)         << "\n";
 }
 
-// op‚ª‘O‚ÌPipelineStage‚©‚ço‚½‚±‚Æ‚ğ•\¦
+// opãŒå‰ã®PipelineStageã‹ã‚‰å‡ºãŸã“ã¨ã‚’è¡¨ç¤º
 void VisualizationDumper::PrintLastPipelineStage( const OpIterator op, DUMP_STATE lastState )
 {
     m_visStream <<
@@ -340,17 +340,17 @@ void VisualizationDumper::PrintStallEnd( const OpIterator op )
     PrintStall( op, false );
 }
 
-// op‚ªRetire/Flush‚³‚ê‚½‚±‚Æ‚ğ•\¦
+// opãŒRetire/Flushã•ã‚ŒãŸã“ã¨ã‚’è¡¨ç¤º
 void VisualizationDumper::PrintOpEndLabel( const OpIterator op )
 {
     OpInfo* opInfo = op->GetOpInfo();
     OpStatus opState = op->GetStatus();
     stringstream label;
 
-    // ƒŒƒWƒXƒ^î•ñ
+    // ãƒ¬ã‚¸ã‚¹ã‚¿æƒ…å ±
     if( opState >= OpStatus::OS_RENAME ){
         
-        // dst operand‚ÉŠÖ‚·‚é•\¦
+        // dst operandã«é–¢ã™ã‚‹è¡¨ç¤º
         int dstNum = opInfo->GetDstNum();
         if( dstNum != 0 ){
             if( dstNum == 1 ){
@@ -375,12 +375,12 @@ void VisualizationDumper::PrintOpEndLabel( const OpIterator op )
 
     }
 
-    // op class‚ğ•\¦
+    // op classã‚’è¡¨ç¤º
     label << OpClassCode::ToString(op->GetOpClass().GetCode()) << "( ";
-    // ƒj[ƒ‚ƒjƒbƒN‚ğ•\¦
+    // ãƒ‹ãƒ¼ãƒ¢ãƒ‹ãƒƒã‚¯ã‚’è¡¨ç¤º
     //label << opInfo->GetMnemonic() << "( ";
 
-    // src operand‚ÉŠÖ‚·‚é•\¦
+    // src operandã«é–¢ã™ã‚‹è¡¨ç¤º
     if( opState >= OpStatus::OS_RENAME ){
         bool first = true;
         for( int j = 0; j < opInfo->GetSrcNum(); j++ ){
@@ -404,7 +404,7 @@ void VisualizationDumper::PrintOpEndLabel( const OpIterator op )
     }
 
 
-    // o—Í
+    // å‡ºåŠ›
     PrintOpLabel( op, POLT_DETAIL, label.str() );
 
 }
@@ -426,7 +426,7 @@ void VisualizationDumper::PrintOpEnd( const OpIterator op, DUMP_STATE state )
 
     PrintOpEndLabel( op );
 
-    // Šî–{î•ñ
+    // åŸºæœ¬æƒ…å ±
     m_visStream << 
         "R\t" << 
         GetVisSerialID( op ) << "\t" <<                 // serial ID
@@ -480,9 +480,9 @@ void VisualizationDumper::Finalize()
     ReleaseParam();
 }
 
-// op‚ÌŒ»İ‚ÌState(PipelineStage/Retire/Flush‚È‚Ç)‚ğ•\¦
-// State–¼‚ğ’Zk‚µ‚ÄÈ—ª‚µ‚½Œ`‚Å•\¦‚³‚ê‚é(shrink(State))
-// shrink()‚Ì’†‚Å“o˜^‚³‚ê‚Ä‚¢‚È‚¢‚à‚Ì‚ÍState‚Ìæ“ª3•¶š•ª‚ª•\¦‚³‚ê‚é
+// opã®ç¾åœ¨ã®State(PipelineStage/Retire/Flushãªã©)ã‚’è¡¨ç¤º
+// Stateåã‚’çŸ­ç¸®ã—ã¦çœç•¥ã—ãŸå½¢ã§è¡¨ç¤ºã•ã‚Œã‚‹(shrink(State))
+// shrink()ã®ä¸­ã§ç™»éŒ²ã•ã‚Œã¦ã„ãªã„ã‚‚ã®ã¯Stateã®å…ˆé ­3æ–‡å­—åˆ†ãŒè¡¨ç¤ºã•ã‚Œã‚‹
 void VisualizationDumper::PrintOpState(OpIterator op, DUMP_STATE state)
 {
     if( !m_enabled )
@@ -496,27 +496,27 @@ void VisualizationDumper::PrintOpState(OpIterator op, DUMP_STATE state)
 
     PrintCycle();
 
-    // ‰‚ß‚Äop‚ğvisDump‚É‘‚«‚¾‚·(Fetch)Aop‚Ìî•ñ‚ğ•\¦‚·‚é
+    // åˆã‚ã¦opã‚’visDumpã«æ›¸ãã ã™æ™‚(Fetchæ™‚)ã€opã®æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
     if(state == DS_FETCH ){
         PrintOpInit(op);
     }
     else{
-        // ‘O‚Ìstage‚ª‚ ‚Á‚½ê‡A‚»‚Ìstage‚ÌI‚í‚è‚ğ•\¦: FetchˆÈŠO
+        // å‰ã®stageãŒã‚ã£ãŸå ´åˆã€ãã®stageã®çµ‚ã‚ã‚Šã‚’è¡¨ç¤º: Fetchæ™‚ä»¥å¤–
         PrintLastPipelineStage( op, GetLastState(op) );
     }
 
     if( state == DS_RETIRE || state == DS_FLUSH ){
-        // PipelineStage‚Ì‘S‘Ì‚ÌI‚í‚è‚ğ•\¦Fop‚ªRetire/Flush‚³‚ê‚½
+        // PipelineStageã®å…¨ä½“ã®çµ‚ã‚ã‚Šã‚’è¡¨ç¤ºï¼šopãŒRetire/Flushã•ã‚ŒãŸæ™‚
         PrintOpEnd( op, state );
     } else {
-        // op‚ªV‚µ‚¢PipelineStage‚É“ü‚Á‚½‚±‚Æ‚ğ•\¦
+        // opãŒæ–°ã—ã„PipelineStageã«å…¥ã£ãŸã“ã¨ã‚’è¡¨ç¤º
         PrintNextPipelineStage( op, state );
-        SetLastState( op, state ); // ÅŒã‚Ìstage‚ğXV
+        SetLastState( op, state ); // æœ€å¾Œã®stageã‚’æ›´æ–°
     }
 }
 
 
-// op‚ª‚Ù‚©‚Ìop‚ğWakeUp‚µ‚½‚ÉŒÄ‚Î‚ê(OpWakeUpEvent)AopŠÔ‚ÌDependency‚ğ•\¦
+// opãŒã»ã‹ã®opã‚’WakeUpã—ãŸæ™‚ã«å‘¼ã°ã‚Œ(OpWakeUpEvent)ã€opé–“ã®Dependencyã‚’è¡¨ç¤º
 void VisualizationDumper::PrintOpDependency(
     const OpIterator producerOp, 
     const OpIterator consumerOp, 
@@ -538,7 +538,7 @@ void VisualizationDumper::PrintOpDependency(
         type << "\n";
 }
 
-// VisualizationDumper‚ÉŒ»İ‚Ìcycle”‚ğ‹³‚¦‚é‚½‚ß‚ÌŠÖ”
+// VisualizationDumperã«ç¾åœ¨ã®cycleæ•°ã‚’æ•™ãˆã‚‹ãŸã‚ã®é–¢æ•°
 void VisualizationDumper::SetCurrentCycle(const s64 cycle)
 {
     m_visCurrentCycle = cycle;

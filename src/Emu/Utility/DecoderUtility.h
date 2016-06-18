@@ -35,8 +35,8 @@
 namespace Onikiri {
     namespace EmulatorUtility {
 
-        // begin ƒrƒbƒg–Ú (LSB=0) ‚©‚çbeginƒrƒbƒg‚ğŠÜ‚ß‚Älen bit‚¾‚¯æ‚èo‚·
-        // sext‚ªtrue‚Ì‚Æ‚«•„†Šg’£‚ğs‚¤
+        // begin ãƒ“ãƒƒãƒˆç›® (LSB=0) ã‹ã‚‰beginãƒ“ãƒƒãƒˆã‚’å«ã‚ã¦len bitã ã‘å–ã‚Šå‡ºã™
+        // sextãŒtrueã®ã¨ãç¬¦å·æ‹¡å¼µã‚’è¡Œã†
         template <typename T>
         T ExtractBits(T value, int begin, int len, bool sext = false)
         {

@@ -35,7 +35,7 @@
 #include "Utility/RuntimeError.h"
 #include "Sim/Core/Core.h"
 
-// <FIXME> PhyReg ‚ğˆÚ“®
+// <FIXME> PhyReg ã‚’ç§»å‹•
 #include "Sim/Dependency/PhyReg/PhyReg.h"
 
 using namespace Onikiri;
@@ -64,7 +64,7 @@ void RegisterFile::Initialize(InitPhase phase)
         LoadParam();
     }
     else if(phase == INIT_POST_CONNECTION){
-        // member •Ï”‚Ìƒ`ƒFƒbƒN
+        // member å¤‰æ•°ã®ãƒã‚§ãƒƒã‚¯
         CheckNodeInitialized( "core", m_core );
         CheckNodeInitialized( "emulator", m_emulator );
 
@@ -81,13 +81,13 @@ void RegisterFile::Initialize(InitPhase phase)
             );
         }
 
-        // ‘S•”‚Å‚¢‚­‚Â•¨—ƒŒƒWƒXƒ^‚ª•K—v‚©ŒvZ
+        // å…¨éƒ¨ã§ã„ãã¤ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ãŒå¿…è¦ã‹è¨ˆç®—
         m_totalCapacity = 0;
         for(int i = 0; i < static_cast<int>(m_capacity.size()); ++i) {
             m_totalCapacity += m_capacity[i];
         }
         
-        // •¨—ƒŒƒWƒXƒ^‚ÌŠm•Û
+        // ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç¢ºä¿
         int schedulerCount = m_core->GetNumScheduler();
         m_register.resize(m_totalCapacity, 0);
         for (int i = 0; i < m_totalCapacity; i++) {

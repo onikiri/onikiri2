@@ -67,13 +67,13 @@ namespace Onikiri
 
         void Initialize( InitPhase phase );
 
-        // ���s���C�e���V��� FinishEvent ��o�^����
+        // 実行レイテンシ後に FinishEvent を登録する
         virtual void Execute(OpIterator op);
 
-        // OpClass �����肤�郌�C�e���V�̎�ނ̐���Ԃ�
+        // OpClass から取りうるレイテンシの種類の数を返す
         virtual int GetLatencyCount(const OpClass& opClass);
 
-        // OpClass �ƃC���f�N�X���烌�C�e���V��Ԃ�
+        // OpClass とインデクスからレイテンシを返す
         virtual int GetLatency(const OpClass& opClass, int index);
 
         // accessors
@@ -81,21 +81,21 @@ namespace Onikiri
 
     protected:
         
-        // �L���b�V��
+        // キャッシュ
         CacheSystem*    m_cacheSystem;
         Cache*          m_cache;
 
-        // �L���b�V���̐�
+        // キャッシュの数
         int m_cacheCount;
         
-        // float �� Load �̕ϊ����C�e���V
+        // float の Load の変換レイテンシ
         int m_floatConversionLatency;
         PhysicalResourceArray<MemOrderManager> m_memOrderManager;
 
-        // Read�̎��s���C�e���V��Ԃ�
+        // Readの実行レイテンシを返す
         int GetExecutedReadLatency( OpIterator op );
 
-        // Write�̎��s���C�e���V��Ԃ�
+        // Writeの実行レイテンシを返す
         int GetExecutedWriteLatency( OpIterator op );
 
         // Get the actual latency of executed 'op'.

@@ -119,15 +119,15 @@ namespace Onikiri
         // ---
         //
 
-        // •ªŠòijump‚ğŠÜ‚Şj‚©‚Ç‚¤‚©
+        // åˆ†å²ï¼ˆjumpã‚’å«ã‚€ï¼‰ã‹ã©ã†ã‹
         bool IsBranch(int code)         
         {
             return IsConditionalBranch(code) || IsUnconditionalBranch(code);
         }
 
-        // Note: •ªŠò‚ÉŠÖ‚µ‚ÄCConditional, IndirectJump, Call ‚Í”r‘¼‚Å‚Í‚È‚¢
-        //       Return‚ÆCall/Jump‚Í”r‘¼‚¾‚ªCConditional Return‚Í‘¶İ‚·‚é
-        // ğŒ•ªŠò‚©‚Ç‚¤‚©
+        // Note: åˆ†å²ã«é–¢ã—ã¦ï¼ŒConditional, IndirectJump, Call ã¯æ’ä»–ã§ã¯ãªã„
+        //       Returnã¨Call/Jumpã¯æ’ä»–ã ãŒï¼ŒConditional Returnã¯å­˜åœ¨ã™ã‚‹
+        // æ¡ä»¶åˆ†å²ã‹ã©ã†ã‹
         bool IsConditionalBranch(int code)
         {
             return
@@ -146,7 +146,7 @@ namespace Onikiri
                 code == syscall_branch;
         }
 
-        // jump ‚©‚Ç‚¤‚©
+        // jump ã‹ã©ã†ã‹
         bool IsIndirectJump(int code)
         {
             return
@@ -178,19 +178,19 @@ namespace Onikiri
                 code == RETC;       
         }
 
-        // ƒƒ‚ƒŠ
+        // ãƒ¡ãƒ¢ãƒª
         bool IsMem(int code)
         {
             return IsLoad(code) || IsStore(code);
         }
 
-        // ƒ[ƒh
+        // ãƒ­ãƒ¼ãƒ‰
         bool IsLoad(int code)
         {
             return code == iLD || code == fLD;
         }
 
-        // ƒXƒgƒA
+        // ã‚¹ãƒˆã‚¢
         bool IsStore(int code)
         {
             return code == iST || code == fST;
@@ -202,7 +202,7 @@ namespace Onikiri
             return code == ADDR;
         }
 
-        // ®”
+        // æ•´æ•°
         bool IsInt(int code)
         {
             return 
@@ -210,7 +210,7 @@ namespace Onikiri
                 (code <= INT_END);
         }
 
-        // •‚“®¬”“_”
+        // æµ®å‹•å°æ•°ç‚¹æ•°
         bool IsFloat(int code)
         {
             return 
@@ -218,15 +218,15 @@ namespace Onikiri
                 (code <= FLOAT_END);
         }
 
-        // ®” <-> •‚“®¬”“_”•ÏŠ·
+        // æ•´æ•° <-> æµ®å‹•å°æ•°ç‚¹æ•°å¤‰æ›
         bool IsIFConversion( int code )
         {
             return code == ifCONV;
         }
 
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚Í’P‘Ì‚ÅÀs‚·‚éB‚·‚È‚í‚¿A
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚ğÀs‚·‚é‘O‚Éã—¬‚Ì–½—ß‚ğ‚·‚×‚ÄƒŠƒ^ƒCƒA‚³‚¹‚ÄA
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚ªƒŠƒ^ƒCƒA‚·‚é‚Ü‚Å‰º—¬‚àƒtƒFƒbƒ`‚µ‚È‚¢
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ã¯å˜ä½“ã§å®Ÿè¡Œã™ã‚‹ã€‚ã™ãªã‚ã¡ã€
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ã‚’å®Ÿè¡Œã™ã‚‹å‰ã«ä¸Šæµã®å‘½ä»¤ã‚’ã™ã¹ã¦ãƒªã‚¿ã‚¤ã‚¢ã•ã›ã¦ã€
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ãŒãƒªã‚¿ã‚¤ã‚¢ã™ã‚‹ã¾ã§ä¸‹æµã‚‚ãƒ•ã‚§ãƒƒãƒã—ãªã„
         bool IsSyscall(int code)
         {
             return 

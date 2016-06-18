@@ -36,22 +36,22 @@
 
 namespace Onikiri {
 
-    // •ªŠò•ûŒü—\‘ªŠí‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    // åˆ†å²æ–¹å‘äºˆæ¸¬å™¨ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     class DirPredIF
     {
     public:
         DirPredIF(){};
         virtual ~DirPredIF(){};
 
-        // •ªŠò•ûŒü‚ð—\‘ª
+        // åˆ†å²æ–¹å‘ã‚’äºˆæ¸¬
         virtual bool Predict(OpIterator opIterator, PC predIndexPC) = 0;
 
-        // ŽÀsŠ®—¹
-        // ÄŽÀs‚Å•¡”‰ñŒÄ‚Î‚ê‚é‰Â”\«‚ª‚ ‚é
-        // ‚Ü‚½AŠÔˆá‚Á‚Ä‚¢‚éŒ‹‰Ê‚ðŽ‚Á‚Ä‚¢‚é‰Â”\«‚à‚ ‚é
+        // å®Ÿè¡Œå®Œäº†
+        // å†å®Ÿè¡Œã§è¤‡æ•°å›žå‘¼ã°ã‚Œã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹
+        // ã¾ãŸã€é–“é•ã£ã¦ã„ã‚‹çµæžœã‚’æŒã£ã¦ã„ã‚‹å¯èƒ½æ€§ã‚‚ã‚ã‚‹
         virtual void Finished(OpIterator opIterator) = 0;
 
-        // ƒŠƒ^ƒCƒA
+        // ãƒªã‚¿ã‚¤ã‚¢
         virtual void Retired(OpIterator opIterator) = 0;
     };
 

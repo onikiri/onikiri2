@@ -160,7 +160,7 @@ bool Fetcher::IsSerializingRequired( OpIterator op ) const
 
 bool Fetcher::IsSerializingRequired( Thread* thread ) const
 {
-    // ’¼—ñ‰»‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢–½—ß‚ªƒRƒA“à‚É‚¢‚½‚çƒXƒg[ƒ‹
+    // ç›´åˆ—åŒ–ã—ãªã„ã¨ã„ã‘ãªã„å‘½ä»¤ãŒã‚³ã‚¢å†…ã«ã„ãŸã‚‰ã‚¹ãƒˆãƒ¼ãƒ«
     InorderList* inorderList = thread->GetInorderList();
     OpIterator frontCommittedOp = inorderList->GetCommittedFrontOp();
     OpIterator frontOp          = inorderList->GetFrontOp();
@@ -178,7 +178,7 @@ bool Fetcher::IsSerializingRequired( Thread* thread ) const
 }
 
 
-// 1–½—ß‚²‚Æ‚Éfetcho—ˆ‚é‚©‚Ç‚¤‚©‚ğŒˆ’è
+// 1å‘½ä»¤ã”ã¨ã«fetchå‡ºæ¥ã‚‹ã‹ã©ã†ã‹ã‚’æ±ºå®š
 void Fetcher::CanFetchBody( FetchDecisionHookParam* param )
 {
 }
@@ -190,7 +190,7 @@ bool Fetcher::CanFetch( Thread* thread, PC pc, OpInfo** infoArray, int numOp )
 
     HOOK_SECTION_PARAM( s_fetchDecisionHook, param )
     {
-        // ’¼—ñ‰»‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢–½—ß‚ªƒRƒA“à‚É‚¢‚½‚çƒXƒg[ƒ‹
+        // ç›´åˆ—åŒ–ã—ãªã„ã¨ã„ã‘ãªã„å‘½ä»¤ãŒã‚³ã‚¢å†…ã«ã„ãŸã‚‰ã‚¹ãƒˆãƒ¼ãƒ«
         // In serializing state.
         if( IsSerializingRequired( thread ) ){
             ++m_stallCycles.currentSyscall;
@@ -201,7 +201,7 @@ bool Fetcher::CanFetch( Thread* thread, PC pc, OpInfo** infoArray, int numOp )
         // The number of required checkpoints for this fetch group.
         int numCheckpointReq = 0;
     
-        // ’¼—ñ‰»‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢–½—ß‚©‚Ç‚¤‚©
+        // ç›´åˆ—åŒ–ã—ãªã„ã¨ã„ã‘ãªã„å‘½ä»¤ã‹ã©ã†ã‹
         bool reqSerializing = false;
 
         for( int k = 0; k < numOp; ++k ) {
@@ -211,7 +211,7 @@ bool Fetcher::CanFetch( Thread* thread, PC pc, OpInfo** infoArray, int numOp )
                 reqSerializing = true;
             }
 
-            // ƒtƒFƒbƒ`ƒOƒ‹[ƒv“à‚É•¡”‚Ì•ªŠò‚ğŠÜ‚Ü‚È‚¢‚æ‚¤‚É‚·‚é
+            // ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—å†…ã«è¤‡æ•°ã®åˆ†å²ã‚’å«ã¾ãªã„ã‚ˆã†ã«ã™ã‚‹
             if( !m_idealMode && info->GetOpClass().IsBranch() ) {
                 if( m_numBranchInFetchGroup >= m_maxBranchInFetchGroup ){
                     param.canFetch = false;
@@ -229,7 +229,7 @@ bool Fetcher::CanFetch( Thread* thread, PC pc, OpInfo** infoArray, int numOp )
             }
         }
 
-        // checkpointMaster ‚Ìƒ`ƒFƒbƒN
+        // checkpointMaster ã®ãƒã‚§ãƒƒã‚¯
         if( !thread->GetCheckpointMaster()->CanCreate( numCheckpointReq ) ) {
             ++m_stallCycles.checkpoint;
             param.canFetch = false;
@@ -242,9 +242,9 @@ bool Fetcher::CanFetch( Thread* thread, PC pc, OpInfo** infoArray, int numOp )
             return param.canFetch;
         }
 
-        // ’¼—ñ‰»‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢–½—ß
+        // ç›´åˆ—åŒ–ã—ãªã„ã¨ã„ã‘ãªã„å‘½ä»¤
         if( reqSerializing ){
-            // ’¼—ñ‰»‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢‚È‚çAã—¬‘¤‚ª‹ó‚©‚Ç‚¤‚©•Ô‚·
+            // ç›´åˆ—åŒ–ã—ãªã„ã¨ã„ã‘ãªã„ãªã‚‰ã€ä¸Šæµå´ãŒç©ºã‹ã©ã†ã‹è¿”ã™
             InorderList* inorderList = thread->GetInorderList();
             if( m_evaluated.isInorderListEmpty && inorderList->IsEmpty() ){
                 param.canFetch = true;
@@ -263,7 +263,7 @@ bool Fetcher::CanFetch( Thread* thread, PC pc, OpInfo** infoArray, int numOp )
 
 }
 
-// array“à‚Ìop‚ğˆø”‚Æ‚µ‚ÄCƒƒ“ƒoŠÖ”ƒ|ƒCƒ“ƒ^‚©‚çŒÄ‚Ño‚µ‚ğs‚¤
+// arrayå†…ã®opã‚’å¼•æ•°ã¨ã—ã¦ï¼Œãƒ¡ãƒ³ãƒé–¢æ•°ãƒã‚¤ãƒ³ã‚¿ã‹ã‚‰å‘¼ã³å‡ºã—ã‚’è¡Œã†
 inline void Fetcher::ForEachOp(
     FetchedOpArray& c, 
     int size, 
@@ -286,7 +286,7 @@ inline void Fetcher::ForEachOpArg1(
     }
 }
 
-// pc/infoArray/numOp‚©‚çƒtƒFƒbƒ`‚µ‚ÄfetchedOp‚ÉŠi”[‚·‚éŠÖ”
+// pc/infoArray/numOpã‹ã‚‰ãƒ•ã‚§ãƒƒãƒã—ã¦fetchedOpã«æ ¼ç´ã™ã‚‹é–¢æ•°
 void Fetcher::Fetch(Thread* thread, FetchedOpArray& fetchedOp, PC pc, OpInfo** infoArray, int numOp )
 {
     InorderList* InorderList = thread->GetInorderList();
@@ -361,19 +361,19 @@ void Fetcher::BackupOnCheckpoint( OpIterator op, bool before )
     }
 }
 
-// •ªŠò—\‘ª‚ğs‚¤ŠÖ”‚Ì–{‘Ì
+// åˆ†å²äºˆæ¸¬ã‚’è¡Œã†é–¢æ•°ã®æœ¬ä½“
 void Fetcher::PredictNextPCBody(BranchPredictionHookParam* param)
 {
     PC predPC;
 
     PC fetchGroupPC = param->fetchGroupPC;
     OpIterator op = param->op;
-    // –{“–‚ÍƒtƒFƒbƒ`ƒOƒ‹[ƒv‚É‘Î‚µ‚Ä1‰ñ‚¾‚¯BTB‚ğˆø‚­
-    // ‘ã‚í‚è‚ÉƒtƒFƒbƒ`ƒOƒ‹[ƒv“à‚Ì•ªŠò‚É‘Î‚µ‚Ä‚Ì‚İBTB‚ğˆø‚­
+    // æœ¬å½“ã¯ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—ã«å¯¾ã—ã¦1å›ã ã‘BTBã‚’å¼•ã
+    // ä»£ã‚ã‚Šã«ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—å†…ã®åˆ†å²ã«å¯¾ã—ã¦ã®ã¿BTBã‚’å¼•ã
     if (op->GetOpClass().IsBranch()) {
         predPC = GetBPred()->Predict( op, fetchGroupPC );
 
-        // BTB/RAS ‚Ì–¢‰Šú‰»ƒGƒ“ƒgƒŠ ‚ªCˆá‚¤PID‚Ì‚à‚Ì‚ğ•Ô‚µ‚Ä‚­‚é
+        // BTB/RAS ã®æœªåˆæœŸåŒ–ã‚¨ãƒ³ãƒˆãƒª ãŒï¼Œé•ã†PIDã®ã‚‚ã®ã‚’è¿”ã—ã¦ãã‚‹
         predPC.pid = fetchGroupPC.pid;
         predPC.tid = fetchGroupPC.tid;
     }
@@ -392,7 +392,7 @@ void Fetcher::PredictNextPCBody(BranchPredictionHookParam* param)
 
 }
 
-// •ªŠò—\‘ª‚ğs‚¤ŠÖ”
+// åˆ†å²äºˆæ¸¬ã‚’è¡Œã†é–¢æ•°
 void Fetcher::PredictNextPC(OpIterator op, PC fetchGroupPC)
 {
     BranchPredictionHookParam param;
@@ -453,12 +453,12 @@ void Fetcher::Update()
     const int cacheOffsetBitSize = 
         m_cacheSystem->GetFirstLevelInsnCache()->GetOffsetBitSize();
 
-    // ƒtƒFƒbƒ`ƒOƒ‹[ƒv’†‚Ì•ªŠò”‚ğ‰Šú‰» (CanFetch‚Åg—p) 
+    // ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—ä¸­ã®åˆ†å²æ•°ã‚’åˆæœŸåŒ– (CanFetchã§ä½¿ç”¨) 
     m_numBranchInFetchGroup = 0;
 
     Thread* fetchThread = GetFetchThread( true );
     if( !fetchThread ){
-        // ƒRƒA“à‚Ì‘S‚Ä‚ÌƒXƒŒƒbƒh‚ªI—¹‚µ‚Ä‚¢‚é
+        // ã‚³ã‚¢å†…ã®å…¨ã¦ã®ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚äº†ã—ã¦ã„ã‚‹
         return;
     }
     if( m_evaluated.reqSerializing ){
@@ -486,7 +486,7 @@ void Fetcher::Update()
         if( pc.address == 0 )
             break;
 
-        // ƒLƒƒƒbƒVƒ…‚Ìƒ‰ƒCƒ“‹«ŠE‚ğ‚Ü‚½‚¢‚¾‚çƒtƒFƒbƒ`‚ğI—¹
+        // ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã®ãƒ©ã‚¤ãƒ³å¢ƒç•Œã‚’ã¾ãŸã„ã ã‚‰ãƒ•ã‚§ãƒƒãƒã‚’çµ‚äº†
         if( !m_idealMode &&
             (fetchGroupPC.address >> cacheOffsetBitSize) != 
             (pc.address >> cacheOffsetBitSize)
@@ -499,11 +499,11 @@ void Fetcher::Update()
         OpInfo** opArray = ops.first;
         int numOp = ops.second;
 
-        // emulator ‚É“n‚µ‚½PC‚©‚ç–½—ß‚ª“¾‚ç‚ê‚È‚¯‚ê‚ÎI—¹
+        // emulator ã«æ¸¡ã—ãŸPCã‹ã‚‰å‘½ä»¤ãŒå¾—ã‚‰ã‚Œãªã‘ã‚Œã°çµ‚äº†
         if( opArray == 0 || opArray[0] == 0)
             break;
 
-        // ‚±‚Ì–½—ß‚ğƒtƒFƒbƒ`‚Å‚«‚È‚¢‚È‚çƒtƒFƒbƒ`I—¹
+        // ã“ã®å‘½ä»¤ã‚’ãƒ•ã‚§ãƒƒãƒã§ããªã„ãªã‚‰ãƒ•ã‚§ãƒƒãƒçµ‚äº†
         if( !CanFetch(fetchThread, pc, opArray, numOp) ) {
             break;
         }
@@ -517,23 +517,23 @@ void Fetcher::Update()
         // checkpoint at dispatch
         // dispatch
         }
-        ‚ÌŒ`‚É‚È‚Á‚Ä‚È‚¢——R‚Ìƒƒ‚
+        ã®å½¢ã«ãªã£ã¦ãªã„ç†ç”±ã®ãƒ¡ãƒ¢
 
-        PC‚ÆOp‚ª1‘Î1‚É‘Î‰‚µ‚Ä‚¢‚È‚­‚ÄAPC‚Ì“r’†‚Ì–½—ß‚Å
-        ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚ğì‚é‰Â”\«‚ª‚ ‚é
-        ˆê•û‚ÅA–½—ß‚ÌÄƒtƒFƒbƒ`‚ÍPC’PˆÊ‚Ås‚¤‚Ì‚ÅA
-        ó‘Ô‚ÌXV‚ÍPC’PˆÊ‚Ås‚í‚È‚¢‚Æ‚¢‚¯‚È‚¢
+        PCã¨OpãŒ1å¯¾1ã«å¯¾å¿œã—ã¦ã„ãªãã¦ã€PCã®é€”ä¸­ã®å‘½ä»¤ã§
+        ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆã‚’ä½œã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹
+        ä¸€æ–¹ã§ã€å‘½ä»¤ã®å†ãƒ•ã‚§ãƒƒãƒã¯PCå˜ä½ã§è¡Œã†ã®ã§ã€
+        çŠ¶æ…‹ã®æ›´æ–°ã¯PCå˜ä½ã§è¡Œã‚ãªã„ã¨ã„ã‘ãªã„
 
-        ‚»‚Ì‚Ù‚©F
-        PC‚Ì“r’†‚Ì–½—ß‚ÌÀsŒ‹‰Ê‚Å“¾‚ç‚ê‚éNextPC‚ª‚Ç‚¤‚È‚é‚©‚ª•ª‚©‚ç‚È‚¢
-        •ªŠò—\‘ªƒ~ƒX‚ÌŒŸo‚Ì‚Æ‚±‚ë‚Ål‚¦‚é•K—v‚ª‚ ‚è‚»‚¤
+        ãã®ã»ã‹ï¼š
+        PCã®é€”ä¸­ã®å‘½ä»¤ã®å®Ÿè¡Œçµæœã§å¾—ã‚‰ã‚Œã‚‹NextPCãŒã©ã†ãªã‚‹ã‹ãŒåˆ†ã‹ã‚‰ãªã„
+        åˆ†å²äºˆæ¸¬ãƒŸã‚¹ã®æ¤œå‡ºã®ã¨ã“ã‚ã§è€ƒãˆã‚‹å¿…è¦ãŒã‚ã‚Šãã†
         */
 
         // fetch
         FetchedOpArray fetchedOp;
         Fetch( fetchThread, fetchedOp, pc, opArray, numOp );
 
-        // •K—v‚È‚çƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚ğì¬
+        // å¿…è¦ãªã‚‰ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆã‚’ä½œæˆ
         ForEachOp( fetchedOp, numOp, &Fetcher::CreateCheckpoint );
         ForEachOpArg1( fetchedOp, numOp, true/*before*/, &Fetcher::BackupOnCheckpoint );
 
@@ -562,14 +562,14 @@ void Fetcher::Update()
         // I-Cache Hit/miss decision
         int iCacheReadLatency = GetICacheReadLatency(pc);
 
-        // -1 ‚ÍC¡Œ»İˆ—’†‚ÌƒTƒCƒNƒ‹•ª‚ğˆø‚¢‚Ä‚¢‚é
+        // -1 ã¯ï¼Œä»Šç¾åœ¨å‡¦ç†ä¸­ã®ã‚µã‚¤ã‚¯ãƒ«åˆ†ã‚’å¼•ã„ã¦ã„ã‚‹
         int stallCycles = iCacheReadLatency - m_fetchLatency - 1;   
         if( stallCycles > 0 ) {
             StallNextCycle( stallCycles );
         }
 
-        // <TODO> ƒtƒFƒbƒ`ƒOƒ‹[ƒv“à‚Ì•ªŠò‚ÌˆÊ’u‚ğŠwKE—\‘ª‚·‚é
-        // taken‚È•ªŠò‚ÅƒtƒFƒbƒ`ƒOƒ‹[ƒv‚ğI—¹‚³‚¹‚é
+        // <TODO> ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—å†…ã®åˆ†å²ã®ä½ç½®ã‚’å­¦ç¿’ãƒ»äºˆæ¸¬ã™ã‚‹
+        // takenãªåˆ†å²ã§ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—ã‚’çµ‚äº†ã•ã›ã‚‹
         if( !m_idealMode && 
             fetchedOp[numOp - 1]->GetPredPC() != pc.Next() 
         ){
@@ -577,7 +577,7 @@ void Fetcher::Update()
         }
     }
 
-    // 1ŒÂˆÈã‚Ì–½—ß‚ğƒtƒFƒbƒ`‚µ‚½‚çƒtƒFƒbƒ`ƒOƒ‹[ƒv”‚ğ‘‚â‚·
+    // 1å€‹ä»¥ä¸Šã®å‘½ä»¤ã‚’ãƒ•ã‚§ãƒƒãƒã—ãŸã‚‰ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—æ•°ã‚’å¢—ã‚„ã™
     if( numFetchedPC > 0 ){
         m_numFetchGroup++;
     }
@@ -601,8 +601,8 @@ Thread* Fetcher::GetFetchThread( bool update )
 
 const int Fetcher::GetICacheReadLatency(const PC& pc)
 {
-    // –½—ßƒLƒƒƒbƒVƒ…ƒAƒNƒZƒX‚Å‚Í—LŒø‚È–½—ß‚Í‚¢‚È‚¢
-    // ‹ó‚Ì–½—ß‚ğ—p‚¢‚ÄƒAƒNƒZƒX‚·‚é
+    // å‘½ä»¤ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚¢ã‚¯ã‚»ã‚¹ã§ã¯æœ‰åŠ¹ãªå‘½ä»¤ã¯ã„ãªã„
+    // ç©ºã®å‘½ä»¤ã‚’ç”¨ã„ã¦ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹
     CacheAccess access;
     access.address = pc;
     access.type = CacheAccess::OT_READ;
@@ -615,5 +615,5 @@ const int Fetcher::GetICacheReadLatency(const PC& pc)
 void Fetcher::SetInitialNumFetchedOp(u64 num)
 {
     m_numFetchedOp = num;
-    // Todo: thread –ˆ‚ÌretireID ‰Šú’l‚Ì’²®ƒR[ƒh‚ğ‘‚­
+    // Todo: thread æ¯ã®retireID åˆæœŸå€¤ã®èª¿æ•´ã‚³ãƒ¼ãƒ‰ã‚’æ›¸ã
 }

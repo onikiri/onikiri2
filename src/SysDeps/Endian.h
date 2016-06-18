@@ -41,7 +41,7 @@ namespace Onikiri {
         return value;
     }
 
-    // ƒoƒCƒgƒI[ƒ_[•ÏŠ·‚ÉŠÂ‹«ˆË‘¶‚Ì‚‘¬‚ÈÀ‘•‚ª‰Â”\‚Å‚ ‚ê‚Îg—p‚·‚é
+    // ãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€ãƒ¼å¤‰æ›ã«ç’°å¢ƒä¾å­˜ã®é«˜é€Ÿãªå®Ÿè£…ãŒå¯èƒ½ã§ã‚ã‚Œã°ä½¿ç”¨ã™ã‚‹
 #if defined(COMPILER_IS_MSVC)
     inline u16 ConvertEndian(u16 value)
     {
@@ -91,7 +91,7 @@ namespace Onikiri {
 
 
 
-    // ŠÂ‹«ˆË‘¶‚ÌÀ‘•‚ª‚Å‚«‚È‚¯‚ê‚Î”Ä—p‚ÌÀ‘•‚ğg—p‚·‚é
+    // ç’°å¢ƒä¾å­˜ã®å®Ÿè£…ãŒã§ããªã‘ã‚Œã°æ±ç”¨ã®å®Ÿè£…ã‚’ä½¿ç”¨ã™ã‚‹
 #ifndef CONVERTENDIAN16_DEFINED
     inline u16 ConvertEndian(u16 value)
     {
@@ -125,7 +125,7 @@ namespace Onikiri {
 #   undef CONVERTENDIAN64_DEFINED
 #endif // #ifndef CONVERTENDIAN64_DEFINED
 
-    // signed ¨ unsigned ‚Ì•ÏŠ·C©“®Œ^•ÏŠ·‚Å‚Í‚ ‚¢‚Ü‚¢‚³‚ª¶‚¶‚é‚Ì‚Å
+    // signed â†’ unsigned ã®å¤‰æ›æ™‚ï¼Œè‡ªå‹•å‹å¤‰æ›ã§ã¯ã‚ã„ã¾ã„ã•ãŒç”Ÿã˜ã‚‹ã®ã§
     inline s8 ConvertEndian(s8 value)
     {
         return (s8)ConvertEndian((u8)value);
@@ -143,8 +143,8 @@ namespace Onikiri {
         return (s64)ConvertEndian((u64)value);
     }
 
-    // size_t ‚ÍŠÂ‹«‚É‚æ‚Á‚ÄƒTƒCƒY‚ªˆÙ‚È‚é‚Ì‚ÅCsize_t ‚ÌƒGƒ“ƒfƒBƒAƒ“•ÏŠ·‚ğs‚Á‚Ä‚Í‚È‚ç‚È‚¢
-    // ŠÂ‹«‚É‚æ‚Á‚ÄŒ‹‰Ê‚ªˆÙ‚È‚Á‚Ä‚µ‚Ü‚¤
+    // size_t ã¯ç’°å¢ƒã«ã‚ˆã£ã¦ã‚µã‚¤ã‚ºãŒç•°ãªã‚‹ã®ã§ï¼Œsize_t ã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å¤‰æ›ã‚’è¡Œã£ã¦ã¯ãªã‚‰ãªã„
+    // ç’°å¢ƒã«ã‚ˆã£ã¦çµæœãŒç•°ãªã£ã¦ã—ã¾ã†
 
 #if defined(HOST_IS_LITTLE_ENDIAN)
     template <typename T>
@@ -173,7 +173,7 @@ namespace Onikiri {
 #   error "host endian is not specified"
 #endif
 
-    // HostToLittle ‚Æ LittleToHostCHostToBig ‚Æ BigToHost ‚ÍCÀÛ‚É‚Í•K‚¸“¯‚¶‚±‚Æ‚ğ‚·‚é‚í‚¯‚¾‚ªC–¼‘O‚Ì‚½‚ß‚Éˆê‰’è‹`‚µ‚Ä‚¨‚­
+    // HostToLittle ã¨ LittleToHostï¼ŒHostToBig ã¨ BigToHost ã¯ï¼Œå®Ÿéš›ã«ã¯å¿…ãšåŒã˜ã“ã¨ã‚’ã™ã‚‹ã‚ã‘ã ãŒï¼Œåå‰ã®ãŸã‚ã«ä¸€å¿œå®šç¾©ã—ã¦ãŠã
     template <typename T>
     inline T EndianLittleToHost(T value)
     {
@@ -185,7 +185,7 @@ namespace Onikiri {
         return EndianHostToBig(value);
     }
 
-    // ƒ^[ƒQƒbƒg‚ÌƒGƒ“ƒfƒBƒAƒ“‚ğˆø”‚Åw’è‚·‚éƒo[ƒWƒ‡ƒ“
+    // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‚’å¼•æ•°ã§æŒ‡å®šã™ã‚‹ãƒãƒ¼ã‚¸ãƒ§ãƒ³
     template <typename T>
     inline T EndianSpecifiedToHost(T value, bool bigEndian)
     {
@@ -200,7 +200,7 @@ namespace Onikiri {
         return EndianSpecifiedToHost(value, bigEndian);
     }
 
-    // ˆø”‚ğQÆ‚Åó‚¯‚Ä•ÏX‚·‚éƒo[ƒWƒ‡ƒ“
+    // å¼•æ•°ã‚’å‚ç…§ã§å—ã‘ã¦å¤‰æ›´ã™ã‚‹ãƒãƒ¼ã‚¸ãƒ§ãƒ³
     template <typename T>
     inline void EndianSpecifiedToHostInPlace(T &value, bool bigEndian) 
     {

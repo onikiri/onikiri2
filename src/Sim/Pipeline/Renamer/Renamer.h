@@ -115,15 +115,15 @@ namespace Onikiri
 
         typedef PipelineNodeBase BaseType;
 
-        // ƒŠƒl[ƒ€‘ÎÛ‚ÌOp‚ğŠi”[‚·‚é”z—ñ
+        // ãƒªãƒãƒ¼ãƒ å¯¾è±¡ã®Opã‚’æ ¼ç´ã™ã‚‹é…åˆ—
         static const int MAX_RENAMING_OPS = 16;
         typedef fixed_sized_buffer< OpIterator, MAX_RENAMING_OPS, Renamer > RenamingOpArray;
 
         // The latency of renaming
         int m_renameLatency;
 
-        PhysicalResourceArray<RegDepPredIF>       m_regDepPred;     // ƒŒƒWƒXƒ^‚ÌˆË‘¶ŠÖŒW‰ğÍ 
-        PhysicalResourceArray<MemDepPredIF>       m_memDepPred;     // ƒƒ‚ƒŠ‚ÌˆË‘¶ŠÖŒW‰ğÍ
+        PhysicalResourceArray<RegDepPredIF>       m_regDepPred;     // ãƒ¬ã‚¸ã‚¹ã‚¿ã®ä¾å­˜é–¢ä¿‚è§£æ 
+        PhysicalResourceArray<MemDepPredIF>       m_memDepPred;     // ãƒ¡ãƒ¢ãƒªã®ä¾å­˜é–¢ä¿‚è§£æ
         PhysicalResourceArray<CheckpointMaster>   m_checkpointMaster;
         PhysicalResourceArray<MemOrderManager>    m_memOrderManager;
 
@@ -153,17 +153,17 @@ namespace Onikiri
         // Statistics of ops.
         OpClassStatistics m_opClassStat;
 
-        // array“à‚Ìop‚ğˆø”‚Æ‚µ‚ÄCƒƒ“ƒoŠÖ”ƒ|ƒCƒ“ƒ^‚©‚çŒÄ‚Ño‚µ‚ğs‚¤
+        // arrayå†…ã®opã‚’å¼•æ•°ã¨ã—ã¦ï¼Œãƒ¡ãƒ³ãƒé–¢æ•°ãƒã‚¤ãƒ³ã‚¿ã‹ã‚‰å‘¼ã³å‡ºã—ã‚’è¡Œã†
         void ForEachOp( RenamingOpArray* c, void (Renamer::*func)(OpIterator) );
         
         template <typename T1>
         void ForEachOp1( RenamingOpArray* c, T1 arg1, void (Renamer::*func)(OpIterator, T1) );
 
         bool CanRename( RenamingOpArray* renamingOps );
-        // ƒŠƒl[ƒ€‚ğs‚¤ŠÖ”
+        // ãƒªãƒãƒ¼ãƒ ã‚’è¡Œã†é–¢æ•°
         void Rename( OpIterator );
 
-        // NOP‚Ìˆ—‚ğs‚¤ŠÖ”
+        // NOPã®å‡¦ç†ã‚’è¡Œã†é–¢æ•°
         void ProcessNOP( OpIterator op );
 
         // Enter an op to a renmaer pipeline.
@@ -181,7 +181,7 @@ namespace Onikiri
         //   Latency prediction is done on renaming stages.
         void Steer( OpIterator op );
 
-        // ƒŠƒl[ƒ€‚Ì‘OŒã‚Å checkpoint ‚ÉƒoƒbƒNƒAƒbƒv‚ğ‚Æ‚éŠÖ”
+        // ãƒªãƒãƒ¼ãƒ ã®å‰å¾Œã§ checkpoint ã«ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’ã¨ã‚‹é–¢æ•°
         void BackupOnCheckpoint( OpIterator op, bool before );
     };
     

@@ -42,16 +42,16 @@ namespace Onikiri {
     class StridePred
     {
     protected:
-        // ƒe[ƒuƒ‹‚ÌƒGƒ“ƒgƒŠ
+        // ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚¨ãƒ³ãƒˆãƒª
         struct Stream
         {
-            T next;             // —\‘ª’l
-            T diff;             // ·•ª
-            unsigned int conf;  // ŠmM“x
-            unsigned int time;  // XV‚³‚ê‚Ä‚©‚ç‚ÌŽžŠÔ
+            T next;             // äºˆæ¸¬å€¤
+            T diff;             // å·®åˆ†
+            unsigned int conf;  // ç¢ºä¿¡åº¦
+            unsigned int time;  // æ›´æ–°ã•ã‚Œã¦ã‹ã‚‰ã®æ™‚é–“
         };
 
-        // ƒe[ƒuƒ‹‚©‚ç—\‘ª‚Æ‚·‚éƒGƒ“ƒgƒŠ‚ð‘I‘ð‚·‚é
+        // ãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰äºˆæ¸¬ã¨ã™ã‚‹ã‚¨ãƒ³ãƒˆãƒªã‚’é¸æŠžã™ã‚‹
         class SelectStream
         {
         public:
@@ -63,7 +63,7 @@ namespace Onikiri {
                     return left.conf > right.conf;
             }
         };
-        // ƒe[ƒuƒ‹‚©‚çíœ‚·‚éƒGƒ“ƒgƒŠ‚ð‘I‘ð‚·‚é
+        // ãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰å‰Šé™¤ã™ã‚‹ã‚¨ãƒ³ãƒˆãƒªã‚’é¸æŠžã™ã‚‹
         class SelectDeleteEntry
         {
         public:

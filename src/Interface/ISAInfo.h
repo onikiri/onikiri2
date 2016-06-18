@@ -59,18 +59,18 @@ namespace Onikiri
         virtual int GetRegisterWordBitSize() = 0;
         virtual int GetAddressSpaceBitSize() = 0;
 
-        // ˜_—ƒŒƒWƒXƒ^‚Ì”‚ğ“¾‚é
+        // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®æ•°ã‚’å¾—ã‚‹
         virtual int GetRegisterCount() = 0;
         virtual int GetMaxSrcRegCount() = 0;
         virtual int GetMaxDstRegCount() = 0;
 
-        // ˜_—ƒŒƒWƒXƒ^ regNum ‚ÌƒŒƒWƒXƒ^ƒZƒOƒƒ“ƒg (“¯‚¶•¨—ƒŒƒWƒXƒ^ƒZƒbƒg‚ğg—p‚·‚é˜_—ƒŒƒWƒXƒ^‚ÌW‡) ID‚ğ“¾‚é
+        // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ regNum ã®ãƒ¬ã‚¸ã‚¹ã‚¿ã‚»ã‚°ãƒ¡ãƒ³ãƒˆ (åŒã˜ç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã‚»ãƒƒãƒˆã‚’ä½¿ç”¨ã™ã‚‹è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®é›†åˆ) IDã‚’å¾—ã‚‹
         virtual int GetRegisterSegmentID(int regNum) = 0;
     
-        // ˜_—ƒŒƒWƒXƒ^‚ÌƒZƒOƒƒ“ƒg”‚ğ•Ô‚·
+        // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ã‚»ã‚°ãƒ¡ãƒ³ãƒˆæ•°ã‚’è¿”ã™
         virtual int GetRegisterSegmentCount() = 0;
 
-        // GetOp‚µ‚½‚É1‚Â‚ÌPC‚É‘Î‚µ‚Ä¶¬‚³‚ê‚éOpInfo‚ÌÅ‘å” 
+        // GetOpã—ãŸæ™‚ã«1ã¤ã®PCã«å¯¾ã—ã¦ç”Ÿæˆã•ã‚Œã‚‹OpInfoã®æœ€å¤§æ•° 
         virtual int GetMaxOpInfoCountPerPC() = 0;
 
         // Endian

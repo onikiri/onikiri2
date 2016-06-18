@@ -78,7 +78,7 @@ void Linux64Loader::LoadBinary(MemorySystem* memory, const String& command)
                 pageAttr = VIRTUAL_MEMORY_ATTR_READ | VIRTUAL_MEMORY_ATTR_EXEC;
             }
 
-            // ƒZƒOƒƒ“ƒg‚ÌƒAƒhƒŒƒX”ÍˆÍ‚É•¨—ƒƒ‚ƒŠ‚ğŠ„‚è“–‚ÄCƒZƒOƒƒ“ƒg‚ğ“Ç‚İ‚Ş
+            // ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã®ã‚¢ãƒ‰ãƒ¬ã‚¹ç¯„å›²ã«ç‰©ç†ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ï¼Œã‚»ã‚°ãƒ¡ãƒ³ãƒˆã‚’èª­ã¿è¾¼ã‚€
             if (ph.p_type == PT_LOAD) {
                 if (ph.p_offset == 0)
                     m_imageBase = ph.p_vaddr;
@@ -95,7 +95,7 @@ void Linux64Loader::LoadBinary(MemorySystem* memory, const String& command)
             //if (ph.p_flags & PF_W && writable_base == 0) {
             //}
 
-            // Às‘®«‚ÌƒZƒOƒƒ“ƒg‚Í1‚Â‚Æ‰¼’è
+            // å®Ÿè¡Œå±æ€§ã®ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã¯1ã¤ã¨ä»®å®š
             if (ph.p_flags & PF_X) {
                 m_codeRange.first = ph.p_vaddr;
                 m_codeRange.second = static_cast<size_t>(ph.p_memsz);
@@ -108,7 +108,7 @@ void Linux64Loader::LoadBinary(MemorySystem* memory, const String& command)
         m_elfProgramHeaderOffset = elfReader.GetProgramHeaderOffset();
         m_elfProgramHeaderCount = elfReader.GetProgramHeaderCount();
 
-        // ƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg“™‚ÌŒvZ
+        // ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆç­‰ã®è¨ˆç®—
         m_entryPoint = CalculateEntryPoint(memory, elfReader);
         CalculateOthers(memory, elfReader);
     }
@@ -121,7 +121,7 @@ void Linux64Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
 {
     u64 sp = stackHead+stackSize;
 
-    // ˆø”‚Ì•ª‰ğ
+    // å¼•æ•°ã®åˆ†è§£
     std::vector<String> stringArgs = commandArgs.split(" ");
     int argc = (int)stringArgs.size()+1;
     scoped_array<const char *> argv(new const char*[argc+1]);
@@ -132,7 +132,7 @@ void Linux64Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
     }
     argv[argc] = NULL;
 
-    // ƒXƒ^ƒbƒNã‚Éˆø”‚ğƒRƒs[
+    // ã‚¹ã‚¿ãƒƒã‚¯ä¸Šã«å¼•æ•°ã‚’ã‚³ãƒ”ãƒ¼
     scoped_array<u64> target_argv ( new u64 [argc+1] );
     for (int i = 0; i <= argc; i ++) {
         if (argv[i]) {
@@ -150,7 +150,7 @@ void Linux64Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
     // <Linux>
     // stack : argc, argv[argc-1], NULL, environ[], NULL, auxv[], NULL
 
-    // Auxiliary Vector ‚Ìİ’è
+    // Auxiliary Vector ã®è¨­å®š
     ELF64_AUXV auxv;
 
     const int uid = posix_getuid(), gid = posix_getgid(), euid = posix_geteuid(), egid = posix_getegid();
@@ -208,7 +208,7 @@ void Linux64Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
     sp -= sizeof(u64); // NULL
     // environ
     sp -= sizeof(u64);
-    WriteMemory( memory, sp, sizeof(u64), sp-8);    // argv[argc] (== NULL) ‚ğw‚·‚æ‚¤‚É‚·‚é
+    WriteMemory( memory, sp, sizeof(u64), sp-8);    // argv[argc] (== NULL) ã‚’æŒ‡ã™ã‚ˆã†ã«ã™ã‚‹
 
     sp -= sizeof(u64); // NULL
     // argv
@@ -261,8 +261,8 @@ u64 Linux64Loader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, co
     return elfReader.GetEntryPoint();
 }
 
-// ElfReader ‚ğg‚Á‚Ä‰½‚©‚ğŒvZ‚·‚é
+// ElfReader ã‚’ä½¿ã£ã¦ä½•ã‹ã‚’è¨ˆç®—ã™ã‚‹
 void Linux64Loader::CalculateOthers(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
 {
-    // ƒfƒtƒHƒ‹ƒg‚Å‚Í‰½‚à‚µ‚È‚¢
+    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯ä½•ã‚‚ã—ãªã„
 }

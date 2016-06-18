@@ -57,8 +57,8 @@ namespace Onikiri {
 
         };
 
-        // target ƒƒ‚ƒŠ’†‚Ìƒoƒbƒtƒ@‚ğ host ‚Ì˜A‘±—Ìˆæ‚Éˆê“I‚ÉƒRƒs[‚·‚éDƒfƒXƒgƒ‰ƒNƒg‚É‘‚«–ß‚· (readOnly ‚Ì‚Æ‚«‚Í‘‚«–ß‚µ‚ğs‚í‚È‚¢)
-        // Get‚É‚æ‚è•Ô‚³‚ê‚½ƒoƒbƒtƒ@‚É‘‚«‚Ş‚±‚Æ‚ÅC‚ ‚½‚©‚à target ‚Ìƒƒ‚ƒŠ‚É’¼Ú‘‚¢‚½‚æ‚¤‚ÉŒ©‚¦‚é 
+        // target ãƒ¡ãƒ¢ãƒªä¸­ã®ãƒãƒƒãƒ•ã‚¡ã‚’ host ã®é€£ç¶šé ˜åŸŸã«ä¸€æ™‚çš„ã«ã‚³ãƒ”ãƒ¼ã™ã‚‹ï¼ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ãƒˆæ™‚ã«æ›¸ãæˆ»ã™ (readOnly ã®ã¨ãã¯æ›¸ãæˆ»ã—ã‚’è¡Œã‚ãªã„)
+        // Getã«ã‚ˆã‚Šè¿”ã•ã‚ŒãŸãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã‚€ã“ã¨ã§ï¼Œã‚ãŸã‹ã‚‚ target ã®ãƒ¡ãƒ¢ãƒªã«ç›´æ¥æ›¸ã„ãŸã‚ˆã†ã«è¦‹ãˆã‚‹ 
         class TargetBuffer
         {
         public:
@@ -76,7 +76,7 @@ namespace Onikiri {
 
         // Utility
 
-        // targetAddr ‚É‚ ‚é•¶š—ñ‚Ì’·‚³‚ğ“¾‚é
+        // targetAddr ã«ã‚ã‚‹æ–‡å­—åˆ—ã®é•·ã•ã‚’å¾—ã‚‹
         u64 TargetStrlen(MemorySystem* mem, u64 targetAddr);
 
         // Get c string data from the targetAddr.

@@ -58,7 +58,7 @@ namespace Onikiri
         // Convert endian for store-load forwarding.
         u64 CorrectEndian( u64 src, int size );
 
-        // ƒAƒhƒŒƒX‚Ì”ÍˆÍ‚ªd‚È‚Á‚Ä‚¢‚é‚©
+        // ã‚¢ãƒ‰ãƒ¬ã‚¹ã®ç¯„å›²ãŒé‡ãªã£ã¦ã„ã‚‹ã‹
         bool IsOverlapped( const MemAccess& access1, const MemAccess& access2 ) const;
         bool IsOverlapped( u64 addr1, int size1, u64 addr2, int size2 ) const;
 

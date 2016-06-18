@@ -196,7 +196,7 @@ void SystemManager::GetInitialContext( ArchitectureStateList* archStateList )
 
     ISAInfoIF* isaInfo = m_context.emulator->GetISAInfo();
 
-    // ˜_—ƒŒƒWƒXƒ^‚Ì‰Šú’l‚ð emulator ‚É‹³‚¦‚Ä‚à‚ç‚Á‚ÄƒZƒbƒg
+    // è«–ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®åˆæœŸå€¤ã‚’ emulator ã«æ•™ãˆã¦ã‚‚ã‚‰ã£ã¦ã‚»ãƒƒãƒˆ
     int logicalRegCount = isaInfo->GetRegisterCount();
     for( int pid = 0; pid < processCount; pid++ ){
         (*archStateList)[pid].registerValue.resize( logicalRegCount );

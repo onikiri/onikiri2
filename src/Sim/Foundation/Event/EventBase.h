@@ -175,7 +175,7 @@ namespace Onikiri
 
 
 
-    // イベントの基底クラス
+    // 繧､繝吶Φ繝医�ｮ蝓ｺ蠎輔け繝ｩ繧ｹ
     template < typename T >
     class EventBase :
         public EventBaseImplement,

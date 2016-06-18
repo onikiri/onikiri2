@@ -49,7 +49,7 @@ using namespace EmulatorUtility::Operation;
 //              Utility
 // **********************************
 
-// ƒtƒ‰ƒO‚ğŒvZ‚·‚éDXER[SO] ‚Íg—p‚³‚ê‚È‚¢‚Ì‚Å–³‹
+// ãƒ•ãƒ©ã‚°ã‚’è¨ˆç®—ã™ã‚‹ï¼XER[SO] ã¯ä½¿ç”¨ã•ã‚Œãªã„ã®ã§ç„¡è¦–
 template <typename Type>
 inline int PPC64CalcFlag(Type lhs, Type rhs = 0)
 {
@@ -66,7 +66,7 @@ inline int PPC64CalcFlag(Type lhs, Type rhs = 0)
     return 0;   // never reached
 }
 
-// FP compare ‚Ìƒtƒ‰ƒO‚ğŒvZ‚·‚éD
+// FP compare æ™‚ã®ãƒ•ãƒ©ã‚°ã‚’è¨ˆç®—ã™ã‚‹ï¼
 template <typename Type>
 inline int PPC64CalcFlagFP(Type lhs, Type rhs = 0)
 {
@@ -86,36 +86,36 @@ inline int PPC64CalcFlagFP(Type lhs, Type rhs = 0)
     return 0;   // never reached
 }
 
-// rlwinm “™‚Ì‚½‚ß‚Ìƒ}ƒXƒN‚ğ¶¬‚·‚é (MSB=0)
+// rlwinm ç­‰ã®ãŸã‚ã®ãƒã‚¹ã‚¯ã‚’ç”Ÿæˆã™ã‚‹ (MSB=0)
 template <typename Type>
 inline Type PPC64GenMask(unsigned int mb, unsigned int me)
 {
     unsigned int typeBits = sizeof(Type)*8;
 
     if (mb > me) {
-        // ƒrƒbƒgme‚©‚çmb‚Ü‚Åi‚¢‚¸‚ê‚àŠÜ‚Ü‚¸j‚ª0‚Å‚ ‚éƒrƒbƒg—ñ‚ğ“¾‚é
+        // ãƒ“ãƒƒãƒˆmeã‹ã‚‰mbã¾ã§ï¼ˆã„ãšã‚Œã‚‚å«ã¾ãšï¼‰ãŒ0ã§ã‚ã‚‹ãƒ“ãƒƒãƒˆåˆ—ã‚’å¾—ã‚‹
         return ~(Type)(shttl::mask(0, mb-me-1) << (typeBits-mb));
     }
     else {
-        // ƒrƒbƒgmb‚©‚çme‚Ü‚Åi‚¢‚¸‚ê‚àŠÜ‚Şj‚ª1‚Å‚ ‚éƒrƒbƒg—ñ‚ğ“¾‚é
+        // ãƒ“ãƒƒãƒˆmbã‹ã‚‰meã¾ã§ï¼ˆã„ãšã‚Œã‚‚å«ã‚€ï¼‰ãŒ1ã§ã‚ã‚‹ãƒ“ãƒƒãƒˆåˆ—ã‚’å¾—ã‚‹
         return (Type)(shttl::mask(0, me-mb+1) << (typeBits-me-1));
     }
 }
 
-// FPSCR‚ÌFEX, VX ‚ğİ’è‚·‚é
+// FPSCRã®FEX, VX ã‚’è¨­å®šã™ã‚‹
 inline u64 PPC64AdjustFPSCR(u64 fpscr)
 {
-    fpscr &= 0x9fffffff;    // FEX, VX‚ğƒNƒŠƒA
+    fpscr &= 0x9fffffff;    // FEX, VXã‚’ã‚¯ãƒªã‚¢
 
     if (fpscr & 0x00000f80)
-        fpscr |= 0x40000000;    // FEX ƒZƒbƒg
+        fpscr |= 0x40000000;    // FEX ã‚»ãƒƒãƒˆ
     if (fpscr & 0x01807000)
-        fpscr |= 0x20000000;    // VX ƒZƒbƒg
+        fpscr |= 0x20000000;    // VX ã‚»ãƒƒãƒˆ
 
     return fpscr;
 }
 
-// FPSCR ‚©‚ç ŠÛ‚ßƒ‚[ƒh‚ğæ“¾‚·‚é
+// FPSCR ã‹ã‚‰ ä¸¸ã‚ãƒ¢ãƒ¼ãƒ‰ã‚’å–å¾—ã™ã‚‹
 template <typename TFPSCR>
 struct PPC64FPSCRRoundMode : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
@@ -139,7 +139,7 @@ struct PPC64FPSCRRoundMode : public std::unary_function<EmulatorUtility::OpEmula
 
 
 
-// CR (TSrcCR) ‚Ì TSrcBit –Ú (MSB=0) ‚ğæ“¾‚·‚é
+// CR (TSrcCR) ã® TSrcBit ç›® (MSB=0) ã‚’å–å¾—ã™ã‚‹
 template <typename TSrcCR, typename TSrcBit>
 struct PPC64CRBit : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
@@ -150,7 +150,7 @@ struct PPC64CRBit : public std::unary_function<EmulatorUtility::OpEmulationState
     }
 };
 
-// CTR (TSrcCTR) ‚ğƒfƒNƒŠƒƒ“ƒg‚µCTDestCTR‚É‘ã“ü‚µCƒfƒNƒŠƒƒ“ƒg‚µ‚½Œ‹‰Ê‚ğ•Ô‚·
+// CTR (TSrcCTR) ã‚’ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã—ï¼ŒTDestCTRã«ä»£å…¥ã—ï¼Œãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã—ãŸçµæœã‚’è¿”ã™
 template <typename TDestCTR, typename TSrcCTR>
 struct PPC64DecCTR : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
@@ -203,7 +203,7 @@ struct PPC64Cntlz : public std::unary_function<EmulatorUtility::OpEmulationState
         int lz = sizeof(Type)*8;    // leading zeros
         Type value = static_cast<Type>( TSrc()(opState) );  
 
-        // value ‚ğ n ƒrƒbƒg‰EƒVƒtƒg‚µ‚Ä‰‚ß‚Ä0‚É‚È‚Á‚½‚Æ‚«Cleading zeros ‚Í sizeof(Type)*8 - n
+        // value ã‚’ n ãƒ“ãƒƒãƒˆå³ã‚·ãƒ•ãƒˆã—ã¦åˆã‚ã¦0ã«ãªã£ãŸã¨ãï¼Œleading zeros ã¯ sizeof(Type)*8 - n
         while (value != 0) {
             lz --;
             value >>= 1;
@@ -213,7 +213,7 @@ struct PPC64Cntlz : public std::unary_function<EmulatorUtility::OpEmulationState
     }
 };
 
-// rlwinm“™
+// rlwinmç­‰
 template <typename Type, typename TSrc, typename TMaskBegin, typename TMaskEnd>
 struct PPC64Mask : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
@@ -247,7 +247,7 @@ struct PPC64MaskInsert : public std::unary_function<EmulatorUtility::OpEmulation
 //              compare
 // **********************************
 
-// Src1 ‚Æ Src2 ‚ğ”äŠr‚µCŒ‹‰Ê‚ğ Condition Register ‚Ì’l‚Æ‚µ‚Ä•Ô‚·
+// Src1 ã¨ Src2 ã‚’æ¯”è¼ƒã—ï¼Œçµæœã‚’ Condition Register ã®å€¤ã¨ã—ã¦è¿”ã™
 template <typename Type, typename TSrc1, typename TSrc2>
 struct PPC64Compare : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
@@ -271,8 +271,8 @@ struct PPC64FPCompare : public std::unary_function<EmulatorUtility::OpEmulationS
 // **********************************
 
 
-// TSrc ‚Ì•‚“®¬”“_”‚ğType‚Ì•„†•t‚«®”Œ^‚É•ÏŠ·‚·‚éD
-// Type‚Å•\‚¹‚éÅ‘å’l‚ğ’´‚¦‚Ä‚¢‚éê‡‚ÍÅ‘å’l‚ğCÅ¬’l‚ğ‰º‰ñ‚Á‚Ä‚¢‚éê‡‚ÍÅ¬’l‚ğ•Ô‚·D
+// TSrc ã®æµ®å‹•å°æ•°ç‚¹æ•°ã‚’Typeã®ç¬¦å·ä»˜ãæ•´æ•°å‹ã«å¤‰æ›ã™ã‚‹ï¼
+// Typeã§è¡¨ã›ã‚‹æœ€å¤§å€¤ã‚’è¶…ãˆã¦ã„ã‚‹å ´åˆã¯æœ€å¤§å€¤ã‚’ï¼Œæœ€å°å€¤ã‚’ä¸‹å›ã£ã¦ã„ã‚‹å ´åˆã¯æœ€å°å€¤ã‚’è¿”ã™ï¼
 template <typename Type, typename TSrc, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
 struct PPC64FPToInt : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
@@ -280,7 +280,7 @@ struct PPC64FPToInt : public std::unary_function<EmulatorUtility::OpEmulationSta
     {
         typedef typename EmulatorUtility::signed_type<Type>::type SignedType;
         typedef typename TSrc::result_type FPType;
-        // 2‚Ì•â”‚ğ‰¼’è
+        // 2ã®è£œæ•°ã‚’ä»®å®š
         const SignedType maxValue = std::numeric_limits<SignedType>::max();
         const SignedType minValue = std::numeric_limits<SignedType>::min();
         FPType value = static_cast<FPType>( TSrc()(opState) );
@@ -350,8 +350,8 @@ struct PPC64FRIM : public std::unary_function<EmulatorUtility::OpEmulationState*
 // **********************************
 //    CR logical operations
 // **********************************
-// func(TSrcCR1[TSrcCI1ƒrƒbƒg–Ú], TSrcCR2[TSrcCI2ƒrƒbƒg–Ú])
-// ƒCƒ“ƒfƒbƒNƒX‚ÍMSB=0
+// func(TSrcCR1[TSrcCI1ãƒ“ãƒƒãƒˆç›®], TSrcCR2[TSrcCI2ãƒ“ãƒƒãƒˆç›®])
+// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯MSB=0
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
 struct PPC64CRAnd : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
@@ -430,8 +430,8 @@ struct PPC64CarryOfAShiftR : public std::unary_function<EmulatorUtility::OpEmula
         Type value = static_cast<Type>( TSrc1()(opState) );
         size_t count = static_cast<size_t>( TSrc2()(opState) ) & count_mask;
         
-        if ((value & ((Type)1 << (sizeof(Type)*8-1)))   // •‰‚Å‚ ‚é‚©
-            && (value & shttl::mask(0, std::min(count, sizeof(Type)*8)))    // ƒVƒtƒg‚Å'1'‚ªÌ‚Ä‚ç‚ê‚é‚©‚Ç‚¤‚©
+        if ((value & ((Type)1 << (sizeof(Type)*8-1)))   // è² ã§ã‚ã‚‹ã‹
+            && (value & shttl::mask(0, std::min(count, sizeof(Type)*8)))    // ã‚·ãƒ•ãƒˆã§'1'ãŒæ¨ã¦ã‚‰ã‚Œã‚‹ã‹ã©ã†ã‹
             )
             return 1;
         else
@@ -508,7 +508,7 @@ struct PPC64MTFSF : public std::unary_function<EmulatorUtility::OpEmulationState
 //    result setting
 // **********************************
 
-// TDestCR[TDestCIƒrƒbƒg–Ú] = TFunc()()
+// TDestCR[TDestCIãƒ“ãƒƒãƒˆç›®] = TFunc()()
 template <typename TDestCR, typename TDestCRI, typename TOrgCR, typename TFunc>
 inline void PPC64SetCRBit(EmulatorUtility::OpEmulationState* opState)
 {
@@ -541,31 +541,31 @@ inline void PPC64SetFPSCRF(EmulatorUtility::OpEmulationState* opState)
     TDestFlag::SetOperand(opState, result >> 27 & 0xf );
 }
 
-// TFunc‚Ì–ß‚è’l‚ğ TDest ‚ÉƒZƒbƒg‚µC–ß‚è’l‚É‰‚¶‚ÄTDestFlag‚Éƒtƒ‰ƒO‚ğİ’è
+// TFuncã®æˆ»ã‚Šå€¤ã‚’ TDest ã«ã‚»ãƒƒãƒˆã—ï¼Œæˆ»ã‚Šå€¤ã«å¿œã˜ã¦TDestFlagã«ãƒ•ãƒ©ã‚°ã‚’è¨­å®š
 template <typename TDest, typename TDestFlag, typename TFunc>
 inline void PPC64SetF(EmulatorUtility::OpEmulationState* opState)
 {
-    typename TFunc::result_type result = TFunc()(opState);  // Œ‹‰Ê‚Ìƒrƒbƒg”‚ğˆÛ‚·‚é
+    typename TFunc::result_type result = TFunc()(opState);  // çµæœã®ãƒ“ãƒƒãƒˆæ•°ã‚’ç¶­æŒã™ã‚‹
 
     TDest::SetOperand(opState, result);
     TDestFlag::SetOperand(opState, PPC64CalcFlag(EmulatorUtility::cast_to_signed(result)) );
 }
 
-// TFunc‚Ì–ß‚è’l‚ğ TDest ‚ÉƒZƒbƒg‚µC–ß‚è’l‚É‰‚¶‚ÄTDestFlag‚Éƒtƒ‰ƒO‚ğİ’è
+// TFuncã®æˆ»ã‚Šå€¤ã‚’ TDest ã«ã‚»ãƒƒãƒˆã—ï¼Œæˆ»ã‚Šå€¤ã«å¿œã˜ã¦TDestFlagã«ãƒ•ãƒ©ã‚°ã‚’è¨­å®š
 template <typename TDest, typename TDestFlag, typename TFPSCR, typename TFunc>
 inline void PPC64SetFPF(EmulatorUtility::OpEmulationState* opState)
 {
-    typename TFunc::result_type result = TFunc()(opState);  // Œ‹‰Ê‚Ìƒrƒbƒg”‚ğˆÛ‚·‚é
+    typename TFunc::result_type result = TFunc()(opState);  // çµæœã®ãƒ“ãƒƒãƒˆæ•°ã‚’ç¶­æŒã™ã‚‹
 
     TDest::SetOperand(opState, AsIntFunc<RegisterType>( result ));
     TDestFlag::SetOperand(opState, TFPSCR()(opState) >> 28 & 0xf );
 }
 
-// •„†Šg’£‚ğs‚¤SetF
+// ç¬¦å·æ‹¡å¼µã‚’è¡Œã†SetF
 template <typename TDest, typename TDestFlag, typename TFunc>
 inline void PPC64SetSextF(EmulatorUtility::OpEmulationState* opState)
 {
-    typename EmulatorUtility::signed_type<typename TFunc::result_type>::type result = EmulatorUtility::cast_to_signed( TFunc()(opState) );  // Œ‹‰Ê‚Ìƒrƒbƒg”‚ğˆÛ‚·‚é
+    typename EmulatorUtility::signed_type<typename TFunc::result_type>::type result = EmulatorUtility::cast_to_signed( TFunc()(opState) );  // çµæœã®ãƒ“ãƒƒãƒˆæ•°ã‚’ç¶­æŒã™ã‚‹
 
     TDest::SetOperand(opState, result);
     TDestFlag::SetOperand(opState, PPC64CalcFlag(EmulatorUtility::cast_to_signed(result)) );

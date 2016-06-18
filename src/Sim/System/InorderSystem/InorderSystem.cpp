@@ -82,7 +82,7 @@ void InorderSystem::Run( SystemContext* context )
 
     int processCount = context->emulator->GetProcessCount();
 
-    // ƒŒƒWƒXƒ^‚Ì‰Šú‰»
+    // ãƒ¬ã‚¸ã‚¹ã‚¿ã®åˆæœŸåŒ–
     ArchitectureStateList& archStateList = context->architectureStateList;
 
     EmulatorIF* emulator = context->emulator;
@@ -107,7 +107,7 @@ void InorderSystem::Run( SystemContext* context )
         OpInfo** opInfoArray = ops.first;
         int infoCount        = ops.second;
 
-        // inorder ‚ÈÀs‚Å info ‚ª–³‚¢—Ìˆæ‚ğƒtƒFƒbƒ`ƒvƒƒOƒ‰ƒ€I—¹
+        // inorder ãªå®Ÿè¡Œã§ info ãŒç„¡ã„é ˜åŸŸã‚’ãƒ•ã‚§ãƒƒãƒï¼ãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†
         if( opInfoArray == 0 || opInfoArray[0] == 0 ) {
             terminateProcesses++;
             if(terminateProcesses >= processCount){
@@ -134,7 +134,7 @@ void InorderSystem::Run( SystemContext* context )
         Renamer* renamer = core->GetRenamer();
         DispatchSteererIF* steerer = renamer->GetSteerer();
 
-        // opInfoArray ‚Ì–½—ß‚ğ‘S‚ÄÀs
+        // opInfoArray ã®å‘½ä»¤ã‚’å…¨ã¦å®Ÿè¡Œ
         for(int infoIndex = 0; infoIndex < infoCount; ++infoIndex){
             OpInfo* opInfo  = opInfoArray[infoIndex];
             OpClass opClass = opInfo->GetOpClass();
@@ -156,22 +156,22 @@ void InorderSystem::Run( SystemContext* context )
             
             op->SetTakenPC( Addr(curThreadPC.pid, curThreadPC.tid, curThreadPC.address+4) );
 
-            // ƒ\[ƒXƒIƒyƒ‰ƒ“ƒh‚ğİ’è
+            // ã‚½ãƒ¼ã‚¹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚’è¨­å®š
             regDepPred->Resolve(op);
 
-            // ƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“ƒŒƒWƒXƒ^‚ğİ’è
+            // ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’è¨­å®š
             regDepPred->Allocate(op);
 
-            // ƒƒ‚ƒŠ–½—ß‚ªƒtƒFƒbƒ`‚³‚ê‚½
+            // ãƒ¡ãƒ¢ãƒªå‘½ä»¤ãŒãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸ
             if( opClass.IsLoad() ) {
                 memOrderManager->Allocate(op);
             }
 
-            // •ªŠò–½—ß‚ªƒtƒFƒbƒ`‚³‚ê‚½
+            // åˆ†å²å‘½ä»¤ãŒãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸ
             if( m_enableBPred && opClass.IsBranch() ) {
                 PC predPC = bPred->Predict(op, op->GetPC());
 
-                // BTB/RAS ‚Ì–¢‰Šú‰»ƒGƒ“ƒgƒŠ ‚ªCˆá‚¤PID‚Ì‚à‚Ì‚ğ•Ô‚µ‚Ä‚­‚é
+                // BTB/RAS ã®æœªåˆæœŸåŒ–ã‚¨ãƒ³ãƒˆãƒª ãŒï¼Œé•ã†PIDã®ã‚‚ã®ã‚’è¿”ã—ã¦ãã‚‹
                 predPC.pid = op->GetPC().pid;
                 predPC.tid = op->GetPC().tid;
 
@@ -192,7 +192,7 @@ void InorderSystem::Run( SystemContext* context )
                 op->ExecutionEnd();
             }
 
-            // ƒ[ƒh–½—ß‚Ìˆ—
+            // ãƒ­ãƒ¼ãƒ‰å‘½ä»¤ã®å‡¦ç†
             if( opClass.IsLoad() ){
                 CacheAccess readAccess( op->GetMemAccess(), op, CacheAccess::OT_READ );
                 if( m_enableCache ){
@@ -217,7 +217,7 @@ void InorderSystem::Run( SystemContext* context )
                 }
             }
 
-            // ƒXƒgƒA–½—ß‚Ìˆ—
+            // ã‚¹ãƒˆã‚¢å‘½ä»¤ã®å‡¦ç†
             if( opClass.IsStore() ) {
                 CacheAccess writeAccess( op->GetMemAccess(), op, CacheAccess::OT_WRITE );
                 memImage->Write( &writeAccess );
@@ -235,7 +235,7 @@ void InorderSystem::Run( SystemContext* context )
                 }
             }
             
-            // •ªŠò–½—ß‚Ìˆ—
+            // åˆ†å²å‘½ä»¤ã®å‡¦ç†
             if( m_enableBPred && opClass.IsBranch() ) {
                 bPred->Finished(op);
                 bPred->Commit(op);
@@ -243,11 +243,11 @@ void InorderSystem::Run( SystemContext* context )
 
             op->SetStatus( OpStatus::OS_WRITTEN_BACK );
 
-            // –½—ß‚ÌŒ‹‰Ê‚ğdump
+            // å‘½ä»¤ã®çµæœã‚’dump
             g_dumper.Dump( DS_FETCH, op );
             g_dumper.Dump( DS_RETIRE, op );
 
-            // ƒƒ‚ƒŠ–½—ß‚ªƒŠƒ^ƒCƒA‚µ‚½
+            // ãƒ¡ãƒ¢ãƒªå‘½ä»¤ãŒãƒªã‚¿ã‚¤ã‚¢ã—ãŸ
             if( opClass.IsLoad() ) {
                 memOrderManager->Commit( op );
                 memOrderManager->Retire( op ); // flush: true
@@ -258,12 +258,12 @@ void InorderSystem::Run( SystemContext* context )
             // Commit
             emulator->Commit( &*op, opInfo );
 
-            // ƒŒƒWƒXƒ^‚ğ‰ğ•ú
+            // ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’è§£æ”¾
             regDepPred->Commit(op);
 
             ++opCount;
 
-            // Ÿ‚ÌPC‚ğƒAƒbƒvƒf[ƒg
+            // æ¬¡ã®PCã‚’ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
             if ( infoIndex == infoCount - 1 ) {
                 if (op->GetTaken()) {
                     curThreadPC = op->GetTakenPC();
@@ -281,7 +281,7 @@ void InorderSystem::Run( SystemContext* context )
     context->executedInsns  = insnCount;
     context->executedCycles = 0;
 
-    // Run‚ÉˆÚs‚·‚é‚½‚ß‚ÉƒZƒbƒg
+    // Runã«ç§»è¡Œã™ã‚‹ãŸã‚ã«ã‚»ãƒƒãƒˆ
     ISAInfoIF* isaInfo = context->emulator->GetISAInfo();
     int logicalRegCount = isaInfo->GetRegisterCount();
 

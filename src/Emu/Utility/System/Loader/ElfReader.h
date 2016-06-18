@@ -57,8 +57,8 @@ namespace Onikiri {
             explicit ElfReader();
             ~ElfReader();
 
-            // ELFƒtƒ@ƒCƒ‹‚ğŠJ‚«Cƒwƒbƒ_î•ñ‚ğ“Ç‚İ‚Ş
-            // “Ç‚İ‚İ‚É¸”s‚·‚ê‚Î runtime_error ‚ğ“Š‚°‚é
+            // ELFãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãï¼Œãƒ˜ãƒƒãƒ€æƒ…å ±ã‚’èª­ã¿è¾¼ã‚€
+            // èª­ã¿è¾¼ã¿ã«å¤±æ•—ã™ã‚Œã° runtime_error ã‚’æŠ•ã’ã‚‹
             void Open(const char *name);
             void Close();
 
@@ -75,33 +75,33 @@ namespace Onikiri {
             const Elf_Shdr &GetSectionHeader(int index) const;
             const Elf_Phdr &GetProgramHeader(int index) const;
 
-            // name ‚ğ‚ÂƒZƒNƒVƒ‡ƒ“‚Ìindex‚ğ“¾‚é
-            // Œ©‚Â‚©‚ç‚È‚¯‚ê‚Î-1
+            // name ã‚’æŒã¤ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®indexã‚’å¾—ã‚‹
+            // è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°-1
             int FindSection(const char *name) const;
-            // ƒZƒNƒVƒ‡ƒ“index‚ÌƒZƒNƒVƒ‡ƒ“–¼‚ğ“¾‚é
+            // ã‚»ã‚¯ã‚·ãƒ§ãƒ³indexã®ã‚»ã‚¯ã‚·ãƒ§ãƒ³åã‚’å¾—ã‚‹
             const char *GetSectionName(int index) const;
 
-            // ƒZƒNƒVƒ‡ƒ“index‚Ì“à—e‚ğbuf‚É“Ç‚İ‚Ş (¸”s runtime_error ‚ğ“Š‚°‚é)
+            // ã‚»ã‚¯ã‚·ãƒ§ãƒ³indexã®å†…å®¹ã‚’bufã«èª­ã¿è¾¼ã‚€ (å¤±æ•—æ™‚ runtime_error ã‚’æŠ•ã’ã‚‹)
             void ReadSectionBody(int index, char *buf, size_t buf_size) const;
-            // offset ‚©‚ç buf_size ‚¾‚¯“Ç‚İ‚Ş (¸”s runtime_error ‚ğ“Š‚°‚é)
+            // offset ã‹ã‚‰ buf_size ã ã‘èª­ã¿è¾¼ã‚€ (å¤±æ•—æ™‚ runtime_error ã‚’æŠ•ã’ã‚‹)
             void ReadRange(size_t offset, char *buf, size_t buf_size) const;
 
-            // ELFƒtƒ@ƒCƒ‹‚ÌƒTƒCƒY‚ğ“¾‚é
+            // ELFãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚µã‚¤ã‚ºã‚’å¾—ã‚‹
             streamsize GetImageSize() const;
-            // ELFƒtƒ@ƒCƒ‹‚ğ‘S‚Ä“Ç‚İ‚Ş (¸”s runtime_error ‚ğ“Š‚°‚é)
+            // ELFãƒ•ã‚¡ã‚¤ãƒ«ã‚’å…¨ã¦èª­ã¿è¾¼ã‚€ (å¤±æ•—æ™‚ runtime_error ã‚’æŠ•ã’ã‚‹)
             void ReadImage(char *buf, size_t buf_size) const;
 
             Elf_Off GetSectionHeaderOffset() const;
             Elf_Off GetProgramHeaderOffset() const;
 
         private:
-            // ELFƒwƒbƒ_‚ğ“Ç‚İ‚ŞDmachine: Šú‘Ò‚³‚ê‚émachine (¸”s runtime_error ‚ğ“Š‚°‚é)
+            // ELFãƒ˜ãƒƒãƒ€ã‚’èª­ã¿è¾¼ã‚€ï¼machine: æœŸå¾…ã•ã‚Œã‚‹machine (å¤±æ•—æ™‚ runtime_error ã‚’æŠ•ã’ã‚‹)
             void ReadELFHeader();
-            // ƒZƒNƒVƒ‡ƒ“ƒwƒbƒ_‚ğ“Ç‚İ‚Ş (¸”s runtime_error ‚ğ“Š‚°‚é)
+            // ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ˜ãƒƒãƒ€ã‚’èª­ã¿è¾¼ã‚€ (å¤±æ•—æ™‚ runtime_error ã‚’æŠ•ã’ã‚‹)
             void ReadSectionHeaders();
-            // ƒvƒƒOƒ‰ƒ€ƒwƒbƒ_‚ğ“Ç‚İ‚Ş (¸”s runtime_error ‚ğ“Š‚°‚é)
+            // ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãƒ˜ãƒƒãƒ€ã‚’èª­ã¿è¾¼ã‚€ (å¤±æ•—æ™‚ runtime_error ã‚’æŠ•ã’ã‚‹)
             void ReadProgramHeaders();
-            // ƒZƒNƒVƒ‡ƒ“ƒl[ƒ€ƒe[ƒuƒ‹ (Elf_Ehdr.e_shstrndx‚Ì¦‚·ƒZƒNƒVƒ‡ƒ“) ‚Ì“à—e‚ğ“Ç‚İ‚Ş (¸”s runtime_error ‚ğ“Š‚°‚é)
+            // ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒ¼ãƒ ãƒ†ãƒ¼ãƒ–ãƒ« (Elf_Ehdr.e_shstrndxã®ç¤ºã™ã‚»ã‚¯ã‚·ãƒ§ãƒ³) ã®å†…å®¹ã‚’èª­ã¿è¾¼ã‚€ (å¤±æ•—æ™‚ runtime_error ã‚’æŠ•ã’ã‚‹)
             void ReadSectionNameTable();
 
             bool m_bigEndian;

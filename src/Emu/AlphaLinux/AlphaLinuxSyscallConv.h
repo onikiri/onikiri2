@@ -54,7 +54,7 @@ namespace Onikiri {
             AlphaLinuxSyscallConv(EmulatorUtility::ProcessState* processState);
             virtual ~AlphaLinuxSyscallConv();
 
-            // SetArg によって与えられた引数に従ってシステムコールを行う
+            // SetArg 縺ｫ繧医▲縺ｦ荳弱∴繧峨ｌ縺溷ｼ墓焚縺ｫ蠕薙▲縺ｦ繧ｷ繧ｹ繝�繝繧ｳ繝ｼ繝ｫ繧定｡後≧
             virtual void Execute(EmulatorUtility::OpEmulationState* opState);
         private:
             virtual void syscall_getsysinfo(EmulatorUtility::OpEmulationState* opState);

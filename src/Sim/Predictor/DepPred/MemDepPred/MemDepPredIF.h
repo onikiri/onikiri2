@@ -39,22 +39,22 @@ namespace Onikiri
 {
     class Core;
     
-    // ƒƒ‚ƒŠ‚ÉŠÖ‚·‚éˆË‘¶—\‘ªŠí‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+    // ãƒ¡ãƒ¢ãƒªã«é–¢ã™ã‚‹ä¾å­˜äºˆæ¸¬å™¨ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
     class MemDepPredIF : public DepPredIF 
     {
     public:
         virtual ~MemDepPredIF(){};
 
-        // Rename(Fetch) 
-        virtual void Resolve(OpIterator op) = 0;        // op ‚ğ ˆË‘¶Œ³‚Ì MemDependency ‚É consumer –½—ß‚Æ‚µ‚ÄŠ„‚è“–‚Ä‚é
-        virtual void Allocate(OpIterator op) = 0;       // op ‚ğ MemDependency ‚Ì producer –½—ß‚Æ‚µ‚ÄŠ„‚è“–‚Ä‚é
+        // Rename(Fetch) æ™‚
+        virtual void Resolve(OpIterator op) = 0;        // op ã‚’ ä¾å­˜å…ƒã® MemDependency ã« consumer å‘½ä»¤ã¨ã—ã¦å‰²ã‚Šå½“ã¦ã‚‹
+        virtual void Allocate(OpIterator op) = 0;       // op ã‚’ MemDependency ã® producer å‘½ä»¤ã¨ã—ã¦å‰²ã‚Šå½“ã¦ã‚‹
         virtual void Commit(OpIterator op) = 0;
-        virtual void Flush(OpIterator op) = 0;      // op ‚ª Flush ‚³‚ê‚½
+        virtual void Flush(OpIterator op) = 0;      // op ãŒ Flush ã•ã‚ŒãŸ
 
-        // MemOrderManager‚É‚æ‚Á‚ÄAMemOrder‚Ìconflict‚ğ‹N‚±‚µ‚½op‚Ì‘g(producer, consumer)‚ğ‹³‚¦‚Ä‚à‚ç‚¤
+        // MemOrderManagerã«ã‚ˆã£ã¦ã€MemOrderã®conflictã‚’èµ·ã“ã—ãŸopã®çµ„(producer, consumer)ã‚’æ•™ãˆã¦ã‚‚ã‚‰ã†
         virtual void OrderConflicted(OpIterator producer, OpIterator consumer) = 0;
 
-        // num”‚Ìop‚ğFetch‚Å‚«‚é‚©‚Ç‚¤‚©‚ğ•Ô‚·
+        // numæ•°ã®opã‚’Fetchã§ãã‚‹ã‹ã©ã†ã‹ã‚’è¿”ã™
         virtual bool CanAllocate(OpIterator* infoArray, int numOp) = 0;
 
     };

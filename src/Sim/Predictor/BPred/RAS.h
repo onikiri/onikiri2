@@ -48,7 +48,7 @@ namespace Onikiri
     {
     private:
         CheckpointMaster*     m_checkpointMaster;
-        CheckpointedData<int> m_stackTop; // Stack‚Ìƒgƒbƒv‚ÌêŠ‚ğ¦‚·
+        CheckpointedData<int> m_stackTop; // Stackã®ãƒˆãƒƒãƒ—ã®å ´æ‰€ã‚’ç¤ºã™
         std::vector<PC>       m_stack;
 
         CheckpointedData<int> m_backupStackTop;
@@ -74,10 +74,10 @@ namespace Onikiri
 
         void Initialize(InitPhase phase);
 
-        // call –½—ß‚ÌPC‚ğpush
+        // call å‘½ä»¤ã®PCã‚’push
         void Push(const SimPC& pc);
         
-        // return –½—ß‚È‚Ì‚ÅPC‚ğPop
+        // return å‘½ä»¤ãªã®ã§PCã‚’Pop
         SimPC Pop();
 
         // accessors

@@ -37,7 +37,7 @@
 namespace Onikiri 
 {
 
-    // Memory読み書きのインターフェース
+    // Memory隱ｭ縺ｿ譖ｸ縺阪�ｮ繧､繝ｳ繧ｿ繝ｼ繝輔ぉ繝ｼ繧ｹ
     class MemIF
     {
     public:

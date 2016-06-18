@@ -77,7 +77,7 @@ void Thread::Initialize(InitPhase phase)
         CheckNodeInitialized( "core",               m_core );
         CheckNodeInitialized( "recoverer",          m_recoverer );
 
-        // CheckpointedData ‚Ì‰Šú‰»
+        // CheckpointedData ã®åˆæœŸåŒ–
         m_fetchPC.Initialize(
             m_checkpointMaster, 
             CheckpointMaster::SLOT_FETCH

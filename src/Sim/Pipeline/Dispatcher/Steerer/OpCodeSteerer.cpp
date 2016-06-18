@@ -70,13 +70,13 @@ void OpCodeDispatchSteerer::Initialize(InitPhase phase)
                 for(int j = 0; j < codeCount; j++){
                     int code = unitList[i]->GetMappedCode( j );
 
-                    // code �������̃C���f�b�N�X�ɂȂ�悤�Ɋg��
+                    // code が末尾のインデックスになるように拡張
                     if((int)m_schedulerMap.size() <= code)
                         m_schedulerMap.resize(code+1);
 
                         ASSERT( m_schedulerMap[code] == 0, "scheduler set twice(code:%d).", code);
 
-                        // �Y������ԍ��ɑ��
+                        // 該当する番号に代入
                         m_schedulerMap[code] = sched;
                 }
             }

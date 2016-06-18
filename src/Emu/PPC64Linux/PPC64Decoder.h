@@ -51,9 +51,9 @@ namespace Onikiri {
 
             struct DecodedInsn
             {
-                // ‘¦’l (MSB‚©‚çŒ©‚Ä–½—ß’†‚ÉŒ»‚ê‚é‡D‚½‚¾‚µ CR Bit Index ‚ÍÅ‰j
+                // å³å€¤ (MSBã‹ã‚‰è¦‹ã¦å‘½ä»¤ä¸­ã«ç¾ã‚Œã‚‹é †ï¼ãŸã ã— CR Bit Index ã¯æœ€åˆï¼‰
                 boost::array<u64, 4> Imm;
-                // ƒIƒyƒ‰ƒ“ƒhEƒŒƒWƒXƒ^ (dst src‹æ•Ê‚¹‚¸MSB‚©‚çŒ©‚Ä–½—ß’†‚ÉŒ»‚ê‚é‡)
+                // ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒ»ãƒ¬ã‚¸ã‚¹ã‚¿ (dst srcåŒºåˆ¥ã›ãšMSBã‹ã‚‰è¦‹ã¦å‘½ä»¤ä¸­ã«ç¾ã‚Œã‚‹é †)
                 boost::array<int, 4> Reg;
                 u32 CodeWord;
 
@@ -63,7 +63,7 @@ namespace Onikiri {
         public:
             PPC64Decoder();
 
-            // –½—ßcodeWord‚ğƒfƒR[ƒh‚µCout‚ÉŠi”[‚·‚é
+            // å‘½ä»¤codeWordã‚’ãƒ‡ã‚³ãƒ¼ãƒ‰ã—ï¼Œoutã«æ ¼ç´ã™ã‚‹
             void Decode(u32 codeWord, DecodedInsn* out);
         private:
         };

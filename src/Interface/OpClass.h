@@ -30,9 +30,9 @@
 
 
 //
-// –½—ß‚Ìí—Ş‚ğ‚ ‚ç‚í‚·ƒNƒ‰ƒX
-// OpClassCode ‚Ì’l‚©‚çOpClass ‚Ì‹““®‚ÍˆêˆÓ‚É’è‚Ü‚é‚½‚ßC
-// ƒCƒ“ƒ^[ƒtƒF[ƒX‚Ìˆê•”‚Æ‚µ‚ÄÀ‘•
+// å‘½ä»¤ã®ç¨®é¡ã‚’ã‚ã‚‰ã‚ã™ã‚¯ãƒ©ã‚¹
+// OpClassCode ã®å€¤ã‹ã‚‰OpClass ã®æŒ™å‹•ã¯ä¸€æ„ã«å®šã¾ã‚‹ãŸã‚ï¼Œ
+// ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã®ä¸€éƒ¨ã¨ã—ã¦å®Ÿè£…
 //
 
 #ifndef __OPCLASS_H__
@@ -97,26 +97,26 @@ namespace Onikiri
 
         ~OpClass() {}
 
-        // –½—ß‚Ìí—Ş‚ğ˜A”Ô‚Å•Ô‚·
+        // å‘½ä»¤ã®ç¨®é¡ã‚’é€£ç•ªã§è¿”ã™
         OpClassCode::OpClassCode GetCode() const
         {
             return m_code;
         }
 
-        // •ªŠòijump‚ğŠÜ‚Şj‚©‚Ç‚¤‚©
+        // åˆ†å²ï¼ˆjumpã‚’å«ã‚€ï¼‰ã‹ã©ã†ã‹
         bool IsBranch() const
         {   return BitTest( MASK_BRANCH );  }
 
-        // Note: •ªŠò‚ÉŠÖ‚µ‚ÄCConditional, IndirectJump, Call ‚Í”r‘¼‚Å‚Í‚È‚¢
-        //       Return‚ÆCall/Jump‚Í”r‘¼‚¾‚ªCConditional Return‚Í‘¶İ‚·‚é
-        // ğŒ•ªŠò‚©‚Ç‚¤‚©
+        // Note: åˆ†å²ã«é–¢ã—ã¦ï¼ŒConditional, IndirectJump, Call ã¯æ’ä»–ã§ã¯ãªã„
+        //       Returnã¨Call/Jumpã¯æ’ä»–ã ãŒï¼ŒConditional Returnã¯å­˜åœ¨ã™ã‚‹
+        // æ¡ä»¶åˆ†å²ã‹ã©ã†ã‹
         bool IsConditionalBranch()  const   
         {   return BitTest( MASK_CONDITIONAL_BRANCH );      }
         
         bool IsUnconditionalBranch() const  
         {   return BitTest( MASK_UNCONDITIONAL_BRANCH );    }
 
-        // jump ‚©‚Ç‚¤‚©
+        // jump ã‹ã©ã†ã‹
         bool IsIndirectJump()   const       
         {   return BitTest( MASK_INDIRECT_JUMP );           }
 
@@ -131,37 +131,37 @@ namespace Onikiri
         bool IsSubroutine() const
         {   return BitTest( MASK_SUBROUTINE );  }
 
-        // ƒƒ‚ƒŠ
+        // ãƒ¡ãƒ¢ãƒª
         bool IsMem() const  
         {   return BitTest( MASK_MEM );     }
 
-        // ƒ[ƒh
+        // ãƒ­ãƒ¼ãƒ‰
         bool IsLoad() const
         {   return BitTest( MASK_LOAD );    }
 
-        // ƒXƒgƒA
+        // ã‚¹ãƒˆã‚¢
         bool IsStore() const
         {   return BitTest( MASK_STORE );   }
 
-        // ƒ[ƒh
+        // ãƒ­ãƒ¼ãƒ‰
         bool IsAddr() const
         {   return BitTest( MASK_ADDR );    }
 
-        // ®”
+        // æ•´æ•°
         bool IsInt() const 
         {   return BitTest( MASK_INT );     }
 
-        // •‚“®¬”“_”
+        // æµ®å‹•å°æ•°ç‚¹æ•°
         bool IsFloat() const 
         {   return BitTest( MASK_FLOAT );   }
 
-        // ®” <-> •‚“®¬”“_”•ÏŠ·
+        // æ•´æ•° <-> æµ®å‹•å°æ•°ç‚¹æ•°å¤‰æ›
         bool IsIFConversion() const 
         {   return BitTest( MASK_IFCONV );  }
 
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚Í’P‘Ì‚ÅÀs‚·‚éB‚·‚È‚í‚¿A
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚ğÀs‚·‚é‘O‚Éã—¬‚Ì–½—ß‚ğ‚·‚×‚ÄƒŠƒ^ƒCƒA‚³‚¹‚ÄA
-        // ƒVƒXƒeƒ€ƒR[ƒ‹‚ªƒŠƒ^ƒCƒA‚·‚é‚Ü‚Å‰º—¬‚àƒtƒFƒbƒ`‚µ‚È‚¢
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ã¯å˜ä½“ã§å®Ÿè¡Œã™ã‚‹ã€‚ã™ãªã‚ã¡ã€
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ã‚’å®Ÿè¡Œã™ã‚‹å‰ã«ä¸Šæµã®å‘½ä»¤ã‚’ã™ã¹ã¦ãƒªã‚¿ã‚¤ã‚¢ã•ã›ã¦ã€
+        // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ãŒãƒªã‚¿ã‚¤ã‚¢ã™ã‚‹ã¾ã§ä¸‹æµã‚‚ãƒ•ã‚§ãƒƒãƒã—ãªã„
         bool IsSyscall() const
         {   return BitTest( MASK_SYSCALL ); }
 
@@ -175,7 +175,7 @@ namespace Onikiri
             return OpClassCode::Code_MAX;
         }
 
-        // ƒfƒoƒbƒO‚Ì‚½‚ß‚É•¶š—ñ‚É‚·‚é
+        // ãƒ‡ãƒãƒƒã‚°ã®ãŸã‚ã«æ–‡å­—åˆ—ã«ã™ã‚‹
         const std::string ToString() const
         {
             return OpClassCode::ToString( m_code );

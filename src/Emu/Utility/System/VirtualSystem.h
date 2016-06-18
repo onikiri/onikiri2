@@ -38,7 +38,7 @@ namespace Onikiri {
     namespace EmulatorUtility {
         typedef POSIX::posix_struct_stat HostStat;
 
-        // target‚ÆhostŠÔ‚ÌFD•ÏŠ·‚ğs‚¤ƒNƒ‰ƒX
+        // targetã¨hosté–“ã®FDå¤‰æ›ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹
         class FDConv
         {
         public:
@@ -47,56 +47,56 @@ namespace Onikiri {
             FDConv();
             ~FDConv();
 
-            // target‚ÌFD‚Æhost‚ÌFD‚Ì•ÏŠ·‚ğs‚¤
+            // targetã®FDã¨hostã®FDã®å¤‰æ›ã‚’è¡Œã†
             int TargetToHost(int targetFD) const;
             int HostToTarget(int hostFD) const;
 
-            // FD‚Ì‘Î‰‚ğ’Ç‰Á
+            // FDã®å¯¾å¿œã‚’è¿½åŠ 
             bool AddMap(int targetFD, int hostFD);
 
-            // FD‚Ì‘Î‰‚ğíœ
+            // FDã®å¯¾å¿œã‚’å‰Šé™¤
             bool RemoveMap(int targetFD);
 
-            // ‹ó‚¢‚Ä‚¢‚é target ‚ÌFD‚ğ•Ô‚·
+            // ç©ºã„ã¦ã„ã‚‹ target ã®FDã‚’è¿”ã™
             int GetFirstFreeFD();
         private:
             void ExtendFDMap();
             void ExtendFDMap(size_t size);
 
-            // target‚Ìfd‚ğhost‚Ìfd‚É•ÏŠ·‚·‚é•\Dhost‚Ìfd‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¯‚ê‚ÎInvalidFD‚ª“ü‚Á‚Ä‚¢‚é
+            // targetã®fdã‚’hostã®fdã«å¤‰æ›ã™ã‚‹è¡¨ï¼hostã®fdãŒå‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãªã‘ã‚Œã°InvalidFDãŒå…¥ã£ã¦ã„ã‚‹
             std::vector<int> m_FDTargetToHostTable;
         };
         
-        // ƒvƒƒZƒX‚ª open ’†‚Ìƒtƒ@ƒCƒ‹‚ğ unlink ‚µ‚½‚Æ‚«‚Ì‹““®‚ğ
-        // Unix ‚É‡‚í‚¹‚é‚½‚ß‚ÌƒNƒ‰ƒX
-        // Ú×‚Í VirtualSystem::Unlink ‚É‹Lq
+        // ãƒ—ãƒ­ã‚»ã‚¹ãŒ open ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ unlink ã—ãŸã¨ãã®æŒ™å‹•ã‚’
+        // Unix ã«åˆã‚ã›ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
+        // è©³ç´°ã¯ VirtualSystem::Unlink ã«è¨˜è¿°
         class DelayUnlinker
         {
         public:
             DelayUnlinker();
             ~DelayUnlinker();
 
-            // TargetFD<>path ‚Ì‘Î‰‚ğ’Ç‰Á
+            // TargetFD<>path ã®å¯¾å¿œã‚’è¿½åŠ 
             bool AddMap(int targetFD, std::string path);
-            // TargetFD<>path ‚Ì‘Î‰‚ğíœ
+            // TargetFD<>path ã®å¯¾å¿œã‚’å‰Šé™¤
             bool RemoveMap(int targetFD);
-            // TargetFD<>path ‚Ì‘Î‰‚·‚éƒpƒX‚ğæ“¾
+            // TargetFD<>path ã®å¯¾å¿œã™ã‚‹ãƒ‘ã‚¹ã‚’å–å¾—
             std::string GetMapPath(int targetFD);
-            // íœŒó•â‚Ì path ‚ğ’Ç‰Á
+            // å‰Šé™¤å€™è£œã® path ã‚’è¿½åŠ 
             bool AddUnlinkPath(std::string path);
-            // íœŒó•â‚Ì path ‚ğ Unlink ‚·‚é‚©‚Ç‚¤‚©
+            // å‰Šé™¤å€™è£œã® path ã‚’ Unlink ã™ã‚‹ã‹ã©ã†ã‹
             bool IfUnlinkable(int targetFD);
-            // íœŒó•â‚Ì path ‚ğíœ
+            // å‰Šé™¤å€™è£œã® path ã‚’å‰Šé™¤
             bool RemoveUnlinkPath(std::string path);
         private:
             std::map<int, std::string> m_targetFDToPathTable;
             std::list<std::string> m_delayUnlinkPathList;
         };
 
-        // target‚Ì‚½‚ß‚Ì‰¼‘zƒVƒXƒeƒ€iƒtƒ@ƒCƒ‹“™j‚ğ’ñ‹Ÿ
-        //  - target‚ÌƒvƒƒZƒX“à‚Ìfd‚ÆƒzƒXƒg‚Ìfd‚Ì•ÏŠ·‚ğs‚¤
-        //  - target–ˆ‚Éworking directory‚ğ‚Â
-        //  - ‚Ìæ“¾
+        // targetã®ãŸã‚ã®ä»®æƒ³ã‚·ã‚¹ãƒ†ãƒ ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ç­‰ï¼‰ã‚’æä¾›
+        //  - targetã®ãƒ—ãƒ­ã‚»ã‚¹å†…ã®fdã¨ãƒ›ã‚¹ãƒˆã®fdã®å¤‰æ›ã‚’è¡Œã†
+        //  - targetæ¯ã«working directoryã‚’æŒã¤
+        //  - æ™‚åˆ»ã®å–å¾—
         class VirtualSystem : public ParamExchange
         {
         public:
@@ -104,12 +104,12 @@ namespace Onikiri {
             VirtualSystem();
             ~VirtualSystem();
 
-            // VirtualSystem‚ÅOpen‚µ‚Ä‚¢‚È‚¢ƒtƒ@ƒCƒ‹‚ğ–¾¦“I‚ÉFD‚Ì•ÏŠ·•\‚É’Ç‰Á‚·‚é(stdin, stdout, stderr“™)
+            // VirtualSystemã§Openã—ã¦ã„ãªã„ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ˜ç¤ºçš„ã«FDã®å¤‰æ›è¡¨ã«è¿½åŠ ã™ã‚‹(stdin, stdout, stderrç­‰)
             bool AddFDMap(int targetFD, int hostFD, bool autoclose = false);
-            // ƒ^[ƒQƒbƒg‚Ìì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ğİ’è‚·‚é
+            // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è¨­å®šã™ã‚‹
             void SetInitialWorkingDir(const boost::filesystem::path& dir);
 
-            // ƒVƒXƒeƒ€ƒR[ƒ‹ŒQ
+            // ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ç¾¤
             int GetErrno();
 
             int GetPID();
@@ -121,7 +121,7 @@ namespace Onikiri {
             char* GetCWD(char* buf, int maxlen);
             int ChDir(const char* path);
 
-            // ƒtƒ@ƒCƒ‹‚ğŠJ‚­DŠJ‚¢‚½ƒtƒ@ƒCƒ‹‚Í©“®‚ÅFD‚Ì•ÏŠ·•\‚É’Ç‰Á‚³‚ê‚é
+            // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãï¼é–‹ã„ãŸãƒ•ã‚¡ã‚¤ãƒ«ã¯è‡ªå‹•ã§FDã®å¤‰æ›è¡¨ã«è¿½åŠ ã•ã‚Œã‚‹
             int Open(const char* filename,int oflag);
 
             int Read(int targetFD, void *buffer, unsigned int count);
@@ -144,7 +144,7 @@ namespace Onikiri {
 
             int MkDir(const char* path, int mode);
 
-            // target‚ÌFD‚Æhost‚ÌFD‚Ì•ÏŠ·‚ğs‚¤
+            // targetã®FDã¨hostã®FDã®å¤‰æ›ã‚’è¡Œã†
             int FDTargetToHost(int targetFD) const
             {
                 return m_fdConv.TargetToHost(targetFD);
@@ -154,7 +154,7 @@ namespace Onikiri {
                 return m_fdConv.HostToTarget(hostFD);
             }
 
-            // ‚Ìæ“¾
+            // æ™‚åˆ»ã®å–å¾—
             s64 GetTime();
             s64 GetClock();
             void AddInsnTick()
@@ -180,13 +180,13 @@ namespace Onikiri {
             void RemoveAutoCloseFD(int fd);
 
             FDConv m_fdConv;
-            // ƒfƒXƒgƒ‰ƒNƒg‚É©“®‚Åclose‚·‚éfd
+            // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ãƒˆæ™‚ã«è‡ªå‹•ã§closeã™ã‚‹fd
             std::vector<int> m_autoCloseFD;
             DelayUnlinker m_delayUnlinker;
 
             boost::filesystem::path m_cwd;
 
-            // 
+            // æ™‚åˆ»
             int EmulationModeStrToInt( const std::string& );
             u64 m_unixTime;
             u64 m_executedInsnTick;

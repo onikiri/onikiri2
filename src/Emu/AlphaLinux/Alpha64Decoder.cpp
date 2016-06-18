@@ -44,22 +44,22 @@ using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::AlphaLinux;
 
 namespace {
-    // –½—ß‚ÌŽí—Þ
+    // å‘½ä»¤ã®ç¨®é¡ž
     enum InsnType {
-        UNDEF,              // –¢’è‹`C‚Ü‚½‚Í—\–ñ
-        MEMORY_ADDR,        // ƒƒ‚ƒŠŒ`Ž® (ƒAƒhƒŒƒXŒvŽZ)
-        MEMORY_LOAD,        // ƒƒ‚ƒŠŒ`Ž® (ƒ[ƒh)
-        MEMORY_STORE,       // ƒƒ‚ƒŠŒ`Ž® (ƒXƒgƒA)
-        MEMORY_LOAD_FLOAT,  // •‚“®¬”“_ƒƒ‚ƒŠŒ`Ž® (ƒ[ƒh)
-        MEMORY_STORE_FLOAT, // •‚“®¬”“_ƒƒ‚ƒŠŒ`Ž® (ƒXƒgƒA)
-        MEMORY_FUNC,        // •ÏˆÊ‚ð‹@”\ƒR[ƒh‚Æ‚µ‚Ä—p‚¢‚éƒƒ‚ƒŠŒ`Ž® (MB“™)
-        MEMORY_JMP,         // ƒWƒƒƒ“ƒv–½—ß (JSR“™)
-        BRANCH,             // •ªŠòŒ`Ž®
-        BRANCH_FLOAT,       // •ªŠòŒ`Ž® (•‚“®¬”“_)
-        BRANCH_SAVE,        // PC‚ð•Û‘¶‚·‚é•ªŠòŒ`Ž® (BR, BSR)
-        OPERATION_INT,      // ‘€ìŒ`Ž® (®”)
-        OPERATION_FLOAT,    // ‘€ìŒ`Ž® (•‚“®¬”)
-        PAL                 // PALƒR[ƒhŒ`Ž®
+        UNDEF,              // æœªå®šç¾©ï¼Œã¾ãŸã¯äºˆç´„
+        MEMORY_ADDR,        // ãƒ¡ãƒ¢ãƒªå½¢å¼ (ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®—)
+        MEMORY_LOAD,        // ãƒ¡ãƒ¢ãƒªå½¢å¼ (ãƒ­ãƒ¼ãƒ‰)
+        MEMORY_STORE,       // ãƒ¡ãƒ¢ãƒªå½¢å¼ (ã‚¹ãƒˆã‚¢)
+        MEMORY_LOAD_FLOAT,  // æµ®å‹•å°æ•°ç‚¹ãƒ¡ãƒ¢ãƒªå½¢å¼ (ãƒ­ãƒ¼ãƒ‰)
+        MEMORY_STORE_FLOAT, // æµ®å‹•å°æ•°ç‚¹ãƒ¡ãƒ¢ãƒªå½¢å¼ (ã‚¹ãƒˆã‚¢)
+        MEMORY_FUNC,        // å¤‰ä½ã‚’æ©Ÿèƒ½ã‚³ãƒ¼ãƒ‰ã¨ã—ã¦ç”¨ã„ã‚‹ãƒ¡ãƒ¢ãƒªå½¢å¼ (MBç­‰)
+        MEMORY_JMP,         // ã‚¸ãƒ£ãƒ³ãƒ—å‘½ä»¤ (JSRç­‰)
+        BRANCH,             // åˆ†å²å½¢å¼
+        BRANCH_FLOAT,       // åˆ†å²å½¢å¼ (æµ®å‹•å°æ•°ç‚¹)
+        BRANCH_SAVE,        // PCã‚’ä¿å­˜ã™ã‚‹åˆ†å²å½¢å¼ (BR, BSR)
+        OPERATION_INT,      // æ“ä½œå½¢å¼ (æ•´æ•°)
+        OPERATION_FLOAT,    // æ“ä½œå½¢å¼ (æµ®å‹•å°æ•°)
+        PAL                 // PALã‚³ãƒ¼ãƒ‰å½¢å¼
     };
 
     const InsnType UND = UNDEF;
@@ -76,7 +76,7 @@ namespace {
     const InsnType OPI = OPERATION_INT;
     const InsnType OPF = OPERATION_FLOAT;
 
-    // –½—ßƒR[ƒh‚ÆŽí—Þ‚Ì‘Î‰ž
+    // å‘½ä»¤ã‚³ãƒ¼ãƒ‰ã¨ç¨®é¡žã®å¯¾å¿œ
     InsnType OpCodeToInsnType[64] =
     {
         // 0x00

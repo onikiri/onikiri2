@@ -97,7 +97,7 @@ BPred::~BPred()
     ReleaseParam();
 }
 
-// ‰Šú‰»
+// åˆæœŸåŒ–
 void BPred::Initialize( InitPhase phase )
 {
     if( phase == INIT_PRE_CONNECTION ){
@@ -105,7 +105,7 @@ void BPred::Initialize( InitPhase phase )
     }
     else if( phase == INIT_POST_CONNECTION ){
 
-        // ƒƒ“ƒo•Ï”‚ª³‚µ‚­ƒZƒbƒg‚³‚ê‚Ä‚¢‚é‚©ƒ`ƒFƒbƒN
+        // ãƒ¡ãƒ³ãƒå¤‰æ•°ãŒæ­£ã—ãã‚»ãƒƒãƒˆã•ã‚Œã¦ã„ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
         CheckNodeInitialized( "dirPred", m_dirPred );
         CheckNodeInitialized( "btb",  m_btb );
         CheckNodeInitialized( "ras",  m_ras );
@@ -122,9 +122,9 @@ void BPred::Initialize( InitPhase phase )
     }
 }
 
-// <TODO> –{“–‚ÍCƒtƒFƒbƒ`ƒOƒ‹[ƒv‚É‘Î‚µ‚ÄŸ‚ÌƒtƒFƒbƒ`ƒOƒ‹[ƒv‚ğ—\‘ª‚·‚é
+// <TODO> æœ¬å½“ã¯ï¼Œãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—ã«å¯¾ã—ã¦æ¬¡ã®ãƒ•ã‚§ãƒƒãƒã‚°ãƒ«ãƒ¼ãƒ—ã‚’äºˆæ¸¬ã™ã‚‹
 
-// op ‚É‘Î‚µ‚ÄAŸ‚É fetch ‚³‚ê‚é–½—ß‚Ì PC ‚ğ—\‘ª
+// op ã«å¯¾ã—ã¦ã€æ¬¡ã« fetch ã•ã‚Œã‚‹å‘½ä»¤ã® PC ã‚’äºˆæ¸¬
 PC BPred::Predict( OpIterator op, PC predIndexPC )
 {
     if( m_perfect && m_mode == SM_SIMULATION ){
@@ -144,14 +144,14 @@ PC BPred::Predict( OpIterator op, PC predIndexPC )
 
     m_btbPredTable[op] = btbPred;
 
-    // BTB‚Éƒqƒbƒg‚µ‚È‚©‚Á‚½ê‡C•ªŠò—\‘ª‚ÍiXV‚àŠÜ‚ß‚Äjs‚í‚È‚¢
+    // BTBã«ãƒ’ãƒƒãƒˆã—ãªã‹ã£ãŸå ´åˆï¼Œåˆ†å²äºˆæ¸¬ã¯ï¼ˆæ›´æ–°ã‚‚å«ã‚ã¦ï¼‰è¡Œã‚ãªã„
     if(!btbHit)
         return pc.Next();
 
 
     PC branchTarget = btbPred.target;
 
-    // ğŒ•ªŠò‚Ìê‡
+    // æ¡ä»¶åˆ†å²ã®å ´åˆ
     bool predTaken  = btbPred.dirPredict ? m_dirPred->Predict(op, predIndexPC) : true;
 
     switch(btbPred.type){
@@ -160,40 +160,40 @@ PC BPred::Predict( OpIterator op, PC predIndexPC )
         return pc.Next();
 
     case BT_CONDITIONAL:
-        // taken / not taken ‚Ì—\‘ª‚É‰‚¶‚ÄAŸ‚ÌPC‚ğ•Ô‚·
-        // not taken ‚Æ—\‘ª‚µ‚½ê‡CŸ‚Ìop‚ÌPC‚ğ•Ô‚·
+        // taken / not taken ã®äºˆæ¸¬ã«å¿œã˜ã¦ã€æ¬¡ã®PCã‚’è¿”ã™
+        // not taken ã¨äºˆæ¸¬ã—ãŸå ´åˆï¼Œæ¬¡ã®opã®PCã‚’è¿”ã™
         return predTaken ? branchTarget : pc.Next();        
 
     case BT_UNCONDITIONAL:
-        // –³ğŒ•ªŠò‚È‚ç BTB ‚Ì—\‘ª‚ğ•Ô‚·
+        // ç„¡æ¡ä»¶åˆ†å²ãªã‚‰ BTB ã®äºˆæ¸¬ã‚’è¿”ã™
         return branchTarget;
 
     case BT_CALL:
-        // call ‚È‚ç RAS ‚É push ‚µ‚ÄABTB ‚Ì—\‘ª‚ğ•Ô‚·
-        // (ƒCƒ“ƒNƒŠƒƒ“ƒg‚ÍPush“à‚Ås‚í‚ê‚é
+        // call ãªã‚‰ RAS ã« push ã—ã¦ã€BTB ã®äºˆæ¸¬ã‚’è¿”ã™
+        // (ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã¯Pushå†…ã§è¡Œã‚ã‚Œã‚‹
         m_ras[op->GetLocalTID()]->Push(pc);
         return branchTarget;
 
     case BT_RETURN:
-        // return ‚È‚ç RAS ‚Ì—\‘ª‚ğ•Ô‚· 
+        // return ãªã‚‰ RAS ã®äºˆæ¸¬ã‚’è¿”ã™ 
         return m_ras[op->GetLocalTID()]->Pop();
 
     case BT_CONDITIONAL_RETURN:
-        // ğŒ•tƒŠƒ^[ƒ“‚Ìê‡‚ÍDirPred‚ğ‚Ğ‚¢‚ÄTaken‚È‚çPop        
-        // not taken ‚È‚çŸ‚ÌPC‚ğ•Ô‚·
+        // æ¡ä»¶ä»˜ãƒªã‚¿ãƒ¼ãƒ³ã®å ´åˆã¯DirPredã‚’ã²ã„ã¦Takenãªã‚‰Pop        
+        // not taken ãªã‚‰æ¬¡ã®PCã‚’è¿”ã™
         return predTaken ? m_ras[op->GetLocalTID()]->Pop() : pc.Next();
 
     case BT_END:
         break;
     }
 
-    // ‚±‚±‚É‚Í–¢“’B‚Ì‚Í‚¸
+    // ã“ã“ã«ã¯æœªåˆ°é”ã®ã¯ãš
     THROW_RUNTIME_ERROR("reached end of Bpred::Predict\n");
 
-    return pc.Next();   // warning ‚æ‚¯
+    return pc.Next();   // warning ã‚ˆã‘
 }
 
-// op ‚ÌÀsI—¹‚ÉŒÄ‚Î‚ê‚é
+// op ã®å®Ÿè¡Œçµ‚äº†æ™‚ã«å‘¼ã°ã‚Œã‚‹
 void BPred::Finished( OpIterator op )
 {
     if( m_perfect ){
@@ -202,7 +202,7 @@ void BPred::Finished( OpIterator op )
 
     const OpClass& opClass = op->GetOpClass();
 
-    // •ªŠò‚Å‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
+    // åˆ†å²ã§ãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
     if( !opClass.IsBranch() ) {
         return;
     }
@@ -210,14 +210,14 @@ void BPred::Finished( OpIterator op )
     // Detect branch miss prediction and recovery if prediction is incorrect.
     RecoveryFromBPredMiss( op );
 
-    // ğŒ•ªŠò‚È‚ç•ûŒü—\‘ªŠí‚ÉÀsŠ®—¹‚ğ’Ê’m
-    // i—\‘ªBTBƒqƒbƒg‚Ìê‡‚Ì‚İ
+    // æ¡ä»¶åˆ†å²ãªã‚‰æ–¹å‘äºˆæ¸¬å™¨ã«å®Ÿè¡Œå®Œäº†ã‚’é€šçŸ¥
+    // ï¼ˆäºˆæ¸¬æ™‚BTBãƒ’ãƒƒãƒˆã®å ´åˆã®ã¿
     if( opClass.IsConditionalBranch() && m_btbPredTable[op].hit ){
         m_dirPred->Finished( op );
     }
 }
 
-// op ‚ÌƒŠƒ^ƒCƒA‚ÉŒÄ‚Î‚ê‚é
+// op ã®ãƒªã‚¿ã‚¤ã‚¢æ™‚ã«å‘¼ã°ã‚Œã‚‹
 void BPred::Commit( OpIterator op )
 {
     if( m_perfect && m_mode != SM_SIMULATION ){
@@ -231,18 +231,18 @@ void BPred::Commit( OpIterator op )
     bool conditional = opClass.IsConditionalBranch();
     
     if( !m_perfect ){
-        // BTBXV
+        // BTBæ›´æ–°
         const BTBPredict& predict = m_btbPredTable[op];
         m_btb->Update( op, predict );
 
-        // ğŒ•ªŠò‚È‚ç•ûŒü—\‘ªŠí‚ÉƒŠƒ^ƒCƒA‚ğ’Ê’m
-        // i—\‘ªBTBƒqƒbƒg‚Ìê‡‚Ì‚İ
+        // æ¡ä»¶åˆ†å²ãªã‚‰æ–¹å‘äºˆæ¸¬å™¨ã«ãƒªã‚¿ã‚¤ã‚¢ã‚’é€šçŸ¥
+        // ï¼ˆäºˆæ¸¬æ™‚BTBãƒ’ãƒƒãƒˆã®å ´åˆã®ã¿
         if( conditional && predict.hit ){
             m_dirPred->Retired( op );
         }
     }
 
-    // ƒqƒbƒg—¦
+    // ãƒ’ãƒƒãƒˆç‡
     PC pcTaken  = op->GetTakenPC();
     PC pcPred   = op->GetPredPC();
     PC pcNext   = NextPC( op->GetPC() );

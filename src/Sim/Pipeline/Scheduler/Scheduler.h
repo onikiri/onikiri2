@@ -102,10 +102,10 @@ namespace Onikiri
 
         void Initialize(InitPhase phase);
 
-        // code ‚É‘Î‰‚·‚é‰‰ZŠí‚ğƒZƒbƒg
+        // code ã«å¯¾å¿œã™ã‚‹æ¼”ç®—å™¨ã‚’ã‚»ãƒƒãƒˆ
         void SetExecUnit( PhysicalResourceArray<ExecUnitIF>& execUnits );
 
-        // code ‚É‘Î‰‚·‚é‰‰ZŠí‚ğ“¾‚é
+        // code ã«å¯¾å¿œã™ã‚‹æ¼”ç®—å™¨ã‚’å¾—ã‚‹
         ExecUnitIF* GetExecUnit(int code);
 
         // PipelineNodeIF
@@ -124,7 +124,7 @@ namespace Onikiri
         // This method is called from WakeupEvent::Evaluate().
         void EvaluateDependency( OpIterator op );
 
-        // op ‚ÉˆË‘¶‚·‚é–½—ß‚ğwake up ‚·‚éƒCƒxƒ“ƒg‚ğ“o˜^‚·‚é
+        // op ã«ä¾å­˜ã™ã‚‹å‘½ä»¤ã‚’wake up ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™»éŒ²ã™ã‚‹
         void RegisterWakeUpEvent( OpIterator op, int latencyFromOp );   
 
         // Returns whether 'op' can be selected in this cycle.
@@ -191,9 +191,9 @@ namespace Onikiri
     private:
         typedef PipelineNodeBase BaseType;
 
-        OpList      m_notReadyOp;       // ‚Ü‚¾ready‚É‚È‚Á‚Ä‚¢‚È‚¢op
-        OpList      m_readyOp;          // ready‚É‚È‚Á‚Äselect‚Ì‘ÎÛ‚É‚È‚éop
-        OpBuffer    m_issuedOp;         // issue‚³‚ê‚½op
+        OpList      m_notReadyOp;       // ã¾ã readyã«ãªã£ã¦ã„ãªã„op
+        OpList      m_readyOp;          // readyã«ãªã£ã¦selectã®å¯¾è±¡ã«ãªã‚‹op
+        OpBuffer    m_issuedOp;         // issueã•ã‚ŒãŸop
 
         struct Evaluated
         {
@@ -203,13 +203,13 @@ namespace Onikiri
             SchedulingOps   selected;   // Selected ops in this cycle.
         } m_evaluated;
 
-        int m_index;                // ‰½”Ô–Ú‚ÌƒXƒPƒWƒ…[ƒ‰‚©
-        int m_issueWidth;           // ”­s•
-        int m_issueLatency;         // ”­sƒŒƒCƒeƒ“ƒV
+        int m_index;                // ä½•ç•ªç›®ã®ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©ã‹
+        int m_issueWidth;           // ç™ºè¡Œå¹…
+        int m_issueLatency;         // ç™ºè¡Œãƒ¬ã‚¤ãƒ†ãƒ³ã‚·
         int m_writeBackLatency;     // The latency of write back.
         std::vector<int> 
-            m_communicationLatency; // ƒXƒPƒWƒ…[ƒ‰ŠÔ‚Ì’ÊMƒŒƒCƒeƒ“ƒV
-        int m_windowCapacity;       // –½—ßƒEƒCƒ“ƒhƒE‚ÌƒTƒCƒY
+            m_communicationLatency; // ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©é–“ã®é€šä¿¡ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·
+        int m_windowCapacity;       // å‘½ä»¤ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚º
 
         // Load pipeline model.
         // See comments in 'Core.h'
@@ -226,12 +226,12 @@ namespace Onikiri
         // Selector
         IssueSelectorIF* m_selector;
 
-        // ƒXƒPƒWƒ…[ƒ‰‚ÌƒNƒ‰ƒXƒ^
+        // ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©ã®ã‚¯ãƒ©ã‚¹ã‚¿
         struct Cluster
         {
             Scheduler*   scheduler;
-            int          issueLatency;          // ”­sƒŒƒCƒeƒ“ƒV
-            int          communicationLatency;  // ƒXƒPƒWƒ…[ƒ‰ŠÔ‚Ì’ÊMƒŒƒCƒeƒ“ƒV
+            int          issueLatency;          // ç™ºè¡Œãƒ¬ã‚¤ãƒ†ãƒ³ã‚·
+            int          communicationLatency;  // ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©é–“ã®é€šä¿¡ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·
         };
         std::vector<Cluster> m_clusters;
 
@@ -241,7 +241,7 @@ namespace Onikiri
         // Clear evaluated conctext.
         void ClearEvaluated();
 
-        // ƒfƒBƒXƒpƒbƒ`‚³‚ê‚Ä‚«‚½op‚ğó‚¯æ‚é
+        // ãƒ‡ã‚£ã‚¹ãƒ‘ãƒƒãƒã•ã‚Œã¦ããŸopã‚’å—ã‘å–ã‚‹
         void DispatchEnd(OpIterator op);
 
         // wake up
@@ -262,7 +262,7 @@ namespace Onikiri
         // Retire/Flush
         void Delete( OpIterator op );
 
-        // op‚ğÀs‚·‚éƒCƒxƒ“ƒg‚ğ“o˜^‚·‚é
+        // opã‚’å®Ÿè¡Œã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™»éŒ²ã™ã‚‹
         void RegisterExecuteEvent(OpIterator op, int latency);
 
     };

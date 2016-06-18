@@ -56,7 +56,7 @@ namespace Onikiri
             static const int MaxImmCount = TISAInfo::MaxImmCount;
             static const int MaxSrcCount = MaxSrcRegCount + MaxImmCount;
             static const int MaxDstCount = MaxDstRegCount;
-            enum OperandType { NONE, REG, IMM, ZERO };  // ZERO ‚Í dstê—p
+            enum OperandType { NONE, REG, IMM, ZERO };  // ZERO ã¯ dstå°‚ç”¨
             typedef void (*EmulationFunc)(OpEmulationState*);
 
             explicit CommonOpInfo(OpClass opClass) : 
@@ -107,7 +107,7 @@ namespace Onikiri
             EmulationFunc GetEmulationFunc() const { return m_emulationFunc; }
             void SetEmulationFunc(EmulationFunc func) { m_emulationFunc = func; }
 
-            // ‘Î‰ 
+            // å¯¾å¿œ 
             void SetSrcRegOpMap(int index, int value)
             {
                 assert( index < MaxSrcCount );  // For avoiding gcc's warning.
@@ -129,28 +129,28 @@ namespace Onikiri
             }
             int GetDstRegOpMap(int index) const { return m_dstRegOpMap[index]; }
 
-            // ƒ\[ƒXEƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“EƒIƒyƒ‰ƒ“ƒh‚ÌŒÂ”‚ğİ’è
+            // ã‚½ãƒ¼ã‚¹ãƒ»ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®å€‹æ•°ã‚’è¨­å®š
             void SetSrcOpNum(int n) { m_srcOpNum = n; }
             int GetSrcOpNum() const { return m_srcOpNum; }
             void SetDstOpNum(int n) { m_dstOpNum = n; }
             int GetDstOpNum() const { return m_dstOpNum; }
 
-            // ‘¦’l‚ÌŒÂ”‚ğİ’è
+            // å³å€¤ã®å€‹æ•°ã‚’è¨­å®š
             void SetImmNum(int n) { m_immNum = n; }
             int GetImmNum() const { return m_immNum; }
 
-            // ƒ\[ƒXEƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“uƒŒƒWƒXƒ^v‚ÌŒÂ”‚ğİ’è
+            // ã‚½ãƒ¼ã‚¹ãƒ»ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ã€Œãƒ¬ã‚¸ã‚¹ã‚¿ã€ã®å€‹æ•°ã‚’è¨­å®š
             void SetSrcRegNum(int n) { m_srcRegNum = n; }
             void SetDstRegNum(int n) { m_dstRegNum = n; }
 
-            int GetSrcRegNum() const { return m_srcRegNum; }    // non-virtual ‚È GetSrcNum
+            int GetSrcRegNum() const { return m_srcRegNum; }    // non-virtual ãª GetSrcNum
             int GetDstRegNum() const { return m_dstRegNum; }
 
             // The number of micro-ops for its instruction.
             void SetMicroOpNum( int microOpNum )    {   m_microOpNum = microOpNum;      }
             void SetMicroOpIndex( int microOpIndex ){   m_microOpIndex = microOpIndex;  }
 
-            // ƒj[ƒ‚ƒjƒbƒN‚ğİ’è (ƒ|ƒCƒ“ƒ^‚Íˆê“I‚È•¶š—ñ‚ğw‚µ‚Ä‚¢‚Ä‚Í‚¢‚¯‚È‚¢)
+            // ãƒ‹ãƒ¼ãƒ¢ãƒ‹ãƒƒã‚¯ã‚’è¨­å®š (ãƒã‚¤ãƒ³ã‚¿ã¯ä¸€æ™‚çš„ãªæ–‡å­—åˆ—ã‚’æŒ‡ã—ã¦ã„ã¦ã¯ã„ã‘ãªã„)
             void SetMnemonic(const char* mnemonic) { m_mnemonic = mnemonic; }
 
             // --- Implementation of OpInfo
@@ -197,34 +197,34 @@ namespace Onikiri
         protected:
             OpClass m_opClass;
             
-            // –½—ß‚É‘Î‰‚·‚é‘€ì‚ğÀs‚·‚éŠÖ”
+            // å‘½ä»¤ã«å¯¾å¿œã™ã‚‹æ“ä½œã‚’å®Ÿè¡Œã™ã‚‹é–¢æ•°
             EmulationFunc m_emulationFunc;
-            // ƒ\[ƒXƒŒƒWƒXƒ^”Ô†
+            // ã‚½ãƒ¼ã‚¹ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·
             boost::array<int, MaxSrcRegCount> m_srcReg;
-            // ƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“ƒŒƒWƒXƒ^”Ô†
+            // ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·
             boost::array<int, MaxDstRegCount> m_dstReg;
-            // ‘¦’l
+            // å³å€¤
             boost::array<s64, MaxImmCount>    m_imm;
-            // srcReg‚Ì”
+            // srcRegã®æ•°
             int m_srcRegNum;
-            // dstReg‚Ì”
+            // dstRegã®æ•°
             int m_dstRegNum;
 
-            // src‚Ì”
+            // srcã®æ•°
             int m_srcOpNum;
-            // dst‚Ì”
+            // dstã®æ•°
             int m_dstOpNum;
-            // imm‚Ì”
+            // immã®æ•°
             int m_immNum;
 
             int m_microOpNum;   // The number of micro-ops for its instruction.
             int m_microOpIndex; // The position of this micro op in its instruction.
 
-            // ƒj[ƒ‚ƒjƒbƒN
+            // ãƒ‹ãƒ¼ãƒ¢ãƒ‹ãƒƒã‚¯
             const char* m_mnemonic;
 
-            // m_srcReg, m_imm, m_dstReg ‚ÆCm_src, m_dst‚Ì‘Î‰‚Ã‚¯
-            // m_srcReg[i]”ÔƒŒƒWƒXƒ^ ‚ğ m_src[ m_srcRegOpMap ] ‚ÉŠi”[‚·‚éD‘¼‚à“¯—l
+            // m_srcReg, m_imm, m_dstReg ã¨ï¼Œm_src, m_dstã®å¯¾å¿œã¥ã‘
+            // m_srcReg[i]ç•ªãƒ¬ã‚¸ã‚¹ã‚¿ ã‚’ m_src[ m_srcRegOpMap ] ã«æ ¼ç´ã™ã‚‹ï¼ä»–ã‚‚åŒæ§˜
             boost::array<int, MaxSrcCount> m_srcRegOpMap;
             boost::array<int, MaxDstCount> m_dstRegOpMap;
             boost::array<int, MaxImmCount> m_immOpMap;

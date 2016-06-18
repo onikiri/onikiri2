@@ -50,36 +50,36 @@ void OptimisticMemDepPred::Initialize(InitPhase phase)
 {
 }
 
-// ƒAƒhƒŒƒXˆê’v/•sˆê’v—\‘ª
-// ‘S‚Ä‚Ìæsstore‚É‘Î‚µ‚Ä•sˆê’v‚Æ—\‘ª‚·‚é‚Ì‚ÅA‰½‚à‚µ‚È‚¢
+// ã‚¢ãƒ‰ãƒ¬ã‚¹ä¸€è‡´/ä¸ä¸€è‡´äºˆæ¸¬
+// å…¨ã¦ã®å…ˆè¡Œstoreã«å¯¾ã—ã¦ä¸ä¸€è‡´ã¨äºˆæ¸¬ã™ã‚‹ã®ã§ã€ä½•ã‚‚ã—ãªã„
 void OptimisticMemDepPred::Resolve(OpIterator op)
 {
 }
 
-// ‘S‚Ä‚Ìæsstore‚É‘Î‚µ‚Ä•sˆê’v‚Æ—\‘ª‚·‚é‚Ì‚ÅA‰½‚à‚µ‚È‚¢
+// å…¨ã¦ã®å…ˆè¡Œstoreã«å¯¾ã—ã¦ä¸ä¸€è‡´ã¨äºˆæ¸¬ã™ã‚‹ã®ã§ã€ä½•ã‚‚ã—ãªã„
 void OptimisticMemDepPred::Allocate(OpIterator op)
 {
 }
 
-// ‘S‚Ä‚Ìæsstore‚É‘Î‚µ‚Ä•sˆê’v‚Æ—\‘ª‚·‚é‚Ì‚ÅA‰½‚à‚µ‚È‚¢
+// å…¨ã¦ã®å…ˆè¡Œstoreã«å¯¾ã—ã¦ä¸ä¸€è‡´ã¨äºˆæ¸¬ã™ã‚‹ã®ã§ã€ä½•ã‚‚ã—ãªã„
 void OptimisticMemDepPred::Commit(OpIterator op)
 {
 }
 
-// ‘S‚Ä‚Ìæsstore‚É‘Î‚µ‚Ä•sˆê’v‚Æ—\‘ª‚·‚é‚Ì‚ÅA‰½‚à‚µ‚È‚¢
+// å…¨ã¦ã®å…ˆè¡Œstoreã«å¯¾ã—ã¦ä¸ä¸€è‡´ã¨äºˆæ¸¬ã™ã‚‹ã®ã§ã€ä½•ã‚‚ã—ãªã„
 void OptimisticMemDepPred::Flush(OpIterator op)
 {
 }
 
-// MemOrderManager‚É‚æ‚Á‚ÄAMemOrder‚Ìconflict‚ğ‹N‚±‚µ‚½op‚Ì‘g(producer, consumer)‚ğ‹³‚¦‚Ä‚à‚ç‚¤
-// OptimisticMemDepPred‚Å‚Í‰½‚à‚µ‚È‚¢
+// MemOrderManagerã«ã‚ˆã£ã¦ã€MemOrderã®conflictã‚’èµ·ã“ã—ãŸopã®çµ„(producer, consumer)ã‚’æ•™ãˆã¦ã‚‚ã‚‰ã†
+// OptimisticMemDepPredã§ã¯ä½•ã‚‚ã—ãªã„
 void OptimisticMemDepPred::OrderConflicted(OpIterator producer, OpIterator consumer)
 {
     m_numAccessOrderViolated++;
 }
 
-// ÀÛ‚É‚ÍPhyReg‚Å‚Í–³‚­ƒƒ‚ƒŠã‚ÌˆË‘¶‚Å‚ ‚é‚½‚ßAPhyReg‚Ö‚ÌŠ„‚è“–‚Ä‚Ís‚í‚ê‚È‚¢
-// ‚»‚Ì‚½‚ßA•K‚¸true‚ğ•Ô‚·
+// å®Ÿéš›ã«ã¯PhyRegã§ã¯ç„¡ããƒ¡ãƒ¢ãƒªä¸Šã®ä¾å­˜ã§ã‚ã‚‹ãŸã‚ã€PhyRegã¸ã®å‰²ã‚Šå½“ã¦ã¯è¡Œã‚ã‚Œãªã„
+// ãã®ãŸã‚ã€å¿…ãštrueã‚’è¿”ã™
 bool OptimisticMemDepPred::CanAllocate(OpIterator* infoArray, int numOp)
 {
     return true;

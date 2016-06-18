@@ -39,7 +39,7 @@ namespace Onikiri {
     class EmulationDebugOp : public EmulationOp {
     private:
 
-        // メモリアクセス
+        // 繝｡繝｢繝ｪ繧｢繧ｯ繧ｻ繧ｹ
         MemAccess m_access;
     public:
         EmulationDebugOp(MemIF* mainMem);

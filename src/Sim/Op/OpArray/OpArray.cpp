@@ -48,22 +48,22 @@ OpArray::ArrayID::~ArrayID()
 OpArray::OpArray(int capacity) : 
     m_capacity(capacity)
 {
-    // Op ‚ÌŠm•Û
+    // Op ã®ç¢ºä¿
     for(int k = 0; k < m_capacity; ++k) {
-        // ArrayID ‚Ìì¬(‚±‚Ì“_‚Å‚ÍOp‚ª‚Ü‚¾ì¬‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å0)
+        // ArrayID ã®ä½œæˆ(ã“ã®æ™‚ç‚¹ã§ã¯OpãŒã¾ã ä½œæˆã•ã‚Œã¦ã„ãªã„ã®ã§0)
         ArrayID* arrayID = new ArrayID(0, this, k);
-        // arrayID ‚ğ—˜—p‚µ‚Ä op ‚ğì¬
+        // arrayID ã‚’åˆ©ç”¨ã—ã¦ op ã‚’ä½œæˆ
         Op* op = new Op( OpIterator(arrayID) );
-        // arrayID ‚É op ‚ğƒZƒbƒg
+        // arrayID ã« op ã‚’ã‚»ãƒƒãƒˆ
         arrayID->SetOp(op);
             
         m_body.push_back(arrayID);
     }
 
-    // g—p’†‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO‚Ì‰Šú‰»
+    // ä½¿ç”¨ä¸­ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°ã®åˆæœŸåŒ–
     m_alive.resize(m_capacity, false);
     
-    // free list ‚Ì‰Šú‰»
+    // free list ã®åˆæœŸåŒ–
     m_freeList.reserve(m_capacity);
     for(int k = 0; k < m_capacity; ++k) {
         m_freeList.push_back(k);
@@ -83,13 +83,13 @@ OpIterator OpArray::CreateOp()
     if( IsFull() ) {
         THROW_RUNTIME_ERROR("OpArray is full.(increase Core/@OpArrayCapacity)");
     }
-    // free list ‚Ì––”ö‚ğ•Ô‚·
+    // free list ã®æœ«å°¾ã‚’è¿”ã™
     ID id = m_freeList.back();
 
-    // free list ‚©‚ç pop
+    // free list ã‹ã‚‰ pop
     m_freeList.pop_back();
 
-    // g—p’†ƒtƒ‰ƒO‚ğ—§‚Ä‚é
+    // ä½¿ç”¨ä¸­ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
     ASSERT( 
         !IsAlive(id),
         "alive id reused.(id = %d)",
@@ -97,7 +97,7 @@ OpIterator OpArray::CreateOp()
     );
     m_alive[id] = true;
 
-    // id”Ô–Ú‚ÌƒIƒŠƒWƒiƒ‹‚ÌOpIterator‚ğ•Ô‚·
+    // idç•ªç›®ã®ã‚ªãƒªã‚¸ãƒŠãƒ«ã®OpIteratorã‚’è¿”ã™
     return OpIterator(m_body[id]);
 }
 
@@ -110,7 +110,7 @@ void OpArray::ReleaseOp(const OpIterator& opIterator)
         "not alive op released.(id = %d)",
         id
     );
-    // ‰ğ•ú‚³‚ê‚½‚Ì‚Å¶‘¶ƒtƒ‰ƒO‚ğ—‚Æ‚·
+    // è§£æ”¾ã•ã‚ŒãŸã®ã§ç”Ÿå­˜ãƒ•ãƒ©ã‚°ã‚’è½ã¨ã™
     m_alive[id] = false;
     m_freeList.push_back(id);
 }

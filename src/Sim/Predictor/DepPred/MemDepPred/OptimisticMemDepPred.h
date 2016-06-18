@@ -39,8 +39,8 @@ namespace Onikiri
 {
     class Core;
     
-    // �������Ɋւ���ˑ��֌W�̗\����
-    // �S�Ă̐�sstore���߂ɑ΂��Ĉˑ����Ȃ��Ɨ\������
+    // メモリに関する依存関係の予測器
+    // 全ての先行store命令に対して依存しないと予測する
     class OptimisticMemDepPred : 
         public MemDepPredIF,
         public PhysicalResourceNode 

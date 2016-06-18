@@ -53,19 +53,19 @@ namespace shttl
 
         // Member Functions
 
-        // index‚Ì”([0, N-1]‚ÌN)‚ğ•Ô‚·
+        // indexã®æ•°([0, N-1]ã®N)ã‚’è¿”ã™
         virtual size_type size() const = 0;
         
-        // index (‚Ó‚Â‚¤‰ºˆÊbit)
+        // index (ãµã¤ã†ä¸‹ä½bit)
         virtual size_type index(const T& key) const = 0;
         
-        // tag (‚Ó‚Â‚¤ãˆÊbit)
+        // tag (ãµã¤ã†ä¸Šä½bit)
         virtual T tag(const T& key) const = 0;
         
-        // index‚Ætag‚©‚çkey‚ğ•œŒ³‚·‚é
+        // indexã¨tagã‹ã‚‰keyã‚’å¾©å…ƒã™ã‚‹
         virtual T rebuild(const T& tag, size_type index) const = 0;
 
-        // lhs‚Ærhs‚ªˆê’v‚·‚é‚©
+        // lhsã¨rhsãŒä¸€è‡´ã™ã‚‹ã‹
         virtual bool match(const T& lhs, const T&rhs) const = 0;
 
     #endif

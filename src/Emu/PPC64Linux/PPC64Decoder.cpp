@@ -38,7 +38,7 @@
 
 // References:
 //   PowerISA, http://www.power.org/ (search PowerISA)
-//   PDF’†Cƒrƒbƒg‚ÌIndex‚ªMSB=0‚Å•\‹L‚³‚ê‚Ä‚¢‚é‚Ì‚É’ˆÓ
+//   PDFä¸­ï¼Œãƒ“ãƒƒãƒˆã®IndexãŒMSB=0ã§è¡¨è¨˜ã•ã‚Œã¦ã„ã‚‹ã®ã«æ³¨æ„
 
 using namespace std;
 using namespace boost;
@@ -46,16 +46,16 @@ using namespace Onikiri;
 using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::PPC64Linux;
 
-// –{—ˆ‚ÍPPC64Decoder‚Ìprivateƒƒ“ƒo‚É‚·‚×‚«‚¾‚ªC
-// –Ê“|‚¾‚Á‚½‚Ì‚Åè”²‚«‚µ‚Ä–³–¼ƒl[ƒ€ƒXƒy[ƒX‚É‚µ‚Ä‚µ‚Ü‚Á‚½
+// æœ¬æ¥ã¯PPC64Decoderã®privateãƒ¡ãƒ³ãƒã«ã™ã¹ãã ãŒï¼Œ
+// é¢å€’ã ã£ãŸã®ã§æ‰‹æŠœãã—ã¦ç„¡åãƒãƒ¼ãƒ ã‚¹ãƒšãƒ¼ã‚¹ã«ã—ã¦ã—ã¾ã£ãŸ
 namespace { 
-    // –½—ßŒê’†‚ÌŠeƒIƒyƒ‰ƒ“ƒh‚ğDecodeInfoElem‚Ì”z—ñ‚Æ‚µ‚Ä’è‹`‚µC
-    // DecodeInfoElem ‚É]‚Á‚ÄƒIƒyƒ‰ƒ“ƒh‚ğæ‚èo‚·
+    // å‘½ä»¤èªä¸­ã®å„ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚’DecodeInfoElemã®é…åˆ—ã¨ã—ã¦å®šç¾©ã—ï¼Œ
+    // DecodeInfoElem ã«å¾“ã£ã¦ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚’å–ã‚Šå‡ºã™
 
 
-    // CR bit‚Ìw’è‚ÍCCR”Ô†‚ÆCRn“à‚Å‚Ìbit‚É•ª‰ğ
+    // CR bitã®æŒ‡å®šã¯ï¼ŒCRç•ªå·ã¨CRnå†…ã§ã®bitã«åˆ†è§£
 
-    // ƒIƒyƒ‰ƒ“ƒh’è‹`‚ÅCDecodedInsn‚Ö‚Ì‘‚«‚İæ
+    // ã‚ªãƒšãƒ©ãƒ³ãƒ‰å®šç¾©ã§ï¼ŒDecodedInsnã¸ã®æ›¸ãè¾¼ã¿å…ˆ
     const int NONE = 0;
     // Reg
     const int D_R0 =  8;
@@ -68,7 +68,7 @@ namespace {
     const int D_I2 = 18;
     const int D_I3 = 19;
     
-    // ƒIƒyƒ‰ƒ“ƒh‚Ìí—Ş
+    // ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®ç¨®é¡
     enum OperandType {
         // Reg
         GPR,    // GPR number
@@ -89,12 +89,12 @@ namespace {
     };
 
     struct OperandFormat {
-        OperandType Type;   // ƒIƒyƒ‰ƒ“ƒh‚Ìí—Ş
-        int BitIndex;       // CodeWord ’†‚ÌˆÊ’u (LSB=0)
-        int BitCount;       // ƒrƒbƒg”
+        OperandType Type;   // ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®ç¨®é¡
+        int BitIndex;       // CodeWord ä¸­ã®ä½ç½® (LSB=0)
+        int BitCount;       // ãƒ“ãƒƒãƒˆæ•°
     };
     struct DecodeInfoElem {
-        int DecodedPlace;   // DecodedInsn ’†‚ÌˆÊ’u
+        int DecodedPlace;   // DecodedInsn ä¸­ã®ä½ç½®
         OperandFormat Operand;  // 
     };
 
@@ -103,7 +103,7 @@ namespace {
         struct DecodeInfoElem DecodeInfoElem[MaxOperands];
     };
 
-    // ‚æ‚­‚ ‚éƒIƒyƒ‰ƒ“ƒh‚ğ’è‹`
+    // ã‚ˆãã‚ã‚‹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚’å®šç¾©
     const OperandFormat GR0 = {GPR, 21, 5}; // GPR  6:10
     const OperandFormat GR1 = {GPR, 16, 5}; // GPR 11:15
     const OperandFormat GR2 = {GPR, 11, 5}; // GPR 16:20
@@ -113,7 +113,7 @@ namespace {
     const OperandFormat FR2 = {FPR, 11, 5}; // FPR 16:20
     const OperandFormat FR3 = {FPR,  6, 5}; // FPR 21:25
 
-    // ‚»‚Ì‘¼Index
+    // ãã®ä»–Index
     const OperandFormat IX0 = {UIM, 21, 5}; // UIM  6:10
     const OperandFormat IX1 = {UIM, 16, 5}; // UIM 11:15
     const OperandFormat IX2 = {UIM, 11, 5}; // UIM 16:20
@@ -122,7 +122,7 @@ namespace {
 
     const OperandFormat UI16 = {UIM,  0, 16};   // UIM 16:31
     const OperandFormat SI16 = {SIM,  0, 16};   // SIM 16:31
-    const OperandFormat IDS = {SIM,  2, 14};    // SIM 16:29 : DS-Form‚Ìdisplacement
+    const OperandFormat IDS = {SIM,  2, 14};    // SIM 16:29 : DS-Formã®displacement
 
     const OperandFormat IMB5 = {MB5,  0, 0};    // UIM 26:26 || UIM21:25
     const OperandFormat ISH6 = {SH6,  0, 0};    // UIM 30:30 || UIM16:20
@@ -145,7 +145,7 @@ namespace {
     // Form
     //
     const DecodeInfo UND = {};
-    const DecodeInfo EXT = {};  // Šg’£ƒIƒyƒR[ƒh
+    const DecodeInfo EXT = {};  // æ‹¡å¼µã‚ªãƒšã‚³ãƒ¼ãƒ‰
 
     // I-Form
     const DecodeInfo IFRM = {{{D_I0, {SIM, 2, 24}}}};
@@ -238,7 +238,7 @@ namespace {
     // MDS-Form
     const DecodeInfo MDSFRM = {{{D_R0, GR0}, {D_R1, GR1}, {D_R2, GR2}, {D_I0, IMB5}}};
 
-    // –½—ßƒR[ƒh‚ÆƒIƒyƒ‰ƒ“ƒh’è‹`
+    // å‘½ä»¤ã‚³ãƒ¼ãƒ‰ã¨ã‚ªãƒšãƒ©ãƒ³ãƒ‰å®šç¾©
     const DecodeInfo OpCodeToDecodeInfo[64] =
     {
         // 0x00
@@ -258,9 +258,9 @@ namespace {
         // 0x38
         UND   , UND   , EXT   , EXT   , UND   , UND   , EXT   , EXT   ,
     };
-    // lq (56), stq(62.2) ‚ÍƒTƒ|[ƒg‚µ‚È‚¢ (‚Â‚¢‚Å‚É‚±‚ê‚ç‚Íprivileged)
+    // lq (56), stq(62.2) ã¯ã‚µãƒãƒ¼ãƒˆã—ãªã„ (ã¤ã„ã§ã«ã“ã‚Œã‚‰ã¯privileged)
 
-    // Opcode ‚Æ‘Î‰‚·‚éDecodeInfo‚Ì‘g (”z—ñ‚Ì‰Šú‰»‚ğs‚¤‚½‚ß)
+    // Opcode ã¨å¯¾å¿œã™ã‚‹DecodeInfoã®çµ„ (é…åˆ—ã®åˆæœŸåŒ–ã‚’è¡Œã†ãŸã‚)
     struct OpcodeDecodeInfoPair {
         u32 Opcode;
         struct DecodeInfo DecodeInfo;
@@ -452,7 +452,7 @@ namespace {
 //      {   0, X     }, //
     };
     const OpcodeDecodeInfoPair OpCode59ExtToDecodeInfo[] = {
-        {0, UND},   // –½—ß‚È‚µ
+        {0, UND},   // å‘½ä»¤ãªã—
     };
     const OpcodeDecodeInfoPair OpCode63ExtToDecodeInfo[] = {
         {   0, XFCMP }, // fcmpu
@@ -486,14 +486,14 @@ namespace {
         { 846, XF_F  }, // fcfid
     };
 
-    // Opcode59 ‚Ì‚¤‚¿Cbit 21:25 ‚ğFRC‚Ég‚¤‚©don't care‚È‚à‚Ì (bit26‚ª1‚Ì‚à‚Ì)
+    // Opcode59 ã®ã†ã¡ï¼Œbit 21:25 ã‚’FRCã«ä½¿ã†ã‹don't careãªã‚‚ã® (bit26ãŒ1ã®ã‚‚ã®)
     const DecodeInfo OpCode59FRCExtToDecodeInfo[16] = {
         // 0x00
         UND   , UND   , AFFF_ , UND   , AFFF_ , AFFF_ , AF_F_ , UND   ,
         // 0x08
         AF_F_ , AFF_F , AF_F_ , UND   , AFFFF , AFFFF , AFFFF , AFFFF ,
     };
-    // Opcode63 ‚Ì‚¤‚¿Cbit 21:25 ‚ğFRC‚Ég‚¤‚©don't care‚È‚à‚Ì (bit26‚ª1‚Ì‚à‚Ì)
+    // Opcode63 ã®ã†ã¡ï¼Œbit 21:25 ã‚’FRCã«ä½¿ã†ã‹don't careãªã‚‚ã® (bit26ãŒ1ã®ã‚‚ã®)
     const DecodeInfo OpCode63FRCExtToDecodeInfo[16] = {
         // 0x00
         UND   , UND   , AFFF_ , UND   , AFFF_ , AFFF_ , AF_F_ , AFFFF  ,
@@ -501,7 +501,7 @@ namespace {
         AF_F_ , AFF_F , AF_F_ , UND   , AFFFF , AFFFF , AFFFF , AFFFF ,
     };
 
-    // OpCodeXXExtToDecodeInfo ‚Ìbegin‚Æend‚ğ’è‹`
+    // OpCodeXXExtToDecodeInfo ã®beginã¨endã‚’å®šç¾©
 #define MakeBeginAndEnd(n) \
     const OpcodeDecodeInfoPair* const OpCode##n##ExtToDecodeInfoBegin = OpCode##n##ExtToDecodeInfo; \
     const OpcodeDecodeInfoPair* const OpCode##n##ExtToDecodeInfoEnd = OpCode##n##ExtToDecodeInfoBegin + sizeof(OpCode##n##ExtToDecodeInfo)/sizeof(OpCode##n##ExtToDecodeInfo[0]);
@@ -537,7 +537,7 @@ namespace {
     {
         u32 opcode = (codeWord >> 26) & 0x3f;
 
-        // Šg’£ƒIƒyƒR[ƒh‚ğ‚Â‚à‚Ì‚Í“Á•Êˆ—
+        // æ‹¡å¼µã‚ªãƒšã‚³ãƒ¼ãƒ‰ã‚’æŒã¤ã‚‚ã®ã¯ç‰¹åˆ¥å‡¦ç†
         switch (opcode) {
         case 30:
             {
@@ -625,7 +625,7 @@ void PPC64Decoder::Decode(u32 codeWord, DecodedInsn* out)
 
         u64 value = 0;
 
-        // OperandFormat ‚É]‚Á‚ÄcodeWord’†‚Ìˆê•”•ª‚ğæ‚èo‚·
+        // OperandFormat ã«å¾“ã£ã¦codeWordä¸­ã®ä¸€éƒ¨åˆ†ã‚’å–ã‚Šå‡ºã™
         switch (operand.Type) {
         case GPR:
             value = ExtractBits<u64>(codeWord, operand.BitIndex, operand.BitCount) + GP_REG0;

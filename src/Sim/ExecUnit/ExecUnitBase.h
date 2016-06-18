@@ -44,7 +44,7 @@ namespace Onikiri
     class Core;
     struct IssueState;
 
-    // ���Z��ɋ��ʂ������
+    // 演算器に共通する実装
     class ExecUnitBase :
         public PhysicalResourceNode,
         public ExecUnitIF 
@@ -83,16 +83,16 @@ namespace Onikiri
         virtual int GetMappedCode(int index);
         virtual int GetMappedCodeCount();
 
-        // ���s���C�e���V��� FinishEvent ��o�^����
+        // 実行レイテンシ後に FinishEvent を登録する
         virtual void Execute( OpIterator op );
 
-        // OpCode �����肤�郌�C�e���V�̎�ނ̐���Ԃ�
+        // OpCode から取りうるレイテンシの種類の数を返す
         virtual int GetLatencyCount( const OpClass& opClass );
 
-        // OpCode �ƃC���f�N�X���烌�C�e���V��Ԃ�
+        // OpCode とインデクスからレイテンシを返す
         virtual int GetLatency( const OpClass& opClass, int index );
 
-        // ���T�C�N���Ă΂��
+        // 毎サイクル呼ばれる
         virtual void Begin();
 
         // Called in Update phase.
@@ -111,13 +111,13 @@ namespace Onikiri
 
     protected:
         std::string m_name;
-        int         m_numPorts;     // ExecUnit�����s�\�ȃ|�[�g��
+        int         m_numPorts;     // ExecUnitが発行可能なポート数
 
         // statistics
         u64 m_numUsed;
         u64 m_numUsable;
 
-        // Latency �̏��
+        // Latency の情報
         ExecLatencyInfo* m_execLatencyInfo;
         Core*            m_core;
         ExecUnitReserver m_reserver;

@@ -43,14 +43,14 @@ namespace Onikiri
     class RegisterFreeList 
         : public PhysicalResourceNode
     {
-        // ƒtƒŠ[ƒŠƒXƒg
-        // Allocation‚ª‰Â”\‚È•¨—ƒŒƒWƒXƒ^‚Ì”Ô†‚ğŠÇ—‚·‚é
+        // ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆ
+        // AllocationãŒå¯èƒ½ãªç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç•ªå·ã‚’ç®¡ç†ã™ã‚‹
         std::vector< pool_list<int> > m_freeList;
 
         // emulator
         PhysicalResourceArray<EmulatorIF> m_emulator;
 
-        // ƒŒƒWƒXƒ^–{‘Ì
+        // ãƒ¬ã‚¸ã‚¹ã‚¿æœ¬ä½“
         PhysicalResourceArray<RegisterFile> m_registerFile;
 
         // Core

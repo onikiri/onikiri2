@@ -38,7 +38,7 @@
 namespace Onikiri 
 {
 
-    // ƒpƒCƒvƒ‰ƒCƒ“‰»‚³‚ê‚½‰‰ZŠí‚ÌW‡
+    // ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³åŒ–ã•ã‚ŒãŸæ¼”ç®—å™¨ã®é›†åˆ
     class PipelinedExecUnit : public ExecUnitBase
     {
     public:

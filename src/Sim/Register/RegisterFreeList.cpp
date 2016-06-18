@@ -53,7 +53,7 @@ void RegisterFreeList::Initialize(InitPhase phase)
         LoadParam();
     }
     else if(phase == INIT_POST_CONNECTION){
-        // ƒƒ“ƒo•Ï”‚Ìƒ`ƒFƒbƒN
+        // ãƒ¡ãƒ³ãƒå¤‰æ•°ã®ãƒã‚§ãƒƒã‚¯
         if( m_registerFile.GetSize() == 0 ) {
             THROW_RUNTIME_ERROR("registerFile not set.");
         }
@@ -66,17 +66,17 @@ void RegisterFreeList::Initialize(InitPhase phase)
         int numLogicalReg = isaInfo->GetRegisterCount();
 
 
-        // segment ‚Ì”Ô†‚ğƒŠƒXƒg‰»‚·‚é‚½‚ß‚Ìset
+        // segment ã®ç•ªå·ã‚’ãƒªã‚¹ãƒˆåŒ–ã™ã‚‹ãŸã‚ã®set
         set<int> segmentSet;
         for (int i = 0; i < numLogicalReg; ++i) {
             int segment = isaInfo->GetRegisterSegmentID(i);
             segmentSet.insert(segment);
         }
 
-        // freeList ‚Ì‰Šú‰»
+        // freeList ã®åˆæœŸåŒ–
         m_freeList.resize(segmentSet.size());
 
-        // freeList ‚Ísegment ‚²‚Æ‚É\’z
+        // freeList ã¯segment ã”ã¨ã«æ§‹ç¯‰
         int phyRegNo = 0;
         for(set<int>::iterator iter = segmentSet.begin();
             iter != segmentSet.end();
@@ -84,7 +84,7 @@ void RegisterFreeList::Initialize(InitPhase phase)
         {
             int segment = *iter;
             int capacity = m_registerFile[0]->GetCapacity(segment);
-            // freeList ‚É“o˜^
+            // freeList ã«ç™»éŒ²
             for (int i = 0; i < capacity; i++) {
                 m_freeList[segment].push_back(phyRegNo);
                 ++phyRegNo;
@@ -97,7 +97,7 @@ void RegisterFreeList::Initialize(InitPhase phase)
         );
 
 
-        // ƒtƒŠ[ƒŠƒXƒg‚Ì‹ó‚«ƒGƒ“ƒgƒŠ‚ğƒ`ƒFƒbƒN
+        // ãƒ•ãƒªãƒ¼ãƒªã‚¹ãƒˆã®ç©ºãã‚¨ãƒ³ãƒˆãƒªã‚’ãƒã‚§ãƒƒã‚¯
         
         vector<int> logicalRegNumList(segmentSet.size(), 0);
         for (int i = 0; i < numLogicalReg; i++) {

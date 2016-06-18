@@ -64,7 +64,7 @@ namespace Onikiri
     class ExecUnitIF;
     struct OpInitArgs;
 
-    // –½—ß‚ğ‚ ‚ç‚í‚·ƒNƒ‰ƒX
+    // å‘½ä»¤ã‚’ã‚ã‚‰ã‚ã™ã‚¯ãƒ©ã‚¹
     class Op :
         public OpStateIF,
         public LogicalResourceBase
@@ -109,19 +109,19 @@ namespace Onikiri
         // satisfied. 'newDeps' argument can be NULL.
         bool IsSrcReady( int index, const DependencySet* newDeps = NULL ) const;
         
-        // ƒCƒxƒ“ƒg‚ğOp ©g‚ÆTimeWheel ‚É“o˜^
+        // ã‚¤ãƒ™ãƒ³ãƒˆã‚’Op è‡ªèº«ã¨TimeWheel ã«ç™»éŒ²
         void AddEvent(
             const EventPtr& evnt, 
             TimeWheelBase* timeWheel, 
             int time, 
             EventMask mask = EVENT_MASK_DEFAULT 
         );
-        // Op ‚É“o˜^‚³‚ê‚Ä‚¢‚éƒCƒxƒ“ƒg‚ğƒLƒƒƒ“ƒZƒ‹
+        // Op ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«
         void CancelEvent( 
             EventMask mask = EVENT_MASK_ALL
         );
 
-        // Op ‚É“o˜^‚³‚ê‚Ä‚¢‚éƒCƒxƒ“ƒg‚ğƒNƒŠƒA
+        // Op ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆã‚’ã‚¯ãƒªã‚¢
         void ClearEvent();
         void ClearWakeupEvent();
 
@@ -131,14 +131,14 @@ namespace Onikiri
         // If you need to re-schedule an op, use Scheduler::Reschedule().
         void RescheduleSelf( bool clearIssueState );        
 
-        // Às‚Ìˆ—
+        // å®Ÿè¡Œã®å‡¦ç†
         void ExecutionBegin();  // Emulation is executed.
         void ExecutionEnd();    // Emulation result is written back and update a state.
 
         // Write execution results to physical registers.
         void WriteExecutionResults();   
 
-        // dependency ‚Ü‚í‚è
+        // dependency ã¾ã‚ã‚Š
         void DissolveSrcReg();
         void DissolveSrcMem();
 
@@ -165,7 +165,7 @@ namespace Onikiri
         OpIterator GetFirstConsumer();
         void ResetDependency();
 
-        // Op ‚ªDispatche ˆÈ~‚ÌƒXƒe[ƒW‚É‚ ‚é‚©‚Ç‚¤‚©
+        // Op ãŒDispatche ä»¥é™ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã«ã‚ã‚‹ã‹ã©ã†ã‹
         bool IsDispatched() const
         {
             OpStatus status = GetStatus();
@@ -180,9 +180,9 @@ namespace Onikiri
         const OpClass& GetOpClass() const { return *m_opClass;             }
 
         int GetNo()             const { return m_no; }
-        u64 GetSerialID()       const { return m_serialID; }                // ŠeƒXƒŒƒbƒh“à‚Å‚ÌSerialID
+        u64 GetSerialID()       const { return m_serialID; }                // å„ã‚¹ãƒ¬ãƒƒãƒ‰å†…ã§ã®SerialID
         u64 GetRetireID()       const { return m_retireID; }                
-        u64 GetGlobalSerialID() const { return m_globalSerialID; }          // ƒRƒA“à‘SƒXƒŒƒbƒh‚É‚¨‚¯‚éSerialID
+        u64 GetGlobalSerialID() const { return m_globalSerialID; }          // ã‚³ã‚¢å†…å…¨ã‚¹ãƒ¬ãƒƒãƒ‰ã«ãŠã‘ã‚‹SerialID
 
         Thread*         GetThread()         const { return m_thread;      }
         Core*           GetCore()           const { return m_core;        }
@@ -234,38 +234,38 @@ namespace Onikiri
 
         // PC
         PC m_pc;
-        // PC‚É‘Î‰‚·‚é–½—ß‚Ìî•ñ
+        // PCã«å¯¾å¿œã™ã‚‹å‘½ä»¤ã®æƒ…å ±
         OpInfo*  m_opInfo;
         const OpClass* m_opClass;
 
-        // “¯ˆêPC“à‚É•¡”‚ÌOp‚ª‚ ‚é‚Æ‚«‚ÉA‚¢‚­‚Â–Ú‚©‚ğ“Á’è‚·‚é”Ô†
-        // ã—¬‘¤‚©‚ç‡‚É 0 1 2 ...
+        // åŒä¸€PCå†…ã«è¤‡æ•°ã®OpãŒã‚ã‚‹ã¨ãã«ã€ã„ãã¤ç›®ã‹ã‚’ç‰¹å®šã™ã‚‹ç•ªå·
+        // ä¸Šæµå´ã‹ã‚‰é †ã« 0 1 2 ...
         int m_no;
 
         // Local thread id in each core
         int m_localTID;
 
-        // ƒtƒFƒbƒ`‚³‚ê‚½‡‚É‚Â‚­”Ô†
+        // ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸé †ã«ã¤ãç•ªå·
         u64 m_serialID;
         u64 m_globalSerialID;
-        // ƒŠƒ^ƒCƒA‚µ‚½‡‚É‚Â‚­”Ô†
+        // ãƒªã‚¿ã‚¤ã‚¢ã—ãŸé †ã«ã¤ãç•ªå·
         u64 m_retireID;
 
-        // ƒtƒFƒbƒ`‚³‚ê‚½ƒRƒA/ƒXƒŒƒbƒh/InorderList
+        // ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸã‚³ã‚¢/ã‚¹ãƒ¬ãƒƒãƒ‰/InorderList
         Thread*     m_thread;
         Core*           m_core;
         InorderList*    m_inorderList;
 
-        // Œ»İ‚Ç‚¤‚¢‚¤ó‘Ô‚È‚Ì‚©
+        // ç¾åœ¨ã©ã†ã„ã†çŠ¶æ…‹ãªã®ã‹
         OpStatus m_status;
 
-        // ©•ª‚ªì‚Á‚½ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg
+        // è‡ªåˆ†ãŒä½œã£ãŸãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆ
         Checkpoint* m_beforeCheckpoint;
         Checkpoint* m_afterCheckpoint;
 
-        // •ªŠò‚ª taken ‚¾‚Á‚½‚ÌPC
+        // åˆ†å²ãŒ taken ã ã£ãŸæ™‚ã®PC
         PC m_takenPC;
-        // •ªŠò‚ª taken ‚©‚Ç‚¤‚©
+        // åˆ†å²ãŒ taken ã‹ã©ã†ã‹
         bool m_taken;
 
         // Memory access
@@ -277,17 +277,17 @@ namespace Onikiri
         // Exception
         Exception m_exception;
 
-        // —\‘ª‚µ‚½PC
+        // äºˆæ¸¬ã—ãŸPC
         PC m_predPC;
 
-        // ƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½•¨—ƒŒƒWƒXƒ^‚Ì”Ô†
+        // ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç•ªå·
         int m_dstReg[SimISAInfo::MAX_DST_REG_COUNT];
-        // ƒ\[ƒX‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½•¨—ƒŒƒWƒXƒ^‚Ì”Ô†
+        // ã‚½ãƒ¼ã‚¹ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸç‰©ç†ãƒ¬ã‚¸ã‚¹ã‚¿ã®ç•ªå·
         int m_srcReg[SimISAInfo::MAX_SRC_REG_COUNT];
 
-        // ƒfƒXƒeƒBƒl[ƒVƒ‡ƒ“‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½ƒƒ‚ƒŠ‚ÌˆË‘¶ŠÖŒW‚Ìƒ|ƒCƒ“ƒ^
+        // ãƒ‡ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸãƒ¡ãƒ¢ãƒªã®ä¾å­˜é–¢ä¿‚ã®ãƒã‚¤ãƒ³ã‚¿
         MemDependencyPtr m_dstMem[MAX_DST_MEM_NUM];
-        // ƒ\[ƒX‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½ƒƒ‚ƒŠ‚ÌˆË‘¶ŠÖŒW‚Ìƒ|ƒCƒ“ƒ^
+        // ã‚½ãƒ¼ã‚¹ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸãƒ¡ãƒ¢ãƒªã®ä¾å­˜é–¢ä¿‚ã®ãƒã‚¤ãƒ³ã‚¿
         MemDependencyPtr m_srcMem[MAX_SRC_MEM_NUM];
 
         // Result of latency prediction
@@ -299,16 +299,16 @@ namespace Onikiri
         // Whether reserving an execution unit or not.
         bool m_reserveExecUnit;
 
-        // ƒtƒ‰ƒbƒVƒ…‚³‚ê‚é‚Æ‚«‚ÉÁ‚·ƒCƒxƒ“ƒg
+        // ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã•ã‚Œã‚‹ã¨ãã«æ¶ˆã™ã‚¤ãƒ™ãƒ³ãƒˆ
         EventList m_event;
 
-        // ©•ª‚ª¡‚¢‚éƒXƒPƒWƒ…[ƒ‰
+        // è‡ªåˆ†ãŒä»Šã„ã‚‹ã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ©
         Scheduler* m_scheduler;
 
-        // ƒŒƒWƒXƒ^ƒtƒ@ƒCƒ‹
+        // ãƒ¬ã‚¸ã‚¹ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«
         RegisterFile* m_regFile;
 
-        // ƒ\[ƒX‚ÆƒfƒBƒXƒeƒBƒl[ƒVƒ‡ƒ“
+        // ã‚½ãƒ¼ã‚¹ã¨ãƒ‡ã‚£ã‚¹ãƒ†ã‚£ãƒãƒ¼ã‚·ãƒ§ãƒ³
         int m_srcNum;
         int m_dstNum;
         PhyReg* m_dstPhyReg[SimISAInfo::MAX_DST_REG_COUNT];

@@ -335,7 +335,7 @@ void PPC64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_ignore(opState);
         break;
 
-    // gcc ‚ª stack ‚ÌŠg’£‚Ég—p‚·‚é‚¾‚¯
+    // gcc ãŒ stack ã®æ‹¡å¼µã«ä½¿ç”¨ã™ã‚‹ã ã‘
     case syscall_id_getrlimit:
         syscall_ignore(opState);
         break;
@@ -347,7 +347,7 @@ void PPC64LinuxSyscallConv::Execute(OpEmulationState* opState)
     //  syscall_mkdir(opState);
     //  break;
 
-    // gcc ‚ªÀsŠÔ‚Ìæ“¾‚Ég—p
+    // gcc ãŒå®Ÿè¡Œæ™‚é–“ã®å–å¾—ã«ä½¿ç”¨
     case syscall_id_getrusage:
         syscall_ignore(opState);
         break;

@@ -52,8 +52,8 @@ namespace Onikiri
     class RAS;
     class ForwardEmulator;
 
-    // •ªŠò—\‘ª‘S‘Ì‚ğ’S“–‚·‚éƒNƒ‰ƒX
-    // Fetcher‚ÉnextPC‚ğ•Ô‚·
+    // åˆ†å²äºˆæ¸¬å…¨ä½“ã‚’æ‹…å½“ã™ã‚‹ã‚¯ãƒ©ã‚¹
+    // Fetcherã«nextPCã‚’è¿”ã™
     class BPred : public PhysicalResourceNode
     {
     public:
@@ -81,8 +81,8 @@ namespace Onikiri
 
         void Initialize( InitPhase phase );
 
-        // op‚Ì•ªŠò‚É‘Î‚µ‚Ä•ªŠò—\‘ª‚ğs‚¢C—\‘ª‚³‚ê‚½•ªŠòæ‚ğ•Ô‚·
-        //   predIndexPC : •ªŠò—\‘ª‚É—p‚¢‚éPCD’ÊíFetch Group‚ÌPC
+        // opã®åˆ†å²ã«å¯¾ã—ã¦åˆ†å²äºˆæ¸¬ã‚’è¡Œã„ï¼Œäºˆæ¸¬ã•ã‚ŒãŸåˆ†å²å…ˆã‚’è¿”ã™
+        //   predIndexPC : åˆ†å²äºˆæ¸¬ã«ç”¨ã„ã‚‹PCï¼é€šå¸¸Fetch Groupã®PC
         PC Predict( OpIterator op, PC predIndexPC );
         void Finished( OpIterator op );
         void Commit( OpIterator op );
@@ -97,7 +97,7 @@ namespace Onikiri
 
     protected:
 
-        DirPredIF*                  m_dirPred;      // •ûŒü—\‘ªŠí
+        DirPredIF*                  m_dirPred;      // æ–¹å‘äºˆæ¸¬å™¨
         BTB*                        m_btb;          // BTB
         PhysicalResourceArray<RAS>  m_ras;          // RAS
         Core*                       m_core;

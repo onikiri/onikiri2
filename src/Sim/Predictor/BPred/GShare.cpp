@@ -68,15 +68,15 @@ GShare::~GShare()
 void GShare::Initialize(InitPhase phase)
 {
     if(phase == INIT_PRE_CONNECTION){
-        LoadParam(); // m_jBitSize, m_kBitSize‚Ì‰Šú‰»
+        LoadParam(); // m_jBitSize, m_kBitSizeã®åˆæœŸåŒ–
     }
     else if(phase == INIT_POST_CONNECTION){
-        // ƒƒ“ƒo•Ï”‚ª³‚µ‚­‰Šú‰»‚³‚ê‚Ä‚¢‚é‚©‚Ìƒ`ƒFƒbƒN
+        // ãƒ¡ãƒ³ãƒå¤‰æ•°ãŒæ­£ã—ãåˆæœŸåŒ–ã•ã‚Œã¦ã„ã‚‹ã‹ã®ãƒã‚§ãƒƒã‚¯
         CheckNodeInitialized( "core", m_core);
         CheckNodeInitialized( "globalHistory", m_globalHistory);
         CheckNodeInitialized( "pht", m_pht);
 
-        // table ‚Ì‰Šú‰»
+        // table ã®åˆæœŸåŒ–
         m_predTable.Resize( *m_core->GetOpArray() );
         
         m_pthIndexBits = m_pht->GetIndexBitSize();
@@ -86,7 +86,7 @@ void GShare::Initialize(InitPhase phase)
     }
 }
 
-// •ªŠò‚Ì•ûŒü‚ğ—\‘ª
+// åˆ†å²ã®æ–¹å‘ã‚’äºˆæ¸¬
 bool GShare::Predict(OpIterator op, PC predIndexPC)
 {
     ASSERT(
@@ -102,21 +102,21 @@ bool GShare::Predict(OpIterator op, PC predIndexPC)
 
     PredInfo& info = m_predTable[op];
 
-    // XV‚Ì‚½‚ß‚É pht ‚Ìindex ‚ğŠo‚¦‚Ä‚¨‚­
+    // æ›´æ–°ã®ãŸã‚ã« pht ã®index ã‚’è¦šãˆã¦ãŠã
     info.phtIndex  = phtIndex;
 
-    // Hit/Miss‚Ì”»’è‚Ì‚½‚ß‚ÉA—\‘ª‚µ‚½•ûŒü‚ğŠo‚¦‚Ä‚¨‚­
+    // Hit/Missã®åˆ¤å®šã®ãŸã‚ã«ã€äºˆæ¸¬ã—ãŸæ–¹å‘ã‚’è¦šãˆã¦ãŠã
     info.direction = taken;
 
     return taken;
 }
 
 //
-// ÀsŠ®—¹
-// ÄÀs‚Å•¡”‰ñŒÄ‚Î‚ê‚é‰Â”\«‚ª‚ ‚é
-// ‚Ü‚½AŠÔˆá‚Á‚Ä‚¢‚éŒ‹‰Ê‚ğ‚Á‚Ä‚¢‚é‰Â”\«‚à‚ ‚é
+// å®Ÿè¡Œå®Œäº†
+// å†å®Ÿè¡Œã§è¤‡æ•°å›å‘¼ã°ã‚Œã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹
+// ã¾ãŸã€é–“é•ã£ã¦ã„ã‚‹çµæœã‚’æŒã£ã¦ã„ã‚‹å¯èƒ½æ€§ã‚‚ã‚ã‚‹
 //
-// op‚ÌÀsŠ®—¹‚ÉPHT‚ÌUpdate‚ğs‚¤
+// opã®å®Ÿè¡Œå®Œäº†æ™‚ã«PHTã®Updateã‚’è¡Œã†
 //
 void GShare::Finished(OpIterator op)
 {
@@ -124,23 +124,23 @@ void GShare::Finished(OpIterator op)
     bool taken = op->GetTaken();
     m_pht->Update(info.phtIndex, taken);
 
-    // —\‘ªMiss‚É‹­§“I‚ÉGlobalHistory‚ÌÅ‰ºˆÊƒrƒbƒg‚ğ•ÏX‚·‚é
-    // GShare::Finished‚ªŒÄ‚Î‚ê‚é‚Æ‚«‚É‚Í‚·‚Å‚Éƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚ÌŠª‚«–ß‚µ‚ª
-    // I‚í‚Á‚Ä‚¢‚é‚Ì‚ÅÅ‰ºˆÊƒrƒbƒg‚Íƒ~ƒX‚µ‚½•ªŠò‚É‘Î‰‚µ‚½ƒrƒbƒg‚É‚È‚Á‚Ä‚¢‚é
+    // äºˆæ¸¬Missæ™‚ã«å¼·åˆ¶çš„ã«GlobalHistoryã®æœ€ä¸‹ä½ãƒ“ãƒƒãƒˆã‚’å¤‰æ›´ã™ã‚‹
+    // GShare::FinishedãŒå‘¼ã°ã‚Œã‚‹ã¨ãã«ã¯ã™ã§ã«ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆã®å·»ãæˆ»ã—ãŒ
+    // çµ‚ã‚ã£ã¦ã„ã‚‹ã®ã§æœ€ä¸‹ä½ãƒ“ãƒƒãƒˆã¯ãƒŸã‚¹ã—ãŸåˆ†å²ã«å¯¾å¿œã—ãŸãƒ“ãƒƒãƒˆã«ãªã£ã¦ã„ã‚‹
     if(info.direction != taken){
         m_globalHistory[op->GetLocalTID()]->SetLeastSignificantBit(taken);
     }
 }
 
-// op‚Ìretire‚Ì“®ì
+// opã®retireæ™‚ã®å‹•ä½œ
 void GShare::Retired(OpIterator op)
 {
     bool taken = op->GetTaken();
 
-    // Checkpoint‚ªGlobalHistory‚ğCommit‚·‚é‚Ì‚Å‚±‚ÌŠÖ”‚Ì’†‚Å‚Í‰½‚àupdate‚µ‚È‚¢
+    // CheckpointãŒGlobalHistoryã‚’Commitã™ã‚‹ã®ã§ã“ã®é–¢æ•°ã®ä¸­ã§ã¯ä½•ã‚‚updateã—ãªã„
     m_globalHistory[op->GetLocalTID()]->Retired( taken ); 
 
-    // —\‘ªHit/Miss‚Ì”»’è
+    // äºˆæ¸¬Hit/Missã®åˆ¤å®š
     if(m_predTable[op].direction == taken){
         ++m_numHit;
     } 
@@ -151,13 +151,13 @@ void GShare::Retired(OpIterator op)
     ++m_numRetire;
 }
 
-// PC‚É‘Î‰‚·‚éPHT‚ÌƒCƒ“ƒfƒbƒNƒX‚ğ•Ô‚·
+// PCã«å¯¾å¿œã™ã‚‹PHTã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¿”ã™
 int GShare::GetPHTIndex(int localThreadID, const PC& pc)
 {
-    // pc ‚Ì‰ºˆÊƒrƒbƒg‚ğØ‚èÌ‚Ä
+    // pc ã®ä¸‹ä½ãƒ“ãƒƒãƒˆã‚’åˆ‡ã‚Šæ¨ã¦
     u64 p = pc.address >> SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
 
-    // p ‚©‚ç jBit + kBit •‚ğØ‚èo‚·
+    // p ã‹ã‚‰ jBit + kBit å¹…ã‚’åˆ‡ã‚Šå‡ºã™
     if(m_addrXORConvolute){
         p = shttl::xor_convolute(p, m_pthIndexBits);
     }

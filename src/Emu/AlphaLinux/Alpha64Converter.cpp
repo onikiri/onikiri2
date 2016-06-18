@@ -50,24 +50,24 @@ using namespace Onikiri::EmulatorUtility::Operation;
 using namespace Onikiri::AlphaLinux::Operation;
 
 //
-// –½—ß‚Ì’è‹`
+// å‘½ä»¤ã®å®šç¾©
 //
 
 namespace {
 
 
 
-    // Še–½—ßŒ`®‚É‘Î‚·‚éƒIƒyƒR[ƒh‚ğ“¾‚é‚½‚ß‚Ìƒ}ƒXƒN (0‚Ìƒrƒbƒg‚ªˆø”)
-    const u32 MASK_EXACT = 0xffffffff;  // ‘Sbit‚ªˆê’v
+    // å„å‘½ä»¤å½¢å¼ã«å¯¾ã™ã‚‹ã‚ªãƒšã‚³ãƒ¼ãƒ‰ã‚’å¾—ã‚‹ãŸã‚ã®ãƒã‚¹ã‚¯ (0ã®ãƒ“ãƒƒãƒˆãŒå¼•æ•°)
+    const u32 MASK_EXACT = 0xffffffff;  // å…¨bitãŒä¸€è‡´
     const u32 MASK_PAL  = 0xffffffff;   // PAL
-    const u32 MASK_MEM = 0xfc000000;    // ƒƒ‚ƒŠŒ`®
-    const u32 MASK_MEMF = 0xfc00ffff;   // •ÏˆÊ‚ğ‹@”\ƒR[ƒh‚Æ‚µ‚Ä—p‚¢‚éƒƒ‚ƒŠŒ`®
-    const u32 MASK_OPF = 0xfc00ffe0;    // ‘€ìŒ`®(•‚“®¬”)
-    const u32 MASK_OPI  = 0xfc001fe0;   // ‘€ìŒ`®(®”)
-    const u32 MASK_BR  = 0xfc000000;    // •ªŠòŒ`®
-    const u32 MASK_JMP = 0xfc00c000;    // ƒWƒƒƒ“ƒv
+    const u32 MASK_MEM = 0xfc000000;    // ãƒ¡ãƒ¢ãƒªå½¢å¼
+    const u32 MASK_MEMF = 0xfc00ffff;   // å¤‰ä½ã‚’æ©Ÿèƒ½ã‚³ãƒ¼ãƒ‰ã¨ã—ã¦ç”¨ã„ã‚‹ãƒ¡ãƒ¢ãƒªå½¢å¼
+    const u32 MASK_OPF = 0xfc00ffe0;    // æ“ä½œå½¢å¼(æµ®å‹•å°æ•°)
+    const u32 MASK_OPI  = 0xfc001fe0;   // æ“ä½œå½¢å¼(æ•´æ•°)
+    const u32 MASK_BR  = 0xfc000000;    // åˆ†å²å½¢å¼
+    const u32 MASK_JMP = 0xfc00c000;    // ã‚¸ãƒ£ãƒ³ãƒ—
 
-    // PALƒR[ƒh
+    // PALã‚³ãƒ¼ãƒ‰
     const u32 PAL_HALT = 0x00000000;
     const u32 PAL_CALLSYS = 0x00000083;
     const u32 PAL_IMB = 0x00000086;
@@ -81,23 +81,23 @@ namespace {
 #define OPCODE_MEMF(c, f) (u32)((c) << 26 | (f))
 #define OPCODE_JMP(c, f) (u32)((c) << 26 | (f) << 14)
 #define OPCODE_BR(c) (u32)((c) << 26)
-// ‹@”\Œ`® (‘æ2ƒ\[ƒXƒIƒyƒ‰ƒ“ƒh = Rb)
+// æ©Ÿèƒ½å½¢å¼ (ç¬¬2ã‚½ãƒ¼ã‚¹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ = Rb)
 #define OPCODE_OPI(c, f) (u32)((c) << 26 | (f) << 5) 
-// ‹@”\Œ`® (‘æ2ƒ\[ƒXƒIƒyƒ‰ƒ“ƒh = ƒŠƒeƒ‰ƒ‹)
+// æ©Ÿèƒ½å½¢å¼ (ç¬¬2ã‚½ãƒ¼ã‚¹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ = ãƒªãƒ†ãƒ©ãƒ«)
 #define OPCODE_OPIL(c, f) (u32)((c) << 26 | 1 << 12 | (f) << 5) 
 #define OPCODE_OPF(c, f) (u32)((c) << 26 | (f) << 5) 
 
 
 namespace {
-    // ƒIƒyƒ‰ƒ“ƒh‚Ìƒeƒ“ƒvƒŒ[ƒg
-    // [RegTemplateBegin, RegTemplateEnd] ‚ÍC–½—ß’†‚ÌƒIƒyƒ‰ƒ“ƒhƒŒƒWƒXƒ^”Ô†‚É’u‚«Š·‚¦‚ç‚ê‚é
-    // [ImmTemplateBegin, RegTemplateEnd] ‚ÍC‘¦’l‚É’u‚«Š·‚¦‚ç‚ê‚é
+    // ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
+    // [RegTemplateBegin, RegTemplateEnd] ã¯ï¼Œå‘½ä»¤ä¸­ã®ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã«ç½®ãæ›ãˆã‚‰ã‚Œã‚‹
+    // [ImmTemplateBegin, RegTemplateEnd] ã¯ï¼Œå³å€¤ã«ç½®ãæ›ãˆã‚‰ã‚Œã‚‹
 
-    // ƒŒƒWƒXƒ^Eƒeƒ“ƒvƒŒ[ƒg‚Ég—p‚·‚é”Ô†
-    // –{•¨‚ÌƒŒƒWƒXƒ^”Ô†‚ğg‚Á‚Ä‚Í‚È‚ç‚È‚¢
-    static const int RegTemplateBegin = -20;    // –½—ß’†‚ÌƒŒƒWƒXƒ^”Ô†‚É•ÏŠ· (”’l‚ÉˆÓ–¡‚Í‚È‚¢D–{•¨‚ÌƒŒƒWƒXƒ^”Ô†‚Æd‚È‚ç‚¸‚©‚ÂˆêˆÓ‚Å‚ ‚ê‚Î‚æ‚¢)
+    // ãƒ¬ã‚¸ã‚¹ã‚¿ãƒ»ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã«ä½¿ç”¨ã™ã‚‹ç•ªå·
+    // æœ¬ç‰©ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’ä½¿ã£ã¦ã¯ãªã‚‰ãªã„
+    static const int RegTemplateBegin = -20;    // å‘½ä»¤ä¸­ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã«å¤‰æ› (æ•°å€¤ã«æ„å‘³ã¯ãªã„ï¼æœ¬ç‰©ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã¨é‡ãªã‚‰ãšã‹ã¤ä¸€æ„ã§ã‚ã‚Œã°ã‚ˆã„)
     static const int RegTemplateEnd = RegTemplateBegin+4-1;
-    static const int ImmTemplateBegin = -30;    // ‘¦’l‚É•ÏŠ·
+    static const int ImmTemplateBegin = -30;    // å³å€¤ã«å¤‰æ›
     static const int ImmTemplateEnd = ImmTemplateBegin+2-1;
 
     const int R0 = RegTemplateBegin+0;
@@ -137,13 +137,13 @@ namespace {
 
 // no trap implemented
 
-// “Š‹@“I‚ÉƒtƒFƒbƒ`‚³‚ê‚½‚Æ‚«‚É‚ÍƒGƒ‰[‚É‚¹‚¸CÀs‚³‚ê‚½‚Æ‚«‚ÉƒGƒ‰[‚É‚·‚é
-// syscall‚É‚·‚é‚±‚Æ‚É‚æ‚èC’¼‘O‚Ü‚Å‚Ì–½—ß‚ªŠ®—¹‚µ‚Ä‚©‚çÀs‚³‚ê‚é (Às‚Í“Š‹@“I‚Å‚È‚¢)
+// æŠ•æ©Ÿçš„ã«ãƒ•ã‚§ãƒƒãƒã•ã‚ŒãŸã¨ãã«ã¯ã‚¨ãƒ©ãƒ¼ã«ã›ãšï¼Œå®Ÿè¡Œã•ã‚ŒãŸã¨ãã«ã‚¨ãƒ©ãƒ¼ã«ã™ã‚‹
+// syscallã«ã™ã‚‹ã“ã¨ã«ã‚ˆã‚Šï¼Œç›´å‰ã¾ã§ã®å‘½ä»¤ãŒå®Œäº†ã—ã¦ã‹ã‚‰å®Ÿè¡Œã•ã‚Œã‚‹ (å®Ÿè¡Œã¯æŠ•æ©Ÿçš„ã§ãªã„)
 Alpha64Converter::OpDef Alpha64Converter::m_OpDefUnknown = 
     {"unknown", MASK_EXACT, 0,  1, {{OpClassCode::UNDEF,    {-1, -1}, {I0, -1, -1, -1}, Alpha64Converter::AlphaUnknownOperation}}};
 
 
-// branch‚ÍCOpInfo —ñ‚ÌÅŒã‚¶‚á‚È‚¢‚Æ‚¾‚ß
+// branchã¯ï¼ŒOpInfo åˆ—ã®æœ€å¾Œã˜ã‚ƒãªã„ã¨ã ã‚
 Alpha64Converter::OpDef Alpha64Converter::m_OpDefsBase[] = 
 {
     //
@@ -166,7 +166,7 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsBase[] =
     //
     {"nop",     MASK_EXACT, 0x47ff041f, 1, {{OpClassCode::iNOP, {-1, -1}, {-1, -1, -1, -1}, NoOperation}}},
     {"fnop",    MASK_EXACT, 0x5fff041f, 1, {{OpClassCode::fNOP, {-1, -1}, {-1, -1, -1, -1}, NoOperation}}},
-    // unop‚Ístack top‚ğ“Ç‚İo‚·‚Ì‚ÅNOP‚É‚µ‚È‚¢•û‚ª‚æ‚¢H
+    // unopã¯stack topã‚’èª­ã¿å‡ºã™ã®ã§NOPã«ã—ãªã„æ–¹ãŒã‚ˆã„ï¼Ÿ
     {"unop",    MASK_EXACT, 0x2ffe0000, 1, {{OpClassCode::iNOP, {-1, -1}, {-1, -1, -1, -1}, NoOperation}}},
 
 
@@ -229,8 +229,8 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsBase[] =
     {"s8subq",  MASK_OPI, OPCODE_OPI(0x10, 0x3b),   1, {{OpClassCode::iALU, {R0, -1}, {R1, R2, -1, -1}, Set< D0, IntScaledSub< u64, 3, S0, S1> >}}},
     {"s8subq",  MASK_OPI, OPCODE_OPIL(0x10, 0x3b),  1, {{OpClassCode::iALU, {R0, -1}, {R1, I0, -1, -1}, Set< D0, IntScaledSub< u64, 3, S0, S1> >}}},
 
-    // mull‚Ísigned mul‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢‚æ‚¤‚È‹C‚ª‚·‚é‚ªŒ»óSPEC‘S‚Ä“®‚¢‚Ä‚¢‚é‚Ì‚ÅG‚ç‚È‚¢‚Å‚¨‚­
-    // –â‘è‚ª‚ ‚ê‚Î IntMul<s32, S0, S1> ‚É•ÏX‚·‚éDmulq‚à“¯‚¶D
+    // mullã¯signed mulã§ãªã‘ã‚Œã°ãªã‚‰ãªã„ã‚ˆã†ãªæ°—ãŒã™ã‚‹ãŒç¾çŠ¶SPECå…¨ã¦å‹•ã„ã¦ã„ã‚‹ã®ã§è§¦ã‚‰ãªã„ã§ãŠã
+    // å•é¡ŒãŒã‚ã‚Œã° IntMul<s32, S0, S1> ã«å¤‰æ›´ã™ã‚‹ï¼mulqã‚‚åŒã˜ï¼
     {"mull",    MASK_OPI, OPCODE_OPI(0x13, 0x00),   1, {{OpClassCode::iMUL, {R0, -1}, {R1, R2, -1, -1}, SetSext< D0, IntMul<u32, S0, S1> >}}},
     {"mull",    MASK_OPI, OPCODE_OPIL(0x13, 0x00),  1, {{OpClassCode::iMUL, {R0, -1}, {R1, I0, -1, -1}, SetSext< D0, IntMul<u32, S0, S1> >}}},
 
@@ -376,11 +376,11 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsBase[] =
     // fp
     //
 
-    // ŠÛ‚ßƒ‚[ƒh
-    // --: •W€ (unbiased rounding to nearest)
-    // /c: Ø‚èÌ‚Ä
-    // /m: •‰‚Ì–³ŒÀ‘å‚Ö
-    // /d: “®“I (FP Control Register)
+    // ä¸¸ã‚ãƒ¢ãƒ¼ãƒ‰
+    // --: æ¨™æº– (unbiased rounding to nearest)
+    // /c: åˆ‡ã‚Šæ¨ã¦
+    // /m: è² ã®ç„¡é™å¤§ã¸
+    // /d: å‹•çš„ (FP Control Register)
 
     // FPCR[59-58]
     //  - 00 : chopped
@@ -389,16 +389,16 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsBase[] =
     //  - 11 : plus inf.
 
 
-    // —áŠOƒ‚[ƒh
-    // /s: ƒ\ƒtƒgƒEƒFƒAŠ®—¹
-    // /u: ƒAƒ“ƒ_[ƒtƒ[—LŒø
-    // /i: •s³ŠmŒ‹‰Ê—LŒø
+    // ä¾‹å¤–ãƒ¢ãƒ¼ãƒ‰
+    // /s: ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢å®Œäº†
+    // /u: ã‚¢ãƒ³ãƒ€ãƒ¼ãƒ•ãƒ­ãƒ¼æœ‰åŠ¹
+    // /i: ä¸æ­£ç¢ºçµæœæœ‰åŠ¹
 
-    // ®”‚Ö‚Ì•ÏŠ·—áŠOƒ‚[ƒh
-    // /v: ®”ƒI[ƒo[ƒtƒ[—LŒø
+    // æ•´æ•°ã¸ã®å¤‰æ›æ™‚ä¾‹å¤–ãƒ¢ãƒ¼ãƒ‰
+    // /v: æ•´æ•°ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼æœ‰åŠ¹
 
-    // <TODO> /d : “®“Iƒ‚[ƒh‚Ö‚Ì‘Î‰
-    // «‚±‚ñ‚ÈŠ´‚¶‚Å‰Â”\.
+    // <TODO> /d : å‹•çš„ãƒ¢ãƒ¼ãƒ‰ã¸ã®å¯¾å¿œ
+    // â†“ã“ã‚“ãªæ„Ÿã˜ã§å¯èƒ½.
     // {"adds/sud", MASK_OPF, OPCODE_OPF(0x16, 0x5c0),  1, {{OpClassCode::fADD, {R0, -1}, {R1, R2,FPC, -1}, SetFP< D0, Cast< double, FPAdd< float, SF0, SF1, AlphaRoundModeFromFPCR<S2> > >}}},
 
     {"adds"    ,    MASK_OPF, OPCODE_OPF(0x16, 0x080),  1, {{OpClassCode::fADD, {R0, -1}, {R1, R2, -1, -1}, SetFP< D0, Cast< double, FPAdd< float, SF0, SF1, IntConst<int, FE_TONEAREST> > > >}}},
@@ -494,7 +494,7 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsBase[] =
     {"fcmovle", MASK_OPI, OPCODE_OPI(0x17, 0x02e),  1, {{OpClassCode::fMOV, {R0, -1}, {R1, R0, R2, -1}, Set< D0, Select< u64, Compare<S0, IntConst<u64, 0>, FPCondLessEqual<f64> >, S2, S1 > >}}},
     {"fcmovgt", MASK_OPI, OPCODE_OPI(0x17, 0x02f),  1, {{OpClassCode::fMOV, {R0, -1}, {R1, R0, R2, -1}, Set< D0, Select< u64, Compare<S0, IntConst<u64, 0>, FPCondGreater<f64> >, S2, S1 > >}}},
 
-    // FIX –½—ß
+    // FIX å‘½ä»¤
     {"sqrts",   MASK_OPF, OPCODE_OPF(0x14, 0x08b),  1, {{OpClassCode::fELEM, {R0, -1}, {R2, -1, -1, -1}, SetFP< D0, Cast< double, FPSqrt< float, SF0, IntConst<int, FE_TONEAREST> > > >}}},
     {"sqrts/su",    MASK_OPF, OPCODE_OPF(0x14, 0x58b),  1, {{OpClassCode::fELEM, {R0, -1}, {R2, -1, -1, -1}, SetFP< D0, Cast< double, FPSqrt< float, SF0, IntConst<int, FE_TONEAREST> > > >}}},
     {"sqrts/suc",   MASK_OPF, OPCODE_OPF(0x14, 0x50b),  1, {{OpClassCode::fELEM, {R0, -1}, {R2, -1, -1, -1}, SetFP< D0, Cast< double, FPSqrt< float, SF0, IntConst<int, FE_TOWARDZERO> > > >}}},
@@ -510,12 +510,12 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsBase[] =
     {"itofs",   MASK_OPF, OPCODE_OPF(0x14, 0x004),  1, {{OpClassCode::ifCONV, {R0, -1}, {R1, -1, -1, -1}, Set< D0, AlphaItofs<S0> >}}},
     {"itoft",   MASK_OPF, OPCODE_OPF(0x14, 0x024),  1, {{OpClassCode::ifCONV, {R0, -1}, {R1, -1, -1, -1}, Set< D0, S0 >}}},
 
-    // CIX –½—ß
+    // CIX å‘½ä»¤
     {"ctlz",    MASK_OPI, OPCODE_OPI(0x1c, 0x32),   1,  {{OpClassCode::iALU, {R0, -1}, {R2, -1, -1, -1}, Set< D0, NumberOfLeadingZeros<u64, S0> >}}},
     {"ctpop",   MASK_OPI, OPCODE_OPI(0x1c, 0x30),   1,  {{OpClassCode::iALU, {R0, -1}, {R2, -1, -1, -1}, Set< D0, NumberOfPopulations<u64, S0> >}}},
     {"cttz",    MASK_OPI, OPCODE_OPI(0x1c, 0x33),   1,  {{OpClassCode::iALU, {R0, -1}, {R2, -1, -1, -1}, Set< D0, NumberOfTrailingZeros<u64, S0> >}}},
 
-    // MAX –½—ß
+    // MAX å‘½ä»¤
     {"pklb",    MASK_OPI, OPCODE_OPI(0x1c, 0x37),   1,  {{OpClassCode::iALU, {R0, -1}, {R2, -1, -1, -1}, Set< D0, AlphaPackLongWords<S0> >}}},
     {"pkwb",    MASK_OPI, OPCODE_OPI(0x1c, 0x36),   1,  {{OpClassCode::iALU, {R0, -1}, {R2, -1, -1, -1}, Set< D0, AlphaPackWords<S0> >}}},
     {"unpkbl",  MASK_OPI, OPCODE_OPI(0x1c, 0x35),   1,  {{OpClassCode::iALU, {R0, -1}, {R2, -1, -1, -1}, Set< D0, AlphaUnpackLongWords<S0> >}}},
@@ -541,9 +541,9 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsBase[] =
     //
     // memory
     //
-    // trap barrier ‚Æ‚è‚ ‚¦‚¸noop
+    // trap barrier ã¨ã‚Šã‚ãˆãšnoop
     {"trapb",   MASK_JMP, OPCODE_MEMF(0x18, 0x0000),    1, {{OpClassCode::iNOP, {-1, -1}, {-1, -1, -1, -1}, NoOperation}}},
-    // ƒVƒ“ƒOƒ‹ƒvƒƒZƒbƒT‚È‚Ì‚Ånoop
+    // ã‚·ãƒ³ã‚°ãƒ«ãƒ—ãƒ­ã‚»ãƒƒã‚µãªã®ã§noop
     {"mb",  MASK_JMP, OPCODE_MEMF(0x18, 0x4000),    1, {{OpClassCode::iNOP, {-1, -1}, {-1, -1, -1, -1}, NoOperation}}},
     {"wmb", MASK_JMP, OPCODE_MEMF(0x18, 0x4400),    1, {{OpClassCode::iNOP, {-1, -1}, {-1, -1, -1, -1}, NoOperation}}},
 
@@ -632,13 +632,13 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsSplitLoadStore[] =
     {"stl_c",       MASK_MEM, OPCODE_MEM(0x2e), 3, {
         {OpClassCode::ADDR, {T0, -1}, {R1, I0, -1, -1}, Set< D0, AlphaAddr< S0, S1 > >},
         {OpClassCode::iST,  {-1, -1}, {R2, T0, -1, -1}, Store< u32, S0, S1 >},
-        // R2‚É lock ‚Ì¬”Û‚ğŠi”[‚·‚é•K—v‚ª‚ ‚éDí‚É¬Œ÷‚·‚é‚Ì‚Å1
+        // R2ã« lock ã®æˆå¦ã‚’æ ¼ç´ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼å¸¸ã«æˆåŠŸã™ã‚‹ã®ã§1
         {OpClassCode::iALU, {R2, -1}, {-1, -1, -1, -1}, Set< D0, IntConst<u64, 1> >}
     }},
     {"stq_c",       MASK_MEM, OPCODE_MEM(0x2f), 3, {
         {OpClassCode::ADDR, {T0, -1}, {R1, I0, -1, -1}, Set< D0, AlphaAddr< S0, S1 > >},
         {OpClassCode::iST,  {-1, -1}, {R2, T0, -1, -1}, Store< u64, S0, S1 >},
-        // lock ‚Ì¬”Û‚ğ‘‚­ (“¯ã)
+        // lock ã®æˆå¦ã‚’æ›¸ã (åŒä¸Š)
         {OpClassCode::iALU, {R2, -1}, {-1, -1, -1, -1}, Set< D0, IntConst<u64, 1> >}
     }},
 
@@ -713,12 +713,12 @@ Alpha64Converter::OpDef Alpha64Converter::m_OpDefsNonSplitLoadStore[] =
     }},
     {"stl_c",       MASK_MEM, OPCODE_MEM(0x2e), 2, {
         {OpClassCode::iST,      {-1, -1}, {R2, R1, I0, -1}, Store< u32, S0, AlphaAddr< S1, S2> >},
-        // R2‚É lock ‚Ì¬”Û‚ğŠi”[‚·‚é•K—v‚ª‚ ‚éDí‚É¬Œ÷‚·‚é‚Ì‚Å1
+        // R2ã« lock ã®æˆå¦ã‚’æ ¼ç´ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼å¸¸ã«æˆåŠŸã™ã‚‹ã®ã§1
         {OpClassCode::iALU, {R2, -1}, {-1, -1, -1, -1}, Set< D0, IntConst<u64, 1> >}
     }},
     {"stq_c",       MASK_MEM, OPCODE_MEM(0x2f), 2, {
         {OpClassCode::iST,      {-1, -1}, {R2, R1, I0, -1}, Store< u64, S0, AlphaAddr< S1, S2> >},
-        // lock ‚Ì¬”Û‚ğ‘‚­ (“¯ã)
+        // lock ã®æˆå¦ã‚’æ›¸ã (åŒä¸Š)
         {OpClassCode::iALU, {R2, -1}, {-1, -1, -1, -1}, Set< D0, IntConst<u64, 1> >}
     }},
 
@@ -773,7 +773,7 @@ Alpha64Converter::~Alpha64Converter()
 {
 }
 
-// srcTemplate ‚É‘Î‰‚·‚éƒIƒyƒ‰ƒ“ƒh‚Ìí—Ş‚ÆCƒŒƒWƒXƒ^‚È‚ç‚Î”Ô†‚ğC‘¦’l‚È‚ç‚Îindex‚ğ•Ô‚·
+// srcTemplate ã«å¯¾å¿œã™ã‚‹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®ç¨®é¡ã¨ï¼Œãƒ¬ã‚¸ã‚¹ã‚¿ãªã‚‰ã°ç•ªå·ã‚’ï¼Œå³å€¤ãªã‚‰ã°indexã‚’è¿”ã™
 std::pair<Alpha64Converter::OperandType, int> Alpha64Converter::GetActualSrcOperand(int srcTemplate, const DecodedInsn& decoded) const
 {
     typedef std::pair<OperandType, int> RetType;
@@ -788,7 +788,7 @@ std::pair<Alpha64Converter::OperandType, int> Alpha64Converter::GetActualSrcOper
     }
 }
 
-// regTemplate ‚©‚çÀÛ‚ÌƒŒƒWƒXƒ^”Ô†‚ğæ“¾‚·‚é
+// regTemplate ã‹ã‚‰å®Ÿéš›ã®ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’å–å¾—ã™ã‚‹
 int Alpha64Converter::GetActualRegNumber(int regTemplate, const DecodedInsn& decoded) const
 {
     if (regTemplate == -1) {
@@ -806,7 +806,7 @@ int Alpha64Converter::GetActualRegNumber(int regTemplate, const DecodedInsn& dec
     }
 }
 
-// ƒŒƒWƒXƒ^”Ô†regNum‚ªƒ[ƒƒŒƒWƒXƒ^‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
+// ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·regNumãŒã‚¼ãƒ­ãƒ¬ã‚¸ã‚¹ã‚¿ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹
 bool Alpha64Converter::IsZeroReg(int regNum) const
 {
     const int IntZeroReg = 31;

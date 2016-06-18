@@ -30,11 +30,11 @@
 
 
 //
-// �g�����߃f�R�[�_�̃t�b�N
-// SystemManager ����
+// 拡張命令デコーダのフック
+// SystemManager から
 // EmulatorIF::SetExtraOpDecoder( ExtraOpDecoderIF* )
-// ��ʂ��ăG�~�����[�^�ɓo�^���s���D
-// ���[�U�[�́Cs_extraOpDecodeHook ����ăf�R�[�h���s���D
+// を通じてエミュレータに登録を行う．
+// ユーザーは，s_extraOpDecodeHook を介してデコードを行う．
 //
 
 #ifndef __ONIKIRI_SYSTEM_MANAGER_EXTRA_OP_MANAGER_H__
