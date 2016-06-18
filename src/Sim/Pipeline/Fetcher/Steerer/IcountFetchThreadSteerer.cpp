@@ -71,7 +71,10 @@ void IcountFetchThreadSteerer::Finalize()
 Thread* IcountFetchThreadSteerer::SteerThread(bool update)
 {
     int threadCount = m_thread.GetSize();
-    std::vector<int> frontendInsnNum(threadCount,0);
+    if (threadCount == 1) {
+        return m_thread[0];
+    }
+    pool_vector<int> frontendInsnNum(threadCount,0);
 
     // Count the number of instructions in front-end for each thread.
     for (int tid = 0; tid < threadCount; tid++)
