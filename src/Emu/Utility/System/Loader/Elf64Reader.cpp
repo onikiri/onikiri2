@@ -31,7 +31,7 @@
 
 #include <pch.h>
 
-#include "Emu/Utility/System/Loader/ElfReader.h"
+#include "Emu/Utility/System/Loader/Elf64Reader.h"
 
 #include <ios>
 #include <algorithm>

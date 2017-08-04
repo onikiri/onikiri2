@@ -36,7 +36,7 @@
 #include "SysDeps/posix.h"
 #include "Emu/Utility/System/Memory/MemorySystem.h"
 #include "Emu/Utility/System/Memory/MemoryUtility.h"
-#include "Emu/Utility/System/Loader/ElfReader.h"
+#include "Emu/Utility/System/Loader/Elf64Reader.h"
 
 using namespace std;
 using namespace boost;

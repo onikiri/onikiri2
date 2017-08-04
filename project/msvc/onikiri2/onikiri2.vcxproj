@@ -266,7 +266,7 @@
     <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32OpInfo.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\Math.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.h" />
-    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\LoaderIF.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\HeapAllocator.h" />
@@ -609,7 +609,7 @@
     <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.cpp" />
     <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.cpp" />
-    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\HeapAllocator.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\MemorySystem.cpp" />

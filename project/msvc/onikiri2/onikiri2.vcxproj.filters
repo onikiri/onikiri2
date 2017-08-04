@@ -780,9 +780,6 @@
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.h">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.h">
-      <Filter>src\Emu\Utility\System\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.h">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClInclude>
@@ -1040,6 +1037,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32OpInfo.h">
       <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1322,9 +1322,6 @@
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.cpp">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.cpp">
-      <Filter>src\Emu\Utility\System\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.cpp">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClCompile>
@@ -1498,6 +1495,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.cpp">
       <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
