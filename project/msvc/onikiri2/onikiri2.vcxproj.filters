@@ -235,6 +235,9 @@
     <Filter Include="src\Sim\Pipeline\Fetcher\Steerer">
       <UniqueIdentifier>{dd1f4d90-3080-472c-b287-3bb69333f69e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Emu\RISCV32Linux">
+      <UniqueIdentifier>{0ad41bb9-0097-481a-9a79-17b9b2092b76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\Types.h">
@@ -1008,6 +1011,36 @@
     <ClInclude Include="..\..\..\src\SysDeps\Boost\asio.h">
       <Filter>src\SysDeps\Boost</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Converter.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Decoder.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Info.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxEmulator.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallID.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxTraits.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Operation.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32OpInfo.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Main.cpp">
@@ -1450,6 +1483,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Sim\Op\OpClassStatistics.cpp">
       <Filter>src\Sim\Op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Converter.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Decoder.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Info.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

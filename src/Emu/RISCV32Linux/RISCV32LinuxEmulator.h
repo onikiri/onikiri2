@@ -29,25 +29,18 @@
 // 
 
 
-#ifndef EMU_EMULATOR_EMULATORFACTORY_H
-#define EMU_EMULATOR_EMULATORFACTORY_H
+#ifndef EMU_RISCV32LINUX_RISCV32_EMULATOR_H
+#define EMU_RISCV32LINUX_RISCV32_EMULATOR_H
 
-#include "Interface/EmulatorIF.h"
+#include "Emu/Utility/CommonEmulator.h"
+#include "Emu/RISCV32Linux/RISCV32LinuxTraits.h"
 
 namespace Onikiri {
-    class EmulatorFactory
-    {
-    public:
-        explicit EmulatorFactory();
-        ~EmulatorFactory();
+    namespace RISCV32Linux {
 
-        // Emulator のコンストラクタ無いでプロセス読み込みを行うが，
-        // その際にメモリ確保などの Notify を system に投げるために，
-        // この時点でsystem を渡しておく必要がある．
-        EmulatorIF* Create(const String& systemName, SystemIF* simSystem);
-    };
+        typedef EmulatorUtility::CommonEmulator<RISCV32LinuxTraits> RISCV32LinuxEmulator;
 
+    } // namespace RISCV32Linux
 } // namespace Onikiri
 
 #endif
-

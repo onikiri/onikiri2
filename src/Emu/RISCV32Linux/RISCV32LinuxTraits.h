@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
+// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,25 +29,29 @@
 // 
 
 
-#ifndef EMU_EMULATOR_EMULATORFACTORY_H
-#define EMU_EMULATOR_EMULATORFACTORY_H
+#ifndef EMU_RISCV32LINUX_RISCV32_TRAITS_H
+#define EMU_RISCV32LINUX_RISCV32_TRAITS_H
 
-#include "Interface/EmulatorIF.h"
+#include "Emu/RISCV32Linux/RISCV32LinuxSyscallConv.h"
+#include "Emu/RISCV32Linux/RISCV32LinuxLoader.h"
+#include "Emu/RISCV32Linux/RISCV32Info.h"
+#include "Emu/RISCV32Linux/RISCV32Converter.h"
+#include "Emu/RISCV32Linux/RISCV32OpInfo.h"
 
 namespace Onikiri {
-    class EmulatorFactory
-    {
-    public:
-        explicit EmulatorFactory();
-        ~EmulatorFactory();
+    namespace RISCV32Linux {
 
-        // Emulator のコンストラクタ無いでプロセス読み込みを行うが，
-        // その際にメモリ確保などの Notify を system に投げるために，
-        // この時点でsystem を渡しておく必要がある．
-        EmulatorIF* Create(const String& systemName, SystemIF* simSystem);
-    };
+        struct RISCV32LinuxTraits {
+            typedef RISCV32Info ISAInfoType;
+            typedef RISCV32OpInfo OpInfoType;
+            typedef RISCV32Converter ConverterType;
+            typedef RISCV32LinuxLoader LoaderType;
+            typedef RISCV32LinuxSyscallConv SyscallConvType;
 
+            static const bool IsBigEndian = false;
+        };
+
+    } // namespace RISCV32Linux
 } // namespace Onikiri
 
 #endif
-

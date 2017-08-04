@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -33,6 +33,7 @@
 #include "Emu/EmulatorFactory.h"
 #include "Emu/AlphaLinux/AlphaLinuxEmulator.h"
 #include "Emu/PPC64Linux/PPC64LinuxEmulator.h"
+#include "Emu/RISCV32Linux/RISCV32LinuxEmulator.h"
 
 using namespace Onikiri;
 
@@ -51,9 +52,12 @@ EmulatorIF* EmulatorFactory::Create(const String& systemName, SystemIF* simSyste
         return new AlphaLinux::AlphaLinuxEmulator( simSystem );
     }
     else if (systemName == "PPC64Linux") {
-        return new PPC64Linux::PPC64LinuxEmulator( simSystem );
+        return new PPC64Linux::PPC64LinuxEmulator(simSystem);
     }
-    
+    else if (systemName == "RISCV32Linux") {
+        return new RISCV32Linux::RISCV32LinuxEmulator(simSystem);
+    }
+
     THROW_RUNTIME_ERROR(
         "Unknown system name specified.\n"
         "This parameter must be one of the following strings : \n"

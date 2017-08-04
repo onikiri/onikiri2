@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
+// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,25 +29,34 @@
 // 
 
 
-#ifndef EMU_EMULATOR_EMULATORFACTORY_H
-#define EMU_EMULATOR_EMULATORFACTORY_H
+#include <pch.h>
+#include "Emu/RISCV32Linux/RISCV32LinuxLoader.h"
 
-#include "Interface/EmulatorIF.h"
+using namespace std;
+using namespace boost;
+using namespace Onikiri;
+using namespace Onikiri::EmulatorUtility;
+using namespace Onikiri::RISCV32Linux;
 
-namespace Onikiri {
-    class EmulatorFactory
-    {
-    public:
-        explicit EmulatorFactory();
-        ~EmulatorFactory();
+namespace {
+    const u16 MACHINE_ALPHA = 0x9026;
+}
 
-        // Emulator のコンストラクタ無いでプロセス読み込みを行うが，
-        // その際にメモリ確保などの Notify を system に投げるために，
-        // この時点でsystem を渡しておく必要がある．
-        EmulatorIF* Create(const String& systemName, SystemIF* simSystem);
-    };
+RISCV32LinuxLoader::RISCV32LinuxLoader()
+    : Linux64Loader(MACHINE_ALPHA)      // machine = alpha
+{
+}
 
-} // namespace Onikiri
+RISCV32LinuxLoader::~RISCV32LinuxLoader()
+{
+}
 
-#endif
+u64 RISCV32LinuxLoader::GetInitialRegValue(int index) const
+{
+    const int STACK_POINTER_REGNUM = 30;
 
+    if (index == STACK_POINTER_REGNUM)
+        return GetInitialSp();
+    else
+        return 0;
+}

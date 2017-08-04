@@ -254,6 +254,16 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Converter.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Decoder.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Info.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxEmulator.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallID.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxTraits.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Operation.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32OpInfo.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\Math.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.h" />
@@ -593,6 +603,11 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Converter.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Decoder.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Info.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.cpp" />
