@@ -78,7 +78,7 @@ u64 PPC64LinuxLoader::GetInitialRegValue(int index) const
     }
 }
 
-u64 PPC64LinuxLoader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
+u64 PPC64LinuxLoader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const Elf64Reader& elfReader)
 {
     // ELFのエントリポイントには_start関数の関数デスクリプタが格納されており，offset 0に関数ポインタが格納されている
     //return memory->ReadMemory(elfReader.GetEntryPoint(), 8);
@@ -88,7 +88,7 @@ u64 PPC64LinuxLoader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory,
 }
 
 
-void PPC64LinuxLoader::CalculateOthers(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
+void PPC64LinuxLoader::CalculateOthers(EmulatorUtility::MemorySystem* memory, const Elf64Reader& elfReader)
 {
     // 関数デスクリプタのoffset 8がtoc
     //m_startTocPointer = memory->ReadMemory(elfReader.GetEntryPoint()+8, 8);

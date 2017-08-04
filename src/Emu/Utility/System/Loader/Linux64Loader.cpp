@@ -56,7 +56,7 @@ Linux64Loader::~Linux64Loader()
 
 void Linux64Loader::LoadBinary(MemorySystem* memory, const String& command)
 {
-    ElfReader elfReader;
+    Elf64Reader elfReader;
 
     try {
         elfReader.Open(command.c_str());
@@ -68,7 +68,7 @@ void Linux64Loader::LoadBinary(MemorySystem* memory, const String& command)
 
         u64 initialBrk = 0;
         for (int i = 0; i < elfReader.GetProgramHeaderCount(); i ++) {
-            const ElfReader::Elf_Phdr &ph = elfReader.GetProgramHeader(i);
+            const Elf64Reader::Elf_Phdr &ph = elfReader.GetProgramHeader(i);
 
             VIRTUAL_MEMORY_ATTR_TYPE pageAttr =
                 VIRTUAL_MEMORY_ATTR_READ | VIRTUAL_MEMORY_ATTR_WRITE;
@@ -172,7 +172,7 @@ void Linux64Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
 
     sp -= sizeof(ELF64_AUXV);
     auxv.a_type = EndianHostToSpecified((u64)AT_PHENT, m_bigEndian);
-    auxv.a_un.a_val = EndianHostToSpecified((u64)sizeof(ElfReader::Elf_Phdr), m_bigEndian);
+    auxv.a_un.a_val = EndianHostToSpecified((u64)sizeof(Elf64Reader::Elf_Phdr), m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF64_AUXV));
 
     sp -= sizeof(ELF64_AUXV);
@@ -256,13 +256,13 @@ bool Linux64Loader::IsBigEndian() const
     return m_bigEndian;
 }
 
-u64 Linux64Loader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
+u64 Linux64Loader::CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const Elf64Reader& elfReader)
 {
     return elfReader.GetEntryPoint();
 }
 
 // ElfReader を使って何かを計算する
-void Linux64Loader::CalculateOthers(EmulatorUtility::MemorySystem* memory, const ElfReader& elfReader)
+void Linux64Loader::CalculateOthers(EmulatorUtility::MemorySystem* memory, const Elf64Reader& elfReader)
 {
     // デフォルトでは何もしない
 }

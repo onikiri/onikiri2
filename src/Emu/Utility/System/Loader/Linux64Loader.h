@@ -39,7 +39,7 @@ namespace Onikiri {
     namespace EmulatorUtility {
         
         class MemorySystem;
-        class ElfReader;
+        class Elf64Reader;
         
         // 64-bit Linux (ELF) 用のローダー
         class Linux64Loader : public LoaderIF
@@ -56,8 +56,8 @@ namespace Onikiri {
             virtual std::pair<u64, size_t> GetCodeRange() const;
             virtual u64 GetInitialRegValue(int index) const = 0;
         protected:
-            virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
-            virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
+            virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::Elf64Reader& elfReader);
+            virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::Elf64Reader& elfReader);
             u64 GetInitialSp() const;
             bool IsBigEndian() const;
         private:

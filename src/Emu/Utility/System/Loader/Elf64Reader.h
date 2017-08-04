@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_ELFREADER_H__
-#define __EMULATORUTILITY_ELFREADER_H__
+#ifndef EMU_UTILITY_SYSTEM_LOADER_ELF_READER64_H
+#define EMU_UTILITY_SYSTEM_LOADER_ELF_READER64_H
 
 #include <fstream>
 #include <vector>
@@ -42,7 +42,7 @@ namespace Onikiri {
     namespace EmulatorUtility {
 
         // Elf64 reader
-        class ElfReader
+        class Elf64Reader
         {
         public:
             typedef ELF64_HEADER  Elf_Ehdr;
@@ -54,8 +54,8 @@ namespace Onikiri {
 
             typedef std::streamsize streamsize;
 
-            explicit ElfReader();
-            ~ElfReader();
+            explicit Elf64Reader();
+            ~Elf64Reader();
 
             // ELFファイルを開き，ヘッダ情報を読み込む
             // 読み込みに失敗すれば runtime_error を投げる
