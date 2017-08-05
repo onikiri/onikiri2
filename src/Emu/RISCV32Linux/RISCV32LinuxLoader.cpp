@@ -31,6 +31,9 @@
 
 #include <pch.h>
 #include "Emu/RISCV32Linux/RISCV32LinuxLoader.h"
+#include "Emu/Utility/System/Memory/MemorySystem.h"
+#include "Emu/Utility/System/Memory/MemoryUtility.h"
+#include "Emu/Utility/System/Loader/Elf32Reader.h"
 
 using namespace std;
 using namespace boost;
@@ -39,11 +42,11 @@ using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::RISCV32Linux;
 
 namespace {
-    const u16 MACHINE_ALPHA = 0x9026;
+    const u16 MACHINE_RISCV = 243;
 }
 
 RISCV32LinuxLoader::RISCV32LinuxLoader()
-    : Linux64Loader(MACHINE_ALPHA)      // machine = alpha
+    : Linux32Loader(MACHINE_RISCV)      // machine = RISCV
 {
 }
 

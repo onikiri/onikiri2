@@ -88,8 +88,8 @@ void Elf32Reader::ReadELFHeader()
         throw runtime_error("cannot read ELF header");
 
     // ELF32かどうかチェック
-    static const int CLASS_ELF32 = 2;
-    if (!equal(&m_elfHeader.e_ident[0], &m_elfHeader.e_ident[3], "\177ELF") && m_elfHeader.e_ident[4] != CLASS_ELF32)
+    static const int CLASS_ELF32 = 1;
+    if (!equal(&m_elfHeader.e_ident[0], &m_elfHeader.e_ident[3], "\177ELF") || m_elfHeader.e_ident[4] != CLASS_ELF32)
         throw runtime_error("not a valid ELF file");
 
     // エンディアンの検出

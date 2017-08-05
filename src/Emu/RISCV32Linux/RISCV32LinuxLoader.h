@@ -32,13 +32,13 @@
 #ifndef EMU_RISCV32LINUX_RISCV32_LOADER_H
 #define EMU_RISCV32LINUX_RISCV32_LOADER_H
 
-#include "Emu/Utility/System/Loader/Linux64Loader.h"
+#include "Emu/Utility/System/Loader/Linux32Loader.h"
 
 
 namespace Onikiri {
     namespace RISCV32Linux {
         // RISCV32Linux ELF 用のローダー
-        class RISCV32LinuxLoader : public EmulatorUtility::Linux64Loader
+        class RISCV32LinuxLoader : public EmulatorUtility::Linux32Loader
         {
         public:
             RISCV32LinuxLoader();
@@ -46,7 +46,6 @@ namespace Onikiri {
 
             // LoaderIF の実装
             virtual u64 GetInitialRegValue(int index) const;
-        private:
         };
 
     } // namespace RISCV32Linux
