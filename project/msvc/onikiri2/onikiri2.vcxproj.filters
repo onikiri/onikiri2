@@ -1041,6 +1041,9 @@
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.h">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF32.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Main.cpp">
@@ -1497,6 +1500,9 @@
       <Filter>src\Emu\RISCV32Linux</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF32.cpp">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClCompile>
   </ItemGroup>

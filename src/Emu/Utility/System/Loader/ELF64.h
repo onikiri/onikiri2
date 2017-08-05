@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_ELF64_H__
-#define __EMULATORUTILITY_ELF64_H__
+#ifndef EMU_UTILITY_SYSTEM_LOADER_ELF64_H
+#define EMU_UTILITY_SYSTEM_LOADER_ELF64_H
 
 namespace Onikiri {
     namespace EmulatorUtility {
