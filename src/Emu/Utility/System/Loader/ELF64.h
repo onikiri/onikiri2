@@ -97,6 +97,10 @@ namespace Onikiri {
                     //void (*a_fcn) (void);
                 } a_un;
             };
+
+            void EndianSpecifiedToHostInPlace(ELF64_HEADER& h, bool bigEndian);
+            void EndianSpecifiedToHostInPlace(ELF64_SECTION& h, bool bigEndian);
+            void EndianSpecifiedToHostInPlace(ELF64_PROGRAM& h, bool bigEndian);
         }   // namespace ELF64
 
         namespace ELF {
@@ -146,8 +150,5 @@ namespace Onikiri {
 
     } // EmulatorUtility
 
-    void EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_HEADER& h, bool bigEndian);
-    void EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_SECTION& h, bool bigEndian);
-    void EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_PROGRAM& h, bool bigEndian);
 } // namespace Onikiri
 #endif
