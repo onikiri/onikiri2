@@ -145,8 +145,6 @@ namespace Onikiri {
         
         }   // namespace ELF
 
-        using namespace ELF64;
-        using namespace ELF;
 
     } // EmulatorUtility
 

@@ -29,33 +29,33 @@
 // 
 
 
-#ifndef EMU_UTILITY_SYSTEM_LOADER_ELF_READER64_H
-#define EMU_UTILITY_SYSTEM_LOADER_ELF_READER64_H
+#ifndef EMU_UTILITY_SYSTEM_LOADER_ELF_READER32_H
+#define EMU_UTILITY_SYSTEM_LOADER_ELF_READER32_H
 
 #include <fstream>
 #include <vector>
 
 #include "SysDeps/Endian.h"
-#include "Emu/Utility/System/Loader/ELF64.h"
+#include "Emu/Utility/System/Loader/ELF32.h"
 
 namespace Onikiri {
     namespace EmulatorUtility {
 
-        // Elf64 reader
-        class Elf64Reader
+        // Elf32 reader
+        class Elf32Reader
         {
         public:
-            typedef ELF64::ELF64_HEADER  Elf_Ehdr;
-            typedef ELF64::ELF64_SECTION Elf_Shdr;
-            typedef ELF64::ELF64_PROGRAM Elf_Phdr;
+            typedef ELF32::ELF32_HEADER  Elf_Ehdr;
+            typedef ELF32::ELF32_SECTION Elf_Shdr;
+            typedef ELF32::ELF32_PROGRAM Elf_Phdr;
             typedef u64 Elf_Addr;
             typedef u32 Elf_Word;
             typedef u64 Elf_Off;
 
             typedef std::streamsize streamsize;
 
-            explicit Elf64Reader();
-            ~Elf64Reader();
+            explicit Elf32Reader();
+            ~Elf32Reader();
 
             // ELFファイルを開き，ヘッダ情報を読み込む
             // 読み込みに失敗すれば runtime_error を投げる

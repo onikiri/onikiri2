@@ -43,6 +43,8 @@ using namespace boost;
 using namespace Onikiri;
 using namespace Onikiri::POSIX;
 using namespace Onikiri::EmulatorUtility;
+using namespace Onikiri::EmulatorUtility::ELF;
+using namespace Onikiri::EmulatorUtility::ELF64;
 
 Linux64Loader::Linux64Loader(u16 machine)
     : m_imageBase(0), m_entryPoint(0), m_initialSp(0), m_machine(machine)
