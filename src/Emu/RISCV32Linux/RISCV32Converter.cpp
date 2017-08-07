@@ -61,8 +61,8 @@ namespace {
     static const u32 MASK_EXACT = 0xffffffff;  // 全bitが一致
 
     static const u32 MASK_AUIPC = 0x0000007f;
-
     static const u32 MASK_IMM = 0x0000707f;
+    static const u32 MASK_INT = 0xfe00707f;
 
 
 /*
@@ -85,8 +85,8 @@ namespace {
 }
 
 #define OPCODE_AUIPC() 0x17
-
 #define OPCODE_IMM(f) (u32)(((f) << 12) | 0x13)
+#define OPCODE_INT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x33)
 
 /*
 #define OPCODE_PAL(c, f) (u32)((c) << 26 | (f))
@@ -171,6 +171,17 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     {"ori",     MASK_IMM,   OPCODE_IMM(6),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, BitOr<u32, S0, S1> > } } },
     {"andi",    MASK_IMM,   OPCODE_IMM(7),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, BitAnd<u32, S0, S1> > } } },
 
+    // INT
+    {"add",     MASK_INT,   OPCODE_INT(0x00, 0),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntAdd<u32, S0, S1> > } } },
+    {"sub",     MASK_INT,   OPCODE_INT(0x20, 0),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntSub<u32, S0, S1> > } } },
+    {"sll",     MASK_INT,   OPCODE_INT(0x00, 1),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
+    {"slt",     MASK_INT,   OPCODE_INT(0x00, 2),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32Compare<S0, S1, IntCondLessSigned<u32> > > } } },
+    {"sltu",    MASK_INT,   OPCODE_INT(0x00, 3),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32Compare<S0, S1, IntCondLessUnsigned<u32> > > } } },
+    {"xor",     MASK_INT,   OPCODE_INT(0x00, 4),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitXor<u32, S0, S1> > } } },
+    {"srl",     MASK_INT,   OPCODE_INT(0x00, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
+    {"sra",     MASK_INT,   OPCODE_INT(0x20, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
+    {"ori",     MASK_INT,   OPCODE_INT(0x20, 6),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitOr<u32, S0, S1> > } } },
+    {"andi",    MASK_INT,   OPCODE_INT(0x20, 7),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitAnd<u32, S0, S1> > } } },
 
 };
 
