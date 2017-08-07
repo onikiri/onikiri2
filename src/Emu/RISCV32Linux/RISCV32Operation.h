@@ -135,6 +135,18 @@ inline void RISCV32BranchRelUncond(OpEmulationState* opState)
     RISCV32DoBranch(opState, target);
 }
 
+template <typename TSrcDisp, typename TCond>
+inline void RISCV32BranchRelCond(OpEmulationState* opState)
+{
+    if (TCond()(opState)) {
+        RISCV32BranchRelUncond<TSrcDisp>(opState);
+    }
+    else {
+        opState->SetTakenPC(RISCV32NextPC(opState));
+    }
+}
+
+
 template <typename TDest, typename TSrcDisp>
 inline void RISCV32CallRelUncond(OpEmulationState* opState)
 {

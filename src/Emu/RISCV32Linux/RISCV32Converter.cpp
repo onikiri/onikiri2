@@ -66,6 +66,8 @@ namespace {
     static const u32 MASK_JAL = 0x0000007f;
     static const u32 MASK_J   = 0x000003ff;
 
+    static const u32 MASK_BR  = 0x000707f;
+
 
 /*
     const u32 MASK_PAL  = 0xffffffff;   // PAL
@@ -91,6 +93,8 @@ namespace {
 #define OPCODE_INT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x33)
 #define OPCODE_JAL() 0x6f
 #define OPCODE_J()   (0x6f | (0 << 5)) // dst is zero register
+
+#define OPCODE_BR(f)  (u32)(((f) << 12) | 0x63)
 
 /*
 #define OPCODE_PAL(c, f) (u32)((c) << 26 | (f))
@@ -192,8 +196,18 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
 
     // JAL
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    { "j",      MASK_J,     OPCODE_J(),     1,  { { OpClassCode::iJUMP,     {-1, -1},   { I0, -1, -1, -1 }, RISCV32BranchRelUncond<S0> } } },
-    { "jal",    MASK_JAL,   OPCODE_JAL(),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   { I0, -1, -1, -1 }, RISCV32CallRelUncond<D0, S0> } } },
+    {"j",       MASK_J,     OPCODE_J(),     1,  { { OpClassCode::iJUMP,     {-1, -1},   {I0, -1, -1, -1},   RISCV32BranchRelUncond<S0> } } },
+    {"jal",     MASK_JAL,   OPCODE_JAL(),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {I0, -1, -1, -1},   RISCV32CallRelUncond<D0, S0> } } },
+
+    // Branch
+    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"beq",     MASK_BR,    OPCODE_BR(0),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondEqual<u32> > > } } },
+    {"bne",     MASK_BR,    OPCODE_BR(1),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondNotEqual<u32> > > } } },
+    {"blt",     MASK_BR,    OPCODE_BR(4),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondLessSigned<u32> > > } } },
+    {"bge",     MASK_BR,    OPCODE_BR(5),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondGreaterEqualSigned<u32> > > } } },
+    {"bltu",    MASK_BR,    OPCODE_BR(6),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondLessUnsigned<u32> > > } } },
+    {"bgeu",    MASK_BR,    OPCODE_BR(7),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondGreaterEqualUnsigned<u32> > > } } },
+
 
 };
 

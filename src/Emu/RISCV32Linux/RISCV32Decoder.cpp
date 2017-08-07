@@ -117,6 +117,21 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
         break;
     }
 
+    case OP_BR:
+    {
+        out->Reg[0] = ExtractBits(codeWord, 15, 5);      // rs1
+        out->Reg[1] = ExtractBits(codeWord, 20, 5);      // rs2
+
+        u32 imm =
+            (ExtractBits(codeWord, 8,  4) << 0) |
+            (ExtractBits(codeWord, 25, 6) << 4) |
+            (ExtractBits(codeWord, 7,  1) << 10) |
+            (ExtractBits(codeWord, 31, 1) << 11);
+
+        out->Imm[0] = ExtractBits(imm, 0, 12, true) << 1;
+        break;
+    }
+
 /*
 
     case UNDEF:
