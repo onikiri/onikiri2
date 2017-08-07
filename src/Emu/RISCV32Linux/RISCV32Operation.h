@@ -87,6 +87,7 @@ struct RISCV32IntConst : public std::unary_function<OpEmulationState*, Type>
 inline void RISCV32DoBranch(OpEmulationState* opState, u32 target)
 {
     opState->SetTaken(true);
+    opState->SetTakenPC(target);
 }
 
 inline u32 RISCV32NextPC(OpEmulationState* opState)
@@ -113,18 +114,35 @@ struct RISCV32Auipc : public std::unary_function<OpEmulationState, RegisterType>
 
 // compare
 template <typename TSrc1, typename TSrc2, typename Comp>
-struct RISCV32Compare : public std::unary_function<EmulatorUtility::OpEmulationState*, u32>
+struct RISCV32Compare : public std::unary_function<EmulatorUtility::OpEmulationState*, RISCV32RegisterType>
 {
-    u32 operator()(EmulatorUtility::OpEmulationState* opState)
+    RISCV32RegisterType operator()(EmulatorUtility::OpEmulationState* opState)
     {
         if (Comp()(TSrc1()(opState), TSrc2()(opState))) {
-            return (u32)REG_VALUE_TRUE;
+            return (RISCV32RegisterType)REG_VALUE_TRUE;
         }
         else {
-            return (u32)REG_VALUE_FALSE;
+            return (RISCV32RegisterType)REG_VALUE_FALSE;
         }
     }
 };
+
+// Branch
+template <typename TSrcDisp>
+inline void RISCV32BranchRelUncond(OpEmulationState* opState)
+{
+    u32 target = RISCV32CurPC(opState) + cast_to_signed(TSrcDisp()(opState));
+    RISCV32DoBranch(opState, target);
+}
+
+template <typename TDest, typename TSrcDisp>
+inline void RISCV32CallRelUncond(OpEmulationState* opState)
+{
+    RISCV32RegisterType ret = static_cast<RISCV32RegisterType>(RISCV32NextPC(opState));
+    RISCV32BranchRelUncond<TSrcDisp>(opState);
+    TDest::SetOperand(opState, ret);
+}
+
 
 } // namespace Operation {
 } // namespace RISCV32Linux {

@@ -63,6 +63,8 @@ namespace {
     static const u32 MASK_AUIPC = 0x0000007f;
     static const u32 MASK_IMM = 0x0000707f;
     static const u32 MASK_INT = 0xfe00707f;
+    static const u32 MASK_JAL = 0x0000007f;
+    static const u32 MASK_J   = 0x000003ff;
 
 
 /*
@@ -87,6 +89,8 @@ namespace {
 #define OPCODE_AUIPC() 0x17
 #define OPCODE_IMM(f) (u32)(((f) << 12) | 0x13)
 #define OPCODE_INT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x33)
+#define OPCODE_JAL() 0x6f
+#define OPCODE_J()   (0x6f | (0 << 5)) // dst is zero register
 
 /*
 #define OPCODE_PAL(c, f) (u32)((c) << 26 | (f))
@@ -160,10 +164,12 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefUnknown =
 // branchは，OpInfo 列の最後じゃないとだめ
 RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] = 
 {
-//  {Name,      Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    // AUIPC
+    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,      Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"auipc",   MASK_AUIPC, OPCODE_AUIPC(), 1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   Set<D0, RISCV32Auipc<S0> >} } },
     
     // IMM
+    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,      Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"addi",    MASK_IMM,   OPCODE_IMM(0),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, IntAdd<u32, S0, S1> > } } },
     {"slti",    MASK_IMM,   OPCODE_IMM(2),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, RISCV32Compare<S0, S1, IntCondLessSigned<u32> > > } } },
     {"sltiu",   MASK_IMM,   OPCODE_IMM(3),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, RISCV32Compare<S0, S1, IntCondLessUnsigned<u32> > > } } },
@@ -172,6 +178,7 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     {"andi",    MASK_IMM,   OPCODE_IMM(7),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, BitAnd<u32, S0, S1> > } } },
 
     // INT
+    //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"add",     MASK_INT,   OPCODE_INT(0x00, 0),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntAdd<u32, S0, S1> > } } },
     {"sub",     MASK_INT,   OPCODE_INT(0x20, 0),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntSub<u32, S0, S1> > } } },
     {"sll",     MASK_INT,   OPCODE_INT(0x00, 1),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
@@ -182,6 +189,11 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     {"sra",     MASK_INT,   OPCODE_INT(0x20, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
     {"ori",     MASK_INT,   OPCODE_INT(0x20, 6),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitOr<u32, S0, S1> > } } },
     {"andi",    MASK_INT,   OPCODE_INT(0x20, 7),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitAnd<u32, S0, S1> > } } },
+
+    // JAL
+    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "j",      MASK_J,     OPCODE_J(),     1,  { { OpClassCode::iJUMP,     {-1, -1},   { I0, -1, -1, -1 }, RISCV32BranchRelUncond<S0> } } },
+    { "jal",    MASK_JAL,   OPCODE_JAL(),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   { I0, -1, -1, -1 }, RISCV32CallRelUncond<D0, S0> } } },
 
 };
 
