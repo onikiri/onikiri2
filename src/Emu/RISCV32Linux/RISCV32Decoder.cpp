@@ -44,58 +44,19 @@ using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::RISCV32Linux;
 
 namespace {
-    // 命令の種類
-    enum InsnType {
-        UNDEF,              // 未定義，または予約
-        MEMORY_ADDR,        // メモリ形式 (アドレス計算)
-        MEMORY_LOAD,        // メモリ形式 (ロード)
-        MEMORY_STORE,       // メモリ形式 (ストア)
-        MEMORY_LOAD_FLOAT,  // 浮動小数点メモリ形式 (ロード)
-        MEMORY_STORE_FLOAT, // 浮動小数点メモリ形式 (ストア)
-        MEMORY_FUNC,        // 変位を機能コードとして用いるメモリ形式 (MB等)
-        MEMORY_JMP,         // ジャンプ命令 (JSR等)
-        BRANCH,             // 分岐形式
-        BRANCH_FLOAT,       // 分岐形式 (浮動小数点)
-        BRANCH_SAVE,        // PCを保存する分岐形式 (BR, BSR)
-        OPERATION_INT,      // 操作形式 (整数)
-        OPERATION_FLOAT,    // 操作形式 (浮動小数)
-        PAL                 // PALコード形式
-    };
 
-    const InsnType UND = UNDEF;
-    const InsnType LDA = MEMORY_ADDR;
-    const InsnType LD = MEMORY_LOAD;
-    const InsnType ST = MEMORY_STORE;
-    const InsnType LDF = MEMORY_LOAD_FLOAT;
-    const InsnType STF = MEMORY_STORE_FLOAT;
-    const InsnType MEMF = MEMORY_FUNC;
-    const InsnType MEMJ = MEMORY_JMP;
-    const InsnType BR = BRANCH;
-    const InsnType BRF = BRANCH_FLOAT;
-    const InsnType BRS = BRANCH_SAVE;
-    const InsnType OPI = OPERATION_INT;
-    const InsnType OPF = OPERATION_FLOAT;
+    // Op code
+    static const int OP_INT_IMM = 0x13; // Integer immediate
+    static const int OP_INT = 0x33;     // Integer
+    static const int OP_LUI = 0x37;     // Load upper immediate (LUI)
+    static const int OP_AUIPC = 0x17;   // Add upper immediate to pc (AUIPC)
 
-    // 命令コードと種類の対応
-    InsnType OpCodeToInsnType[64] =
-    {
-        // 0x00
-        PAL , UND , UND , UND , UND , UND , UND , UND ,
-        // 0x08
-        LDA , LDA , LD  , LD  , LD  , ST ,  ST ,  ST  , 
-        // 0x10
-        OPI , OPI , OPI , OPI , OPF , OPF , OPF , OPF , 
-        // 0x18
-        MEMF, UND , MEMJ, UND , OPI , UND , UND , UND , 
-        // 0x20
-        LDF , LDF , LDF , LDF , STF , STF , STF , STF , 
-        // 0x28
-        LD  , LD  , LD  , LD  , ST  , ST  , ST  , ST  , 
-        // 0x30
-        BRS , BRF , BRF , BRF , BRS , BRF , BRF , BRF , 
-        // 0x38
-        BR  , BR  , BR  , BR  , BR  , BR  , BR  , BR  , 
-    };
+    static const int OP_JAL = 0x6f;     // Jump and link (JAL)
+    static const int OP_JALR = 0x67;    // Jump and link register (JALR)
+
+    static const int OP_BR = 0x63;      // Branch
+    static const int OP_LD = 0x03;      // Load
+    static const int OP_ST = 0x23;      // Store
 }
 
 RISCV32Decoder::DecodedInsn::DecodedInsn()
@@ -119,16 +80,22 @@ RISCV32Decoder::RISCV32Decoder()
 void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
 {
     out->clear();
-
-    u32 opcode = (codeWord >> 26) & 0x3f;
     out->CodeWord = codeWord;
 
-    InsnType type = OpCodeToInsnType[opcode];
+    u32 opcode = codeWord & 0x7f;
 
-    switch (type) {
-    case PAL:
+
+    switch (opcode) {
+    case OP_AUIPC:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5);
+        out->Imm[0] = ExtractBits(codeWord, 12, 20);
+        break;
+
+    case OP_INT_IMM:
         out->Imm[1] = ExtractBits(codeWord, 0, 26);
         break;
+    /*
+
     case UNDEF:
         break;
     case MEMORY_ADDR:
@@ -197,8 +164,9 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
         else
             out->Reg[1] = ExtractBits(codeWord, 21, 5) + 32;
         break;
+    */
     default:
-        ASSERT(0);  // never reached
+        break;
     }
 }
 
