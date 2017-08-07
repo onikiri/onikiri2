@@ -191,23 +191,19 @@ void ProcessState::Init(
 // Initialize the memory map of a loaded process except loaded binary areas.
 void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
 {
-    // mmapに使うヒープを，アドレス空間上で0からバイナリイメージの
-    // 直前まで確保する (アドレス0のマップ単位は含まない)
-    //u64 heapBase = m_memorySystem->GetPageSize();
-
-    // 鬼斬で予約されていないところから
-    u64 heapBase = m_memorySystem->GetReservedAddressRange() + 1;
-    m_memorySystem->AddHeapBlock(heapBase, m_loader->GetImageBase() - heapBase);
-
-
-    // スタックの確保
+    // Allocate a stack area
     u64 stackMegaBytes = pcp.GetStackMegaBytes();
     if(stackMegaBytes <= 1){
         THROW_RUNTIME_ERROR("Stack size(%d MB) is too small.", stackMegaBytes);
     }
-
     u64 stackBytes = stackMegaBytes*1024*1024;
-    u64 stack = m_memorySystem->MMap(0, stackBytes);
+    
+    // GetStackTail returns the end of address (e.g., 0xbfffffff), so +1
+    u64 stack = m_loader->GetStackTail() - stackMegaBytes + 1;  
+    m_memorySystem->AssignPhysicalMemory(
+        stack, stackBytes, VIRTUAL_MEMORY_ATTR_READ | VIRTUAL_MEMORY_ATTR_WRITE
+    );
+    //u64 stack = m_memorySystem->MMap(0, stackBytes);
 
     // 引数の設定
     string targetBase = pcp.GetTargetBasePath();
@@ -216,7 +212,16 @@ void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
         stack, 
         stackBytes, 
         CompletePath( pcp.GetCommand(), targetBase ),
-        pcp.GetCommandArguments() );
+        pcp.GetCommandArguments() 
+    );
+
+    // mmapに使うヒープを，アドレス空間上で0からバイナリイメージの
+    // 直前まで確保する (アドレス0のマップ単位は含まない)
+    //u64 heapBase = m_memorySystem->GetPageSize();
+
+    // 鬼斬で予約されていないところから
+    u64 heapBase = m_memorySystem->GetReservedAddressRange() + 1;
+    m_memorySystem->AddHeapBlock(heapBase, m_loader->GetImageBase() - heapBase);
 }
 
 void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
