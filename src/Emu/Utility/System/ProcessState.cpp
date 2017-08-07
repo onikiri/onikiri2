@@ -171,16 +171,7 @@ void ProcessState::Init(
 
         m_codeRange = m_loader->GetCodeRange();
 
-        // mmapに使うヒープを，アドレス空間上で0からバイナリイメージの
-        // 直前まで確保する (アドレス0のマップ単位は含まない)
-        //u64 heapBase = m_memorySystem->GetPageSize();
-
-        // 鬼斬で予約されていないところから
-        u64 heapBase = m_memorySystem->GetReservedAddressRange() + 1;
-        m_memorySystem->AddHeapBlock(heapBase, m_loader->GetImageBase()-heapBase);
-
-        InitStack(pcp);
-
+        InitMemoryMap(pcp);
         InitTargetStdIO(pcp);
     }
     catch (...) {
@@ -197,9 +188,18 @@ void ProcessState::Init(
     }
 }
 
-
-void ProcessState::InitStack(const ProcessCreateParam& pcp)
+// Initialize the memory map of a loaded process except loaded binary areas.
+void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
 {
+    // mmapに使うヒープを，アドレス空間上で0からバイナリイメージの
+    // 直前まで確保する (アドレス0のマップ単位は含まない)
+    //u64 heapBase = m_memorySystem->GetPageSize();
+
+    // 鬼斬で予約されていないところから
+    u64 heapBase = m_memorySystem->GetReservedAddressRange() + 1;
+    m_memorySystem->AddHeapBlock(heapBase, m_loader->GetImageBase() - heapBase);
+
+
     // スタックの確保
     u64 stackMegaBytes = pcp.GetStackMegaBytes();
     if(stackMegaBytes <= 1){

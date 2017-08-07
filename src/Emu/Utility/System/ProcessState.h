@@ -130,7 +130,7 @@ namespace Onikiri {
 
         private:
             void Init(const ProcessCreateParam& pcp, SystemIF* simSystem, SyscallConvIF* syscallConv, LoaderIF* loader, bool bigEndian);
-            void InitStack(const ProcessCreateParam& createParam);
+            void InitMemoryMap(const ProcessCreateParam& createParam);
             void InitTargetStdIO(const ProcessCreateParam& createParam);
 
             int m_pid;
