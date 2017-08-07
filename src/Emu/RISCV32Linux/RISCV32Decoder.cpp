@@ -46,7 +46,7 @@ using namespace Onikiri::RISCV32Linux;
 namespace {
 
     // Op code
-    static const int OP_INT_IMM = 0x13; // Integer immediate
+    static const int OP_IMM = 0x13;     // Integer immediate
     static const int OP_INT = 0x33;     // Integer
     static const int OP_LUI = 0x37;     // Load upper immediate (LUI)
     static const int OP_AUIPC = 0x17;   // Add upper immediate to pc (AUIPC)
@@ -87,12 +87,14 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
 
     switch (opcode) {
     case OP_AUIPC:
-        out->Reg[0] = ExtractBits(codeWord, 7, 5);
-        out->Imm[0] = ExtractBits(codeWord, 12, 20);
+        out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
+        out->Imm[0] = ExtractBits(codeWord, 12, 20);    // imm
         break;
 
-    case OP_INT_IMM:
-        out->Imm[1] = ExtractBits(codeWord, 0, 26);
+    case OP_IMM:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
+        out->Imm[0] = ExtractBits(codeWord, 20, 12);    // imm
         break;
     /*
 

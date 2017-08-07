@@ -58,9 +58,12 @@ namespace {
 
 
     // 各命令形式に対するオペコードを得るためのマスク (0のビットが引数)
-    const u32 MASK_EXACT = 0xffffffff;  // 全bitが一致
+    static const u32 MASK_EXACT = 0xffffffff;  // 全bitが一致
 
-    const u32 MASK_AUIPC = 0x0000007f;
+    static const u32 MASK_AUIPC = 0x0000007f;
+
+    static const u32 MASK_IMM = 0x0000707f;
+
 
 /*
     const u32 MASK_PAL  = 0xffffffff;   // PAL
@@ -82,6 +85,9 @@ namespace {
 }
 
 #define OPCODE_AUIPC() 0x17
+
+#define OPCODE_IMM(f) (u32)(((f) << 12) | 0x13)
+
 /*
 #define OPCODE_PAL(c, f) (u32)((c) << 26 | (f))
 #define OPCODE_MEM(c) (u32)((c) << 26)
@@ -154,8 +160,10 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefUnknown =
 // branchは，OpInfo 列の最後じゃないとだめ
 RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] = 
 {
-//  {Name,      Mask,           Opcode,         nOp,{ OpClassCode,         Dst[],       Src[],              OpInfoType::EmulationFunc}[]}
-    {"auipc",   MASK_AUIPC,     OPCODE_AUIPC(), 1,  { {OpClassCode::iALU,  {R0, -1},    {I0, -1, -1, -1},   Set<D0, RISCV32Auipc<S0> >} } },
+//  {Name,      Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"auipc",   MASK_AUIPC, OPCODE_AUIPC(), 1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   Set<D0, RISCV32Auipc<S0> >} } },
+
+    {"addi",    MASK_IMM,   OPCODE_IMM(0),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, IntAdd<u32, S0, S1> > } } },
 };
 
 //
