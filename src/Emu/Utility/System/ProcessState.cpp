@@ -217,7 +217,15 @@ void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
 
     // Reserve a mmap area
     // Physical memory is allocated when mmap() is called.
-    u64 mmapAreaSize = 0x40000000;
+    u64 initBrk = m_memorySystem->Brk(0);
+    ASSERT(initBrk != 0, "Brk is not initialized");
+
+    s64 pageSize = m_memorySystem->GetPageSize();
+    initBrk = (initBrk / pageSize + 1) * pageSize;  // Align to page boundary
+
+    // Use half of the area sandwiched between stack and brk initial values in mmap
+    s64 mmapAreaSize = (stack - initBrk) / 2;   
+    ASSERT(mmapAreaSize > 0, "The size of mmap area is incorrect.");
     m_memorySystem->AddHeapBlock(stack - mmapAreaSize, mmapAreaSize);
 }
 
