@@ -253,6 +253,14 @@ u64 Linux64Loader::GetInitialSp() const
     return m_initialSp;
 }
 
+// Get the stack tail (bottom)
+u64 Linux64Loader::GetStackTail() const   
+{
+    return ADDR_STACK_TAIL;
+
+}
+
+
 bool Linux64Loader::IsBigEndian() const
 {
     return m_bigEndian;

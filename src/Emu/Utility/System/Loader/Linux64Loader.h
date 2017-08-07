@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_LINUX64LOADER_H__
-#define __EMULATORUTILITY_LINUX64LOADER_H__
+#ifndef EMU_UTILITY_LINUX64LOADER_H
+#define EMU_UTILITY_LINUX64LOADER_H
 
 #include "Emu/Utility/System/Loader/LoaderIF.h"
 
@@ -55,12 +55,17 @@ namespace Onikiri {
             virtual u64 GetEntryPoint() const;
             virtual std::pair<u64, size_t> GetCodeRange() const;
             virtual u64 GetInitialRegValue(int index) const = 0;
+            virtual u64 GetStackTail() const;   // Get the stack tail (bottom)
+
         protected:
             virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::Elf64Reader& elfReader);
             virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::Elf64Reader& elfReader);
             u64 GetInitialSp() const;
             bool IsBigEndian() const;
+
         private:
+            static const u64 ADDR_STACK_TAIL = 0x00007fffffffffff;
+
             std::pair<u64, size_t> m_codeRange;
 
             // Memory write

@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_LOADERIF_H__
-#define __EMULATORUTILITY_LOADERIF_H__
+#ifndef EMU_UTILITY_LOADER_IF_H
+#define EMU_UTILITY_LOADER_IF_H
 
 namespace Onikiri {
     namespace EmulatorUtility {
@@ -62,6 +62,9 @@ namespace Onikiri {
 
             // レジスタの初期値を得る
             virtual u64 GetInitialRegValue(int index) const = 0;
+
+            // Get the stack tail (bottom, the largest address of the stack)
+            virtual u64 GetStackTail() const = 0;
         };
 
     } // namespace EmulatorUtility
