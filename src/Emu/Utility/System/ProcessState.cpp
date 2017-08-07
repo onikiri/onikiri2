@@ -215,13 +215,10 @@ void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
         pcp.GetCommandArguments() 
     );
 
-    // mmapに使うヒープを，アドレス空間上で0からバイナリイメージの
-    // 直前まで確保する (アドレス0のマップ単位は含まない)
-    //u64 heapBase = m_memorySystem->GetPageSize();
-
-    // 鬼斬で予約されていないところから
-    u64 heapBase = m_memorySystem->GetReservedAddressRange() + 1;
-    m_memorySystem->AddHeapBlock(heapBase, m_loader->GetImageBase() - heapBase);
+    // Reserve a mmap area
+    // Physical memory is allocated when mmap() is called.
+    u64 mmapAreaSize = 0x40000000;
+    m_memorySystem->AddHeapBlock(stack - mmapAreaSize, mmapAreaSize);
 }
 
 void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
