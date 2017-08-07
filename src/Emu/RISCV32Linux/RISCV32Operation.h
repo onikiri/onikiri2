@@ -48,6 +48,9 @@ using namespace EmulatorUtility::Operation;
 
 typedef u32 RISCV32RegisterType;
 
+static const RISCV32RegisterType REG_VALUE_TRUE = 1;
+static const RISCV32RegisterType REG_VALUE_FALSE = 0;
+
 // Operands
 template <int OperandIndex>
 class RISCV32DstOperand
@@ -97,6 +100,7 @@ inline u32 RISCV32CurPC(OpEmulationState* opState)
 }
 
 
+// Set PC
 template<typename TSrc1>
 struct RISCV32Auipc : public std::unary_function<OpEmulationState, RegisterType>
 {
@@ -106,6 +110,21 @@ struct RISCV32Auipc : public std::unary_function<OpEmulationState, RegisterType>
     }
 };
 
+
+// compare
+template <typename TSrc1, typename TSrc2, typename Comp>
+struct RISCV32Compare : public std::unary_function<EmulatorUtility::OpEmulationState*, u32>
+{
+    u32 operator()(EmulatorUtility::OpEmulationState* opState)
+    {
+        if (Comp()(TSrc1()(opState), TSrc2()(opState))) {
+            return (u32)REG_VALUE_TRUE;
+        }
+        else {
+            return (u32)REG_VALUE_FALSE;
+        }
+    }
+};
 
 } // namespace Operation {
 } // namespace RISCV32Linux {
