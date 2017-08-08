@@ -140,77 +140,26 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
         break;
     }
 
-/*
+    case OP_LD:
+    {
+        out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
+        out->Imm[0] = ExtractBits(codeWord, 20, 12, true);
+        break;
+    }
 
-    case UNDEF:
+    case OP_ST:
+    {
+        out->Reg[0] = ExtractBits(codeWord, 15, 5);     // rs1
+        out->Reg[1] = ExtractBits(codeWord, 20, 5);     // rs2
+
+        u32 imm =
+            (ExtractBits(codeWord, 7,  5) << 0) |
+            (ExtractBits(codeWord, 25, 7) << 5);
+        out->Imm[0] = ExtractBits(imm, 0, 12, true);
         break;
-    case MEMORY_ADDR:
-    case MEMORY_LOAD:
-        out->Imm[0] = ExtractBits<u64>(codeWord, 0, 16, true);
-        out->Reg[0] = ExtractBits(codeWord, 21, 5);
-        out->Reg[1] = ExtractBits(codeWord, 16, 5);
-        break;
-    case MEMORY_STORE:
-        out->Imm[0] = ExtractBits<u64>(codeWord, 0, 16, true);
-        out->Reg[2] = ExtractBits(codeWord, 21, 5);
-        out->Reg[1] = ExtractBits(codeWord, 16, 5);
-        break;
-    case MEMORY_LOAD_FLOAT:
-        out->Imm[0] = ExtractBits<u64>(codeWord, 0, 16, true);
-        out->Reg[0] = ExtractBits(codeWord, 21, 5)+32;  // fp register
-        out->Reg[1] = ExtractBits(codeWord, 16, 5);
-        break;
-    case MEMORY_STORE_FLOAT:
-        out->Imm[0] = ExtractBits<u64>(codeWord, 0, 16, true);
-        out->Reg[2] = ExtractBits(codeWord, 21, 5)+32;  // fp register
-        out->Reg[1] = ExtractBits(codeWord, 16, 5);
-        break;
-    case MEMORY_FUNC:
-        out->Imm[1] = ExtractBits(codeWord, 0, 16);
-        out->Reg[0] = ExtractBits(codeWord, 21, 5);
-        out->Reg[1] = ExtractBits(codeWord, 16, 5);
-        break;
-    case MEMORY_JMP:
-        out->Imm[0] = ExtractBits(codeWord, 0, 14);
-        //out->Imm[0] = ExtractBits(codeWord, 14, 2);
-        out->Reg[1] = ExtractBits(codeWord, 16, 5); // Rb
-        out->Reg[0] = ExtractBits(codeWord, 21, 5); // Ra
-        break;
-    case BRANCH:
-        out->Imm[0] = ExtractBits<u64>(codeWord, 0, 21, true);
-        out->Reg[1] = ExtractBits(codeWord, 21, 5);
-        break;
-    case BRANCH_FLOAT:
-        out->Imm[0] = ExtractBits<u64>(codeWord, 0, 21, true);
-        out->Reg[1] = ExtractBits(codeWord, 21, 5)+32;  // fp register
-        break;
-    case BRANCH_SAVE:
-        out->Imm[0] = ExtractBits<u64>(codeWord, 0, 21, true);
-        out->Reg[0] = ExtractBits(codeWord, 21, 5);
-        break;
-    case OPERATION_INT:
-        out->Reg[0] = ExtractBits(codeWord, 0, 5);
-        out->Imm[1] = ExtractBits(codeWord, 5, 7);
-        if (ExtractBits(codeWord, 12, 1))
-            out->Imm[0] = ExtractBits(codeWord, 13, 8);
-        else
-            out->Reg[2] = ExtractBits(codeWord, 16, 5);
-        if (ExtractBits(codeWord, 5, 3) == 0 && 
-            ExtractBits(codeWord, 9, 3) == 7)   // FTOIx
-            out->Reg[1] = ExtractBits(codeWord, 21, 5) + 32;    // fp register
-        else
-            out->Reg[1] = ExtractBits(codeWord, 21, 5);
-        break;
-    case OPERATION_FLOAT:
-        out->Reg[0] = ExtractBits(codeWord, 0, 5) + 32;
-        out->Imm[1] = ExtractBits(codeWord, 5, 11);
-        out->Reg[2] = ExtractBits(codeWord, 16, 5) + 32;    // fp register
-        if(ExtractBits(codeWord, 5, 4) == 4)    // ITOFx
-            out->Reg[1] = ExtractBits(codeWord, 21, 5); // int register
-        else
-            out->Reg[1] = ExtractBits(codeWord, 21, 5) + 32;
-        break;
-    */
+    }
+
     default:
         break;
     }

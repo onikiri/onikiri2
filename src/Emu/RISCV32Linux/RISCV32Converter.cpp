@@ -74,6 +74,9 @@ namespace {
     static const u32 MASK_RET =     0x000ff07f; // J-type, rs1, funct3, rd, opcode
 
     static const u32 MASK_BR  =     0x0000707f; // B-type, funct3
+
+    static const u32 MASK_ST  =     0x0000707f; // B-type, funct3
+    static const u32 MASK_LD  =     0x0000707f; // B-type, funct3
 }
 
 #define OPCODE_AUIPC() 0x17
@@ -90,6 +93,9 @@ namespace {
 #define OPCODE_RET(rs1)  (0x67 | (0 << 12) | (rs1 << 15))
 
 #define OPCODE_BR(f)  (u32)(((f) << 12) | 0x63)
+
+#define OPCODE_LD(f)  (u32)(((f) << 12) | 0x03)
+#define OPCODE_ST(f)  (u32)(((f) << 12) | 0x23)
 
 
 namespace {
@@ -208,14 +214,26 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
 
     // Branch
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    {"beq",     MASK_BR,    OPCODE_BR(0),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondEqual<u32> > > } } },
-    {"bne",     MASK_BR,    OPCODE_BR(1),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondNotEqual<u32> > > } } },
-    {"blt",     MASK_BR,    OPCODE_BR(4),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondLessSigned<u32> > > } } },
-    {"bge",     MASK_BR,    OPCODE_BR(5),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondGreaterEqualSigned<u32> > > } } },
-    {"bltu",    MASK_BR,    OPCODE_BR(6),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondLessUnsigned<u32> > > } } },
-    {"bgeu",    MASK_BR,    OPCODE_BR(7),   1,{ { OpClassCode::iBC,     {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondGreaterEqualUnsigned<u32> > > } } },
+    {"beq",     MASK_BR,    OPCODE_BR(0),   1,  { { OpClassCode::iBC,   {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondEqual<u32> > > } } },
+    {"bne",     MASK_BR,    OPCODE_BR(1),   1,  { { OpClassCode::iBC,   {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondNotEqual<u32> > > } } },
+    {"blt",     MASK_BR,    OPCODE_BR(4),   1,  { { OpClassCode::iBC,   {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondLessSigned<u32> > > } } },
+    {"bge",     MASK_BR,    OPCODE_BR(5),   1,  { { OpClassCode::iBC,   {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondGreaterEqualSigned<u32> > > } } },
+    {"bltu",    MASK_BR,    OPCODE_BR(6),   1,  { { OpClassCode::iBC,   {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondLessUnsigned<u32> > > } } },
+    {"bgeu",    MASK_BR,    OPCODE_BR(7),   1,  { { OpClassCode::iBC,   {-1, -1},   {R0, R1, I0, -1},   RISCV32BranchRelCond<S2, Compare<S0, S1, IntCondGreaterEqualUnsigned<u32> > > } } },
 
+    // Store
+    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"sb",      MASK_ST,    OPCODE_ST(0),   1,  { { OpClassCode::iST,   {-1, -1},   {R1, R0, I0, -1},   Store<u8, S0, RISCV32Addr<S1, S2> > } } },
+    {"sh",      MASK_ST,    OPCODE_ST(1),   1,  { { OpClassCode::iST,   {-1, -1},   {R1, R0, I0, -1},   Store<u16, S0, RISCV32Addr<S1, S2> > } } },
+    {"sw",      MASK_ST,    OPCODE_ST(2),   1,  { { OpClassCode::iST,   {-1, -1},   {R1, R0, I0, -1},   Store<u32, S0, RISCV32Addr<S1, S2> > } } },
 
+    // Load
+    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"lb",      MASK_LD,    OPCODE_LD(0),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, Load<u8,  RISCV32Addr<S0, S1> > > } } },
+    {"lh",      MASK_LD,    OPCODE_LD(1),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, Load<u16, RISCV32Addr<S0, S1> > > } } },
+    {"lw",      MASK_LD,    OPCODE_LD(2),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u32, RISCV32Addr<S0, S1> > > } } },
+    {"lb",      MASK_LD,    OPCODE_LD(4),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u8,  RISCV32Addr<S0, S1> > > } } },
+    {"lh",      MASK_LD,    OPCODE_LD(5),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u16, RISCV32Addr<S0, S1> > > } } },
 };
 
 //

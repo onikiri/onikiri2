@@ -170,6 +170,17 @@ inline void RISCV32CallAbsUncond(OpEmulationState* opState)
     TDest::SetOperand(opState, ret);
 }
 
+//
+// Load/Store
+//
+template<typename TSrc1, typename TSrc2>
+struct RISCV32Addr : public std::unary_function<EmulatorUtility::OpEmulationState, RISCV32RegisterType>
+{
+    RISCV32RegisterType operator()(EmulatorUtility::OpEmulationState* opState) const
+    {
+        return TSrc1()(opState) + EmulatorUtility::cast_to_signed(TSrc2()(opState));
+    }
+};
 
 } // namespace Operation {
 } // namespace RISCV32Linux {
