@@ -60,7 +60,9 @@ namespace {
     // 各命令形式に対するオペコードを得るためのマスク (0のビットが引数)
     static const u32 MASK_EXACT = 0xffffffff;  // 全bitが一致
 
+    static const u32 MASK_LUI =     0x0000007f; // U-type, opcode
     static const u32 MASK_AUIPC =   0x0000007f; // U-type, opcode
+
     static const u32 MASK_IMM =     0x0000707f; // I-type, funct3 + opcode
     static const u32 MASK_SHIFT =   0xfe00707f; // I-type?, funct3 + opcode
     static const u32 MASK_INT =     0xfe00707f; // R-type, funct7 + funct3 + opcode
@@ -79,7 +81,9 @@ namespace {
     static const u32 MASK_LD  =     0x0000707f; // B-type, funct3
 }
 
-#define OPCODE_AUIPC() 0x17
+#define OPCODE_LUI()    0x37
+#define OPCODE_AUIPC()  0x17
+
 #define OPCODE_IMM(f) (u32)(((f) << 12) | 0x13)
 #define OPCODE_SHIFT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x13)
 #define OPCODE_INT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x33)
@@ -157,8 +161,9 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefUnknown =
 // branchは，OpInfo 列の最後じゃないとだめ
 RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] = 
 {
-    // AUIPC
+    // LUI/AUIPC
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"lui",     MASK_LUI,   OPCODE_LUI(),   1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   Set<D0, RISCV32Lui<S0> >} } },
     {"auipc",   MASK_AUIPC, OPCODE_AUIPC(), 1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   Set<D0, RISCV32Auipc<S0> >} } },
     
     // IMM

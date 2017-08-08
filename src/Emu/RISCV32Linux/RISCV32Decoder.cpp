@@ -91,6 +91,11 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
         out->Imm[0] = ExtractBits(codeWord, 12, 20);    // imm
         break;
 
+    case OP_LUI:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
+        out->Imm[0] = ExtractBits(codeWord, 12, 20);    // imm
+        break;
+
     case OP_IMM:
         out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
         out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1

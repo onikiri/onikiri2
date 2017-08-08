@@ -111,6 +111,16 @@ struct RISCV32Auipc : public std::unary_function<OpEmulationState, RegisterType>
     }
 };
 
+// Load upper immediate
+template<typename TSrc1>
+struct RISCV32Lui : public std::unary_function<OpEmulationState, RegisterType>
+{
+    RISCV32RegisterType operator()(OpEmulationState* opState) const
+    {
+        return TSrc1()(opState) << 12;
+    }
+};
+
 
 // compare
 template <typename TSrc1, typename TSrc2, typename Comp>
