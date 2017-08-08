@@ -37,12 +37,16 @@ using namespace std;
 using namespace boost::asio;
 using ip::tcp;
 
-// #define GDB_DEBUG
+//#define GDB_DEBUG
 
 DebugStub::DebugStub(SystemBase::SystemContext* context, int pid) :
     m_acc(m_ioService, tcp::endpoint(tcp::v4(), (unsigned short)context->debugParam.debugPort))
 {
-    ASSERT(context->targetArchitecture == "AlphaLinux", "GDB Debug mode is currently available on AlphaLinux only.");
+    ASSERT(
+        context->targetArchitecture == "AlphaLinux" ||  
+        context->targetArchitecture == "RISCV32Linux", 
+        "GDB Debug mode is currently available on AlphaLinux/RISCV32Linux only."
+    );
     ASSERT(context->threads.GetSize() == 1, "Multithread GDB Debugging is not supported.");
 
     m_context = context;
@@ -574,22 +578,41 @@ void DebugStub::OnExec(EmulationDebugOp* op)
 u64 DebugStub::GetRegister( int regNum )
 {
     // TODO: set correct PC on every ISA
-    if (regNum == 0x42)
-    {
-        return 0;
+    if (m_context->targetArchitecture == "AlphaLinux") {
+        if (regNum == 0x42) {
+            return 0;
+        }
+        return (regNum != 0x40) ? m_context->architectureStateList[m_pid].registerValue[regNum] : m_context->architectureStateList[m_pid].pc.address;
     }
-    return (regNum != 0x40) ? m_context->architectureStateList[m_pid].registerValue[regNum] : m_context->architectureStateList[m_pid].pc.address;
+    else if (m_context->targetArchitecture == "RISCV32Linux") {
+        return (regNum != 0x20) ? 
+            m_context->architectureStateList[m_pid].registerValue[regNum] : 
+            m_context->architectureStateList[m_pid].pc.address;
+    }
+    ASSERT(false, "Unsupported architecture");
+    return 0;
 }
 
 void DebugStub::SetRegister( int regNum, u64 value )
 {
     // TODO: set correct PC on every ISA
-    if(regNum != 0x40){
-        m_context->architectureStateList[m_pid].registerValue[regNum] = value;
+    if (m_context->targetArchitecture == "AlphaLinux") {
+        if(regNum != 0x40){
+            m_context->architectureStateList[m_pid].registerValue[regNum] = value;
+        }
+        else {
+            m_context->architectureStateList[m_pid].pc.address = value;
+        }
     }
-    else {
-        m_context->architectureStateList[m_pid].pc.address = value;
+    else if (m_context->targetArchitecture == "RISCV32Linux") {
+        if(regNum != 0x20){
+            m_context->architectureStateList[m_pid].registerValue[regNum] = value;
+        }
+        else {
+            m_context->architectureStateList[m_pid].pc.address = value;
+        }
     }
+    ASSERT(false, "Unsupported architecture");
 }
 
 u64 DebugStub::GetMemory( MemAccess* access )
