@@ -385,6 +385,10 @@ void DebugStub::ExecDebug()
         else if (m_packet.command == "Kill"){
             THROW_RUNTIME_ERROR("Terminated via gdb.");
         }
+        else if (m_packet.command == "MustReplyEmpty") {
+            SendPacket("");
+        }
+
         break;
     case ('c'): // Continue
         m_stopExec = false;
