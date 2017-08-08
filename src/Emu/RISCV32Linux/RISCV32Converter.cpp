@@ -173,8 +173,8 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     // SHIFT
     //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"slli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 1),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
-    {"srl",     MASK_SHIFT, OPCODE_SHIFT(0x00, 5),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
-    {"sra",     MASK_SHIFT, OPCODE_SHIFT(0x20, 5),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
+    {"srli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 5),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
+    {"srai",    MASK_SHIFT, OPCODE_SHIFT(0x20, 5),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
 
     // INT
     //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
@@ -186,8 +186,8 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     {"xor",     MASK_INT,   OPCODE_INT(0x00, 4),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitXor<u32, S0, S1> > } } },
     {"srl",     MASK_INT,   OPCODE_INT(0x00, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
     {"sra",     MASK_INT,   OPCODE_INT(0x20, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
-    {"ori",     MASK_INT,   OPCODE_INT(0x20, 6),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitOr<u32, S0, S1> > } } },
-    {"andi",    MASK_INT,   OPCODE_INT(0x20, 7),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitAnd<u32, S0, S1> > } } },
+    {"or",      MASK_INT,   OPCODE_INT(0x00, 6),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitOr<u32, S0, S1> > } } },
+    {"and",     MASK_INT,   OPCODE_INT(0x00, 7),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitAnd<u32, S0, S1> > } } },
 
     // JAL
     // J must be placed before JAL, because MASK_JAL/OPCODE_JAL include J
