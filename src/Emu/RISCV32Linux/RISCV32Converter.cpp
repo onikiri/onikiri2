@@ -60,32 +60,12 @@ namespace {
     // 各命令形式に対するオペコードを得るためのマスク (0のビットが引数)
     static const u32 MASK_EXACT = 0xffffffff;  // 全bitが一致
 
-    static const u32 MASK_AUIPC = 0x0000007f;
-    static const u32 MASK_IMM = 0x0000707f;
-    static const u32 MASK_INT = 0xfe00707f;
-    static const u32 MASK_JAL = 0x0000007f;
-    static const u32 MASK_J   = 0x000003ff;
-
-    static const u32 MASK_BR  = 0x000707f;
-
-
-/*
-    const u32 MASK_PAL  = 0xffffffff;   // PAL
-    const u32 MASK_MEM = 0xfc000000;    // メモリ形式
-    const u32 MASK_MEMF = 0xfc00ffff;   // 変位を機能コードとして用いるメモリ形式
-    const u32 MASK_OPF = 0xfc00ffe0;    // 操作形式(浮動小数)
-    const u32 MASK_OPI  = 0xfc001fe0;   // 操作形式(整数)
-    const u32 MASK_BR  = 0xfc000000;    // 分岐形式
-    const u32 MASK_JMP = 0xfc00c000;    // ジャンプ
-
-    // PALコード
-    const u32 PAL_HALT = 0x00000000;
-    const u32 PAL_CALLSYS = 0x00000083;
-    const u32 PAL_IMB = 0x00000086;
-    const u32 PAL_RDUNIQ = 0x0000009e;
-    const u32 PAL_WRUNIQ = 0x0000009f;
-    const u32 PAL_GENTRAP = 0x000000aa;
-    */
+    static const u32 MASK_AUIPC = 0x0000007f;   // U-type, opcode
+    static const u32 MASK_IMM = 0x0000707f;     // I-type, funct3 + opcode
+    static const u32 MASK_INT = 0xfe00707f;     // R-type, funct7 + funct3 + opcode
+    static const u32 MASK_JAL = 0x0000007f;     // J-type
+    static const u32 MASK_J   = 0x000003ff;     // J-type, rd
+    static const u32 MASK_BR  = 0x000707f;      // B-type, funct3
 }
 
 #define OPCODE_AUIPC() 0x17
@@ -93,21 +73,8 @@ namespace {
 #define OPCODE_INT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x33)
 #define OPCODE_JAL() 0x6f
 #define OPCODE_J()   (0x6f | (0 << 5)) // dst is zero register
-
 #define OPCODE_BR(f)  (u32)(((f) << 12) | 0x63)
 
-/*
-#define OPCODE_PAL(c, f) (u32)((c) << 26 | (f))
-#define OPCODE_MEM(c) (u32)((c) << 26)
-#define OPCODE_MEMF(c, f) (u32)((c) << 26 | (f))
-#define OPCODE_JMP(c, f) (u32)((c) << 26 | (f) << 14)
-#define OPCODE_BR(c) (u32)((c) << 26)
-// 機能形式 (第2ソースオペランド = Rb)
-#define OPCODE_OPI(c, f) (u32)((c) << 26 | (f) << 5) 
-// 機能形式 (第2ソースオペランド = リテラル)
-#define OPCODE_OPIL(c, f) (u32)((c) << 26 | 1 << 12 | (f) << 5) 
-#define OPCODE_OPF(c, f) (u32)((c) << 26 | (f) << 5) 
-*/
 
 namespace {
     // オペランドのテンプレート
