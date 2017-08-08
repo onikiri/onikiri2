@@ -69,7 +69,9 @@ namespace {
     static const u32 MASK_J =       0x00000fff; // J-type, rd
 
     static const u32 MASK_JALR =    0x0000707f; // J-type?, 
-    static const u32 MASK_JR =      0x00007fff; // J-type, rd
+    static const u32 MASK_CALLRET = 0x000fffff; // J-type, rs1, funct3, rd, opcode
+    static const u32 MASK_CALL =    0x00007fff; // J-type, funct3, rd, opcode
+    static const u32 MASK_RET =     0x000ff07f; // J-type, rs1, funct3, rd, opcode
 
     static const u32 MASK_BR  =     0x0000707f; // B-type, funct3
 }
@@ -79,11 +81,13 @@ namespace {
 #define OPCODE_SHIFT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x13)
 #define OPCODE_INT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x33)
 
-#define OPCODE_JAL() 0x6f
-#define OPCODE_J()   (0x6f | (0 << 7)) // dst is zero register
+#define OPCODE_JAL() (0x6f)
+#define OPCODE_J()   (0x6f | (0 << 7))  // rd == x0
 
-#define OPCODE_JALR() (0x67 | (0 << 12))
-#define OPCODE_JR()   (0x67 | (0 << 12) | (0 << 7)) // dst is zero register
+#define OPCODE_JALR()            (0x67 | (0 << 12))
+#define OPCODE_CALLRET(rd, rs1)  (0x67 | (rd << 7) | (0 << 12) | (rs1 << 15))
+#define OPCODE_CALL(rd)  (0x67 | (rd << 7) | (0 << 12))
+#define OPCODE_RET(rs1)  (0x67 | (0 << 12) | (rs1 << 15))
 
 #define OPCODE_BR(f)  (u32)(((f) << 12) | 0x63)
 
@@ -180,14 +184,27 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     {"andi",    MASK_INT,   OPCODE_INT(0x20, 7),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitAnd<u32, S0, S1> > } } },
 
     // JAL
+    // J must be placed before JAL, because MASK_JAL/OPCODE_JAL include J
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"j",       MASK_J,     OPCODE_J(),     1,  { { OpClassCode::iJUMP,     {-1, -1},   {I0, -1, -1, -1},   RISCV32BranchRelUncond<S0> } } },
     {"jal",     MASK_JAL,   OPCODE_JAL(),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {I0, -1, -1, -1},   RISCV32CallRelUncond<D0, S0> } } },
     
     // JALR
-    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    {"jr",      MASK_JR,    OPCODE_JR(),    1,  { { OpClassCode::iJUMP,     {-1, -1},   {R1, I0, -1, -1},   RISCV32BranchAbsUncond<S0, S1> } } },
-    {"jalr",    MASK_JALR,  OPCODE_JALR(),  1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
+    // CALL/RET must be placed before JALR, because MASK_JALR/OPCODE_JALR include CALL/RET
+    //    rd    rs1    rs1=rd   RAS action
+    //    !link !link  -        none
+    //    !link link   -        pop
+    //    link  !link  -        push
+    //    link  link   0        push and pop
+    //    link  link   1        push    //{Name,    Mask,           Opcode,                 nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(1, 5),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(5, 1),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_CALL,      OPCODE_CALL(5),         1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_CALL,      OPCODE_CALL(1),         1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_RET,       OPCODE_RET(5),          1,  { { OpClassCode::RET,       {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_RET,       OPCODE_RET(1),          1,  { { OpClassCode::RET,       {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_CALL,      OPCODE_CALL(0),         1,  { { OpClassCode::iJUMP,     {-1, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_JALR,      OPCODE_JALR(),          1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
 
     // Branch
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
