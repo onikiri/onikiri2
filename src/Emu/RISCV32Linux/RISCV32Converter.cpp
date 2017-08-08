@@ -60,21 +60,31 @@ namespace {
     // 各命令形式に対するオペコードを得るためのマスク (0のビットが引数)
     static const u32 MASK_EXACT = 0xffffffff;  // 全bitが一致
 
-    static const u32 MASK_AUIPC = 0x0000007f;   // U-type, opcode
-    static const u32 MASK_IMM = 0x0000707f;     // I-type, funct3 + opcode
-    static const u32 MASK_SHIFT = 0xfe00707f;   // I-type?, funct3 + opcode
-    static const u32 MASK_INT = 0xfe00707f;     // R-type, funct7 + funct3 + opcode
-    static const u32 MASK_JAL = 0x0000007f;     // J-type
-    static const u32 MASK_J   = 0x000003ff;     // J-type, rd
-    static const u32 MASK_BR  = 0x000707f;      // B-type, funct3
+    static const u32 MASK_AUIPC =   0x0000007f; // U-type, opcode
+    static const u32 MASK_IMM =     0x0000707f; // I-type, funct3 + opcode
+    static const u32 MASK_SHIFT =   0xfe00707f; // I-type?, funct3 + opcode
+    static const u32 MASK_INT =     0xfe00707f; // R-type, funct7 + funct3 + opcode
+    
+    static const u32 MASK_JAL =     0x0000007f; // J-type
+    static const u32 MASK_J =       0x00000fff; // J-type, rd
+
+    static const u32 MASK_JALR =    0x0000707f; // J-type?, 
+    static const u32 MASK_JR =      0x00007fff; // J-type, rd
+
+    static const u32 MASK_BR  =     0x0000707f; // B-type, funct3
 }
 
 #define OPCODE_AUIPC() 0x17
 #define OPCODE_IMM(f) (u32)(((f) << 12) | 0x13)
 #define OPCODE_SHIFT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x13)
 #define OPCODE_INT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x33)
+
 #define OPCODE_JAL() 0x6f
-#define OPCODE_J()   (0x6f | (0 << 5)) // dst is zero register
+#define OPCODE_J()   (0x6f | (0 << 7)) // dst is zero register
+
+#define OPCODE_JALR() (0x67 | (0 << 12))
+#define OPCODE_JR()   (0x67 | (0 << 12) | (0 << 7)) // dst is zero register
+
 #define OPCODE_BR(f)  (u32)(((f) << 12) | 0x63)
 
 
@@ -173,6 +183,11 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"j",       MASK_J,     OPCODE_J(),     1,  { { OpClassCode::iJUMP,     {-1, -1},   {I0, -1, -1, -1},   RISCV32BranchRelUncond<S0> } } },
     {"jal",     MASK_JAL,   OPCODE_JAL(),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {I0, -1, -1, -1},   RISCV32CallRelUncond<D0, S0> } } },
+    
+    // JALR
+    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"jr",      MASK_JR,    OPCODE_JR(),    1,  { { OpClassCode::iJUMP,     {-1, -1},   {R1, I0, -1, -1},   RISCV32BranchAbsUncond<S0, S1> } } },
+    {"jalr",    MASK_JALR,  OPCODE_JALR(),  1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
 
     // Branch
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}

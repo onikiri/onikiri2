@@ -128,6 +128,13 @@ struct RISCV32Compare : public std::unary_function<EmulatorUtility::OpEmulationS
 };
 
 // Branch
+template <typename TSrcTarget, typename TSrcDisp>
+inline void RISCV32BranchAbsUncond(OpEmulationState* opState)
+{
+    u32 target = TSrcTarget()(opState) + cast_to_signed(TSrcDisp()(opState));
+    RISCV32DoBranch(opState, target);
+}
+
 template <typename TSrcDisp>
 inline void RISCV32BranchRelUncond(OpEmulationState* opState)
 {
@@ -152,6 +159,14 @@ inline void RISCV32CallRelUncond(OpEmulationState* opState)
 {
     RISCV32RegisterType ret = static_cast<RISCV32RegisterType>(RISCV32NextPC(opState));
     RISCV32BranchRelUncond<TSrcDisp>(opState);
+    TDest::SetOperand(opState, ret);
+}
+
+template <typename TDest, typename TSrcTarget, typename TSrcDisp>
+inline void RISCV32CallAbsUncond(OpEmulationState* opState)
+{
+    RISCV32RegisterType ret = static_cast<RISCV32RegisterType>(RISCV32NextPC(opState));
+    RISCV32BranchAbsUncond<TSrcTarget, TSrcDisp>(opState);
     TDest::SetOperand(opState, ret);
 }
 
