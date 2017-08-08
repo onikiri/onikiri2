@@ -49,6 +49,7 @@ DebugStub::DebugStub(SystemBase::SystemContext* context, int pid) :
     );
     ASSERT(context->threads.GetSize() == 1, "Multithread GDB Debugging is not supported.");
 
+    m_reg64 = context->targetArchitecture == "AlphaLinux";
     m_context = context;
     m_pid = pid;
     m_stopExec = true;
@@ -63,6 +64,7 @@ DebugStub::DebugStub(SystemBase::SystemContext* context, int pid) :
             ExecDebug();
         }
     }
+
 }
 
 DebugStub::~DebugStub()
@@ -272,7 +274,13 @@ void DebugStub::ExecDebug()
     case ('g'): // Read general registers
         readnum = m_context->architectureStateList.at(m_pid).registerValue.capacity();
         for(size_t i = 0; i < readnum; i++){
-            readstr += U64ToHexStr(GetRegister((int)i), 8); // TODO: 32bit register
+            // TODO: 32bit register
+            if (m_reg64) {
+                readstr += U64ToHexStr(GetRegister((int)i), 8); 
+            }
+            else{
+                readstr += U32ToHexStr((u32)GetRegister((int)i), 4); 
+            }
         }
         SendPacket(readstr);
         break;
@@ -289,7 +297,10 @@ void DebugStub::ExecDebug()
         SendPacket("OK");
         break;
     case ('p'): // Read the value of specified register
-        SendPacket(U64ToHexStr(GetRegister((int)HexStrToU64(m_packet.command)), 8)); // TODO: 32bit register
+        if (m_reg64)
+            SendPacket(U64ToHexStr(GetRegister((int)HexStrToU64(m_packet.command)), 8)); // TODO: 32bit register
+        else
+            SendPacket(U32ToHexStr((u32)GetRegister((int)HexStrToU32(m_packet.command)), 4)); // TODO: 32bit register
         break;
     case ('P'): // Write specified register
         for (int i=0; i < 8; i++)
@@ -638,6 +649,26 @@ u64 DebugStub::HexStrToU64(string str)
 }
 
 string DebugStub::U64ToHexStr( u64 val, int num )
+{
+    stringstream ss;
+    for(int i = 0; i < num; i++){
+        ss << setw(2) << setfill('0') << hex << (val & 0xff);
+        val >>= 8;
+    }
+    return ss.str();
+}
+
+u32 DebugStub::HexStrToU32(string str)
+{
+    stringstream ss;
+    u32 retVal;
+
+    ss << str;
+    ss >> hex >> retVal;
+    return retVal;
+}
+
+string DebugStub::U32ToHexStr(u32 val, int num)
 {
     stringstream ss;
     for(int i = 0; i < num; i++){

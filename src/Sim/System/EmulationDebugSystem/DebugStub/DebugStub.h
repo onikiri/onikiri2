@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef __EMULATOR_DEBUGSTUB_H__
-#define __EMULATOR_DEBUGSTUB_H__
+#ifndef SIM_SYSTEN_EMULATION_DEBUG_SYSTEM_DEBUG_STUB_DEBUG_STUB_H
+#define SIM_SYSTEN_EMULATION_DEBUG_SYSTEM_DEBUG_STUB_DEBUG_STUB_H
 
 #include "Sim/System/SystemBase.h"
 #include "Sim/System/EmulationDebugSystem/EmulationDebugOp.h"
@@ -48,6 +48,7 @@ namespace Onikiri{
         int m_pid;
         bool m_stopExec;
         int m_stopCount;
+        bool m_reg64;   // This flag is set if register width is 64 bits
 
         typedef std::pair<u64,int> pointpair;
         typedef std::map<u64,int> Pointmap;
@@ -85,7 +86,9 @@ namespace Onikiri{
         u64 GetMemory(MemAccess* access);
         void SetMemory(MemAccess* access);
         u64 HexStrToU64(std::string str);
+        u32 HexStrToU32(std::string str);
         std::string U64ToHexStr(u64 val, int num);
+        std::string U32ToHexStr(u32 val, int num);
         u64 ParseBinary(std::string binStr);
         bool IsAddressOverlap(MemAccess access, pointpair watchpoint);
     public:
