@@ -81,6 +81,8 @@ namespace Onikiri {
             const int syscall_id_execve = 59;
             const int syscall_id_umask = 60;
 
+            const int syscall_id_getppid = 64;
+
             const int syscall_id_vfork = 66;
             const int syscall_id_stat = 67;
             const int syscall_id_lstat = 68;
@@ -122,6 +124,8 @@ namespace Onikiri {
             const int syscall_id_osf_pid_unblock = 154;
 
             const int syscall_id_sigaction = 156;
+
+            const int syscall_id_setgid32 = 214;
 
             const int syscall_id_getpgid = 233;
             const int syscall_id_getsid = 234;

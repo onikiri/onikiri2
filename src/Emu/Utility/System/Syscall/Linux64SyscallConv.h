@@ -130,6 +130,11 @@ namespace Onikiri {
             //virtual void syscall_setreuid(EmulatorUtility::OpEmulationState* opState);
             //virtual void syscall_setregid(EmulatorUtility::OpEmulationState* opState);
 
+            virtual void syscall_setgid32(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_getppid(EmulatorUtility::OpEmulationState* opState);
+
+            virtual void syscall_setgroups(EmulatorUtility::OpEmulationState* opState);
+
             virtual void syscall_access(EmulatorUtility::OpEmulationState* opState);
         //  virtual void syscall_fstat(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_stat64(EmulatorUtility::OpEmulationState* opState);

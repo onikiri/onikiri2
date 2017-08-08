@@ -295,6 +295,19 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     //case syscall_id_setreuid:
     //  syscall_setreuid(opState);
     //  break;
+    
+    case syscall_id_getppid:
+        syscall_getppid(opState);
+        break;
+
+    case syscall_id_setgid32:
+        syscall_setgid32(opState);
+        break;
+
+    case syscall_id_setgroups:
+        syscall_setgroups(opState);
+        break;
+
     case syscall_id_access:
         syscall_access(opState);
         break;

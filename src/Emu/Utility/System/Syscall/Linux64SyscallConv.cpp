@@ -515,6 +515,24 @@ void Linux64SyscallConv::syscall_mkdir(OpEmulationState* opState)
     }
 }
 
+void Linux64SyscallConv::syscall_setgid32(OpEmulationState* opState)
+{
+    // TODO: add implementation
+    SetResult(true, 0);
+}
+
+void Linux64SyscallConv::syscall_getppid(OpEmulationState* opState)
+{
+    // TODO: add implementation
+    SetResult(true, 0);
+}
+
+void Linux64SyscallConv::syscall_setgroups(OpEmulationState* opState)
+{
+    // TODO: add implementation
+    SetResult(true, 0);
+}
+
 void Linux64SyscallConv::syscall_access(OpEmulationState* opState)
 {
     string path = StrCpyToHost( GetMemorySystem(), m_args[1] );
