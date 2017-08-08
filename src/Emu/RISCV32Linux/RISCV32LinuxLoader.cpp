@@ -56,7 +56,7 @@ RISCV32LinuxLoader::~RISCV32LinuxLoader()
 
 u64 RISCV32LinuxLoader::GetInitialRegValue(int index) const
 {
-    const int STACK_POINTER_REGNUM = 30;
+    const int STACK_POINTER_REGNUM = 2;
 
     if (index == STACK_POINTER_REGNUM)
         return GetInitialSp();
