@@ -192,6 +192,29 @@ struct RISCV32Addr : public std::unary_function<EmulatorUtility::OpEmulationStat
     }
 };
 
+
+void RISCV32SyscallSetArg(EmulatorUtility::OpEmulationState* opState)
+{
+    EmulatorUtility::SyscallConvIF* syscallConv = opState->GetProcessState()->GetSyscallConv();
+    syscallConv->SetArg(0, SrcOperand<0>()(opState));
+    syscallConv->SetArg(1, SrcOperand<1>()(opState));
+    syscallConv->SetArg(2, SrcOperand<2>()(opState));
+    DstOperand<0>::SetOperand(opState, SrcOperand<0>()(opState));
+}
+
+// invoke syscall, get result&error and branch if any
+void RISCV32SyscallCore(EmulatorUtility::OpEmulationState* opState)
+{
+    EmulatorUtility::SyscallConvIF* syscallConv = opState->GetProcessState()->GetSyscallConv();
+    syscallConv->SetArg(3, SrcOperand<1>()(opState));
+    syscallConv->SetArg(4, SrcOperand<2>()(opState));
+    //syscallConv->SetArg(5, SrcOperand<2>()(opState));
+    syscallConv->Execute(opState);
+
+    DstOperand<0>::SetOperand(opState, syscallConv->GetResult(EmulatorUtility::SyscallConvIF::RetValueIndex) );
+    //DstOperand<1>::SetOperand(opState, syscallConv->GetResult(EmulatorUtility::SyscallConvIF::ErrorFlagIndex) );
+}
+
 } // namespace Operation {
 } // namespace RISCV32Linux {
 } // namespace Onikiri

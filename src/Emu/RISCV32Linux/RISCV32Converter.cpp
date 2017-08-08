@@ -101,6 +101,8 @@ namespace {
 #define OPCODE_LD(f)  (u32)(((f) << 12) | 0x03)
 #define OPCODE_ST(f)  (u32)(((f) << 12) | 0x23)
 
+#define OPCODE_ECALL()  (u32)(0x73)
+
 
 namespace {
     // オペランドのテンプレート
@@ -239,6 +241,14 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     {"lw",      MASK_LD,    OPCODE_LD(2),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u32, RISCV32Addr<S0, S1> > > } } },
     {"lb",      MASK_LD,    OPCODE_LD(4),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u8,  RISCV32Addr<S0, S1> > > } } },
     {"lh",      MASK_LD,    OPCODE_LD(5),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u16, RISCV32Addr<S0, S1> > > } } },
+
+    // System
+    //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"ecall",   MASK_EXACT, OPCODE_ECALL(),   2,  {
+        {OpClassCode::syscall,          {17, -1}, {17, 10, 11, -1}, RISCV32SyscallSetArg} ,
+        {OpClassCode::syscall_branch,   {10, -1}, {17, 12, 13, -1}, RISCV32SyscallCore},
+    }},
+    
 };
 
 //

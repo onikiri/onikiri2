@@ -57,6 +57,8 @@ namespace {
     static const int OP_BR = 0x63;      // Branch
     static const int OP_LD = 0x03;      // Load
     static const int OP_ST = 0x23;      // Store
+
+    static const int OP_ECALL = 0x73;      // system call
 }
 
 RISCV32Decoder::DecodedInsn::DecodedInsn()
@@ -164,6 +166,9 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
         out->Imm[0] = ExtractBits(imm, 0, 12, true);
         break;
     }
+
+    case OP_ECALL:
+        break;
 
     default:
         break;
