@@ -286,8 +286,8 @@ int RISCV32Converter::GetActualRegNumber(int regTemplate, const DecodedInsn& dec
 // レジスタ番号regNumがゼロレジスタかどうかを判定する
 bool RISCV32Converter::IsZeroReg(int regNum) const
 {
-    const int IntZeroReg = 31;
-    const int FPZeroReg = 63;
+    const int IntZeroReg = 0;
+    const int FPZeroReg = 32;
 
     return regNum == IntZeroReg || regNum == FPZeroReg;
 }
