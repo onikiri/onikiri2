@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_LINUX64SYSCALLCONV_H__
-#define __EMULATORUTILITY_LINUX64SYSCALLCONV_H__
+#ifndef EMU_UTILITY_SYSTEM_SYSCALL_LINUX64_SYSCALL_CONV_H
+#define EMU_UTILITY_SYSTEM_SYSCALL_LINUX64_SYSCALL_CONV_H
 
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/VirtualSystem.h"
@@ -45,8 +45,6 @@ namespace Onikiri {
 
         class Linux64SyscallConv : public EmulatorUtility::SyscallConvIF
         {
-        private:
-            Linux64SyscallConv() {}
         public:
             Linux64SyscallConv(EmulatorUtility::ProcessState* processState);
             virtual ~Linux64SyscallConv();
@@ -61,7 +59,8 @@ namespace Onikiri {
             virtual u64 GetResult(int index);
             virtual void SetSystem(SystemIF* system);
 
-        private:
+        protected:
+            Linux64SyscallConv() {}
             static const int MaxResultCount = 2;
 
             std::vector<u64> m_args;
@@ -70,7 +69,6 @@ namespace Onikiri {
             SystemIF* m_simulatorSystem;
 
 
-        protected:
             static const int MaxArgCount = 16;
 
             u64 GetArg(int index) const

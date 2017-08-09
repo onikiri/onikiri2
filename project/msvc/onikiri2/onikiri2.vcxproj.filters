@@ -1050,6 +1050,9 @@
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux32Loader.h">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.h">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Main.cpp">
@@ -1516,6 +1519,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux32Loader.cpp">
       <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.cpp">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

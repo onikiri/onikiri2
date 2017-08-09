@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,47 +29,26 @@
 // 
 
 
-#ifndef EMU_RISCV32LINUX_RISCV32LINUX_SYSCALL_CONV_H
-#define EMU_RISCV32LINUX_RISCV32LINUX_SYSCALL_CONV_H
+#ifndef EMU_UTILITY_SYSTEM_SYSCALL_LINUX32_SYSCALL_CONV_H
+#define EMU_UTILITY_SYSTEM_SYSCALL_LINUX32_SYSCALL_CONV_H
 
-#include "Emu/Utility/System/Syscall/SyscallConvIF.h"
-#include "Emu/Utility/System/VirtualSystem.h"
-#include "Emu/Utility/System/Syscall/Linux32SyscallConv.h"
+#include "Emu/Utility/System/Syscall/Linux64SyscallConv.h"
 
 namespace Onikiri {
+    class SystemIF;
 
     namespace EmulatorUtility {
-        class ProcessState;
-        class MemorySystem;
-        class OpEmulationState;
-    }
-
-    namespace RISCV32Linux {
-
-        class RISCV32LinuxSyscallConv : public EmulatorUtility::Linux32SyscallConv
+        class Linux32SyscallConv : public Linux64SyscallConv
         {
-        private:
-            RISCV32LinuxSyscallConv();
         public:
-            RISCV32LinuxSyscallConv(EmulatorUtility::ProcessState* processState);
-            virtual ~RISCV32LinuxSyscallConv();
+            Linux32SyscallConv(EmulatorUtility::ProcessState* processState);
+            virtual ~Linux32SyscallConv();
 
-            // SetArg によって与えられた引数に従ってシステムコールを行う
-            virtual void Execute(EmulatorUtility::OpEmulationState* opState);
         protected:
-
-            // arch dependent
-
-            // conversion
-            //virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
-            virtual int Get_MAP_ANONYMOUS();
-            virtual int Get_MREMAP_MAYMOVE();
-            virtual int Get_CLK_TCK();
-
-            virtual u32 OpenFlagTargetToHost(u32 flag);
+            Linux32SyscallConv() {}
         };
 
-    } // namespace RISCV32Linux
+    } // namespace AlphaLinux
 } // namespace Onikiri
 
 #endif

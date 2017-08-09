@@ -277,6 +277,7 @@
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\MemoryUtility.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\VirtualMemory.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\ProcessState.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConvIF.h" />
@@ -622,6 +623,7 @@
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\MemoryUtility.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\VirtualMemory.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\ProcessState.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualSystem.cpp" />

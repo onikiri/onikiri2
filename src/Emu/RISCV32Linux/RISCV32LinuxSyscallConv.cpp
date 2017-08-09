@@ -54,7 +54,8 @@ using namespace Onikiri::RISCV32Linux;
 using namespace Onikiri::POSIX;
 
 
-RISCV32LinuxSyscallConv::RISCV32LinuxSyscallConv(ProcessState* processState) : Linux64SyscallConv(processState)
+RISCV32LinuxSyscallConv::RISCV32LinuxSyscallConv(ProcessState* processState) : 
+    Linux32SyscallConv(processState)
 {
 }
 
@@ -153,7 +154,8 @@ static struct {
 void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
 {
 #ifdef SYSCALL_DEBUG 
-    static std::ofstream log("syscall.log", std::ios_base::out | std::ios_base::trunc);
+    //static std::ofstream log("syscall.log", std::ios_base::out | std::ios_base::trunc);
+    auto& log = std::cout;
 
     log << dec << GetArg(0) << " ";
     for (size_t i = 0; i < sizeof(syscallTable)/sizeof(syscallTable[0]); i ++) {
