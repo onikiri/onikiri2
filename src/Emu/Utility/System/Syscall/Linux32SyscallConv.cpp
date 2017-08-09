@@ -54,7 +54,8 @@ using namespace Onikiri;
 using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::POSIX;
 
-
+namespace {
+}
 
 // Linux32SyscallConv
 Linux32SyscallConv::Linux32SyscallConv(ProcessState* processState)
@@ -65,3 +66,5 @@ Linux32SyscallConv::Linux32SyscallConv(ProcessState* processState)
 Linux32SyscallConv::~Linux32SyscallConv()
 {
 }
+
+

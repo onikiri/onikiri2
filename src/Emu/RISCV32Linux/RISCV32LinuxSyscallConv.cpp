@@ -35,6 +35,7 @@
 
 #include "Env/Env.h"
 #include "SysDeps/posix.h"
+#include "SysDeps/Endian.h"
 
 #include "Emu/Utility/System/ProcessState.h"
 #include "Emu/Utility/System/Memory/MemorySystem.h"
@@ -67,6 +68,58 @@ RISCV32LinuxSyscallConv::~RISCV32LinuxSyscallConv()
 #define SYSCALLNAME(name, argcnt, argtempl) {syscall_id_##name, #name, argcnt, argtempl}
 
 namespace {
+
+    typedef s32 riscv32_time_t;
+
+    struct riscv32_timespec
+    {
+        riscv32_time_t tv_sec;
+        riscv32_time_t tv_nsec;
+    };
+
+    struct riscv32_stat
+    {
+        s64 st_dev;
+        s32 st_ino;
+        s32 __st_ino_pad;
+        s32 st_mode;
+        s32 st_nlink;
+        s32 st_uid;
+        s32 st_gid;
+        s64 st_rdev;
+        s64 __pad1;
+        s32 st_size;
+        s32 __st_size_pad;
+        s32 st_blksize;
+        s32 __pad2;
+        s32 st_blocks;
+        s32 __st_blocks_pad;
+        riscv32_timespec st_atim;
+        riscv32_timespec st_mtim;
+        riscv32_timespec st_ctim;
+        s32 __glibc_reserved[2];
+    };
+    /*
+    struct riscv32_iovec
+    {
+        u64 linux64_iov_base;
+        u64 linux64_iov_len;
+    };
+
+    struct riscv32_tms
+    {
+        s64 linux64_tms_utime;
+        s64 linux64_tms_stime;
+        s64 linux64_tms_cutime;
+        s64 linux64_tms_cstime;
+    };
+
+    struct riscv32_timeval {
+        s64 linux64_tv_sec;
+        s64 linux64_tv_usec;
+    };
+    */
+
 
 // x: int (hexadecimal)
 // n: int
@@ -299,7 +352,7 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
 */
     case syscall_id_fstat:
 //  case syscall_id_fstat64:
-        syscall_fstat64(opState);
+        syscall_fstat32(opState);
         break;
 /*
     case syscall_id_ioctl:
@@ -435,3 +488,108 @@ u32 RISCV32LinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
 
     return conv.TargetToHost(flag);
 }
+
+// Implementation of fstat for 32bit environment
+void RISCV32LinuxSyscallConv::syscall_fstat32(EmulatorUtility::OpEmulationState* opState)
+{
+    HostStat st;
+    int result = GetVirtualSystem()->FStat((int)m_args[1], &st);
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+#ifdef HOST_IS_WINDOWS
+        /*
+        st.st_rdev は Windows では st.st_dev と同じだが、
+        (http://msdn.microsoft.com/ja-jp/library/14h5k7ff.aspx)
+        Linux では特殊なファイルの場合ここの値が変わる。
+        標準出力だとどうやら 0x8801 になるらしい？（要出典）
+        この st_rdev で実行パスが変わることがあるため、ホストの入出力を使用する場合は
+        とりあえず 0x8801 とする。
+        （例えば mcf では if(st.st_rdev >> 4) で Copyright の書込み先を変えるようで、
+        そのためにここの値が正しくないと実行パスが変わる）
+        */
+        if(GetVirtualSystem()->GetDelayUnlinker()->GetMapPath((int)m_args[1]) == "HostIO"){
+            st.st_rdev = 0x8801;
+        }
+#endif
+        write_stat32((u64)m_args[2], st);
+        SetResult(true, result);
+    }
+}
+
+void RISCV32LinuxSyscallConv::write_stat32(u64 dest, const HostStat &src)
+{
+    static u32 host_st_mode[] =
+    {
+        POSIX_S_IFDIR,
+        POSIX_S_IFCHR,
+        POSIX_S_IFREG,
+        POSIX_S_IFIFO,
+    };
+    static u32 riscv32_st_mode[] =
+    {
+        0040000, // _S_IFDIR
+        0020000, // _S_IFCHR
+        0100000, // _S_IFREG
+        0010000, // _S_IFIFO
+    };
+    static int st_mode_size = sizeof(host_st_mode)/sizeof(host_st_mode[0]);
+    SyscallConstConvBitwise conv(
+        host_st_mode,
+        riscv32_st_mode, 
+        st_mode_size
+    );
+
+    TargetBuffer buf(GetMemorySystem(), dest, sizeof(riscv32_stat));
+    riscv32_stat* t_buf = static_cast<riscv32_stat*>(buf.Get());
+    memset(t_buf, 0, sizeof(riscv32_stat));
+
+    t_buf->st_dev = src.st_dev;
+    t_buf->st_ino = src.st_ino;
+    t_buf->st_rdev = src.st_rdev;
+    t_buf->st_size = src.st_size;
+    t_buf->st_uid = src.st_uid;
+    t_buf->st_gid = src.st_gid;
+    t_buf->st_nlink = src.st_nlink;
+    /*
+    t_buf->st_atime = src.st_atime;
+    t_buf->st_mtime = src.st_mtime;
+    t_buf->st_ctime = src.st_ctime;
+    */
+
+    // st_blksize : 効率的にファイル・システムIO が行える"好ましい"ブロック・サイズ
+    //              CentOS4 では32768
+    // st_blocks  : ファイルに割り当てられた512B の数
+    //              CentOS4 では8 刻みになる？
+
+#if defined(HOST_IS_WINDOWS) || defined(HOST_IS_CYGWIN)
+    static const int BLOCK_UNIT = 512*8;
+    t_buf->st_mode    = conv.HostToTarget(src.st_mode);
+    t_buf->st_blocks  = (src.st_size+BLOCK_UNIT-1)/BLOCK_UNIT*8;
+    t_buf->st_blksize = 32768;
+#else
+    t_buf->st_blocks = src.st_blocks;
+    t_buf->st_mode = src.st_mode;
+    t_buf->st_blksize = src.st_blksize;
+#endif
+
+    // hostのstat(src)の要素とtargetのstatの要素のサイズが異なるかもしれないので，一旦targetのstatに代入してからエンディアンを変換する
+    bool bigEndian = GetMemorySystem()->IsBigEndian();
+    EndianHostToSpecifiedInPlace(t_buf->st_dev, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_ino, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_rdev, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_size, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_uid, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_gid, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_nlink, bigEndian);
+    /*
+    EndianHostToSpecifiedInPlace(t_buf->st_atime, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_mtime, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_ctime, bigEndian);
+    */
+    EndianHostToSpecifiedInPlace(t_buf->st_mode, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_blocks, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_blksize, bigEndian);
+}
+
