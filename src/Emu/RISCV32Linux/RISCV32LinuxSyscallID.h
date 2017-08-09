@@ -41,10 +41,11 @@ namespace Onikiri {
             const int syscall_id_close = 57;
             const int syscall_id_write = 64;
             const int syscall_id_fstat = 80;
+            const int syscall_id_exit = 93;
+            const int syscall_id_exit_group = 94;
             const int syscall_id_brk = 214;
 
             /*
-            const int syscall_id_exit = 1;
             const int syscall_id_read = 3;
             const int syscall_id_open = 5;
 
@@ -113,7 +114,6 @@ namespace Onikiri {
             const int syscall_id_madvise = 205;
             const int syscall_id_gettid = 207;
             const int syscall_id_tkill = 208;
-            const int syscall_id_exit_group = 234;
             const int syscall_id_tgkill = 250;
             */
         } // namespace SyscallID

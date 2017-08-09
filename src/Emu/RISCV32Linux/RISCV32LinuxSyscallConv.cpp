@@ -257,15 +257,15 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_fstat:
         syscall_fstat32(opState);
         break;
+    case syscall_id_exit:
+    case syscall_id_exit_group:
+        syscall_exit(opState);
+        break;
     case syscall_id_brk:
         syscall_brk(opState);
         break;
 
 /*
-    case syscall_id_exit:
-    case syscall_id_exit_group:
-        syscall_exit(opState);
-        break;
     case syscall_id_read:
         syscall_read(opState);
         break;
