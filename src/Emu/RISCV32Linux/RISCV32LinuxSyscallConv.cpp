@@ -248,6 +248,19 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     SetResult(false, 0);
     switch (GetArg(0)) {
+    case syscall_id_close:
+        syscall_close(opState);
+        break;
+    case syscall_id_write:
+        syscall_write(opState);
+        break;
+    case syscall_id_fstat:
+        syscall_fstat32(opState);
+        break;
+    case syscall_id_brk:
+        syscall_brk(opState);
+        break;
+
 /*
     case syscall_id_exit:
     case syscall_id_exit_group:
@@ -255,9 +268,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_read:
         syscall_read(opState);
-        break;
-    case syscall_id_write:
-        syscall_write(opState);
         break;
     case syscall_id_readv:
         syscall_readv(opState);
@@ -268,10 +278,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_open:
         syscall_open(opState);
         break;
-    case syscall_id_close:
-        syscall_close(opState);
-        break;
-
     case syscall_id_lseek:
         syscall_lseek(opState);
         break;
@@ -300,9 +306,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_fcntl:
         syscall_fcntl(opState);
-        break;
-    case syscall_id_brk:
-        syscall_brk(opState);
         break;
     case syscall_id_getpid:
     case syscall_id_gettid:
@@ -349,12 +352,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
 //  case syscall_id_lstat64:
         syscall_lstat64(opState);
         break;
-*/
-    case syscall_id_fstat:
-//  case syscall_id_fstat64:
-        syscall_fstat32(opState);
-        break;
-/*
     case syscall_id_ioctl:
         syscall_ioctl(opState);
         break;
