@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
+// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef EMU_RISCV32LINUX_RISCV32_SYSCALLCONV_H
-#define EMU_RISCV32LINUX_RISCV32_SYSCALLCONV_H
+#ifndef EMU_RISCV32LINUX_RISCV32LINUX_SYSCALL_CONV_H
+#define EMU_RISCV32LINUX_RISCV32LINUX_SYSCALL_CONV_H
 
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/VirtualSystem.h"
@@ -56,11 +56,11 @@ namespace Onikiri {
 
             // SetArg によって与えられた引数に従ってシステムコールを行う
             virtual void Execute(EmulatorUtility::OpEmulationState* opState);
-        private:
-            virtual void syscall_getsysinfo(EmulatorUtility::OpEmulationState* opState);
-            virtual void syscall_setsysinfo(EmulatorUtility::OpEmulationState* opState);
+        protected:
 
-            // consts / conversion
+            // arch dependent
+
+            // conversion
             //virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
             virtual int Get_MAP_ANONYMOUS();
             virtual int Get_MREMAP_MAYMOVE();
