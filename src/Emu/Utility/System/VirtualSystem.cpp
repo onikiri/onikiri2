@@ -357,6 +357,14 @@ int VirtualSystem::Write(int fd, void* buffer, unsigned int count)
 int VirtualSystem::Close(int fd)
 {
     int hostFD = m_fdConv.TargetToHost(fd);
+    if (posix_fileno(stdin) == hostFD || 
+        posix_fileno(stdout) == hostFD || 
+        posix_fileno(stderr) == hostFD
+    ){
+        // Block closing system handles
+        return 0;
+    }
+
     int result = posix_close(hostFD);
     if (result != -1) {
         // closeに成功したら自動クローズリストから除外
