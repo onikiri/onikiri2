@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='RISCV32Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/400.perlbench/test/'
+        Command='./bin/perlbench'
+        CommandArguments='-I. -I./lib test.pl'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>
