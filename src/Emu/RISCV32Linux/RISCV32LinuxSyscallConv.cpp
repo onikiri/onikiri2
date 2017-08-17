@@ -132,21 +132,23 @@ static struct {
     int argcnt;
     const char* argtempl;
 } syscallTable[] = {
-    SYSCALLNAME(fstat, 2, "np"),
-/*
+    SYSCALLNAME(close, 1, "n"),
+    SYSCALLNAME(lseek, 3, "nxn"),
     SYSCALLNAME(exit, 0, ""),
+    SYSCALLNAME(exit_group, 0, ""),
     SYSCALLNAME(read, 3, "npn"),
     SYSCALLNAME(write, 3, "npn"),
+    SYSCALLNAME(fstat, 2, "np"),
+    SYSCALLNAME(brk, 1, "p"),
+    SYSCALLNAME(open, 3, "sxx"),
+/*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
-    SYSCALLNAME(open, 3, "sxx"),
-    SYSCALLNAME(close, 1, "n"),
     SYSCALLNAME(stat, 2, "sp"),
     SYSCALLNAME(lstat, 2, "sp"),
     //SYSCALLNAME(stat64, 2, "sp"),
     //SYSCALLNAME(lstat64, 2, "sp"),
     //SYSCALLNAME(fstat64, 2, "np"),
-    SYSCALLNAME(lseek, 3, "nxn"),
     SYSCALLNAME(truncate, 2, "px"),
     SYSCALLNAME(ftruncate, 2, "nx"),
     SYSCALLNAME(fcntl, 3, "nnp"),
@@ -171,7 +173,6 @@ static struct {
     //SYSCALLNAME(settimeofday, 2, "pp"),
 
     SYSCALLNAME(uname, 1, "p"),
-    SYSCALLNAME(brk, 1, "p"),
 
     SYSCALLNAME(access, 2, "sx"),
 
@@ -189,7 +190,6 @@ static struct {
     SYSCALLNAME(getrusage, 2, "xp"),
     SYSCALLNAME(getrlimit, 2, "np"),
     SYSCALLNAME(setrlimit, 2, "np"),
-    SYSCALLNAME(exit_group, 0, ""),
     SYSCALLNAME(dup, 1, "n"),
 
     SYSCALLNAME(rt_sigaction, 3, "xxx"),
@@ -251,6 +251,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_close:
         syscall_close(opState);
         break;
+    case syscall_id_lseek:
+        syscall_lseek(opState);
+        break;
     case syscall_id_write:
         syscall_write(opState);
         break;
@@ -277,9 +280,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_writev:
         syscall_writev(opState);
-        break;
-    case syscall_id_lseek:
-        syscall_lseek(opState);
         break;
     case syscall_id_unlink:
         syscall_unlink(opState);

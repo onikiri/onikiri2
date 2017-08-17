@@ -39,6 +39,7 @@ namespace Onikiri {
         // https://github.com/riscv/riscv-linux/blob/riscv-next/include/uapi/asm-generic/unistd.h
         namespace SyscallID {
             const int syscall_id_close = 57;
+            const int syscall_id_lseek = 62;
             const int syscall_id_read = 63;
             const int syscall_id_write = 64;
             const int syscall_id_fstat = 80;
@@ -57,7 +58,6 @@ namespace Onikiri {
             const int syscall_id_time = 13;
 
             const int syscall_id_chmod = 15;
-            const int syscall_id_lseek = 19;
             const int syscall_id_getpid = 20;
 
             const int syscall_id_setuid = 23;
