@@ -134,13 +134,15 @@ static struct {
 } syscallTable[] = {
     SYSCALLNAME(close, 1, "n"),
     SYSCALLNAME(lseek, 3, "nxn"),
-    SYSCALLNAME(exit, 0, ""),
-    SYSCALLNAME(exit_group, 0, ""),
     SYSCALLNAME(read, 3, "npn"),
     SYSCALLNAME(write, 3, "npn"),
     SYSCALLNAME(fstat, 2, "np"),
+    SYSCALLNAME(exit, 0, ""),
+    SYSCALLNAME(exit_group, 0, ""),
+    SYSCALLNAME(gettimeofday, 2, "pp"),
     SYSCALLNAME(brk, 1, "p"),
     SYSCALLNAME(open, 3, "sxx"),
+    SYSCALLNAME(unlink, 1, "s"),
 /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
@@ -158,7 +160,6 @@ static struct {
     SYSCALLNAME(mkdir, 2, "sx"),
     SYSCALLNAME(rmdir, 1, "s"),
     SYSCALLNAME(readlink, 3, "spx"),
-    SYSCALLNAME(unlink, 1, "s"),
     SYSCALLNAME(link, 2, "ss"),
     SYSCALLNAME(rename, 2, "ss"),
     SYSCALLNAME(mmap, 6, "pxxxnx"),
@@ -169,7 +170,6 @@ static struct {
     SYSCALLNAME(ioctl, 3, "xxx"),
     SYSCALLNAME(time, 1, "p"),
     SYSCALLNAME(times, 1, "p"),
-    SYSCALLNAME(gettimeofday, 2, "pp"),
     //SYSCALLNAME(settimeofday, 2, "pp"),
 
     SYSCALLNAME(uname, 1, "p"),
@@ -254,6 +254,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_lseek:
         syscall_lseek(opState);
         break;
+    case syscall_id_read:
+        syscall_read(opState);
+        break;
     case syscall_id_write:
         syscall_write(opState);
         break;
@@ -264,14 +267,17 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_exit_group:
         syscall_exit(opState);
         break;
+    case syscall_id_gettimeofday:
+        syscall_gettimeofday(opState);
+        break;
     case syscall_id_brk:
         syscall_brk(opState);
         break;
     case syscall_id_open:
         syscall_open(opState);
         break;
-    case syscall_id_read:
-        syscall_read(opState);
+    case syscall_id_unlink:
+        syscall_unlink(opState);
         break;
 
 /*
@@ -280,9 +286,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_writev:
         syscall_writev(opState);
-        break;
-    case syscall_id_unlink:
-        syscall_unlink(opState);
         break;
     case syscall_id_rename:
         syscall_rename(opState);
@@ -363,9 +366,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_times:
         syscall_times(opState);
-        break;
-    case syscall_id_gettimeofday:
-        syscall_gettimeofday(opState);
         break;
 
     case syscall_id_dup:
