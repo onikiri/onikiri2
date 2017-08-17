@@ -143,10 +143,10 @@ static struct {
     SYSCALLNAME(brk, 1, "p"),
     SYSCALLNAME(open, 3, "sxx"),
     SYSCALLNAME(unlink, 1, "s"),
+    SYSCALLNAME(stat, 2, "sp"),
 /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
-    SYSCALLNAME(stat, 2, "sp"),
     SYSCALLNAME(lstat, 2, "sp"),
     //SYSCALLNAME(stat64, 2, "sp"),
     //SYSCALLNAME(lstat64, 2, "sp"),
@@ -279,6 +279,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_unlink:
         syscall_unlink(opState);
         break;
+    case syscall_id_stat:
+        syscall_stat32(opState);
+        break;
 
 /*
     case syscall_id_readv:
@@ -347,10 +350,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     //case syscall_id_access:
     //  syscall_access(opState);
     //  break;
-    case syscall_id_stat:
-//  case syscall_id_stat64:
-        syscall_stat64(opState);
-        break;
     case syscall_id_lstat:
 //  case syscall_id_lstat64:
         syscall_lstat64(opState);
@@ -514,6 +513,20 @@ void RISCV32LinuxSyscallConv::syscall_fstat32(EmulatorUtility::OpEmulationState*
         SetResult(true, result);
     }
 }
+void RISCV32LinuxSyscallConv::syscall_stat32(OpEmulationState* opState)
+{
+    HostStat st;
+    string path = StrCpyToHost(GetMemorySystem(), m_args[1]);
+    int result = GetVirtualSystem()->Stat(path.c_str(), &st);
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        write_stat32((u64)m_args[2], st);
+        SetResult(true, result);
+    }
+}
+
 
 void RISCV32LinuxSyscallConv::write_stat32(u64 dest, const HostStat &src)
 {

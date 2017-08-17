@@ -47,8 +47,10 @@ namespace Onikiri {
             const int syscall_id_exit_group = 94;
             const int syscall_id_gettimeofday = 169;
             const int syscall_id_brk = 214;
+
             const int syscall_id_open = 1024;
             const int syscall_id_unlink = 1026;
+            const int syscall_id_stat = 1038;
 
             /*
 
@@ -91,7 +93,6 @@ namespace Onikiri {
             const int syscall_id_ftruncate = 93;
             const int syscall_id_fchmod = 94;
             const int syscall_id_fchown = 95;
-            const int syscall_id_stat = 106;
             const int syscall_id_lstat = 107;
             const int syscall_id_uname = 122;
             const int syscall_id_mprotect = 125;
