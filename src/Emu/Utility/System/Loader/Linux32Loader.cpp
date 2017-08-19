@@ -68,10 +68,25 @@ void Linux32Loader::LoadBinary(MemorySystem* memory, const String& command)
 
         m_bigEndian = elfReader.IsBigEndian();
 
+        u64 imageBase = 0xffffffffffffffff; // An address where ELF file is loaded 
+        u64 addrBase = 0xffffffffffffffff;  // The head of an allocated address space
+
+        // Determine address/image bases
+        for (int i = 0; i < elfReader.GetProgramHeaderCount(); i ++) {
+            const Elf32Reader::Elf_Phdr &ph = elfReader.GetProgramHeader(i);
+            if (ph.p_type == PT_LOAD) {
+                if (addrBase > ph.p_vaddr) {
+                    addrBase = ph.p_vaddr;
+                }
+                if (imageBase > ph.p_vaddr - ph.p_offset) {
+                    imageBase = ph.p_vaddr - ph.p_offset;
+                }
+            }
+        }
+
         u64 initialBrk = 0;
         for (int i = 0; i < elfReader.GetProgramHeaderCount(); i ++) {
             const Elf32Reader::Elf_Phdr &ph = elfReader.GetProgramHeader(i);
-
             VIRTUAL_MEMORY_ATTR_TYPE pageAttr =
                 VIRTUAL_MEMORY_ATTR_READ | VIRTUAL_MEMORY_ATTR_WRITE;
 
@@ -82,8 +97,6 @@ void Linux32Loader::LoadBinary(MemorySystem* memory, const String& command)
 
             // セグメントのアドレス範囲に物理メモリを割り当て，セグメントを読み込む
             if (ph.p_type == PT_LOAD) {
-                if (ph.p_offset == 0)
-                    m_imageBase = ph.p_vaddr;
                 memory->AssignPhysicalMemory(ph.p_vaddr, ph.p_memsz, pageAttr);
                 TargetBuffer buf(memory, ph.p_vaddr, static_cast<size_t>(ph.p_filesz));
                 elfReader.ReadRange(static_cast<size_t>(ph.p_offset), (char*)buf.Get(), static_cast<size_t>(ph.p_filesz));
@@ -94,8 +107,6 @@ void Linux32Loader::LoadBinary(MemorySystem* memory, const String& command)
                     THROW_RUNTIME_ERROR( "Reserved address region is too large.");
                 }
             }
-            //if (ph.p_flags & PF_W && writable_base == 0) {
-            //}
 
             // 実行属性のセグメントは1つと仮定
             if (ph.p_flags & PF_X) {
@@ -103,6 +114,17 @@ void Linux32Loader::LoadBinary(MemorySystem* memory, const String& command)
                 m_codeRange.second = static_cast<size_t>(ph.p_memsz);
             }
         }
+
+        // Load header region if it is necessary
+        if (addrBase > imageBase) {
+            u64 size = addrBase - imageBase;
+            memory->AssignPhysicalMemory(imageBase, size, VIRTUAL_MEMORY_ATTR_READ | VIRTUAL_MEMORY_ATTR_EXEC);
+            TargetBuffer buf(memory, imageBase, static_cast<size_t>(size));
+            elfReader.ReadRange(static_cast<size_t>(0), (char*)buf.Get(), static_cast<size_t>(size));
+        }
+
+        m_entryPoint = CalculateEntryPoint(memory, elfReader);
+        m_imageBase = imageBase;
         ASSERT(m_imageBase != 0);
 
         memory->SetInitialBrk(initialBrk);
@@ -111,7 +133,6 @@ void Linux32Loader::LoadBinary(MemorySystem* memory, const String& command)
         m_elfProgramHeaderCount = elfReader.GetProgramHeaderCount();
 
         // エントリポイント等の計算
-        m_entryPoint = CalculateEntryPoint(memory, elfReader);
         CalculateOthers(memory, elfReader);
     }
     catch (runtime_error& e) {
