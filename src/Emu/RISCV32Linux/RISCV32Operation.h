@@ -192,6 +192,71 @@ struct RISCV32Addr : public std::unary_function<EmulatorUtility::OpEmulationStat
     }
 };
 
+//
+// Div/Rem
+//
+template <typename TSrc1, typename TSrc2>
+struct RISCV32IntDiv : public std::unary_function<OpEmulationState*, u32>
+{
+    u32 operator()(OpEmulationState* opState)
+    {
+        s32 src1 = static_cast<s32>(TSrc1()(opState));
+        s32 src2 = static_cast<s32>(TSrc2()(opState));
+        if (src2 == 0){
+            return static_cast<u32>(-1);
+        }
+        if (src1 < -0x7fffffff && src2 == -1) { // overflow
+            return src1;
+        }
+        return static_cast<u32>(src1 / src2);
+    }
+};
+
+template <typename TSrc1, typename TSrc2>
+struct RISCV32IntRem : public std::unary_function<OpEmulationState*, u32>
+{
+    u32 operator()(OpEmulationState* opState)
+    {
+        s32 src1 = static_cast<s32>(TSrc1()(opState));
+        s32 src2 = static_cast<s32>(TSrc2()(opState));
+        if (src2 == 0){
+            return src1;
+        }
+        if (src1 < -0x7fffffff && src2 == -1) { // overflow
+            return 0;
+        }
+        return src1 % src2;
+    }
+};
+
+template <typename TSrc1, typename TSrc2>
+struct RISCV32IntDivu : public std::unary_function<OpEmulationState*, u32>
+{
+    u32 operator()(OpEmulationState* opState)
+    {
+        u32 src1 = static_cast<u32>(TSrc1()(opState));
+        u32 src2 = static_cast<u32>(TSrc2()(opState));
+        if (src2 == 0){
+            return static_cast<u32>(-1);
+        }
+        return src1 / src2;
+    }
+};
+
+template <typename TSrc1, typename TSrc2>
+struct RISCV32IntRemu : public std::unary_function<OpEmulationState*, u32>
+{
+    u32 operator()(OpEmulationState* opState)
+    {
+        u32 src1 = static_cast<u32>(TSrc1()(opState));
+        u32 src2 = static_cast<u32>(TSrc2()(opState));
+        if (src2 == 0){
+            return src1;
+        }
+        return src1 % src2;
+    }
+};
+
 
 void RISCV32SyscallSetArg(EmulatorUtility::OpEmulationState* opState)
 {

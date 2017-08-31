@@ -55,8 +55,6 @@ using namespace Onikiri::RISCV32Linux::Operation;
 
 namespace {
 
-
-
     // 各命令形式に対するオペコードを得るためのマスク (0のビットが引数)
     static const u32 MASK_EXACT = 0xffffffff;  // 全bitが一致
 
@@ -79,6 +77,7 @@ namespace {
 
     static const u32 MASK_ST  =     0x0000707f; // B-type, funct3
     static const u32 MASK_LD  =     0x0000707f; // B-type, funct3
+
 }
 
 #define OPCODE_LUI()    0x37
@@ -209,7 +208,8 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     //    !link link   -        pop
     //    link  !link  -        push
     //    link  link   0        push and pop
-    //    link  link   1        push    //{Name,    Mask,           Opcode,                 nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    //    link  link   1        push
+    //{Name,    Mask,           Opcode,                 nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(1, 5),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(5, 1),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALL,      OPCODE_CALL(5),         1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV32CallAbsUncond<D0, S0, S1> } } },
@@ -249,6 +249,16 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
         {OpClassCode::syscall_branch,   {10, -1}, {17, 12, 13, -1}, RISCV32SyscallCore},
     }},
     
+    // RV32M
+    //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    {"mul",     MASK_INT,   OPCODE_INT(0x01, 0),    1,  { {OpClassCode::iMUL,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntMul<u32, S0, S1> > } } },
+    {"mulh",    MASK_INT,   OPCODE_INT(0x01, 1),    1,  { {OpClassCode::iMUL,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntUMulh32<s64, s64, S0, S1> > } } },
+    {"mulhus",  MASK_INT,   OPCODE_INT(0x01, 2),    1,  { {OpClassCode::iMUL,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntUMulh32<u64, u64, S0, S1> > } } },
+    {"mulhu",   MASK_INT,   OPCODE_INT(0x01, 3),    1,  { {OpClassCode::iMUL,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntUMulh32<s64, u64, S0, S1> > } } },
+    {"div",     MASK_INT,   OPCODE_INT(0x01, 4),    1,  { {OpClassCode::iDIV,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32IntDiv<S0, S1> > } } },
+    {"divu",    MASK_INT,   OPCODE_INT(0x01, 5),    1,  { {OpClassCode::iDIV,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32IntDivu<S0, S1> > } } },
+    {"rem",     MASK_INT,   OPCODE_INT(0x01, 6),    1,  { {OpClassCode::iDIV,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32IntRem<S0, S1> > } } },
+    {"remu",    MASK_INT,   OPCODE_INT(0x01, 7),    1,  { {OpClassCode::iDIV,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32IntRemu<S0, S1> > } } },
 };
 
 //

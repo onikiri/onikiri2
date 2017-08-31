@@ -675,6 +675,18 @@ struct IntSMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState
     }
 };
 
+template <typename Type1, typename Type2, typename TSrc1, typename TSrc2>
+struct IntUMulh32 : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+{
+    u32 operator()(OpEmulationState* opState) const
+    {
+        Type1 lhs = TSrc1()(opState);
+        Type2 rhs = TSrc2()(opState);
+        Type1 ret = static_cast<Type1>(lhs * rhs) >> 32;
+        return static_cast<u32>(ret);
+    }
+};
+
 // **********************************
 //    shift operations
 // **********************************
