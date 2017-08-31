@@ -65,7 +65,7 @@ namespace Onikiri {
 
         private:
             //static const u64 ADDR_STACK_TAIL = 0xc000000 - 1;
-            static const u64 ADDR_STACK_TAIL = 0xf7000000 - 0x31c - 1;  // QEMU
+            static const u64 ADDR_STACK_TAIL = 0xf7000000 - 0x5e4 - 1;  // Set an initial address used in QEMU
 
             std::pair<u64, size_t> m_codeRange;
 
