@@ -199,7 +199,11 @@ void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
     u64 stackBytes = stackMegaBytes*1024*1024;
     
     // GetStackTail returns the end of address (e.g., 0xbfffffff), so +1
+    if (m_loader->GetStackTail() < stackBytes) {
+        THROW_RUNTIME_ERROR("Stack size(%d MB) is greater than the stack top address.", stackMegaBytes);
+    }
     u64 stack = m_loader->GetStackTail() - stackBytes + 1;
+
     m_memorySystem->AssignPhysicalMemory(
         stack, stackBytes, VIRTUAL_MEMORY_ATTR_READ | VIRTUAL_MEMORY_ATTR_WRITE
     );
