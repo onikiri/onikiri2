@@ -466,7 +466,7 @@ Cache::Result Cache::OnWritePendingHit(
 
     return Result( 
         m_latency + phResult.latency, 
-        Result::ST_MISS,
+        Result::ST_PENDING_HIT,
         this
     );
 }
@@ -629,6 +629,10 @@ void Cache::Invalidate( const Addr& addr )
 
     HookEntry( this, &Cache::InvalidateBody, &s_invalidateHook, &param );
 
+	for (int i = 0; i < m_prevLevelCaches.GetSize(); i++) {
+		m_prevLevelCaches[i]->Invalidate(addr);
+	}
+
     if( m_prefetcher ){
         m_prefetcher->OnCacheInvalidation( this, &param );
     }
@@ -636,10 +640,20 @@ void Cache::Invalidate( const Addr& addr )
 
 void Cache::InvalidateBody( CacheHookParam* param )
 {
-    CacheTableIterator line = m_cacheTable->invalidate( *param->address );
-    if( line != m_cacheTable->end() ){
-        m_numInvalidated++;
-    }
+	CacheTableIterator line = m_cacheTable->find(*param->address);
+	if (line != m_cacheTable->end()) {
+		if (m_writePolicy == WP_WRITE_BACK && !m_perfect) {
+			if ((*m_lineState)[line].dirty) {
+				Access writeBack;
+				writeBack.address = *param->address;
+				writeBack.value = 0;
+				writeBack.type = AOT_WRITE_BACK;
+				m_nextLevelCache->Write(writeBack, NULL);
+			}
+		}
+		m_cacheTable->invalidate(*param->address);
+		m_numInvalidated++;
+	}
     param->line = line;
 }
 
