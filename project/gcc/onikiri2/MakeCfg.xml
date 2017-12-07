@@ -10,8 +10,8 @@
       Name="linux" 
       HostString="Linux"
       CXX="g++" 
-      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG -Wno-unused-local-typedefs"
-      LDFlags="-static" 
+      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG -Wno-deprecated-declarations"
+      LDFlags="-static -lpthread" 
       CleanTargets="*.o *.d *.gch"
       WorkingDirectory="WorkLinux" 
       OutputFile="a.out"
@@ -20,7 +20,7 @@
         <Directory Path="../../../src"/>
         <Directory Path="../../../src/pch"/>
         <Directory Path="../../../lib"/>
-        <Directory Path="../../../lib/boost/boost_1_53_0"/>
+        <Directory Path="../../../lib/boost/boost_1_65_1"/>
         <Directory Path="../../../lib/zlib"/>
       </IncludeDirectories>
       <LibraryDirectories>
@@ -59,7 +59,7 @@
         <Directory Path="../../../src"/>
         <Directory Path="../../../src/pch"/>
         <Directory Path="../../../lib"/>
-        <Directory Path="../../../lib/boost/boost_1_53_0"/>
+        <Directory Path="../../../lib/boost/boost_1_65_1"/>
         <Directory Path="../../../lib/zlib"/>
       </IncludeDirectories>
       <LibraryDirectories>

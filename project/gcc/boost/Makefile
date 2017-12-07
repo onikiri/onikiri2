@@ -2,7 +2,7 @@
 # Extracting boost archive
 #
 
-BOOST_BASE_NAME = boost_1_53_0
+BOOST_BASE_NAME = boost_1_65_1
 BOOST_BASE_DIR  = ../../../lib/boost
 
 BOOST_TARGET_DIR = $(BOOST_BASE_DIR)/$(BOOST_BASE_NAME)

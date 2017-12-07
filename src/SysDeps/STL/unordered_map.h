@@ -29,27 +29,15 @@
 // 
 
 
-//
-// 'unordered_map' defined in this file is not necessary
-// if formal(C++0x) unordered_map is defined.
-//
-
 #ifndef __ONIKIRI_SYSDEPS_STL_UNORDERED_MAP_H
 #define __ONIKIRI_SYSDEPS_STL_UNORDERED_MAP_H
 
-#include <boost/tr1/unordered_map.hpp>
+#include <boost/unordered_map.hpp>
 
 namespace Onikiri
 {
-
-#ifdef BOOST_HAS_TR1_UNORDERED_MAP
-    using ::std::tr1::unordered_map;
-    using ::std::tr1::hash;
-#else
     using ::boost::unordered_map;
     using ::boost::hash;
-#endif
-
 }
 
 #endif
