@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/exchange2_s" CommandArguments="0 " STDERR="exchange2.err" STDIN="" STDOUT="exchange2.txt" TargetBasePath="./" TargetWorkPath="../run/exchange2_s/test/input" />
+</Processes>
+</Emulator>
+</Session>

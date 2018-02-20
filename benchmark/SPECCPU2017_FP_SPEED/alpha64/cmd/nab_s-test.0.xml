@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/nab_s" CommandArguments="hkrdenq 1930344093 1000 " STDERR="hkrdenq.err" STDIN="" STDOUT="hkrdenq.out" TargetBasePath="./" TargetWorkPath="../run/nab_s/test/input" />
+</Processes>
+</Emulator>
+</Session>

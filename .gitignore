@@ -25,10 +25,24 @@ project/gcc/XML2CHeader/XML2CHeader*
 project/gcc/zlib
 
 # Benchmark
+
+benchmark/SPECCPU2017_INT/run/*
+benchmark/SPECCPU2017_INT/*/bin/*
+
+benchmark/SPECCPU2017_FP/run/*
+benchmark/SPECCPU2017_FP/*/bin/*
+
 benchmark/SPECCPU2006_INT/run/*
+benchmark/SPECCPU2006_INT/*/bin/*
+
 benchmark/SPECCPU2006_FP/run/*
+benchmark/SPECCPU2006_FP/*/bin/*
+
 benchmark/SPECCPU2000_INT/run/*
+benchmark/SPECCPU2000_INT/*/bin/*
+
 benchmark/SPECCPU2000_FP/run/*
+benchmark/SPECCPU2000_FP/*/bin/*
 
 # VS-related files
 *.sdf
