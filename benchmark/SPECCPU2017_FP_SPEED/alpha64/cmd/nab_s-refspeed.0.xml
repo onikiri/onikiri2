@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/nab_s" CommandArguments="3j1n 20140317 220 " STDERR="3j1n.err" STDIN="" STDOUT="3j1n.out" TargetBasePath="./" TargetWorkPath="../run/nab_s/refspeed/input" />
+</Processes>
+</Emulator>
+</Session>
