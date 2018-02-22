@@ -4,7 +4,7 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
 // 
 // This software is provided 'as-is', without any express or implied
@@ -59,7 +59,7 @@
 #include <math.h>
 #include <assert.h>
 #include <time.h>
-#include "SysDeps/stdarg.h"
+#include <stdarg.h>
 
 
 //
@@ -78,9 +78,7 @@
 #include <set>
 #include <deque>
 #include <stack>
-
-// for compatibility
-#include "SysDeps/STL/list.h"
+#include <list>
 
 #include <algorithm>
 #include <functional>
