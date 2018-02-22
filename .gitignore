@@ -3,9 +3,7 @@ lib/boost/boost*
 
 tool/AutoRunTools/result*
 tool/User/McPAT/Script/work*
-tool/User/Work/onikiri.result*
-tool/User/Work/mcpat.result*
-
+tool/User/Work/*
 
 # Automatically generated header files
 src/DefaultParam.h
@@ -57,6 +55,7 @@ benchmark/SPECCPU2000_FP/*/bin/*
 
 project/msvc/Lib/*
 project/msvc/ipch
+project/msvc/.vs
 
 project/msvc/Debug
 project/msvc/FastDebug

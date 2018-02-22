@@ -45,7 +45,8 @@
 
 #if defined( HOST_IS_WINDOWS ) || defined(HOST_IS_CYGWIN) 
 
-// _WIN32_WINNT should be defined for boost::asio
+// __MSABI_LONG and _WIN32_WINNT should be defined for boost::asio
+#define __MSABI_LONG(x) x
 #define _WIN32_WINNT 0x0501
 
 #endif

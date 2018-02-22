@@ -10,8 +10,8 @@
       Name="linux" 
       HostString="Linux"
       CXX="g++" 
-      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG -Wno-unused-local-typedefs"
-      LDFlags="-static" 
+      CXXFlags="-Wall -Werror -O2 -g -std=c++11 -DONIKIRI_DEBUG -Wno-deprecated-declarations -Wno-unused-const-variable -Wno-unused-private-field"
+      LDFlags="-static -lpthread" 
       CleanTargets="*.o *.d *.gch"
       WorkingDirectory="WorkLinux" 
       OutputFile="a.out"
@@ -20,7 +20,7 @@
         <Directory Path="../../../src"/>
         <Directory Path="../../../src/pch"/>
         <Directory Path="../../../lib"/>
-        <Directory Path="../../../lib/boost/boost_1_53_0"/>
+        <Directory Path="../../../lib/boost/boost_1_65_1"/>
         <Directory Path="../../../lib/zlib"/>
       </IncludeDirectories>
       <LibraryDirectories>
@@ -45,11 +45,15 @@
 
     </Platform>
     
+    <!-- 
+      We use '-std=gnu++11' instead of '-std=std++11' because some elements such as
+      'fileno' are not defined in the c++11 mode in cygwin.
+    -->
     <Platform 
       Name="cygwin"
       HostString="CYGWIN" 
       CXX="g++" 
-      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG -D__USE_W32_SOCKETS -Wno-unknown-pragmas -Wno-unused-local-typedefs"
+      CXXFlags="-Wall -Werror -O2 -g -std=gnu++11 -Wno-unused-variable -DONIKIRI_DEBUG -D__USE_W32_SOCKETS"
       LDFlags="-static"
       CleanTargets="*.o *.d *.gch"
       WorkingDirectory="WorkCygwin"
@@ -59,7 +63,7 @@
         <Directory Path="../../../src"/>
         <Directory Path="../../../src/pch"/>
         <Directory Path="../../../lib"/>
-        <Directory Path="../../../lib/boost/boost_1_53_0"/>
+        <Directory Path="../../../lib/boost/boost_1_65_1"/>
         <Directory Path="../../../lib/zlib"/>
       </IncludeDirectories>
       <LibraryDirectories>

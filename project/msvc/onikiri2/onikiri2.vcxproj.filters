@@ -1310,13 +1310,13 @@
     <ClCompile Include="..\..\..\lib\tinyxml\tinyxmlparser.cpp">
       <Filter>src\Lib\tinyxml</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\system\src\error_code.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\system\src\error_code.cpp">
       <Filter>src\Lib\boost\system</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\iostreams\src\mapped_file.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\iostreams\src\mapped_file.cpp">
       <Filter>src\Lib\boost\iostreams</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\iostreams\src\zlib.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\iostreams\src\zlib.cpp">
       <Filter>src\Lib\boost\iostreams</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Emu\Utility\System\ProcessState.cpp">
@@ -1442,28 +1442,28 @@
     <ClCompile Include="..\..\..\src\Sim\Recoverer\Recoverer.cpp">
       <Filter>src\Sim\Recoverer</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\codecvt_error_category.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\codecvt_error_category.cpp">
       <Filter>src\Lib\boost\filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\operations.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\operations.cpp">
       <Filter>src\Lib\boost\filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\path.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\path.cpp">
       <Filter>src\Lib\boost\filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\path_traits.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\path_traits.cpp">
       <Filter>src\Lib\boost\filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\portability.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\portability.cpp">
       <Filter>src\Lib\boost\filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\unique_path.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\unique_path.cpp">
       <Filter>src\Lib\boost\filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\utf8_codecvt_facet.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\utf8_codecvt_facet.cpp">
       <Filter>src\Lib\boost\filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\windows_file_codecvt.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\windows_file_codecvt.cpp">
       <Filter>src\Lib\boost\filesystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Sim\ExecUnit\ExecUnitReserver.cpp">
