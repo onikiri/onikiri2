@@ -56,7 +56,7 @@
 
 #   pragma warning(push)
 
-// Some boost files cause warnings in MSVC 2015.
+// Some boost files cause warnings in MSVC 2017.
 #   pragma warning(disable:4244)
 #   pragma warning(disable:4245)
 #   pragma warning(disable:4828)

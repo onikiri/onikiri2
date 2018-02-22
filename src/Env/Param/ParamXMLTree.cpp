@@ -470,8 +470,8 @@ bool ParamXMLTree::Get( const ParamXMLPath& path, String* value, NodeStatus* sta
             ChildMap::iterator next = node->children.find( pathNode->str );
             if( next != node->children.end() ){
                 if( (size_t)pathNode->arrayIndex >= next->second.size()  ){
-                if(status)
-                    *status = node->status;
+                    if(status)
+                        *status = node->status;
                     return false;
                 }
                 node = next->second[pathNode->arrayIndex];

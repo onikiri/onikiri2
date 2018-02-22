@@ -55,6 +55,7 @@ benchmark/SPECCPU2000_FP/*/bin/*
 
 project/msvc/Lib/*
 project/msvc/ipch
+project/msvc/.vs
 
 project/msvc/Debug
 project/msvc/FastDebug

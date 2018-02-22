@@ -45,13 +45,7 @@
 #include <process.h>
 #include <direct.h>
 
-#elif defined(HOST_IS_CYGWIN)
-
-#include <io.h>
-#include <process.h>
-#include <dirent.h>
-
-#elif defined(HOST_IS_LINUX)
+#elif defined(HOST_IS_LINUX) || defined(HOST_IS_CYGWIN)
 
 #include <unistd.h>
 #include <fcntl.h>

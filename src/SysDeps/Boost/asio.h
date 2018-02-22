@@ -44,9 +44,11 @@
 #   pragma warning(pop)
 
 #elif defined HOST_IS_CYGWIN
-    // push & pop is available since gcc 4.6 but
-    // currently Cygwin gcc is 4.5.3
-    // #pragma GCC diagnostic push
+
+    // Some additional definitions are defined in host_type.h!!
+
+    // push & pop is available since gcc 4.6
+#   pragma GCC diagnostic push
 
     // Missing braces in boost/asio/ip/impl/address_v6.ipp and
     // boost/asio/ip/detail/impl/endpoint.ipp.
@@ -62,7 +64,7 @@
 #   pragma GCC diagnostic error "-Wmissing-braces"
 #   pragma GCC diagnostic error "-Wstrict-aliasing"
 
-    // #pragma GCC diagnostic pop
+#   pragma GCC diagnostic pop
 #else
 #   include <boost/asio.hpp>
 #endif

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -22,29 +22,30 @@
     <ProjectGuid>{F1F9397A-EBD4-406C-B588-6CA9B9146554}</ProjectGuid>
     <RootNamespace>onikiri2</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -79,7 +80,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_53_0;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_65_1;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;NOMINMAX;ONIKIRI_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -122,7 +123,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_53_0;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_65_1;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_ITERATOR_DEBUG_LEVEL=0;NOMINMAX;ONIKIRI_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -167,7 +168,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_53_0;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_65_1;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;NOMINMAX;ONIKIRI_DEBUG;SHTTL_DISABLE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -215,7 +216,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_53_0;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\src\pch;$(ProjectDir)\..\..\..\src\;$(ProjectDir)\..\..\..\lib\boost\boost_1_65_1;$(ProjectDir)\..\..\..\lib\zlib;$(ProjectDir)\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;NOMINMAX;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;SHTTL_DISABLE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -513,7 +514,7 @@
     <ClInclude Include="..\..\..\lib\tinyxml\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\codecvt_error_category.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\codecvt_error_category.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -523,7 +524,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\operations.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\operations.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -533,7 +534,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\path.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\path.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -543,7 +544,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\path_traits.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\path_traits.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -553,7 +554,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\portability.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\portability.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -563,7 +564,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\unique_path.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\unique_path.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -573,7 +574,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\utf8_codecvt_facet.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\utf8_codecvt_facet.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -583,7 +584,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\filesystem\src\windows_file_codecvt.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\filesystem\src\windows_file_codecvt.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -830,7 +831,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\iostreams\src\mapped_file.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\iostreams\src\mapped_file.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -840,7 +841,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\iostreams\src\zlib.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\iostreams\src\zlib.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -850,7 +851,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\boost\boost_1_53_0\libs\system\src\error_code.cpp">
+    <ClCompile Include="..\..\..\lib\boost\boost_1_65_1\libs\system\src\error_code.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">Use</PrecompiledHeader>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
