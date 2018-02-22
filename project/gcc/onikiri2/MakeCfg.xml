@@ -10,7 +10,7 @@
       Name="linux" 
       HostString="Linux"
       CXX="g++" 
-      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG -Wno-deprecated-declarations"
+      CXXFlags="-Wall -Werror -O2 -g -std=c++11 -DONIKIRI_DEBUG -Wno-deprecated-declarations -Wno-unused-const-variable -Wno-unused-private-field"
       LDFlags="-static -lpthread" 
       CleanTargets="*.o *.d *.gch"
       WorkingDirectory="WorkLinux" 
@@ -47,7 +47,7 @@
     
     <!-- 
       We use '-std=gnu++11' instead of '-std=std++11' because some elements such as
-      'fileno' are not defined in std++11 mode.
+      'fileno' are not defined in the c++11 mode in cygwin.
     -->
     <Platform 
       Name="cygwin"
