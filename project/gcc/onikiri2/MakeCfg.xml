@@ -45,11 +45,15 @@
 
     </Platform>
     
+    <!-- 
+      We use '-std=gnu++11' instead of '-std=std++11' because some elements such as
+      'fileno' are not defined in std++11 mode.
+    -->
     <Platform 
       Name="cygwin"
       HostString="CYGWIN" 
       CXX="g++" 
-      CXXFlags="-Wall -Werror -O2 -g -DONIKIRI_DEBUG -D__USE_W32_SOCKETS -Wno-unknown-pragmas -Wno-unused-local-typedefs"
+      CXXFlags="-Wall -Werror -O2 -g -std=gnu++11 -Wno-unused-variable -DONIKIRI_DEBUG -D__USE_W32_SOCKETS"
       LDFlags="-static"
       CleanTargets="*.o *.d *.gch"
       WorkingDirectory="WorkCygwin"
