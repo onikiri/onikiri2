@@ -42,6 +42,8 @@ namespace Operation {
 
 // その他関数
 
+// calculate absolute value of signed x without causing overflow
+u64 SafeAbs(s64 x);
 // high-order 64 bits of the 128-bit product of unsigned lhs and rhs
 u64 UnsignedMulHigh64(u64 lhs, u64 rhs);
 // high-order 64 bits of the 128-bit product of signed lhs and rhs
