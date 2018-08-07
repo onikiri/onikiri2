@@ -32,49 +32,28 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <cstdint>
 
 //
 // basic data types
 //
-#ifdef _MSC_VER
 
-    namespace Onikiri
-    {
-        typedef signed   __int64 s64;
-        typedef unsigned __int64 u64;
-        typedef signed   __int32 s32;
-        typedef unsigned __int32 u32;
-        typedef signed   __int16 s16;
-        typedef unsigned __int16 u16;
-        typedef signed   __int8  s8;
-        typedef unsigned __int8  u8;
+namespace Onikiri
+{
+    // int*_t is ALWAYS two's complement.
 
-        typedef float  f32;
-        typedef double f64;
-    };
-    
-#else
- 
-    #include <inttypes.h>
-    namespace Onikiri
-    {
-        typedef int64_t  s64;
-        typedef uint64_t u64;
-        typedef int32_t  s32;
-        typedef uint32_t u32;
-        typedef int16_t  s16;
-        typedef uint16_t u16;
-        typedef int8_t   s8;
-        typedef uint8_t  u8;
+    using s64 = std::int64_t;
+    using u64 = std::uint64_t;
+    using s32 = std::int32_t;
+    using u32 = std::uint32_t;
+    using s16 = std::int16_t;
+    using u16 = std::uint16_t;
+    using s8  = std::int8_t;
+    using u8  = std::uint8_t;
 
-        typedef float  f32;
-        typedef double f64;
-    };
-
-#endif
-
-
-
+    using f32 = float;
+    using f64 = double;
+}
 
 #endif  // #ifndef TYPES_H
 

@@ -32,6 +32,8 @@
 #ifndef EMU_UTILITY_EMULATORUTILITY_GENERIC_OPERATION_H
 #define EMU_UTILITY_EMULATORUTILITY_GENERIC_OPERATION_H
 
+#include <cstring>
+
 #include "SysDeps/fenv.h"
 #include "Emu/Utility/Math.h"
 #include "Emu/Utility/OpEmulationState.h"
@@ -42,6 +44,8 @@ namespace Operation {
 
 // その他関数
 
+// calculate absolute value of signed x without causing overflow
+u64 SafeAbs(s64 x);
 // high-order 64 bits of the 128-bit product of unsigned lhs and rhs
 u64 UnsignedMulHigh64(u64 lhs, u64 rhs);
 // high-order 64 bits of the 128-bit product of signed lhs and rhs
@@ -102,13 +106,14 @@ inline FPType AsFPFunc(IntType value)
 {
     BOOST_STATIC_ASSERT(sizeof(IntType) == sizeof(FPType));
 
-    union {
-        IntType i;
-        FPType  f;
-    } intfp;
-
-    intfp.i = value;
-    return intfp.f;
+    // ビット列の再解釈にはunionを用いる方法が有名だが、
+    // unionを用いたビット列再解釈はC言語では正しいがC++では誤り
+    // （strict aliasing rules に違反している未定義動作）
+    // 2010年代以降のコンパイラでは単なるレジスタ転送命令に
+    // 最適化されるため、C言語でunionを用いたコードと同程度の性能となる
+    FPType f;
+    std::memcpy(&f, &value, sizeof(f));
+    return f;
 }
 
 // 浮動小数点型のvalueを，同じビット表現を持つ整数型に変換する
@@ -116,13 +121,10 @@ template <typename IntType, typename FPType>
 inline IntType AsIntFunc(FPType value)
 {
     BOOST_STATIC_ASSERT(sizeof(IntType) == sizeof(FPType));
-    union {
-        IntType i;
-        FPType  f;
-    } intfp;
-
-    intfp.f = value;
-    return intfp.i;
+    // unionを用いるのは誤り。AsFPFuncのコメントを参照。
+    IntType i;
+    std::memcpy(&i, &value, sizeof(i));
+    return i;
 }
 
 // 整数のビット列を浮動小数点数として再解釈 ( reinterpret as fp )
