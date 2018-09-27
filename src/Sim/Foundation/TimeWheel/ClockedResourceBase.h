@@ -211,13 +211,13 @@ namespace Onikiri
         }
 
         // Cancel a stall period set by StallNextCycle.
-        virtual void CacnelStallPeriod()
+        virtual void CancelStallPeriod()
         {
             m_stallPeriod = 0;
 
             Children::iterator end = m_children.end();
             for( Children::iterator i = m_children.begin(); i != end; ++i ){
-                (*i)->CacnelStallPeriod();
+                (*i)->CancelStallPeriod();
             }
         }
 
