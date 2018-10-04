@@ -34,6 +34,8 @@
 #include "Sim/Pipeline/Scheduler/IssueSelector/InorderIssueSelector.h"
 #include "Sim/Op/Op.h"
 
+#include <algorithm>
+
 using namespace Onikiri;
 
 InorderIssueSelector::InorderIssueSelector()
@@ -61,52 +63,44 @@ void InorderIssueSelector::EvaluateSelect( Scheduler* scheduler )
     int issueCount = 0;
     int issueWidth = scheduler->GetIssueWidth();
 
-    const OpList& readyOps = scheduler->GetReadyOps();
     const OpList& notReadyOps = scheduler->GetNotReadyOps();
+    u64 minNotReadyID = UINT64_MAX;
+    for( auto op : notReadyOps ) {
+        minNotReadyID = std::min( minNotReadyID, op->GetGlobalSerialID() );
+    }
+
+    const OpList& readyOps = scheduler->GetReadyOps();
     const SchedulingOps& wokeUpOps = scheduler->GetWokeUpOps();
 
-    OpList::const_iterator          r = readyOps.begin();
-    SchedulingOps::const_iterator   w = wokeUpOps.begin();
+    pool_vector< OpIterator > readyAndWokeUpOps;
+    for( auto op : readyOps ) {
+        readyAndWokeUpOps.push_back( op );
+    }
+    for( auto op : wokeUpOps ) {
+        readyAndWokeUpOps.push_back( op );
+    }
 
-    while( issueCount < issueWidth ){
-        OpIterator selected;
+    std::sort( readyAndWokeUpOps.begin(), readyAndWokeUpOps.end(),
+        []( OpIterator lhs, OpIterator rhs ) { return lhs->GetGlobalSerialID() < rhs->GetGlobalSerialID(); }
+    );
 
-        // Selects the oldest ops from ready ops on issue.
-        if( r != readyOps.end() && w != wokeUpOps.end() ){
-            // There are both of ready ops and woke-up ops.
-            if( (*r)->GetGlobalSerialID() < (*w)->GetGlobalSerialID() ){
-                selected = *r;  ++r;
-            }
-            else{
-                selected = *w;  ++w;
-            }
-        }
-        else if( r != readyOps.end() ){
-            // There are only ready ops.
-            selected = *r;  ++r;
-        }
-        else if( w != wokeUpOps.end() ){
-            // There are only woke-up ops.
-            selected = *w;  ++w;
-        }
-        else{
-            // No op can be selected.
-            break;
-        }
-
+    for( auto op : readyAndWokeUpOps ) {
         // If there are any older ops, the op is not selected.
         if( notReadyOps.size() > 0 &&
-            notReadyOps.begin()->GetOp()->GetGlobalSerialID() < selected->GetGlobalSerialID() 
+            minNotReadyID < op->GetGlobalSerialID()
         ){
             break;
         }
 
-        if( scheduler->CanSelect( selected ) ) {
-            scheduler->ReserveSelect( selected );
+        if( scheduler->CanSelect( op ) ) {
+            scheduler->ReserveSelect( op );
             ++issueCount;
+            if( issueCount >= issueWidth ) {
+                break;
+            }
         }
         else{
-            g_dumper.Dump( DS_WAITING_UNIT, selected );
+            g_dumper.Dump( DS_WAITING_UNIT, op );
         }
     }
 }
