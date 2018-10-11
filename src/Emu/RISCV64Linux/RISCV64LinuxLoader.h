@@ -29,45 +29,26 @@
 // 
 
 
-#include <pch.h>
-#include "Emu/EmulatorFactory.h"
-#include "Emu/AlphaLinux/AlphaLinuxEmulator.h"
-#include "Emu/PPC64Linux/PPC64LinuxEmulator.h"
-#include "Emu/RISCV32Linux/RISCV32LinuxEmulator.h"
-#include "Emu/RISCV64Linux/RISCV64LinuxEmulator.h"
+#ifndef EMU_RISCV64LINUX_RISCV64_LOADER_H
+#define EMU_RISCV64LINUX_RISCV64_LOADER_H
 
-using namespace Onikiri;
-
-EmulatorFactory::EmulatorFactory()
-{
-}
-
-EmulatorFactory::~EmulatorFactory()
-{
-}
+#include "Emu/Utility/System/Loader/Linux64Loader.h"
 
 
-EmulatorIF* EmulatorFactory::Create(const String& systemName, SystemIF* simSystem)
-{
-    if (systemName == "AlphaLinux") {
-        return new AlphaLinux::AlphaLinuxEmulator( simSystem );
-    }
-    else if (systemName == "PPC64Linux") {
-        return new PPC64Linux::PPC64LinuxEmulator(simSystem);
-    }
-    else if (systemName == "RISCV32Linux") {
-        return new RISCV32Linux::RISCV32LinuxEmulator(simSystem);
-    }
-	else if (systemName == "RISCV64Linux") {
-		return new RISCV64Linux::RISCV64LinuxEmulator(simSystem);
-	}
+namespace Onikiri {
+    namespace RISCV64Linux {
+        // RISCV64Linux ELF 用のローダー
+        class RISCV64LinuxLoader : public EmulatorUtility::Linux64Loader
+        {
+        public:
+            RISCV64LinuxLoader();
+            virtual ~RISCV64LinuxLoader();
 
-    THROW_RUNTIME_ERROR(
-        "Unknown system name specified.\n"
-        "This parameter must be one of the following strings : \n"
-        "[AlphaLinux,PPC64Linux]"
-    );
+            // LoaderIF の実装
+            virtual u64 GetInitialRegValue(int index) const;
+        };
 
-    return 0;
-}
+    } // namespace RISCV64Linux
+} // namespace Onikiri
 
+#endif

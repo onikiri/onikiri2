@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
+// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,45 +29,29 @@
 // 
 
 
-#include <pch.h>
-#include "Emu/EmulatorFactory.h"
-#include "Emu/AlphaLinux/AlphaLinuxEmulator.h"
-#include "Emu/PPC64Linux/PPC64LinuxEmulator.h"
-#include "Emu/RISCV32Linux/RISCV32LinuxEmulator.h"
-#include "Emu/RISCV64Linux/RISCV64LinuxEmulator.h"
+#ifndef EMU_RISCV64LINUX_RISCV64_TRAITS_H
+#define EMU_RISCV64LINUX_RISCV64_TRAITS_H
 
-using namespace Onikiri;
+#include "Emu/RISCV64Linux/RISCV64LinuxSyscallConv.h"
+#include "Emu/RISCV64Linux/RISCV64LinuxLoader.h"
+#include "Emu/RISCV64Linux/RISCV64Info.h"
+#include "Emu/RISCV64Linux/RISCV64Converter.h"
+#include "Emu/RISCV64Linux/RISCV64OpInfo.h"
 
-EmulatorFactory::EmulatorFactory()
-{
-}
+namespace Onikiri {
+    namespace RISCV64Linux {
 
-EmulatorFactory::~EmulatorFactory()
-{
-}
+        struct RISCV64LinuxTraits {
+            typedef RISCV64Info ISAInfoType;
+            typedef RISCV64OpInfo OpInfoType;
+            typedef RISCV64Converter ConverterType;
+            typedef RISCV64LinuxLoader LoaderType;
+            typedef RISCV64LinuxSyscallConv SyscallConvType;
 
+            static const bool IsBigEndian = false;
+        };
 
-EmulatorIF* EmulatorFactory::Create(const String& systemName, SystemIF* simSystem)
-{
-    if (systemName == "AlphaLinux") {
-        return new AlphaLinux::AlphaLinuxEmulator( simSystem );
-    }
-    else if (systemName == "PPC64Linux") {
-        return new PPC64Linux::PPC64LinuxEmulator(simSystem);
-    }
-    else if (systemName == "RISCV32Linux") {
-        return new RISCV32Linux::RISCV32LinuxEmulator(simSystem);
-    }
-	else if (systemName == "RISCV64Linux") {
-		return new RISCV64Linux::RISCV64LinuxEmulator(simSystem);
-	}
+    } // namespace RISCV64Linux
+} // namespace Onikiri
 
-    THROW_RUNTIME_ERROR(
-        "Unknown system name specified.\n"
-        "This parameter must be one of the following strings : \n"
-        "[AlphaLinux,PPC64Linux]"
-    );
-
-    return 0;
-}
-
+#endif

@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
+// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -30,44 +30,36 @@
 
 
 #include <pch.h>
-#include "Emu/EmulatorFactory.h"
-#include "Emu/AlphaLinux/AlphaLinuxEmulator.h"
-#include "Emu/PPC64Linux/PPC64LinuxEmulator.h"
-#include "Emu/RISCV32Linux/RISCV32LinuxEmulator.h"
-#include "Emu/RISCV64Linux/RISCV64LinuxEmulator.h"
+#include "Emu/RISCV64Linux/RISCV64LinuxLoader.h"
+#include "Emu/Utility/System/Memory/MemorySystem.h"
+#include "Emu/Utility/System/Memory/MemoryUtility.h"
+#include "Emu/Utility/System/Loader/Elf64Reader.h"
 
+using namespace std;
+using namespace boost;
 using namespace Onikiri;
+using namespace Onikiri::EmulatorUtility;
+using namespace Onikiri::RISCV64Linux;
 
-EmulatorFactory::EmulatorFactory()
+namespace {
+    const u16 MACHINE_RISCV = 243;
+}
+
+RISCV64LinuxLoader::RISCV64LinuxLoader()
+    : Linux64Loader(MACHINE_RISCV)      // machine = RISCV
 {
 }
 
-EmulatorFactory::~EmulatorFactory()
+RISCV64LinuxLoader::~RISCV64LinuxLoader()
 {
 }
 
-
-EmulatorIF* EmulatorFactory::Create(const String& systemName, SystemIF* simSystem)
+u64 RISCV64LinuxLoader::GetInitialRegValue(int index) const
 {
-    if (systemName == "AlphaLinux") {
-        return new AlphaLinux::AlphaLinuxEmulator( simSystem );
-    }
-    else if (systemName == "PPC64Linux") {
-        return new PPC64Linux::PPC64LinuxEmulator(simSystem);
-    }
-    else if (systemName == "RISCV32Linux") {
-        return new RISCV32Linux::RISCV32LinuxEmulator(simSystem);
-    }
-	else if (systemName == "RISCV64Linux") {
-		return new RISCV64Linux::RISCV64LinuxEmulator(simSystem);
-	}
+    const int STACK_POINTER_REGNUM = 2;
 
-    THROW_RUNTIME_ERROR(
-        "Unknown system name specified.\n"
-        "This parameter must be one of the following strings : \n"
-        "[AlphaLinux,PPC64Linux]"
-    );
-
-    return 0;
+    if (index == STACK_POINTER_REGNUM)
+        return GetInitialSp();
+    else
+        return 0;
 }
-
