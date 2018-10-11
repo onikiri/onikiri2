@@ -29,45 +29,38 @@
 // 
 
 
-#include <pch.h>
-#include "Emu/EmulatorFactory.h"
-#include "Emu/AlphaLinux/AlphaLinuxEmulator.h"
-#include "Emu/PPC64Linux/PPC64LinuxEmulator.h"
-#include "Emu/RISCV32Linux/RISCV32LinuxEmulator.h"
-#include "Emu/RISCV64Linux/RISCV64LinuxEmulator.h"
+#ifndef EMU_RISCV64LINUX_RISCV64_DECODER_H
+#define EMU_RISCV64LINUX_RISCV64_DECODER_H
 
-using namespace Onikiri;
+#include "Emu/RISCV64Linux/RISCV64Info.h"
 
-EmulatorFactory::EmulatorFactory()
-{
-}
+namespace Onikiri {
+    namespace RISCV64Linux {
 
-EmulatorFactory::~EmulatorFactory()
-{
-}
+        class RISCV64Decoder
+        {
+        public:
+            struct DecodedInsn
+            {
+                // 即値
+                boost::array<u64, 2> Imm;
+                // オペランド・レジスタ(dest, src1..3)
+                boost::array<int, 4> Reg;
 
+                u32 CodeWord;
 
-EmulatorIF* EmulatorFactory::Create(const String& systemName, SystemIF* simSystem)
-{
-    if (systemName == "AlphaLinux") {
-        return new AlphaLinux::AlphaLinuxEmulator( simSystem );
-    }
-    else if (systemName == "PPC64Linux") {
-        return new PPC64Linux::PPC64LinuxEmulator(simSystem);
-    }
-    else if (systemName == "RISCV32Linux") {
-        return new RISCV32Linux::RISCV32LinuxEmulator(simSystem);
-    }
-	else if (systemName == "RISCV64Linux") {
-		return new RISCV64Linux::RISCV64LinuxEmulator(simSystem);
-	}
+                DecodedInsn();
+                void clear();
+            };
+        public:
+            RISCV64Decoder();
+            // 命令codeWordをデコードし，outに格納する
+            void Decode(u32 codeWord, DecodedInsn* out);
+        private:
 
-    THROW_RUNTIME_ERROR(
-        "Unknown system name specified.\n"
-        "This parameter must be one of the following strings : \n"
-        "[AlphaLinux,PPC64Linux]"
-    );
+        };
 
-    return 0;
-}
+    } // namespace RISCV64Linux
+} // namespace Onikiri
 
+#endif

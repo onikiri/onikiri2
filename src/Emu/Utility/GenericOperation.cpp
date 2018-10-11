@@ -85,3 +85,15 @@ s64 Onikiri::EmulatorUtility::Operation::SignedMulHigh64(s64 lhs, s64 rhs)
     return result*resultSign;
 }
 
+s64 Onikiri::EmulatorUtility::Operation::SignedUnsignedMulHigh64(s64 lhs, u64 rhs)
+{
+	s64 resultSign = 1;
+	if (lhs < 0) {
+		lhs = -lhs;
+		resultSign *= -1;
+	}
+	s64 result = (s64)UnsignedMulHigh64((u64)lhs, (u64)rhs);
+	return result * resultSign;
+}
+
+
