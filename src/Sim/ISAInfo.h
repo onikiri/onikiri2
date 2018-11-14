@@ -63,7 +63,7 @@ namespace Onikiri
             static const int MAX_SRC_REG_COUNT = 4;
             static const int MAX_DST_REG_COUNT = 3;
 
-            static const int MAX_REG_COUNT = 80;
+            static const int MAX_REG_COUNT = 10000;
             static const int MAX_REG_SEGMENT_COUNT = 6;
             static const int MAX_OP_INFO_COUNT_PER_PC = 4;
 

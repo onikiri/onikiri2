@@ -43,7 +43,7 @@ namespace Onikiri {
             T result = (value >> begin) & ~(~(T)0 << len);
             // sign extend
             if (sext && (result & ((T)1 << (len-1))))
-                result |= ~0 << len;
+                result |= ~(T)0 << len;
             return result;
         }
 

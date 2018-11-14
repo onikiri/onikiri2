@@ -48,8 +48,8 @@ int RISCV64Info::GetRegisterSegmentID(int regNum)
          0,     // Int
         32,     // FP
         64,     // Address
-        65,     // FPCR
-        66      // 最大+1
+		4161,     // CSR
+        4162      // 最大+1
     };
     const int nElems = sizeof(segmentRange)/sizeof(segmentRange[0]);
 

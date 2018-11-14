@@ -671,7 +671,7 @@ struct IntSMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState
     s64 operator()(OpEmulationState* opState) const
     {
         s64 lhs = static_cast<s64>(TSrc1()(opState));
-        s64 rhs = static_cast<s64>(TSrc2()(opState));
+        s64 rhs = TSrc2()(opState);
 
         return SignedMulHigh64(lhs, rhs);
     }
