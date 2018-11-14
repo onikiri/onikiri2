@@ -49,10 +49,11 @@ namespace Onikiri {
             // FP  : 32
             // ADDR : 1
             // FPCR : 1 (FP control register)
-            static const int RegisterCount = 32+32+1+1;
+            static const int RegisterCount = 32+32+1+1+4096;
 
             static const int REG_ADDRESS = 64;
             static const int REG_FPCR    = 65;
+			//static const int REG_CSR     = 66;
 
             static const int MAX_MEMORY_ACCESS_WIDTH = 8;
 

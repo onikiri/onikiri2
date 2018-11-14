@@ -139,7 +139,7 @@ namespace Onikiri {
 
 
 			template <typename Type, typename TSrc1, typename TSrc2>
-			struct RISCV64MIN : public std::unary_function<EmulatorUtility::OpEmulationState*, Type> //RoundModeが必要なのかわかりません
+			struct RISCV64MIN : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
 			{
 				Type operator()(OpEmulationState* opState)
 				{
@@ -157,7 +157,7 @@ namespace Onikiri {
 
 
 			template <typename Type, typename TSrc1, typename TSrc2>
-			struct RISCV64MAX : public std::unary_function<EmulatorUtility::OpEmulationState*, Type> //RoundModeが必要なのかわかりません
+			struct RISCV64MAX : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
 			{
 				Type operator()(OpEmulationState* opState)
 				{
@@ -184,7 +184,7 @@ namespace Onikiri {
 					Type ths = TSrc3()(opState); //変数名適当です
 
 					Onikiri::ScopedFESetRound sr(RoundMode()(opState));
-					volatile Type rvalue = lhs * rhs + ths;
+					volatile Type rvalue = std::fma(lhs, rhs, ths);
 					return rvalue;
 				}
 			};
@@ -199,7 +199,7 @@ namespace Onikiri {
 					Type ths = TSrc3()(opState); //変数名適当です
 
 					Onikiri::ScopedFESetRound sr(RoundMode()(opState));
-					volatile Type rvalue = lhs * rhs - ths;
+					volatile Type rvalue = std::fma(lhs, rhs, -ths);
 					return rvalue;
 				}
 			};
@@ -214,7 +214,7 @@ namespace Onikiri {
 					Type ths = TSrc3()(opState); //変数名適当です
 
 					Onikiri::ScopedFESetRound sr(RoundMode()(opState));
-					volatile Type rvalue = -lhs * rhs + ths;
+					volatile Type rvalue = std::fma(-lhs, rhs, ths);
 					return rvalue;
 				}
 			};
@@ -229,7 +229,7 @@ namespace Onikiri {
 					Type ths = TSrc3()(opState); //変数名適当です
 
 					Onikiri::ScopedFESetRound sr(RoundMode()(opState));
-					volatile Type rvalue = -lhs * rhs - ths;
+					volatile Type rvalue = std::fma(-lhs, rhs, -ths);
 					return rvalue;
 				}
 			};
@@ -246,7 +246,7 @@ namespace Onikiri {
 					typedef typename EmulatorUtility::signed_type<Type>::type SignedType;
 					typedef typename TSrc::result_type FPType;
 					// 2の補数を仮定
-					const SignedType maxValue = std::numeric_limits<SignedType>::max(); //ここ理解できてない（稲岡）あいうろ
+					const SignedType maxValue = std::numeric_limits<SignedType>::max(); //ここ理解できてない（稲岡）
 					const SignedType minValue = std::numeric_limits<SignedType>::min();
 					FPType value = static_cast<FPType>(TSrc()(opState));
 
@@ -368,6 +368,36 @@ namespace Onikiri {
 					Type rhs = static_cast<Type>(TSrc2()(opState));
 
 					return lhs <= rhs;
+				}
+			};
+
+			//ここを頑張る
+			template <typename Type, typename TSrc1>
+			struct RISCV64FCLASS : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+			{
+				u64 operator()(EmulatorUtility::OpEmulationState* opState)
+				{
+					Type value = static_cast<Type>(TSrc1()(opState));
+					switch(std::fpclassify(value)) {
+		        case FP_INFINITE:
+							if(signbit(value)) return (u64)0x0000000000000001;
+							else return (u64)0x0000000000000080;
+							break;
+		        case FP_NAN:       return (u64)0x0000000000000100;
+		        case FP_NORMAL:
+							if(signbit(value)) return (u64)0x0000000000000002;
+							else return (u64)0x0000000000000040;
+							break;
+		        case FP_SUBNORMAL:
+							if(signbit(value)) return (u64)0x0000000000000004;
+							else return (u64)0x0000000000000020;
+							break;
+		        case FP_ZERO:
+							if(signbit(value)) return (u64)0x0000000000000008;
+							else return (u64)0x0000000000000010;
+							break;
+		        default:           return 0x0000000000000000;
+    			}
 				}
 			};
 
@@ -578,9 +608,30 @@ namespace Onikiri {
 				//DstOperand<1>::SetOperand(opState, syscallConv->GetResult(EmulatorUtility::SyscallConvIF::ErrorFlagIndex) );
 			}
 
+			template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
+			inline void RISCV64CSRRW(OpEmulationState* opState)
+			{
+				TDest::SetOperand(opState, CSR_S()(opState));
+				CSR_D::SetOperand(opState, TSrc1()(opState));
+			}
+
+			template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
+			inline void RISCV64CSRRS(OpEmulationState* opState)
+			{
+				TDest::SetOperand(opState, CSR_S()(opState));
+				CSR_D::SetOperand(opState, TSrc1()(opState) | CSR_S()(opState));
+			}
+
+			template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
+			inline void RISCV64CSRRC(OpEmulationState* opState)
+			{
+				TDest::SetOperand(opState, CSR_S()(opState));
+				CSR_D::SetOperand(opState, ~(TSrc1()(opState)) & CSR_S()(opState));
+			}
+			
+
 		} // namespace Operation {
 	} // namespace RISCV64Linux {
 } // namespace Onikiri
 
 #endif // #ifndef EMU_ALPHA_LINUX_ALPHALINUX_ALPHAOPERATION_H
-
