@@ -15,7 +15,7 @@
 >
   <!-- Emulator parameters-->
   <Emulator
-    TargetArchitecture="AlphaLinux"
+    TargetArchitecture="RISCV64Linux"
     EnableResultCRC32Calculation="0"
   >
     <Converter
@@ -746,7 +746,7 @@
           <!-- RegisterFile -->
           <RegisterFile
             Name = "registerFile"
-            Capacity = "128,128,64,8"
+            Capacity = "128,128,4098,8"
           />
 
           <RegisterFreeList
