@@ -269,8 +269,7 @@ void MemorySystem::CheckValueOnPageBoundary( u64 addr, const char* signature  )
 {
     if( ( addr & (GetPageSize() - 1) ) != 0 ){
         RUNTIME_WARNING( 
-            "The address is not aligned to a page boundary in '%s'\n"
-            "Address : %08x%08x",
+            "The address is not aligned to a page boundary in Address : %08x%08x\n",
             (u32)(addr >> 32), (u32)addr,
             signature
         );
