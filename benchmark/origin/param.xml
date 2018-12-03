@@ -1,0 +1,72 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<Session>
+
+  <Emulator>
+    <Processes>
+			<!--
+				TargetBasePath　：ターゲット指定の際の起点となるディレクトリのパス（必須）
+				TargetWorkPath　：ターゲット実行時の作業ディレクトリ
+				Command　　　　 ：ターゲット・バイナリ（必須）
+				CommandArguments：ターゲット・バイナリへ渡すコマンドライン引数
+				STDIN/STDOUT　　：標準入力/標準出力 空の場合，ホストのそれに接続されます
+				
+				TargetWorkPath やCommand はTargetBasePath からの相対パスとして処理されます．
+				TargetBasePath は絶対パス，あるいはこのファイルからの相対パスで指定を行います．
+			-->
+      <Process
+				TargetBasePath='./'
+				TargetWorkPath=''
+				Command='result_multilib'
+				CommandArguments=''
+				STDIN=''
+				STDOUT=''
+			/>
+    </Processes>
+  </Emulator>
+
+  <Simulator>
+  	<!--
+  		@SkipInsns で指定した命令数のエミュレーションを行った後，
+  		@SimulationInsns で指定した命令数のサイクル・アキュレートな
+  		シミュレーションを行います．
+  		
+  		命令数の指定は m（メガ）,k（キロ）などのサフィックスをつけて
+  		指定することも可能です．
+  		
+  		以下の指定例では，1,000 命令のエミュレーションを行った後，
+  		1,000,000 命令のサイクルア・キュレートなシミュレーションを行います．
+		-->
+    <System SimulationInsns='100k' SkipInsns='1K' />
+  </Simulator>
+  
+	<!-- 環境設定 -->
+	<Environment>
+		<!--
+			ダンプの設定
+			EnableDump を1 にすることで，各種ダンプが有効になります．
+		-->
+		<Dumper>
+			<!-- 実行の詳細なダンプ -->
+			<TraceDumper
+				FileName='dump.txt'
+				EnableDump='0'
+			/>
+			<!-- ビジュアライザ 用のダンプ -->
+			<VisualizationDumper
+				FileName='vis.txt'
+				EnableDump='1'
+				EnableGzip='1'
+				GzipLevel ='2'
+				SkipInsns ='0'
+			/>
+		</Dumper>
+
+		<!--
+			出力XMLの指定
+			FileName を空にした場合，標準出力に表示が行われます．
+		-->
+		<OutputXML
+			FileName='result.xml'
+			Level='Detail'/>
+	</Environment>
+</Session>
