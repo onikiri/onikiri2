@@ -57,6 +57,7 @@ namespace Onikiri {
             // 命令codeWordをデコードし，outに格納する
             void Decode(u32 codeWord, DecodedInsn* out);
         private:
+            void DecodeCompressedInstruction(u32 codeWord, DecodedInsn* out);
 
         };
 

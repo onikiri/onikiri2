@@ -67,6 +67,14 @@ namespace Onikiri
                     m_emuState->GetPC() );
             }
 
+            PC GetNotTakenPC() const
+            {
+                return Addr(
+                    m_emuState->GetPID(),
+                    m_emuState->GetTID(),
+                    m_emuState->GetNotTakenPC() );
+            }
+
             const u64 GetSrc(const int index) const
             {
                 return m_emuState->GetSrc( index );
@@ -93,6 +101,15 @@ namespace Onikiri
                     m_emuState->GetPID(),
                     m_emuState->GetTID(),
                     m_emuState->GetTakenPC() );
+            }
+
+            PC GetNextPC() const
+            {
+                if( GetTaken() ) {
+                    return GetTakenPC();
+                } else {
+                    return GetNotTakenPC();
+                }
             }
 
             void SetTaken(const bool taken)

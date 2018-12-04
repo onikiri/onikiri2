@@ -114,11 +114,9 @@ namespace Onikiri {
             OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState)
                 : m_opState(opState), m_opInfo(opInfo), m_processState(processState)
             {
-                Addr addr = m_opState->GetTakenPC();
-                m_takenPC = addr.address;
                 m_taken = false;
-                m_pid = addr.pid;
-                m_tid = addr.tid;
+                m_pid = m_opState->GetPC().pid;
+                m_tid = m_opState->GetPC().tid;
 
                 m_PC = m_opState->GetPC().address;
 
@@ -128,10 +126,9 @@ namespace Onikiri {
             // エミュレーション高速化用
             // レジスタ値を regArray から取得する
             template<typename TOpInfo>
-            OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState, PC pc, u64 takenAddr, u64* regArray)
+            OpEmulationState(Onikiri::OpStateIF* opState, TOpInfo* opInfo, EmulatorUtility::ProcessState* processState, PC pc, u64* regArray)
                 : m_opState(opState), m_opInfo(opInfo), m_processState(processState)
             {
-                m_takenPC = pc.address+4;
                 m_taken = false;
                 m_pid = pc.pid;
                 m_tid = pc.tid;
@@ -198,6 +195,11 @@ namespace Onikiri {
                 return m_PC;
             }
 
+            Onikiri::u64 GetNotTakenPC() const
+            {
+                return m_PC + m_opInfo->GetInstructionSizeInByte();
+            }
+
             void SetTakenPC(Onikiri::u64 pc)
             {
                 m_takenPC = pc;
@@ -206,6 +208,11 @@ namespace Onikiri {
             Onikiri::u64 GetTakenPC() const
             {
                 return m_takenPC;
+            }
+
+            Onikiri::u64 GetNextPC() const
+            {
+                return GetTaken() ? GetTakenPC() : GetNotTakenPC();
             }
 
             int GetPID() const

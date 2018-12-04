@@ -167,6 +167,8 @@ namespace Onikiri
         SchedulerRemovePolicy   GetSchedulerRemovePolicy()  const   {   return m_schedulerRemovePolicy; }
         CheckpointingPolicy     GetCheckpointingPolicy()    const   {   return m_checkpointingPolicy; }
 
+        int GetInstructionWordByteShift() const { return m_instructionWordByteShift; }
+
         int GetTimeWheelSize() const { return m_timeWheelSize; };
 
         // リカバリ方法
@@ -235,6 +237,9 @@ namespace Onikiri
         LoadPipelineModel       m_loadPipeLineModel;
         SchedulerRemovePolicy   m_schedulerRemovePolicy;
         CheckpointingPolicy     m_checkpointingPolicy;
+
+        // Instruction word size is usually 4 Byte
+        int m_instructionWordByteShift = 2;
 };
 
 }; // namespace Onikiri

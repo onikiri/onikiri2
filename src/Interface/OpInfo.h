@@ -60,6 +60,9 @@ namespace Onikiri
         // The position of this micro op in its instruction.
         virtual int GetMicroOpIndex() const = 0;
 
+        // Instruction word size in byte
+        virtual int GetInstructionSizeInByte() const = 0;
+
         // Mnemonic for dump.
         virtual const char* GetMnemonic() const = 0;
     };

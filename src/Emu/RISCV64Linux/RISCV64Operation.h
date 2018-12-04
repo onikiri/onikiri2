@@ -92,7 +92,7 @@ namespace Onikiri {
 
 			inline u64 RISCV64NextPC(OpEmulationState* opState)
 			{
-				return (u64)opState->GetPC() + 4;
+				return (u64)opState->GetNotTakenPC();
 			}
 
 			inline u64 RISCV64CurPC(OpEmulationState* opState)

@@ -31,7 +31,7 @@
 
 #include <pch.h>
 #include "Sim/Predictor/BPred/BTB.h"
-#include "Sim/Foundation/SimPC.h"
+#include "Sim/Core/Core.h"
 #include "Sim/Op/Op.h"
 
 using namespace Onikiri;
@@ -39,6 +39,7 @@ using namespace std;
 
 BTB::BTB()
 {
+    m_core          = nullptr;
     m_numEntryBits  = 0;
     m_numWays       = 0;
 
@@ -65,8 +66,8 @@ void BTB::Initialize(InitPhase phase)
 {
     if(phase == INIT_PRE_CONNECTION){
         LoadParam();
-        m_table = 
-            new SetAssocTableType( HasherType(m_numEntryBits), m_numWays);
+    } else if( phase == INIT_POST_CONNECTION ) {
+        m_table = new SetAssocTableType( HasherType( m_core->GetInstructionWordByteShift(), m_numEntryBits ), m_numWays );
     }
 }
 

@@ -90,6 +90,13 @@ namespace {
 
 
 
+    static constexpr u32 MASK_COMPRESSED_EXACT    = 0x0000ffff;
+    static constexpr u32 MASK_COMPRESSED_FUNCT3   = 0x0000e003; // FFFxxxxxxxxxxxCC
+    static constexpr u32 MASK_COMPRESSED_FUNCT4   = 0x0000f003; // FFFFxxxxxxxxxxCC
+    static constexpr u32 MASK_COMPRESSED_FUNCT5   = 0x0000ec03; // FFFxFFxxxxxxxxCC
+    static constexpr u32 MASK_COMPRESSED_FUNCT8   = 0x0000fc63; // FFFFFFxxxFFxxxCC
+    static constexpr u32 MASK_COMPRESSED_FUNCT4Z  = 0x0000f07f; // FFFFxxxxx00000CC
+    static constexpr u32 MASK_COMPRESSED_FUNCT3SP = 0x0000ef83; // FFFx00010xxxxxCC (rd==2 is SP)
 }
 
 #define OPCODE_LUI()    0x37
@@ -135,6 +142,10 @@ namespace {
 #define OPCODE_FCLASS(f7) (u32)(((f7) << 25) | (0 << 20) | (1 << 12) | 0x53)
 
 
+constexpr u32 OPCODE_COMPRESSED_FUNCT8(u32 opcode, u32 funct3, u32 funct2, u32 funct1, u32 funct2ex) { return (funct3 << 13) | (funct1 << 12) | (funct2 << 10) | (funct2ex << 5) | opcode; }
+constexpr u32 OPCODE_COMPRESSED_FUNCT3(u32 opcode, u32 funct3)                                       { return OPCODE_COMPRESSED_FUNCT8(opcode, funct3, 0, 0, 0); }
+constexpr u32 OPCODE_COMPRESSED_FUNCT4(u32 opcode, u32 funct3, u32 funct1)                           { return OPCODE_COMPRESSED_FUNCT8(opcode, funct3, 0, funct1, 0); }
+constexpr u32 OPCODE_COMPRESSED_FUNCT5(u32 opcode, u32 funct3, u32 funct2)                           { return OPCODE_COMPRESSED_FUNCT8(opcode, funct3, funct2, 0, 0); }
 
 namespace {
     // オペランドのテンプレート
@@ -159,7 +170,9 @@ namespace {
 
     const int T0 = RISCV64Info::REG_ADDRESS;
     const int FPC = RISCV64Info::REG_FPCR;
-	 
+
+    static constexpr int SP = RISCV64Info::REG_SP;
+    static constexpr int RA = RISCV64Info::REG_RA;
 }
 
 #define RISCV64_DSTOP(n) RISCV64DstOperand<n>
@@ -182,11 +195,6 @@ namespace {
 #define SD2 RISCV64_SRCOPDOUBLE(2)
 #define SD3 RISCV64_SRCOPDOUBLE(3)
 
-// 00000000 PAL 00 = halt
-// 2ffe0000 ldq_u r31, r30(0) = unop
-// 471f041f mslql r31, r31, r31 = nop
-
-// no trap implemented
 
 // 投機的にフェッチされたときにはエラーにせず，実行されたときにエラーにする
 // syscallにすることにより，直前までの命令が完了してから実行される (実行は投機的でない)
@@ -200,8 +208,8 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 	//RV32I
     // LUI/AUIPC 変更
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    {"lui",     MASK_LUI,   OPCODE_LUI(),   1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   SetSext<D0, RISCV64Lui<S0> >} } },
-    {"auipc",   MASK_AUIPC, OPCODE_AUIPC(), 1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   SetSext<D0, RISCV64Auipc<S0> >} } },
+    {"lui",     MASK_LUI,   OPCODE_LUI(),   1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   Set<D0, RISCV64Lui<S0> >} } },
+    {"auipc",   MASK_AUIPC, OPCODE_AUIPC(), 1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   Set<D0, RISCV64Auipc<S0> >} } },
     
     // IMM 
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
@@ -214,20 +222,20 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     
     // SHIFT　変更
     //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    {"slli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 1),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } },
-    {"srli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 5),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } },
-    {"srai",    MASK_SHIFT, OPCODE_SHIFT(0x10, 5),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } },
+    {"slli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 1),  1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } },
+    {"srli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 5),  1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } },
+    {"srai",    MASK_SHIFT, OPCODE_SHIFT(0x10, 5),  1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } },
 
     // INT　SLL,SRL,SRA変更 
     //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"add",     MASK_INT,   OPCODE_INT(0x00, 0),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntAdd<u64, S0, S1> > } } },
     {"sub",     MASK_INT,   OPCODE_INT(0x20, 0),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntSub<u64, S0, S1> > } } },
-    {"sll",     MASK_INT,   OPCODE_INT(0x00, 1),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } },
+    {"sll",     MASK_INT,   OPCODE_INT(0x00, 1),    1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } },
     {"slt",     MASK_INT,   OPCODE_INT(0x00, 2),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV64Compare<S0, S1, IntCondLessSigned<u64> > > } } },
     {"sltu",    MASK_INT,   OPCODE_INT(0x00, 3),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV64Compare<S0, S1, IntCondLessUnsigned<u64> > > } } },
     {"xor",     MASK_INT,   OPCODE_INT(0x00, 4),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitXor<u64, S0, S1> > } } },
-    {"srl",     MASK_INT,   OPCODE_INT(0x00, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } },
-    {"sra",     MASK_INT,   OPCODE_INT(0x20, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } },
+    {"srl",     MASK_INT,   OPCODE_INT(0x00, 5),    1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } },
+    {"sra",     MASK_INT,   OPCODE_INT(0x20, 5),    1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } },
     {"or",      MASK_INT,   OPCODE_INT(0x00, 6),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitOr<u64, S0, S1> > } } },
     {"and",     MASK_INT,   OPCODE_INT(0x00, 7),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitAnd<u64, S0, S1> > } } },
 
@@ -331,17 +339,17 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 
 	//SHIFT
 	//{Name,    Mask,       Opcode,                  nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-	{ "slliw",  MASK_SHIFT, OPCODE_SHIFTW(0x00, 1),  1,{ { OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
-	{ "srliw",  MASK_SHIFT, OPCODE_SHIFTW(0x00, 5),  1,{ { OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
-	{ "sraiw",  MASK_SHIFT, OPCODE_SHIFTW(0x20, 5),  1,{ { OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
+	{ "slliw",  MASK_SHIFT, OPCODE_SHIFTW(0x00, 1),  1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
+	{ "srliw",  MASK_SHIFT, OPCODE_SHIFTW(0x00, 5),  1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
+	{ "sraiw",  MASK_SHIFT, OPCODE_SHIFTW(0x20, 5),  1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
 
 	// INT
 	//{Name,    Mask,       Opcode,                  nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
 	{ "addw",   MASK_INT,   OPCODE_INTW(0x00, 0),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, IntAdd<u32, S0, S1> > } } },
 	{ "subw",   MASK_INT,   OPCODE_INTW(0x20, 0),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, IntSub<u32, S0, S1> > } } },
-	{ "sllw",   MASK_INT,   OPCODE_INTW(0x00, 1),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
-	{ "srlw",   MASK_INT,   OPCODE_INTW(0x00, 5),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
-	{ "sraw",   MASK_INT,   OPCODE_INTW(0x20, 5),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
+	{ "sllw",   MASK_INT,   OPCODE_INTW(0x00, 1),    1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
+	{ "srlw",   MASK_INT,   OPCODE_INTW(0x00, 5),    1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
+	{ "sraw",   MASK_INT,   OPCODE_INTW(0x20, 5),    1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
 	
 	//LOAD/STORE
 	//{Name,    Mask,       Opcode,         nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
@@ -487,7 +495,7 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 	//LOAD/STORE
 	//{Name,    Mask,       Opcode,           nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
     { "fld",    MASK_LD,    OPCODE_FLD(3),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, Load<u64, RISCV64Addr<S0, S1> > > } } },
-	{ "sld",    MASK_ST,    OPCODE_FST(3),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u64, S0, RISCV64Addr<S1, S2> > } } },
+	{ "fsd",    MASK_ST,    OPCODE_FST(3),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u64, S0, RISCV64Addr<S1, S2> > } } },
 
 	//FLOAT
 	//rneとrmmの違いがよくわかってません
@@ -611,6 +619,56 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 	{ "fclass.d",   MASK_FCLASS,  OPCODE_FCLASS(0x71),      1,{ { OpClassCode::fADD,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64FCLASS< f64, SD0> > } } },
 
 
+    // RV64C -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // **special case** must be placed before 'usual case'
+
+    // C.ILLEGAL    0b0000'0000'0000'0000 **special case of C.ADDi4SPN**
+    { "C.ADDI4SPN", MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 0, 0 )           , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, I0, -1, -1 },   Set<D0, IntAdd<u64, S0, S1> > } } }, // imm==0 is reserved
+    { "C.FLD"     , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 0, 1 )           , 1, { { OpClassCode::fLD      , { R0, -1 }, { R1, I0, -1, -1 },   Set<D0, Load<u64, RISCV64Addr<S0, S1> > > } } },
+    { "C.LW"      , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 0, 2 )           , 1, { { OpClassCode::iLD      , { R0, -1 }, { R1, I0, -1, -1 },   SetSext<D0, Load<u32, RISCV64Addr<S0, S1> > > } } },
+    { "C.LD"      , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 0, 3 )           , 1, { { OpClassCode::iLD      , { R0, -1 }, { R1, I0, -1, -1 },   Set<D0, Load<u64, RISCV64Addr<S0, S1> > > } } },
+    // RESERVED     0b100x'xxxx'xxxx'xx00
+    { "C.FSD"     , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 0, 5 )           , 1, { { OpClassCode::fST      , { -1, -1 }, { R1, R0, I0, -1 },   Store<u64, S0, RISCV64Addr<S1, S2> > } } },
+    { "C.SW"      , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 0, 6 )           , 1, { { OpClassCode::iST      , { -1, -1 }, { R1, R0, I0, -1 },   Store<u32, S0, RISCV64Addr<S1, S2> > } } },
+    { "C.SD"      , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 0, 7 )           , 1, { { OpClassCode::iST      , { -1, -1 }, { R1, R0, I0, -1 },   Store<u64, S0, RISCV64Addr<S1, S2> > } } },
+
+    { "C.NOP"     , MASK_COMPRESSED_EXACT   , 0x0001                                     , 1, { { OpClassCode::iNOP     , { -1, -1 }, { -1, -1, -1, -1 },   NoOperation } } }, // **special case of C.ADDI**
+    { "C.ADDI"    , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 1, 0 )           , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, I0, -1, -1 },   Set<D0, IntAdd<u64, S0, S1> > } } }, // rd==0 is illegal, imm==0 is HINT, rd==0&&imm==0 is C.NOP
+    { "C.ADDIW"   , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 1, 1 )           , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, I0, -1, -1 },   SetSext<D0, IntAdd<u32, S0, S1> > } } }, // rd==0 is reserved
+    { "C.LI"      , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 1, 2 )           , 1, { { OpClassCode::iALU     , { R0, -1 }, { I0, -1, -1, -1 },   Set<D0, S0> } } }, // rd==0 is reserved
+    { "C.ADDI16SP", MASK_COMPRESSED_FUNCT3SP, OPCODE_COMPRESSED_FUNCT3( 1, 3 ) | (2 << 7), 1, { { OpClassCode::iALU     , { SP, -1 }, { SP, I0, -1, -1 },   Set<D0, IntAdd<u64, S0, S1> > } } }, // imm==0 is reserved
+    { "C.LUI"     , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 1, 3 )           , 1, { { OpClassCode::iALU     , { R0, -1 }, { I0, -1, -1, -1 },   Set<D0, RISCV64Lui<S0> > } } }, // rd==0 is HINT, imm==0 is reserved
+    { "C.SRLI"    , MASK_COMPRESSED_FUNCT5  , OPCODE_COMPRESSED_FUNCT5( 1, 4, 0 )        , 1, { { OpClassCode::iSFT     , { R0, -1 }, { R0, I0, -1, -1 },   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } }, // imm==0 is HINT
+    { "C.SRAI"    , MASK_COMPRESSED_FUNCT5  , OPCODE_COMPRESSED_FUNCT5( 1, 4, 1 )        , 1, { { OpClassCode::iSFT     , { R0, -1 }, { R0, I0, -1, -1 },   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } }, // imm==0 is HINT
+    { "C.ANDI"    , MASK_COMPRESSED_FUNCT5  , OPCODE_COMPRESSED_FUNCT5( 1, 4, 2 )        , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, I0, -1, -1 },   Set<D0, BitAnd<u64, S0, S1> > } } },
+    { "C.SUB"     , MASK_COMPRESSED_FUNCT8  , OPCODE_COMPRESSED_FUNCT8( 1, 4, 3, 0, 0 )  , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, R1, -1, -1 },   Set<D0, IntSub<u64, S0, S1> > } } },
+    { "C.XOR"     , MASK_COMPRESSED_FUNCT8  , OPCODE_COMPRESSED_FUNCT8( 1, 4, 3, 0, 1 )  , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, R1, -1, -1 },   Set<D0, BitXor<u64, S0, S1> > } } },
+    { "C.OR"      , MASK_COMPRESSED_FUNCT8  , OPCODE_COMPRESSED_FUNCT8( 1, 4, 3, 0, 2 )  , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, R1, -1, -1 },   Set<D0, BitOr <u64, S0, S1> > } } },
+    { "C.AND"     , MASK_COMPRESSED_FUNCT8  , OPCODE_COMPRESSED_FUNCT8( 1, 4, 3, 0, 3 )  , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, R1, -1, -1 },   Set<D0, BitAnd<u64, S0, S1> > } } },
+    { "C.SUBW"    , MASK_COMPRESSED_FUNCT8  , OPCODE_COMPRESSED_FUNCT8( 1, 4, 3, 1, 0 )  , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, R1, -1, -1 },   SetSext<D0, IntSub<u32, S0, S1> > } } },
+    { "C.ADDW"    , MASK_COMPRESSED_FUNCT8  , OPCODE_COMPRESSED_FUNCT8( 1, 4, 3, 1, 1 )  , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, R1, -1, -1 },   SetSext<D0, IntAdd<u32, S0, S1> > } } },
+    // RESERVED     0b1001'11xx'x10x'xx01
+    // RESERVED     0b1001'11xx'x11x'xx01
+    { "C.J"       , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 1, 5 )           , 1, { { OpClassCode::iJUMP    , { -1, -1 }, { I0, -1, -1, -1 },   RISCV64BranchRelUncond<S0> } } },
+    { "C.BEQZ"    , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 1, 6 )           , 1, { { OpClassCode::iBC      , { -1, -1 }, { R0,  0, I0, -1 },   RISCV64BranchRelCond<S2, Compare<S0, S1, IntCondEqual<u64> > > } } },
+    { "C.BNEZ"    , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 1, 7 )           , 1, { { OpClassCode::iBC      , { -1, -1 }, { R0,  0, I0, -1 },   RISCV64BranchRelCond<S2, Compare<S0, S1, IntCondNotEqual<u64> > > } } },
+
+    { "C.SLLI"    , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 2, 0 )           , 1, { { OpClassCode::iSFT     , { R0, -1 }, { R0, I0, -1, -1 },   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } }, // rd==0 is HINT, imm==0 is HINT
+    { "C.FLDSP"   , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 2, 1 )           , 1, { { OpClassCode::fLD      , { R0, -1 }, { SP, I0, -1, -1 },   Set<D0, Load<u64, RISCV64Addr<S0, S1> > > } } },
+    { "C.LWSP"    , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 2, 2 )           , 1, { { OpClassCode::iLD      , { R0, -1 }, { SP, I0, -1, -1 },   SetSext<D0, Load<u32, RISCV64Addr<S0, S1> > > } } }, // rd==0 is reserved
+    { "C.LDSP"    , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 2, 3 )           , 1, { { OpClassCode::iLD      , { R0, -1 }, { SP, I0, -1, -1 },   Set<D0, Load<u64, RISCV64Addr<S0, S1> > > } } }, // rd==0 is reserved
+    { "C.JR"      , MASK_COMPRESSED_EXACT   , OPCODE_COMPRESSED_FUNCT4( 2, 4, 0 )|(1<<7) , 1, { { OpClassCode::RET      , {  0, -1 }, { R0, -1, -1, -1 },   RISCV64CallAbsUncond<D0, S0, IntConst<u64, 0> > } } }, // **special case of C.MV**, rs==1 is link register (RAS pop)
+    { "C.JR"      , MASK_COMPRESSED_EXACT   , OPCODE_COMPRESSED_FUNCT4( 2, 4, 0 )|(5<<7) , 1, { { OpClassCode::RET      , {  0, -1 }, { R0, -1, -1, -1 },   RISCV64CallAbsUncond<D0, S0, IntConst<u64, 0> > } } }, // **special case of C.MV**, rs==5 is alt link register (RAS pop)
+    { "C.JR"      , MASK_COMPRESSED_FUNCT4Z , OPCODE_COMPRESSED_FUNCT4( 2, 4, 0 )        , 1, { { OpClassCode::CALL_JUMP, {  0, -1 }, { R0, -1, -1, -1 },   RISCV64CallAbsUncond<D0, S0, IntConst<u64, 0> > } } }, // **special case of C.MV**, rs==0 is reserved
+    { "C.MV"      , MASK_COMPRESSED_FUNCT4  , OPCODE_COMPRESSED_FUNCT4( 2, 4, 0 )        , 1, { { OpClassCode::iALU     , { R0, -1 }, { R1, -1, -1, -1 },   Set<D0, S0> } } }, // rd== 0 is hint
+    // C.EBREAK     0b1001'0000'0000'0010 **very special case of C.ADD**
+    { "C.JALR"    , MASK_COMPRESSED_EXACT   , OPCODE_COMPRESSED_FUNCT4( 2, 4, 1 )|(1<<7) , 1, { { OpClassCode::CALL_JUMP, { RA, -1 }, { R0, -1, -1, -1 },   RISCV64CallAbsUncond<D0, S0, IntConst<u64, 0> > } } }, // **special case of C.ADD** rs==1 is link register (RAS push)
+    { "C.JALR"    , MASK_COMPRESSED_EXACT   , OPCODE_COMPRESSED_FUNCT4( 2, 4, 1 )|(5<<7) , 1, { { OpClassCode::iJUMP    , { RA, -1 }, { R0, -1, -1, -1 },   RISCV64CallAbsUncond<D0, S0, IntConst<u64, 0> > } } }, // **special case of C.ADD** rs==5 is alt link register (RAS push&pop)
+    { "C.JALR"    , MASK_COMPRESSED_FUNCT4Z , OPCODE_COMPRESSED_FUNCT4( 2, 4, 1 )        , 1, { { OpClassCode::CALL_JUMP, { RA, -1 }, { R0, -1, -1, -1 },   RISCV64CallAbsUncond<D0, S0, IntConst<u64, 0> > } } }, // **special case of C.ADD**
+    { "C.ADD"     , MASK_COMPRESSED_FUNCT4  , OPCODE_COMPRESSED_FUNCT4( 2, 4, 1 )        , 1, { { OpClassCode::iALU     , { R0, -1 }, { R0, R1, -1, -1 },   Set<D0, IntAdd<u64, S0, S1> > } } }, // rd==0 is HINT
+    { "C.FSDSP"   , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 2, 5 )           , 1, { { OpClassCode::fST      , { -1, -1 }, { R0, SP, I0, -1 },   Store<u64, S0, RISCV64Addr<S1, S2> > } } },
+    { "C.SWSP"    , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 2, 6 )           , 1, { { OpClassCode::iST      , { -1, -1 }, { R0, SP, I0, -1 },   Store<u32, S0, RISCV64Addr<S1, S2> > } } },
+    { "C.SDSP"    , MASK_COMPRESSED_FUNCT3  , OPCODE_COMPRESSED_FUNCT3( 2, 7 )           , 1, { { OpClassCode::iST      , { -1, -1 }, { R0, SP, I0, -1 },   Store<u64, S0, RISCV64Addr<S1, S2> > } } },
 
 };
 

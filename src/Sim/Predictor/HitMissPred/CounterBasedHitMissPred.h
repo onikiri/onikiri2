@@ -45,6 +45,8 @@
 
 namespace Onikiri
 {
+    class Core;
+
     class CounterBasedHitMissPred : 
         public HitMissPredIF,
         public PhysicalResourceNode
@@ -57,6 +59,7 @@ namespace Onikiri
         END_PARAM_MAP()
 
         BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core, "core", m_core )
         END_RESOURCE_MAP()
 
         CounterBasedHitMissPred();
@@ -69,6 +72,7 @@ namespace Onikiri
         virtual void Commit( OpIterator op, bool hit );
 
     private:
+        Core* m_core;
         int m_counterBits;
         int m_entryBits;
         bool m_addrXORConvolute;

@@ -50,6 +50,8 @@ namespace Onikiri {
             static const int MaxOpInfoDefs = 3;
             static const int MaxDstOperands = PPC64OpInfo::MaxDstRegCount;
             static const int MaxSrcOperands = 6;    // SrcReg と SrcImm の合計
+
+            static int CalculateInstructionSize( const PPC64OpInfo& ) { return 4; }
         };
 
         // Alphaの命令を，OpInfo の列に変換する

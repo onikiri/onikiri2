@@ -82,6 +82,13 @@ PC EmulationOp::GetPC() const
     return m_pc;
 }
 
+PC EmulationOp::GetNotTakenPC() const
+{
+    PC pc(m_pc);
+    pc.address += m_opInfo->GetInstructionSizeInByte();
+    return pc;
+}
+
 const u64 EmulationOp::GetSrc( const int index ) const
 {
     return m_srcReg[index];
@@ -111,6 +118,15 @@ void EmulationOp::SetTakenPC( const PC takenPC )
 PC EmulationOp::GetTakenPC() const
 {
     return m_takenPC;
+}
+
+PC EmulationOp::GetNextPC() const
+{
+    if( GetTaken() ) {
+        return GetTakenPC();
+    } else {
+        return GetNotTakenPC();
+    }
 }
 
 void EmulationOp::SetTaken( const bool taken )

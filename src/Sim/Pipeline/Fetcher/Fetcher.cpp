@@ -378,8 +378,7 @@ void Fetcher::PredictNextPCBody(BranchPredictionHookParam* param)
         predPC.tid = fetchGroupPC.tid;
     }
     else {
-        SimPC pc(op->GetPC());
-        predPC = pc.Next();
+        predPC = op->GetNotTakenPC();
     }
 
     op->SetPredPC( predPC );
@@ -571,7 +570,7 @@ void Fetcher::Update()
         // <TODO> フェッチグループ内の分岐の位置を学習・予測する
         // takenな分岐でフェッチグループを終了させる
         if( !m_idealMode && 
-            fetchedOp[numOp - 1]->GetPredPC() != pc.Next() 
+            fetchedOp[numOp - 1]->GetPredPC() != fetchedOp[numOp - 1]->GetNotTakenPC()
         ){
             break;
         }
