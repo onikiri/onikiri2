@@ -302,6 +302,21 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 		syscall_mmap(opState);
 		break;
 
+	case syscall_id_geteuid:
+		syscall_geteuid(opState);
+		break;
+
+	case syscall_id_getuid:
+		syscall_getuid(opState);
+		break;
+
+	case syscall_id_getegid:
+		syscall_getegid(opState);
+		break;
+
+	case syscall_id_getgid:
+		syscall_getgid(opState);
+		break;
 /*
     case syscall_id_readv:
         syscall_readv(opState);
