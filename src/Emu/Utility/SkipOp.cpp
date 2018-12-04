@@ -52,6 +52,12 @@ PC SkipOp::GetPC() const
     return Addr();
 }
 
+PC SkipOp::GetNotTakenPC() const
+{
+	ASSERT( 0, "do not call" );
+	return Addr();
+}
+
 const u64 SkipOp::GetSrc(const int index) const
 {
     ASSERT(0, "do not call");
@@ -76,6 +82,12 @@ void SkipOp::SetTakenPC(const PC takenPC)
 }
 
 PC SkipOp::GetTakenPC() const
+{
+    ASSERT(0, "do not call");
+    return Addr();
+}
+
+PC SkipOp::GetNextPC() const
 {
     ASSERT(0, "do not call");
     return Addr();

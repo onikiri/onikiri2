@@ -74,7 +74,7 @@ namespace Onikiri
 
         void Initialize(InitPhase phase);
 
-        // call 命令のPCをpush
+        // call 命令後に返ってくるべきPCをpush
         void Push(const SimPC& pc);
         
         // return 命令なのでPCをPop

@@ -35,7 +35,7 @@
 
 #include <pch.h>
 #include "Sim/Predictor/HitMissPred/CounterBasedHitMissPred.h"
-#include "Sim/ISAInfo.h"
+#include "Sim/Core/Core.h"
 #include "Sim/Op/Op.h"
 
 using namespace Onikiri;
@@ -71,7 +71,7 @@ void CounterBasedHitMissPred::Initialize(InitPhase phase)
 
 u64 CounterBasedHitMissPred::ConvolutePCToArrayIndex(PC pc)
 {
-    int shift = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
+    int shift = m_core->GetInstructionWordByteShift();
     u64 p = pc.address >> shift;
     p ^= pc.tid;
     return shttl::xor_convolute(p, m_entryBits);
@@ -80,7 +80,7 @@ u64 CounterBasedHitMissPred::ConvolutePCToArrayIndex(PC pc)
 
 u64 CounterBasedHitMissPred::MaskPCToArrayIndex(PC pc)
 {
-    int shift = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
+    int shift = m_core->GetInstructionWordByteShift();
     u64 p = pc.address >> shift;
     p ^= pc.tid;
     return shttl::mask(0, m_entryBits) & p; 

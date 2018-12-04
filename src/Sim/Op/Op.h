@@ -88,20 +88,19 @@ namespace Onikiri
 
         // OpStateIF
         virtual PC GetPC() const { return m_pc; }
+        virtual PC GetNotTakenPC() const { PC pc(m_pc); pc.address += m_opInfo->GetInstructionSizeInByte(); return pc; }
         virtual const u64 GetSrc(const int index) const;
         virtual void SetDst(const int index, const u64 value);
         virtual const u64 GetDst(const int index) const;
         virtual void SetTakenPC(const PC takenPC);
         virtual PC GetTakenPC() const;
+        virtual PC GetNextPC() const;
         virtual void SetTaken(const bool taken);
         virtual bool GetTaken() const;
 
         // MemIF
         virtual void Read(  MemAccess* access );
         virtual void Write( MemAccess* access );
-
-        // Get a pc of a next of.
-        PC GetNextPC();
 
         // Returns whether this op is ready to select in an 'index'-th scheduler.
         // 'newDeps' is a set of dependencies that will be satisfied.

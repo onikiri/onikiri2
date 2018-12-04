@@ -49,6 +49,14 @@ namespace Onikiri {
             static const int MaxOpInfoDefs = 3;
             static const int MaxDstOperands = OpInfoType::MaxDstRegCount;
             static const int MaxSrcOperands = 4;    // SrcReg と SrcImm の合計
+
+            static int CalculateInstructionSize(const OpInfoType& opInfo) {
+                if( opInfo.GetMnemonic()[0] == 'C' && opInfo.GetMnemonic()[1] == '.' ) {
+                    return 2;
+                } else {
+                    return 4;
+                }
+            }
         };
 
         // RISCVの命令を，OpInfo の列に変換する

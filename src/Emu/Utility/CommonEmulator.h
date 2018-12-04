@@ -382,7 +382,7 @@ namespace Onikiri {
                     totalOpCount++;
                     OpInfoType* opInfo = static_cast<OpInfoType*>( opInfoArray[opIndex] );
                     
-                    OpEmulationState opState(&op, opInfo, process, pc, pc.address + ISAInfoType::InstructionWordBitSize/8, regArray);   // opからオペランド等を読んで OpEmulationState を構築
+                    OpEmulationState opState(&op, opInfo, process, pc, regArray);   // opからオペランド等を読んで OpEmulationState を構築
                     opInfo->GetEmulationFunc()(&opState);
                     opState.ApplyEmulationStateToRegArray<OpInfoType>(regArray);
 
@@ -393,10 +393,7 @@ namespace Onikiri {
                     virtualSystem->AddInsnTick();
     
                     if (opIndex == opCount-1) {
-                        if (opState.GetTaken())
-                            pc.address = opState.GetTakenPC();
-                        else
-                            pc.address += ISAInfoType::InstructionWordBitSize/8;
+                        pc.address = opState.GetNextPC();
                         break;
                     }
                 }

@@ -54,11 +54,13 @@ namespace Onikiri
 
         // OpStateIF
         virtual PC GetPC() const;
+        virtual PC GetNotTakenPC() const;
         virtual const u64 GetSrc( const int index ) const;
         virtual void SetDst( const int index, const u64 value );
         virtual const u64 GetDst( const int index ) const;
         virtual void SetTakenPC( const PC takenPC );
         virtual PC GetTakenPC() const;
+        virtual PC GetNextPC() const;
         virtual void SetTaken( const bool taken );
         virtual bool GetTaken() const;
 

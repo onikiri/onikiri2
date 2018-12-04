@@ -109,10 +109,7 @@ void EmulationDebugSystem::Run( SystemContext* context )
         }
 
         // 次のPC
-        if (op.GetTaken())
-            curThreadPC = op.GetTakenPC();
-        else
-            curThreadPC.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
+        curThreadPC = op.GetNextPC();
 
         insnCount ++;
         curPID = (curPID + 1) % processCount;   // Round robin

@@ -135,6 +135,7 @@
 #define SHTTL_ASSERT(x) { using namespace Onikiri; ASSERT(x); }
 #include "Lib/shttl/std_hasher.h"
 #include "Lib/shttl/static_off_hasher.h"
+#include "Lib/shttl/dynamic_off_hasher.h"
 #include "Lib/shttl/setassoc_table.h"
 #include "Lib/shttl/null_struct.h"
 #include "Lib/shttl/counter_array.h"

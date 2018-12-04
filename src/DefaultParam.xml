@@ -15,7 +15,7 @@
 >
   <!-- Emulator parameters-->
   <Emulator
-    TargetArchitecture="AlphaLinux"
+    TargetArchitecture="RISCV64Linux"
     EnableResultCRC32Calculation="0"
   >
     <Converter
@@ -130,7 +130,9 @@
               <EmulatorIF  Name = "emulator" />
             </MemOrderManager>
 
-            <CounterBasedHitMissPred Name="counterBasedHitMissPred" Count="CoreCount"/>
+            <CounterBasedHitMissPred Name="counterBasedHitMissPred" Count="CoreCount">
+              <Core Name = "core" />
+            </CounterBasedHitMissPred>
             <OptimisticHitMissPred   Name="optimisticHitMissPred"   Count="CoreCount"/>
             <PessimisticHitMissPred  Name="pessimisticHitMissPred"  Count="CoreCount"/>
 
@@ -286,6 +288,10 @@
                 <CheckpointMaster Name= "checkpointMaster" />
               </GlobalHistory>
             </GShare>
+
+            <BTB Name = "btb" Count="CoreCount">
+              <Core Name = "core" />
+            </BTB>
 
             <RoundRobinFetchThreadSteerer Name = "roundRobinFetchThreadSteerer" Count = "CoreCount">
               <Connection   Name = "thread" />
@@ -746,7 +752,7 @@
           <!-- RegisterFile -->
           <RegisterFile
             Name = "registerFile"
-            Capacity = "128,128,64,8"
+            Capacity = "128,128,4098,8"
           />
 
           <RegisterFreeList

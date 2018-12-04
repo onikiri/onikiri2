@@ -197,14 +197,12 @@ PC Op::GetTakenPC() const
     return m_takenPC;
 }
 
-PC Op::GetNextPC()
+PC Op::GetNextPC() const
 {
     if( m_taken ) {  
         return m_takenPC;
     }else {
-        SimPC nextPC(m_pc);
-        nextPC++;
-        return nextPC;
+        return GetNotTakenPC();
     }
 }
 
@@ -540,8 +538,8 @@ std::string Op::ToString(int detail, bool valDetail, const char* delim)
     if(detail == 2) return oss.str();
 
     // next pc まで
-    oss << "TPC: " << GetTakenPC().pid << "/"
-        << hex << GetTakenPC().address << dec
+    oss << "TPC: " << GetNextPC().pid << "/"
+        << hex << GetNextPC().address << dec
         << ( GetTaken() ? "(t)" : "(n)" ) << delim;
 
     if(detail == 3) return oss.str();

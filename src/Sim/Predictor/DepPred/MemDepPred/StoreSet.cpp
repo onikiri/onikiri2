@@ -71,6 +71,7 @@ void StoreSet::Initialize(InitPhase phase)
     if( phase == INIT_PRE_CONNECTION ) {
         LoadParam();
     } else if( phase == INIT_POST_CONNECTION ) {
+        size_t WORD_BITS = m_core->GetInstructionWordByteShift();
         m_storeIDTable = 
             new StoreIDTableType( 
                 HasherType( m_numStoreIDTableEntryBits, WORD_BITS ),

@@ -51,6 +51,9 @@ namespace Onikiri {
             // FPCR : 1 (FP control register)
             static const int RegisterCount = 32+32+1+1+4096;
 
+            static constexpr int REG_RA = 1; // return address
+            static constexpr int REG_SP = 2; // stack pointer
+
             static const int REG_ADDRESS = 64;
             static const int REG_FPCR    = 65;
 			//static const int REG_CSR     = 66;
