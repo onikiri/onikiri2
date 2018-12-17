@@ -208,11 +208,6 @@ void Linux64Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF64_AUXV));
 
     sp -= sizeof(u64); // NULL
-    // environ
-    sp -= sizeof(u64);
-    WriteMemory( memory, sp, sizeof(u64), sp-8);    // argv[argc] (== NULL) を指すようにする
-
-    sp -= sizeof(u64); // NULL
     // argv
     for (int i = 0; i <= argc; i ++) {
         sp -= sizeof(u64);
