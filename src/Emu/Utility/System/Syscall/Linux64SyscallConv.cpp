@@ -321,6 +321,25 @@ void Linux64SyscallConv::syscall_open(OpEmulationState* opState)
     else
         SetResult(true, result);
 }
+void Linux64SyscallConv::syscall_openat(OpEmulationState* opState)
+{
+	std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
+
+	int result = GetVirtualSystem()->Open(
+		fileName.c_str(),
+		(int)OpenFlagTargetToHost(static_cast<u32>(m_args[3]))
+	);
+	std::string fd = "/dev/tty";
+	if (fd == fileName) {
+		result = 1;
+	}
+
+
+	if (result == -1)
+		SetResult(false, GetVirtualSystem()->GetErrno());
+	else
+		SetResult(true, result);
+}
 
 void Linux64SyscallConv::syscall_close(OpEmulationState* opState)
 {
