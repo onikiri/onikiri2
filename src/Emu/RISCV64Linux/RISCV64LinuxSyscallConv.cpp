@@ -142,6 +142,7 @@ static struct {
     SYSCALLNAME(gettimeofday, 2, "pp"),
     SYSCALLNAME(brk, 1, "p"),
     SYSCALLNAME(open, 3, "sxx"),
+	SYSCALLNAME(openat, 4, "xsxx"),
     SYSCALLNAME(unlink, 1, "s"),
     SYSCALLNAME(stat, 2, "sp"),
 	SYSCALLNAME(uname, 1, "p"),
@@ -291,7 +292,7 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 		break;
 
 	case syscall_id_openat:
-		syscall_open(opState);
+		syscall_openat(opState);
 		break;
 
 	case syscall_id_writev:
