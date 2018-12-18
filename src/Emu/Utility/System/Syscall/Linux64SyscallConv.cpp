@@ -254,7 +254,7 @@ void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
     } utsname;
 
     memset(&utsname, 0, sizeof(utsname));
-    strcpy(utsname.release, "2.6.23");
+    strcpy(utsname.release, "3.4.5");
 
     GetMemorySystem()->MemCopyToTarget(m_args[1], &utsname, sizeof(utsname));
 
