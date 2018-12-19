@@ -200,8 +200,8 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 	//RV32I
     // LUI/AUIPC 変更
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    {"lui",     MASK_LUI,   OPCODE_LUI(),   1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   SetSext<D0, RISCV64Lui<S0> >} } },
-    {"auipc",   MASK_AUIPC, OPCODE_AUIPC(), 1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   SetSext<D0, RISCV64Auipc<S0> >} } },
+    {"lui",     MASK_LUI,   OPCODE_LUI(),   1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   Set<D0, RISCV64Lui<S0> >} } },
+    {"auipc",   MASK_AUIPC, OPCODE_AUIPC(), 1,  { {OpClassCode::iALU,   {R0, -1},   {I0, -1, -1, -1},   Set<D0, RISCV64Auipc<S0> >} } },
     
     // IMM 
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
