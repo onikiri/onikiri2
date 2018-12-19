@@ -5,7 +5,7 @@
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -157,9 +157,6 @@ namespace {
     const int I0 = ImmTemplateBegin+0;
     const int I1 = ImmTemplateBegin+1;
 
-    const int T0 = RISCV64Info::REG_ADDRESS;
-    const int FPC = RISCV64Info::REG_FPCR;
-	 
 }
 
 #define RISCV64_DSTOP(n) RISCV64DstOperand<n>

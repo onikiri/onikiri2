@@ -5,7 +5,7 @@
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -47,12 +47,9 @@ namespace Onikiri {
             static const int MaxImmCount = 2;
             // Int : 32
             // FP  : 32
-            // ADDR : 1
-            // FPCR : 1 (FP control register)
-            static const int RegisterCount = 32+32+1+1+4096;
-
-            static const int REG_ADDRESS = 64;
-            static const int REG_FPCR    = 65;
+            // dummy0 : 1 (Alpha とセグメント数をあわせるため)
+            // dummy1 : 1
+            static const int RegisterCount = 32+32+1+1;
 			//static const int REG_CSR     = 66;
 
             static const int MAX_MEMORY_ACCESS_WIDTH = 8;

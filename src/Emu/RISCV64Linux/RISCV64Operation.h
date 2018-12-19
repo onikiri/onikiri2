@@ -5,7 +5,7 @@
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -611,22 +611,28 @@ namespace Onikiri {
 			template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
 			inline void RISCV64CSRRW(OpEmulationState* opState)
 			{
-				TDest::SetOperand(opState, CSR_S()(opState));
-				CSR_D::SetOperand(opState, TSrc1()(opState));
+                TDest::SetOperand(opState, 0);
+                RUNTIME_WARNING("CSR is accessed.");
+				//TDest::SetOperand(opState, CSR_S()(opState));
+				//CSR_D::SetOperand(opState, TSrc1()(opState));
 			}
 
 			template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
 			inline void RISCV64CSRRS(OpEmulationState* opState)
 			{
-				TDest::SetOperand(opState, CSR_S()(opState));
-				CSR_D::SetOperand(opState, TSrc1()(opState) | CSR_S()(opState));
+                TDest::SetOperand(opState, 0);
+                RUNTIME_WARNING("CSR is accessed.");
+                //TDest::SetOperand(opState, CSR_S()(opState));
+				//CSR_D::SetOperand(opState, TSrc1()(opState) | CSR_S()(opState));
 			}
 
 			template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
 			inline void RISCV64CSRRC(OpEmulationState* opState)
 			{
-				TDest::SetOperand(opState, CSR_S()(opState));
-				CSR_D::SetOperand(opState, ~(TSrc1()(opState)) & CSR_S()(opState));
+                TDest::SetOperand(opState, 0);
+                RUNTIME_WARNING("CSR is accessed.");
+                //TDest::SetOperand(opState, CSR_S()(opState));
+				//CSR_D::SetOperand(opState, ~(TSrc1()(opState)) & CSR_S()(opState));
 			}
 			
 

@@ -5,7 +5,7 @@
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2015 Ryota Shioya.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -47,9 +47,9 @@ int RISCV64Info::GetRegisterSegmentID(int regNum)
     const int segmentRange[] = {
          0,     // Int
         32,     // FP
-        64,     // Address
-		4161,     // CSR
-        4162      // 最大+1
+        64,     // dummy 0
+        65,     // dummy 1
+        66      // 最大+1
     };
     const int nElems = sizeof(segmentRange)/sizeof(segmentRange[0]);
 
