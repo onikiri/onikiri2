@@ -275,8 +275,8 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     {"lb",      MASK_LD,    OPCODE_LD(0),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, Load<u8,  RISCV64Addr<S0, S1> > > } } },
     {"lh",      MASK_LD,    OPCODE_LD(1),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, Load<u16, RISCV64Addr<S0, S1> > > } } },
     {"lw",      MASK_LD,    OPCODE_LD(2),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, Load<u32, RISCV64Addr<S0, S1> > > } } },
-    {"lb",      MASK_LD,    OPCODE_LD(4),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u8,  RISCV64Addr<S0, S1> > > } } },
-    {"lh",      MASK_LD,    OPCODE_LD(5),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u16, RISCV64Addr<S0, S1> > > } } },
+    {"lbu",     MASK_LD,    OPCODE_LD(4),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u8,  RISCV64Addr<S0, S1> > > } } },
+    {"lhu",     MASK_LD,    OPCODE_LD(5),   1,  { { OpClassCode::iLD,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, Load<u16, RISCV64Addr<S0, S1> > > } } },
 
     // System
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
@@ -363,7 +363,7 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 	//LOAD/STORE
 	//{Name,    Mask,       Opcode,           nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
     { "flw",    MASK_LD,    OPCODE_FLD(2),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, Load<u32, RISCV64Addr<S0, S1> > > } } },
-	{ "slw",    MASK_ST,    OPCODE_FST(2),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u32, S0, RISCV64Addr<S1, S2> > } } },
+	{ "fsw",    MASK_ST,    OPCODE_FST(2),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u32, S0, RISCV64Addr<S1, S2> > } } },
 
 	//FLOAT
 	//rneとrmmの違いがよくわかってません
@@ -487,7 +487,7 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 	//LOAD/STORE
 	//{Name,    Mask,       Opcode,           nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
     { "fld",    MASK_LD,    OPCODE_FLD(3),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, Load<u64, RISCV64Addr<S0, S1> > > } } },
-	{ "sld",    MASK_ST,    OPCODE_FST(3),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u64, S0, RISCV64Addr<S1, S2> > } } },
+	{ "fsd",    MASK_ST,    OPCODE_FST(3),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u64, S0, RISCV64Addr<S1, S2> > } } },
 
 	//FLOAT
 	//rneとrmmの違いがよくわかってません
