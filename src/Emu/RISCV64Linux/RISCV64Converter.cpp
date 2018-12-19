@@ -214,20 +214,20 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     
     // SHIFT　変更
     //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    {"slli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 1),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } },
-    {"srli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 5),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } },
-    {"srai",    MASK_SHIFT, OPCODE_SHIFT(0x10, 5),  1,  { {OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } },
+    {"slli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 1),  1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } },
+    {"srli",    MASK_SHIFT, OPCODE_SHIFT(0x00, 5),  1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } },
+    {"srai",    MASK_SHIFT, OPCODE_SHIFT(0x10, 5),  1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } },
 
     // INT　SLL,SRL,SRA変更 
     //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"add",     MASK_INT,   OPCODE_INT(0x00, 0),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntAdd<u64, S0, S1> > } } },
     {"sub",     MASK_INT,   OPCODE_INT(0x20, 0),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, IntSub<u64, S0, S1> > } } },
-    {"sll",     MASK_INT,   OPCODE_INT(0x00, 1),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } },
+    {"sll",     MASK_INT,   OPCODE_INT(0x00, 1),    1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftL<u64, S0, S1, 0x3f > > } } },
     {"slt",     MASK_INT,   OPCODE_INT(0x00, 2),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV64Compare<S0, S1, IntCondLessSigned<u64> > > } } },
     {"sltu",    MASK_INT,   OPCODE_INT(0x00, 3),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV64Compare<S0, S1, IntCondLessUnsigned<u64> > > } } },
     {"xor",     MASK_INT,   OPCODE_INT(0x00, 4),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitXor<u64, S0, S1> > } } },
-    {"srl",     MASK_INT,   OPCODE_INT(0x00, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } },
-    {"sra",     MASK_INT,   OPCODE_INT(0x20, 5),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } },
+    {"srl",     MASK_INT,   OPCODE_INT(0x00, 5),    1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, LShiftR<u64, S0, S1, 0x3f > > } } },
+    {"sra",     MASK_INT,   OPCODE_INT(0x20, 5),    1,  { {OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, AShiftR<u64, S0, S1, 0x3f > > } } },
     {"or",      MASK_INT,   OPCODE_INT(0x00, 6),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitOr<u64, S0, S1> > } } },
     {"and",     MASK_INT,   OPCODE_INT(0x00, 7),    1,  { {OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, BitAnd<u64, S0, S1> > } } },
 
@@ -331,17 +331,17 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 
 	//SHIFT
 	//{Name,    Mask,       Opcode,                  nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-	{ "slliw",  MASK_SHIFT, OPCODE_SHIFTW(0x00, 1),  1,{ { OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
-	{ "srliw",  MASK_SHIFT, OPCODE_SHIFTW(0x00, 5),  1,{ { OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
-	{ "sraiw",  MASK_SHIFT, OPCODE_SHIFTW(0x20, 5),  1,{ { OpClassCode::iALU,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
+	{ "slliw",  MASK_SHIFT, OPCODE_SHIFTW(0x00, 1),  1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
+	{ "srliw",  MASK_SHIFT, OPCODE_SHIFTW(0x00, 5),  1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
+	{ "sraiw",  MASK_SHIFT, OPCODE_SHIFTW(0x20, 5),  1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, I0, -1, -1},   SetSext<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
 
 	// INT
 	//{Name,    Mask,       Opcode,                  nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
 	{ "addw",   MASK_INT,   OPCODE_INTW(0x00, 0),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, IntAdd<u32, S0, S1> > } } },
 	{ "subw",   MASK_INT,   OPCODE_INTW(0x20, 0),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, IntSub<u32, S0, S1> > } } },
-	{ "sllw",   MASK_INT,   OPCODE_INTW(0x00, 1),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
-	{ "srlw",   MASK_INT,   OPCODE_INTW(0x00, 5),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
-	{ "sraw",   MASK_INT,   OPCODE_INTW(0x20, 5),    1,{ { OpClassCode::iALU,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
+	{ "sllw",   MASK_INT,   OPCODE_INTW(0x00, 1),    1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, LShiftL<u32, S0, S1, 0x1f > > } } },
+	{ "srlw",   MASK_INT,   OPCODE_INTW(0x00, 5),    1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, LShiftR<u32, S0, S1, 0x1f > > } } },
+	{ "sraw",   MASK_INT,   OPCODE_INTW(0x20, 5),    1,{ { OpClassCode::iSFT,   {R0, -1},   {R1, R2, -1, -1},   SetSext<D0, AShiftR<u32, S0, S1, 0x1f > > } } },
 	
 	//LOAD/STORE
 	//{Name,    Mask,       Opcode,         nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
