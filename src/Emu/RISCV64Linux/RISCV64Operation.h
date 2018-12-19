@@ -380,20 +380,20 @@ namespace Onikiri {
 					Type value = static_cast<Type>(TSrc1()(opState));
 					switch(std::fpclassify(value)) {
 		        case FP_INFINITE:
-							if(signbit(value)) return (u64)0x0000000000000001;
+							if(std::signbit(value)) return (u64)0x0000000000000001;
 							else return (u64)0x0000000000000080;
 							break;
 		        case FP_NAN:       return (u64)0x0000000000000100;
 		        case FP_NORMAL:
-							if(signbit(value)) return (u64)0x0000000000000002;
+							if(std::signbit(value)) return (u64)0x0000000000000002;
 							else return (u64)0x0000000000000040;
 							break;
 		        case FP_SUBNORMAL:
-							if(signbit(value)) return (u64)0x0000000000000004;
+							if(std::signbit(value)) return (u64)0x0000000000000004;
 							else return (u64)0x0000000000000020;
 							break;
 		        case FP_ZERO:
-							if(signbit(value)) return (u64)0x0000000000000008;
+							if(std::signbit(value)) return (u64)0x0000000000000008;
 							else return (u64)0x0000000000000010;
 							break;
 		        default:           return 0x0000000000000000;
