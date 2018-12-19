@@ -155,7 +155,8 @@ void Linux64Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
     // Auxiliary Vector の設定
     ELF64_AUXV auxv;
 
-    const int uid = posix_getuid(), gid = posix_getgid(), euid = posix_geteuid(), egid = posix_getegid();
+    // [[maybe_unused]]
+    // const int uid = posix_getuid(), gid = posix_getgid(), euid = posix_geteuid(), egid = posix_getegid();
 
     sp -= sizeof(ELF64_AUXV);
     auxv.a_type = EndianHostToSpecified((u64)AT_NULL, m_bigEndian);
