@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -37,19 +37,26 @@ using namespace std;
 using namespace boost::asio;
 using ip::tcp;
 
-//#define GDB_DEBUG
+#define GDB_DEBUG
 
 DebugStub::DebugStub(SystemBase::SystemContext* context, int pid) :
     m_acc(m_ioService, tcp::endpoint(tcp::v4(), (unsigned short)context->debugParam.debugPort))
 {
-    ASSERT(
-        context->targetArchitecture == "AlphaLinux" ||  
-        context->targetArchitecture == "RISCV32Linux", 
-        "GDB Debug mode is currently available on AlphaLinux/RISCV32Linux only."
-    );
-    ASSERT(context->threads.GetSize() == 1, "Multithread GDB Debugging is not supported.");
+    const auto& archName = context->targetArchitecture;
+    if (!(
+        archName == "AlphaLinux" ||
+        archName == "RISCV32Linux" ||
+        archName == "RISCV64Linux"
+    )){
+        THROW_RUNTIME_ERROR(
+            "GDB Debug mode is currently available on AlphaLinux/RISCV32Linux/RISCV64Linux only."
+        );
+    }
+    if (context->threads.GetSize() != 1) {
+        THROW_RUNTIME_ERROR("Multithread GDB Debugging is not supported.");
+    }
 
-    m_reg64 = context->targetArchitecture == "AlphaLinux";
+    m_reg64 = archName == "AlphaLinux" || archName == "RISCV64Linux";
     m_context = context;
     m_pid = pid;
     m_stopExec = true;
@@ -589,41 +596,72 @@ void DebugStub::OnExec(EmulationDebugOp* op)
 u64 DebugStub::GetRegister( int regNum )
 {
     // TODO: set correct PC on every ISA
-    if (m_context->targetArchitecture == "AlphaLinux") {
-        if (regNum == 0x42) {
+    auto& reg = m_context->architectureStateList[m_pid].registerValue;
+    u64* pcAddr = &m_context->architectureStateList[m_pid].pc.address;
+    const auto& arch = m_context->targetArchitecture;
+
+    if (arch == "AlphaLinux") {
+        if (regNum < 0x40) {
+            return reg[regNum];
+        }
+        else if (regNum == 0x40) {
+            return *pcAddr;
+        }
+        else {
             return 0;
         }
-        return (regNum != 0x40) ? m_context->architectureStateList[m_pid].registerValue[regNum] : m_context->architectureStateList[m_pid].pc.address;
     }
-    else if (m_context->targetArchitecture == "RISCV32Linux") {
-        return (regNum != 0x20) ? 
-            m_context->architectureStateList[m_pid].registerValue[regNum] : 
-            m_context->architectureStateList[m_pid].pc.address;
+    else if (arch == "RISCV64Linux" || arch == "RISCV32Linux") {
+        if (regNum < 32) {
+            return reg[regNum];         // INT
+        }
+        else if (regNum == 32) {
+            return *pcAddr;             // PC
+        }
+        else if (regNum < 64+1) {
+            return reg[regNum - 1];     // FP
+        }
+        else if (regNum < 4096 + 64 + 1) {
+            return 0;   // CSR
+        }
+        else {
+            return 0;
+        }
     }
-    ASSERT(false, "Unsupported architecture");
+    THROW_RUNTIME_ERROR("Unsupported architecture");
     return 0;
 }
 
 void DebugStub::SetRegister( int regNum, u64 value )
 {
-    // TODO: set correct PC on every ISA
-    if (m_context->targetArchitecture == "AlphaLinux") {
+    // TODO: set correct PC (with pid) on every ISA
+    auto& reg = m_context->architectureStateList[m_pid].registerValue;
+    u64* pcAddr = &m_context->architectureStateList[m_pid].pc.address;
+    const auto& arch = m_context->targetArchitecture;
+
+    if (arch == "AlphaLinux") {
         if(regNum != 0x40){
-            m_context->architectureStateList[m_pid].registerValue[regNum] = value;
+            reg[regNum] = value;
         }
         else {
-            m_context->architectureStateList[m_pid].pc.address = value;
+            *pcAddr = value;
         }
     }
-    else if (m_context->targetArchitecture == "RISCV32Linux") {
-        if(regNum != 0x20){
-            m_context->architectureStateList[m_pid].registerValue[regNum] = value;
+    else if (arch == "RISCV64Linux" || arch == "RISCV32Linux") {
+        if (regNum < 32) {
+            reg[regNum] = value;        // INT
         }
-        else {
-            m_context->architectureStateList[m_pid].pc.address = value;
+        else if (regNum == 32) {
+            *pcAddr = value;            // PC
+        }
+        else if (regNum < 64+1) {
+            reg[regNum - 1] = value;    // FP
+        }
+        else if (regNum < 4096 + 64 + 1) {
+            // CSR
         }
     }
-    ASSERT(false, "Unsupported architecture");
+    THROW_RUNTIME_ERROR("Unsupported architecture");
 }
 
 u64 DebugStub::GetMemory( MemAccess* access )
