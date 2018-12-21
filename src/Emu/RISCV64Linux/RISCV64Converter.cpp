@@ -367,35 +367,37 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 
     // RV32A
     // Only for single thread execution
-    // OpClassCode::iST of AtomicMemoryOperation instruction may be wrong.
+    // It is not always necessary to stop all the instructions
+    // but for the sake of simplicity, I implemented by using OpClalssCode::syscall
     //{Name,         Mask,          Opcode,                 nOp,{ OpClassCode,         Dst[],       Src[],               OpInfoType::EmulationFunc}[]}
     { "lr.w"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 2),    1, { { OpClassCode::iLD, { R0, -1 }, { R1, -1, -1, -1 },    SetSext<D0, Load<u32, S0> > } } },
     { "sc.w"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 3),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Store<u32, S1, S0>, Set<D0, IntConst<u64, 0> > > } } }, // 0 is 'success'
-    { "amoswap.w",   MASK_ATOMIC,   OPCODE_ATOMIC(2, 1),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, S1, S0> > } } },
-    { "amoadd.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 0),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, IntAdd    <u32, Load<u32, S0>, S1>, S0> > } } },
-    { "amoxor.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 4),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, BitXor    <u32, Load<u32, S0>, S1>, S0> > } } },
-    { "amoand.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 12),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, BitAnd    <u32, Load<u32, S0>, S1>, S0> > } } },
-    { "amoor.w"  ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 8),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, BitOr     <u32, Load<u32, S0>, S1>, S0> > } } },
-    { "amomin.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 16),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, RISCV64Min<s32, Load<u32, S0>, S1>, S0> > } } },
-    { "amomax.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 20),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, RISCV64Max<s32, Load<u32, S0>, S1>, S0> > } } },
-    { "amominu.w",   MASK_ATOMIC,   OPCODE_ATOMIC(2, 24),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, RISCV64Min<u32, Load<u32, S0>, S1>, S0> > } } },
-    { "amomaxu.w",   MASK_ATOMIC,   OPCODE_ATOMIC(2, 28),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, RISCV64Max<u32, Load<u32, S0>, S1>, S0> > } } },
+    { "amoswap.w",   MASK_ATOMIC,   OPCODE_ATOMIC(2, 1),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, S1> } } },
+    { "amoadd.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 0),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, IntAdd    <u32, S2, S1> > } } },
+    { "amoxor.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 4),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, BitXor    <u32, S2, S1> > } } },
+    { "amoand.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 12),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, BitAnd    <u32, S2, S1> > } } },
+    { "amoor.w"  ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 8),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, BitOr     <u32, S2, S1> > } } },
+    { "amomin.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 16),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, RISCV64Min<s32, S2, S1> > } } },
+    { "amomax.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 20),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, RISCV64Max<s32, S2, S1> > } } },
+    { "amominu.w",   MASK_ATOMIC,   OPCODE_ATOMIC(2, 24),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, RISCV64Min<u32, S2, S1> > } } },
+    { "amomaxu.w",   MASK_ATOMIC,   OPCODE_ATOMIC(2, 28),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u32, D0, S0, RISCV64Max<u32, S2, S1> > } } },
 
     // RV64A
     // Only for single thread execution
-    // OpClassCode::iST of AtomicMemoryOperation instruction may be wrong.
+    // It is not always necessary to stop all the instructions
+    // but for the sake of simplicity, I implemented by using OpClalssCode::syscall
     //{Name,         Mask,          Opcode,                 nOp,{ OpClassCode,         Dst[],       Src[],               OpInfoType::EmulationFunc}[]}
     { "lr.d"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 2),    1, { { OpClassCode::iLD, { R0, -1 }, { R1, -1, -1, -1 },    Set<D0, Load<u64, S0> > } } },
     { "sc.d"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 3),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Store<u64, S1, S0>, Set<D0, IntConst<u64, 0> > > } } }, // 0 is 'success'
-    { "amoswap.d",   MASK_ATOMIC,   OPCODE_ATOMIC(3, 1),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, S1, S0> > } } },
-    { "amoadd.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 0),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, IntAdd    <u64, Load<u64, S0>, S1>, S0> > } } },
-    { "amoxor.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 4),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, BitXor    <u64, Load<u64, S0>, S1>, S0> > } } },
-    { "amoand.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 12),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, BitAnd    <u64, Load<u64, S0>, S1>, S0> > } } },
-    { "amoor.d"  ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 8),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, BitOr     <u64, Load<u64, S0>, S1>, S0> > } } },
-    { "amomin.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 16),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, RISCV64Min<s64, Load<u64, S0>, S1>, S0> > } } },
-    { "amomax.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 20),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, RISCV64Max<s64, Load<u64, S0>, S1>, S0> > } } },
-    { "amominu.d",   MASK_ATOMIC,   OPCODE_ATOMIC(3, 24),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, RISCV64Min<u64, Load<u64, S0>, S1>, S0> > } } },
-    { "amomaxu.d",   MASK_ATOMIC,   OPCODE_ATOMIC(3, 28),   1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Set<D0, Load<u64, S0> >, Store<u64, RISCV64Max<u64, Load<u64, S0>, S1>, S0> > } } },
+    { "amoswap.d",   MASK_ATOMIC,   OPCODE_ATOMIC(3, 1),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, S1 > } } },
+    { "amoadd.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 0),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, IntAdd    <u64, S2, S1> > } } },
+    { "amoxor.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 4),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, BitXor    <u64, S2, S1> > } } },
+    { "amoand.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 12),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, BitAnd    <u64, S2, S1> > } } },
+    { "amoor.d"  ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 8),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, BitOr     <u64, S2, S1> > } } },
+    { "amomin.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 16),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, RISCV64Min<s64, S2, S1> > } } },
+    { "amomax.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 20),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, RISCV64Max<s64, S2, S1> > } } },
+    { "amominu.d",   MASK_ATOMIC,   OPCODE_ATOMIC(3, 24),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, RISCV64Min<u64, S2, S1> > } } },
+    { "amomaxu.d",   MASK_ATOMIC,   OPCODE_ATOMIC(3, 28),   1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, R0, -1 },    RISCV64AtomicOperation<u64, D0, S0, RISCV64Max<u64, S2, S1> > } } },
 
 	//RV32F
 	//LOAD/STORE

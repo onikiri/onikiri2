@@ -37,6 +37,7 @@
 #include "Emu/Utility/GenericOperation.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/ProcessState.h"
+#include "Emu/Utility/System/Memory/MemorySystem.h"
 
 
 namespace Onikiri {
@@ -606,6 +607,51 @@ namespace Onikiri {
                 }
             };
 
+            template <typename Type, typename TAddr>
+            struct RISCV64AtomicLoad : public std::unary_function<OpEmulationState*, u64>
+            {
+                u64 operator()(OpEmulationState* opState)
+                {
+                    MemorySystem* mem = opState->GetProcessState()->GetMemorySystem();
+                    MemAccess access;
+                    access.address.pid = opState->GetPID();
+                    access.address.address = TAddr()(opState);
+                    access.size = sizeof(Type);
+                    access.sign = true;
+
+                    mem->ReadMemory(&access);
+
+                    if (access.result != MemAccess::Result::MAR_SUCCESS) {
+                        THROW_RUNTIME_ERROR("Atomic memory read access failed: %s", access.ToString().c_str());
+                    }
+
+                    return access.value;
+                }
+            };
+
+            template <typename Type, typename TValue, typename TAddr>
+            void RISCV64AtomicStore(OpEmulationState* opState)
+            {
+                MemorySystem* mem = opState->GetProcessState()->GetMemorySystem();
+                MemAccess access;
+                access.address.pid = opState->GetPID();
+                access.address.address = TAddr()(opState);
+                access.size = sizeof(Type);
+                access.value = TValue()(opState);
+
+                mem->WriteMemory(&access);
+
+                if (access.result != MemAccess::Result::MAR_SUCCESS) {
+                    THROW_RUNTIME_ERROR("Atomic memory write access failed: %s", access.ToString().c_str());
+                }
+            }
+
+            template <typename Type, typename TDst, typename TAddr, typename Operation>
+            void RISCV64AtomicOperation(OpEmulationState* opState)
+            {
+                Set<TDst, RISCV64AtomicLoad<Type, TAddr>>(opState);
+                RISCV64AtomicStore<Type, Operation, TAddr>(opState);
+            }
 
 			void RISCV64SyscallSetArg(EmulatorUtility::OpEmulationState* opState)
 			{
