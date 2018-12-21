@@ -142,12 +142,13 @@ static struct {
     SYSCALLNAME(gettimeofday, 2, "pp"),
     SYSCALLNAME(brk, 1, "p"),
     SYSCALLNAME(open, 3, "sxx"),
-	SYSCALLNAME(openat, 4, "xsxx"),
+	SYSCALLNAME(openat, 4, "nsxx"),
     SYSCALLNAME(unlink, 1, "s"),
     SYSCALLNAME(stat, 2, "sp"),
 	SYSCALLNAME(uname, 1, "p"),
 	SYSCALLNAME(writev, 3, "npn"),
-	SYSCALLNAME(mmap, 6, "pxxxnx")
+	SYSCALLNAME(mmap, 6, "pxxxnx"),
+	SYSCALLNAME(readlinkat, 4, "nssn")
 /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
@@ -297,6 +298,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
 	case syscall_id_writev:
 		syscall_writev(opState);
+		break;
+
+	case syscall_id_readlinkat:
+		syscall_readlinkat(opState);
 		break;
 
 	case syscall_id_mmap:
