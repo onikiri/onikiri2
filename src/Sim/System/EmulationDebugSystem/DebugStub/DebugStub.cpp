@@ -37,7 +37,7 @@ using namespace std;
 using namespace boost::asio;
 using ip::tcp;
 
-#define GDB_DEBUG
+//#define GDB_DEBUG
 
 DebugStub::DebugStub(SystemBase::SystemContext* context, int pid) :
     m_acc(m_ioService, tcp::endpoint(tcp::v4(), (unsigned short)context->debugParam.debugPort))
