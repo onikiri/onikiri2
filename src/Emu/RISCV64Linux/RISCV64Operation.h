@@ -584,6 +584,29 @@ namespace Onikiri {
 				}
 			};
 
+            template <typename Type, typename TSrc1, typename TSrc2>
+            struct RISCV64Min : public std::unary_function<OpEmulationState*, u64>
+            {
+                u64 operator()(OpEmulationState* opState)
+                {
+                    Type src1 = static_cast<Type>(TSrc1()(opState));
+                    Type src2 = static_cast<Type>(TSrc2()(opState));
+                    return static_cast<u64>(std::min(src1, src2));
+                }
+            };
+
+            template <typename Type, typename TSrc1, typename TSrc2>
+            struct RISCV64Max : public std::unary_function<OpEmulationState*, u64>
+            {
+                u64 operator()(OpEmulationState* opState)
+                {
+                    Type src1 = static_cast<Type>(TSrc1()(opState));
+                    Type src2 = static_cast<Type>(TSrc2()(opState));
+                    return static_cast<u64>(std::max(src1, src2));
+                }
+            };
+
+
 			void RISCV64SyscallSetArg(EmulatorUtility::OpEmulationState* opState)
 			{
 				EmulatorUtility::SyscallConvIF* syscallConv = opState->GetProcessState()->GetSyscallConv();

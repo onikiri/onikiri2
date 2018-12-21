@@ -63,6 +63,8 @@ namespace {
   	static const int OP_IMMW = 0x1b;    // Integer immediate word
   	static const int OP_INTW = 0x3b;    // Integer word
 
+    static const int OP_ATOMIC = 0x2f;  // Atomic memory operations
+
   	static const int OP_FLD = 0x07;     // Float load
   	static const int OP_FST = 0x27;     // Float store
   	static const int OP_FMADD = 0x43;   // Float mul add
@@ -204,6 +206,12 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
 		out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
 		out->Reg[2] = ExtractBits(codeWord, 20, 5);     // rs2
 		break;
+
+    case OP_ATOMIC:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
+        out->Reg[2] = ExtractBits(codeWord, 20, 5);     // rs2
+        break;
 
 	case OP_FLD:
 		out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
