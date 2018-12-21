@@ -393,7 +393,10 @@ int VirtualSystem::ReadLinkAt(int targetFD, std::string pathname, void *buffer, 
 		//I do not know the name of the executable binary
 		s += "result_linux";
 
-		memcpy(buffer, s.c_str(), sizeof(char)*count);
+        if (s.size() >= count) {
+            THROW_RUNTIME_ERROR(" %d >= %d; too long path: %s", s.size(), count, pathname.c_str());
+        }
+        ::strncpy(static_cast<char*>(buffer), s.c_str(), sizeof(char)*count-1);
 		return 0;
 	}
 	else {
