@@ -382,6 +382,17 @@ int VirtualSystem::Close(int fd)
     return result;
 }
 
+int VirtualSystem::ReadLinkAt(int targetFD, std::string pathname, void *buffer, unsigned int count) {
+	if (pathname == "/proc/self/exe") {
+		memcpy(buffer, m_cwd.string().c_str(), sizeof(char)*count);
+		return 0;
+	}
+	else {
+		THROW_RUNTIME_ERROR("error in ReadLinkAt: directory: %s", pathname.c_str());
+		return -1;
+	}
+}
+
 int VirtualSystem::FStat(int fd, HostStat* buffer)
 {
     int hostFD = FDTargetToHost(fd);

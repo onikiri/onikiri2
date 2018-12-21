@@ -127,6 +127,7 @@ namespace Onikiri {
             int Read(int targetFD, void *buffer, unsigned int count);
             int Write(int targetFD, void* buffer, unsigned int count);
             int Close(int targetFD);
+			int ReadLinkAt(int targetFD, std::string pathname, void *buffer, unsigned int count);
 
             int Stat(const char* path, HostStat* s);
             int FStat(int fd, HostStat* s);
