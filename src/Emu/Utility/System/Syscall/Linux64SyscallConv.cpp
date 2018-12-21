@@ -452,9 +452,6 @@ void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
 	
 	int result = GetVirtualSystem()->ReadLinkAt((int)m_args[1], fileName, buf.Get(), bufSize);
 
-
-	// result = GetVirtualSystem()->Read((int)m_args[1], buf.Get(), bufSize);
-
 	if (result == -1) {
 		SetResult(false, GetVirtualSystem()->GetErrno());
 	}

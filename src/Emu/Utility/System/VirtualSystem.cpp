@@ -384,7 +384,16 @@ int VirtualSystem::Close(int fd)
 
 int VirtualSystem::ReadLinkAt(int targetFD, std::string pathname, void *buffer, unsigned int count) {
 	if (pathname == "/proc/self/exe") {
-		memcpy(buffer, m_cwd.string().c_str(), sizeof(char)*count);
+
+		//If it is as it is it will contain ./.
+		string s = m_cwd.string();
+		s.pop_back();
+		s.pop_back();
+		s.pop_back();
+		//I do not know the name of the executable binary
+		s += "result_linux";
+
+		memcpy(buffer, s.c_str(), sizeof(char)*count);
 		return 0;
 	}
 	else {
