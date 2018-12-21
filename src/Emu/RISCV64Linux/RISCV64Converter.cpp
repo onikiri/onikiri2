@@ -288,8 +288,8 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     // Fence Instructions
     // It is not always necessary to stop all the instructions
     // but for the sake of simplicity, I implemented by using OpClalssCode::syscall
-    {"fence",   0xf00fffff, 0x0000000f,   1,  { { OpClassCode::syscall,   {-1, -1},   {-1, -1, -1},   NoOperation } } },
-    {"fence.i", MASK_EXACT, 0x0000100f,   1,  { { OpClassCode::syscall,   {-1, -1},   {-1, -1, -1},   NoOperation } } },
+    {"fence",   0xf00fffff, 0x0000000f,   1,  { { OpClassCode::syscall,   {-1, -1},   {-1, -1, -1, -1},   NoOperation } } },
+    {"fence.i", MASK_EXACT, 0x0000100f,   1,  { { OpClassCode::syscall,   {-1, -1},   {-1, -1, -1, -1},   NoOperation } } },
 
 
 	// Csr
