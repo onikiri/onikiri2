@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -148,7 +148,8 @@ static struct {
 	SYSCALLNAME(uname, 1, "p"),
 	SYSCALLNAME(writev, 3, "npn"),
 	SYSCALLNAME(mmap, 6, "pxxxnx"),
-	SYSCALLNAME(readlinkat, 4, "nssn")
+    SYSCALLNAME(munmap, 2, "px"),
+    SYSCALLNAME(readlinkat, 4, "nssn")
 /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
@@ -169,7 +170,6 @@ static struct {
     SYSCALLNAME(rename, 2, "ss"),
     SYSCALLNAME(mmap, 6, "pxxxnx"),
     SYSCALLNAME(mremap, 4, "pxxx"),
-    SYSCALLNAME(munmap, 2, "px"),
     SYSCALLNAME(mprotect, 3, "pxx"),
     SYSCALLNAME(chmod, 2, "sx"),
     SYSCALLNAME(ioctl, 3, "xxx"),
@@ -304,7 +304,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 		syscall_readlinkat(opState);
 		break;
 
-	case syscall_id_mmap:
+    case syscall_id_munmap:
+        syscall_munmap(opState);
+        break;
+    case syscall_id_mmap:
 		syscall_mmap(opState);
 		break;
 

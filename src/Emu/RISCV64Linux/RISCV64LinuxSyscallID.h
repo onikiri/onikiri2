@@ -5,7 +5,7 @@
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -64,6 +64,7 @@ namespace Onikiri {
 
 			
             const int syscall_id_brk = 214;
+            const int syscall_id_munmap = 215;
 
 			const int syscall_id_mmap = 222;
 
@@ -108,7 +109,6 @@ namespace Onikiri {
             const int syscall_id_getrusage = 77;
             const int syscall_id_readlink = 85;
             const int syscall_id_mmap = 90;
-            const int syscall_id_munmap = 91;
             const int syscall_id_truncate = 92;
             const int syscall_id_ftruncate = 93;
             const int syscall_id_fchmod = 94;
