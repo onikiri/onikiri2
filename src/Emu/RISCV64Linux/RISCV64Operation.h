@@ -673,8 +673,7 @@ namespace Onikiri {
 
 				u64 error = (u64)syscallConv->GetResult(EmulatorUtility::SyscallConvIF::ErrorFlagIndex);
 				u64 val = (u64)syscallConv->GetResult(EmulatorUtility::SyscallConvIF::RetValueIndex);
-				DstOperand<0>::SetOperand(opState, error ? (u32)-1 : val);
-				//DstOperand<1>::SetOperand(opState, syscallConv->GetResult(EmulatorUtility::SyscallConvIF::ErrorFlagIndex) );
+                DstOperand<0>::SetOperand(opState, error ? (u64)-1 : val);
 			}
 
 			template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
