@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+
+  <!--
+   ゲスト・プログラムの gdb によるデバッグの手順
+   
+   * -g -O0 でコンパイルを行い，デバッグ情報が埋め込まれたバイナリを生成する
+     * ソース・コードへのパスが絶対パスで埋め込まれるので，各自で生成しなければならない
+     
+   * .vscode/launch.json の中身を各自の環境に書き換える
+     * miDebuggerPath: RISC-V 用 GDB のパス
+     * program: デバッグ対象の RISC-V バイナリ
+       * 中身が一緒であれば，鬼斬で読むバイナリと同一ファイルである必要はない
+     * setupCommands/text の "target remote shioya:5555" の shioya の部分を 
+       各自のマシン名か IP アドレスに書き換える
+  
+   * VS Code でこのファイルがあるディレクトリを開く
+     * 左のサイドバーから，「デバッグ」を開く
+     * 左下の「ブレークポイント」に __libc_start_main と main を追加
+       * どっかでブレークさせないと，最後まで単に実行されてしまう
+   
+   * 鬼斬で /Session/System/@Mode='EmulationWithDebug' を指定して起動
+     * 接続待機中である旨が表示されるはず
+     * Linux だと何も表示されないことがある
+
+   * VS Code で F5 を押して，デバッガを起動
+     * 鬼斬側で connected と出れば接続成功
+     
+  -->
+
+
+  <!--
+  <Import>
+    <File Path="C:\\Users\\shioya\\Desktop\\onikiri2-branches\\onikiri2-git\\benchmark\\SPECCPU2017_INT_SPEED\\riscv64\\cmd\\deepsjeng_s-test.0.xml" />
+  </Import>
+  -->
+  <Emulator TargetArchitecture="RISCV64Linux">
+    <Processes>
+      <Process 
+        Command='result_linux'
+        TargetBasePath='./'
+        TargetWorkPath=''
+        CommandArguments=''
+        STDIN=''
+        STDOUT=''
+      />
+    </Processes>
+  </Emulator>
+
+  <Simulator>
+    <!--
+      Mode='EmulationWithDebug' により，gdb のリモート・デバッグの
+      サーバーとして起動する．
+    -->
+    <System
+      Mode='EmulationWithDebug'
+      SimulationInsns='323000' 
+      SkipInsns='0' 
+    />
+  </Simulator>
+  
+  <Environment>
+    <OutputXML FileName='result.xml' Level='Detail'/>
+  </Environment>
+</Session>
