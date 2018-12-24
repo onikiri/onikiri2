@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='RISCV64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/456.hmmer/test/'
+        Command='./bin/hmmer'
+        CommandArguments='--fixed 0 --mean 325 --num 45000 --sd 200 --seed 0 bombesin.hmm'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

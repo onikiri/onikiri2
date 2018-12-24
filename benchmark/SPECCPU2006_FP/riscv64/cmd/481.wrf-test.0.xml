@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='RISCV64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/481.wrf/test/'
+        Command='./bin/wrf'
+        CommandArguments=''
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

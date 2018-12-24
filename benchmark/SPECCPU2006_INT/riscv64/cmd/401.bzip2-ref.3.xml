@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='RISCV64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../'
+        TargetWorkPath='../run/401.bzip2/ref/'
+        Command='./bin/bzip2'
+        CommandArguments='input.program 280'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>
