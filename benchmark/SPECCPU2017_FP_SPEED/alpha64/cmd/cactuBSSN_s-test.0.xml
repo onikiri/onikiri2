@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/cactuBSSN_s" CommandArguments="spec_test.par " STDERR="spec_test.err" STDIN="" STDOUT="spec_test.out" TargetBasePath="./" TargetWorkPath="../run/cactuBSSN_s/test/input" />
+<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/cactuBSSN_s" CommandArguments="spec_test.par " STDERR="spec_test.err" STDIN="" STDOUT="spec_test.out" TargetBasePath="./" TargetWorkPath="../../run/cactuBSSN_s/test/input" />
 </Processes>
 </Emulator>
 </Session>

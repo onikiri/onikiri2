@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/xz_s" CommandArguments="cpu2006docs.tar.xz 4 055ce243071129412e9dd0b3b69a21654033a9b723d874b2015c774fac1553d9713be561ca86f74e4f16f22e664fc17a79f30caa5ad2c04fbc447549c2810fae 1034828 -1 3e " STDERR="cpu2006docs.tar-4-3e.err" STDIN="" STDOUT="cpu2006docs.tar-4-3e.out" TargetBasePath="./" TargetWorkPath="../run/xz_s/test/input" />
+<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/xz_s" CommandArguments="cpu2006docs.tar.xz 4 055ce243071129412e9dd0b3b69a21654033a9b723d874b2015c774fac1553d9713be561ca86f74e4f16f22e664fc17a79f30caa5ad2c04fbc447549c2810fae 1034828 -1 3e " STDERR="cpu2006docs.tar-4-3e.err" STDIN="" STDOUT="cpu2006docs.tar-4-3e.out" TargetBasePath="./" TargetWorkPath="../../run/xz_s/test/input" />
 </Processes>
 </Emulator>
 </Session>

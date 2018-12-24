@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/cam4_s" CommandArguments="" STDERR="cam4_s_base.my_amd64-m64.err" STDIN="" STDOUT="cam4_s_base.my_amd64-m64.txt" TargetBasePath="./" TargetWorkPath="../run/cam4_s/test/input" />
+<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/cam4_s" CommandArguments="" STDERR="cam4_s_base.my_amd64-m64.err" STDIN="" STDOUT="cam4_s_base.my_amd64-m64.txt" TargetBasePath="./" TargetWorkPath="../../run/cam4_s/test/input" />
 </Processes>
 </Emulator>
 </Session>
