@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -228,7 +228,8 @@ void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
     initBrk = (initBrk / pageSize + 1) * pageSize;  // Align to page boundary
 
     // Use half of the area sandwiched between stack and brk initial values in mmap
-    s64 mmapAreaSize = (stack - initBrk) / 2;   
+    s64 mmapAreaSize = (stack - initBrk) / 2;
+    mmapAreaSize = (mmapAreaSize / pageSize + 1) * pageSize;  // Align to page boundary
     ASSERT(mmapAreaSize > 0, "The size of mmap area is incorrect.");
     m_memorySystem->AddHeapBlock(stack - mmapAreaSize, mmapAreaSize);
 }
