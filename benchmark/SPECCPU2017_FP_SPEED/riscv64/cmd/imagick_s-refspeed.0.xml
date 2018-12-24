@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/imagick_s" CommandArguments="-limit disk 0 refspeed_input.tga -resize 817% -rotate -2.76 -shave 540x375 -alpha remove -auto-level -contrast-stretch 1x1% -colorspace Lab -channel R -equalize +channel -colorspace sRGB -define histogram:unique-colors=false -adaptive-blur 0x5 -despeckle -auto-gamma -adaptive-sharpen 55 -enhance -brightness-contrast 10x10 -resize 30% refspeed_output.tga " STDERR="refspeed_convert.err" STDIN="" STDOUT="refspeed_convert.out" TargetBasePath="./" TargetWorkPath="../../run/imagick_s/refspeed/input" />
+</Processes>
+</Emulator>
+</Session>

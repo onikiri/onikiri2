@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/x264_s" CommandArguments="--dumpyuv 50 --frames 156 -o BuckBunny_New.264 BuckBunny.yuv 1280x720 " STDERR="run_000-156_x264_s_base.my_amd64-m64_x264.err" STDIN="" STDOUT="run_000-156_x264_s_base.my_amd64-m64_x264.out" TargetBasePath="./" TargetWorkPath="../../run/x264_s/test/input" />
+</Processes>
+</Emulator>
+</Session>

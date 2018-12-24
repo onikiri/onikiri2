@@ -24,11 +24,11 @@ project/gcc/zlib
 
 # Benchmark
 
-benchmark/SPECCPU2017_INT/run/*
-benchmark/SPECCPU2017_INT/*/bin/*
+benchmark/SPECCPU2017_INT_SPEED/run/*
+benchmark/SPECCPU2017_INT_SPEED/*/bin/*
 
-benchmark/SPECCPU2017_FP/run/*
-benchmark/SPECCPU2017_FP/*/bin/*
+benchmark/SPECCPU2017_FP_SPEED/run/*
+benchmark/SPECCPU2017_FP_SPEED/*/bin/*
 
 benchmark/SPECCPU2006_INT/run/*
 benchmark/SPECCPU2006_INT/*/bin/*
