@@ -406,8 +406,12 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     { "fsw",    MASK_ST,    OPCODE_FST(2),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u32, S0, RISCV64Addr<S1, S2> > } } },
 
     //FLOAT
-    //rneとrmmの違いがよくわかってません
-    //{Name,            Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    // round mode (bit 14-12)
+    // 000: RNE Round to Nearest, ties to Even (直近の偶数に丸める)
+    // 001: RTZ Round towards Zero
+    // 010: RDN Round Down (towards −infinity)
+    // 011: RUP Round Up (towards +infinity)
+    // 100: RMM Round to Nearest, ties to Max Magnitude (直近の最大に丸める)    // 111: Use a round mode in FCSR    //{Name,            Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     { "fadd.s/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x00, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, Cast<f64, FPAdd< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
     { "fadd.s/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x00, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, Cast<f64, FPAdd< f32, SF0, SF1, IntConst<int, FE_TOWARDZERO> > > > } } },
     { "fadd.s/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x00, 2),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, Cast<f64, FPAdd< f32, SF0, SF1, IntConst<int, FE_DOWNWARD> > > > } } },
