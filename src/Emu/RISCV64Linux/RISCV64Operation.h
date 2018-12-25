@@ -173,7 +173,18 @@ namespace Onikiri {
                     }
                 }
             };
-
+            
+            //
+            // FP operations
+            //
+            struct RISCV64RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+            {
+                int operator()(EmulatorUtility::OpEmulationState* opState) const
+                {
+                    // TODO: Select a round mode from FCSR
+                    return FE_TOWARDZERO;
+                }
+            };
 
             template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
             struct RISCV64MADD : public std::unary_function<OpEmulationState*, Type>
