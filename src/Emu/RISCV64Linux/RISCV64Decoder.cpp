@@ -5,7 +5,7 @@
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
 // Copyright (c) 2005-2015 Masahiro Goshima.
-// Copyright (c) 2005-2017 Ryota Shioya.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -176,24 +176,30 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
         u64 imm =
             (ExtractBits<u64>(codeWord, 7,  5) << 0) |
             (ExtractBits<u64>(codeWord, 25, 7) << 5);
+
         out->Imm[0] = ExtractBits<u64>(imm, 0, 12, true);
         break;
     }
 
     case OP_ECALL:
-		if (ExtractBits<u64>(codeWord, 12, 3) == 0x1 || ExtractBits<u64>(codeWord, 12, 3) == 0x2 || ExtractBits<u64>(codeWord, 12, 3) == 0x3) {
-			out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd 
-			out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
-			out->Reg[2] = ExtractBits(codeWord, 25, 12) + 65;     // csr
+		if (ExtractBits<u64>(codeWord, 12, 3) == 0x1 || 
+            ExtractBits<u64>(codeWord, 12, 3) == 0x2 || 
+            ExtractBits<u64>(codeWord, 12, 3) == 0x3
+        ) {
+			out->Reg[0] = ExtractBits(codeWord, 7, 5);          // rd 
+			out->Reg[1] = ExtractBits(codeWord, 15, 5);         // rs1
+			out->Reg[2] = ExtractBits(codeWord, 25, 12) + 65;   // csr
 		}
-		else if (ExtractBits<u64>(codeWord, 12, 3) == 0x5 || ExtractBits<u64>(codeWord, 12, 3) == 0x6 || ExtractBits<u64>(codeWord, 12, 3) == 0x7) {
-			out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
-			out->Imm[0] = ExtractBits<u64>(codeWord, 15, 5, true);      // imm
-			out->Reg[1] = ExtractBits(codeWord, 20, 12) + 65;     // csr
+		else if (
+            ExtractBits<u64>(codeWord, 12, 3) == 0x5 || 
+            ExtractBits<u64>(codeWord, 12, 3) == 0x6 || 
+            ExtractBits<u64>(codeWord, 12, 3) == 0x7
+        ) {
+			out->Reg[0] = ExtractBits(codeWord, 7, 5);              // rd
+			out->Imm[0] = ExtractBits<u64>(codeWord, 15, 5, true);  // imm
+			out->Reg[1] = ExtractBits(codeWord, 20, 12) + 65;       // csr
 		}
 		break;
-
-
 
 	case OP_IMMW:
 		out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
@@ -260,22 +266,23 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
 		break;
 
 	case OP_FLOAT: //正しい？
-    if(ExtractBits<u64>(codeWord, 26, 6) == 0x38){
-  		out->Reg[0] = ExtractBits(codeWord, 7, 5);           // rd 整数レジスタ
-  		out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
-    }
-    else if(ExtractBits<u64>(codeWord, 26, 6) == 0x3c){
-      out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd 
-      out->Reg[1] = ExtractBits(codeWord, 15, 5);          // rs1 整数レジスタ
-    }
-    else{
-      out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
-  		out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
-  		out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
-    }
-    break;
+        if(ExtractBits<u64>(codeWord, 26, 6) == 0x38){
+  		    out->Reg[0] = ExtractBits(codeWord, 7, 5);           // rd 整数レジスタ
+  		    out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+        }
+        else if(ExtractBits<u64>(codeWord, 26, 6) == 0x3c){
+          out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd 
+          out->Reg[1] = ExtractBits(codeWord, 15, 5);          // rs1 整数レジスタ
+        }
+        else{
+          out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
+  		    out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+  		    out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+        }
+        break;
 
     default:
+        //THROW_RUNTIME_ERROR("Unknown op code");
         break;
     }
 }
