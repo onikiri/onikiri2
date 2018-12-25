@@ -243,7 +243,9 @@ void Linux64SyscallConv::syscall_mprotect(OpEmulationState* opState)
 
 void Linux64SyscallConv::syscall_sigaction(EmulatorUtility::OpEmulationState* opState)
 {
-    SetResult(true, (u64)0);
+    // The current implementation does not provide signal functionality.
+    // Even if an error is simply returned, it seems to be ignored.
+    SetResult(true, (u64)-1);
 }
 
 void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
