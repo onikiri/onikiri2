@@ -113,6 +113,7 @@ namespace Onikiri {
             virtual void syscall_mremap(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_mprotect(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_fcntl(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_sigaction(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_uname(EmulatorUtility::OpEmulationState* opState);
 
             virtual void syscall_brk(EmulatorUtility::OpEmulationState* opState);

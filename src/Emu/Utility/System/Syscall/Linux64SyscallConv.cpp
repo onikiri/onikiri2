@@ -241,6 +241,11 @@ void Linux64SyscallConv::syscall_mprotect(OpEmulationState* opState)
     SetResult(true, (u64)0);
 }
 
+void Linux64SyscallConv::syscall_sigaction(EmulatorUtility::OpEmulationState* opState)
+{
+    SetResult(true, (u64)0);
+}
+
 void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
 {
     // linux
