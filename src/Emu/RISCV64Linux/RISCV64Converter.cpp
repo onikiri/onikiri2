@@ -717,15 +717,19 @@ void RISCV64Converter::RISCVUnknownOperation(OpEmulationState* opState)
 
     DecoderType decoder;
     DecodedInsn decoded;
-    decoder.Decode( codeWord, &decoded);
+    decoder.Decode(codeWord, &decoded);
 
-    stringstream ss;
     u32 opcode = codeWord & 0x7f;
-    ss << "unknown instruction : " << hex << setw(8) << codeWord << endl;
-    ss << "\topcode : " << hex << opcode << endl;
-    ss << "\timm[1] : " << hex << decoded.Imm[1] << endl;
-
-    THROW_RUNTIME_ERROR(ss.str().c_str());
+    String info;
+    info.format(
+        "unknown instruction is executed (pc:%016llx):"
+        "\n\tcode: %08x\n\topcode: %08x\n\timm[1]: %016llx", 
+        opState->GetPC(),
+        codeWord,
+        opcode,
+        decoded.Imm[1]
+    );
+    THROW_RUNTIME_ERROR(info.c_str());
 }
 
 const RISCV64Converter::OpDef* RISCV64Converter::GetOpDefUnknown() const
