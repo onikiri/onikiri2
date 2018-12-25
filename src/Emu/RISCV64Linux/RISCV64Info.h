@@ -50,7 +50,7 @@ namespace Onikiri {
             // dummy0 : 1 (Alpha とセグメント数をあわせるため)
             // dummy1 : 1
             static const int RegisterCount = 32+32+1+1;
-			//static const int REG_CSR     = 66;
+            //static const int REG_CSR     = 66;
 
             static const int MAX_MEMORY_ACCESS_WIDTH = 8;
 

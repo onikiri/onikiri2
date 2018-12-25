@@ -60,18 +60,18 @@ namespace {
 
     static const int OP_ECALL = 0x73;   // system call
 
-  	static const int OP_IMMW = 0x1b;    // Integer immediate word
-  	static const int OP_INTW = 0x3b;    // Integer word
+    static const int OP_IMMW = 0x1b;    // Integer immediate word
+    static const int OP_INTW = 0x3b;    // Integer word
 
     static const int OP_ATOMIC = 0x2f;  // Atomic memory operations
 
-  	static const int OP_FLD = 0x07;     // Float load
-  	static const int OP_FST = 0x27;     // Float store
-  	static const int OP_FMADD = 0x43;   // Float mul add
-  	static const int OP_FMSUB = 0x47;   // Float mul sub
-  	static const int OP_FNMSUB = 0x4b;  // Float neg mul sub
-  	static const int OP_FNMADD = 0x4f;  // Float neg mul add
-  	static const int OP_FLOAT = 0x53;   // Float
+    static const int OP_FLD = 0x07;     // Float load
+    static const int OP_FST = 0x27;     // Float store
+    static const int OP_FMADD = 0x43;   // Float mul add
+    static const int OP_FMSUB = 0x47;   // Float mul sub
+    static const int OP_FNMSUB = 0x4b;  // Float neg mul sub
+    static const int OP_FNMADD = 0x4f;  // Float neg mul add
+    static const int OP_FLOAT = 0x53;   // Float
 }
 
 RISCV64Decoder::DecodedInsn::DecodedInsn()
@@ -182,36 +182,36 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
     }
 
     case OP_ECALL:
-		if (ExtractBits<u64>(codeWord, 12, 3) == 0x1 || 
+        if (ExtractBits<u64>(codeWord, 12, 3) == 0x1 || 
             ExtractBits<u64>(codeWord, 12, 3) == 0x2 || 
             ExtractBits<u64>(codeWord, 12, 3) == 0x3
         ) {
-			out->Reg[0] = ExtractBits(codeWord, 7, 5);          // rd 
-			out->Reg[1] = ExtractBits(codeWord, 15, 5);         // rs1
-			out->Reg[2] = ExtractBits(codeWord, 25, 12) + 65;   // csr
-		}
-		else if (
+            out->Reg[0] = ExtractBits(codeWord, 7, 5);          // rd 
+            out->Reg[1] = ExtractBits(codeWord, 15, 5);         // rs1
+            out->Reg[2] = ExtractBits(codeWord, 25, 12) + 65;   // csr
+        }
+        else if (
             ExtractBits<u64>(codeWord, 12, 3) == 0x5 || 
             ExtractBits<u64>(codeWord, 12, 3) == 0x6 || 
             ExtractBits<u64>(codeWord, 12, 3) == 0x7
         ) {
-			out->Reg[0] = ExtractBits(codeWord, 7, 5);              // rd
-			out->Imm[0] = ExtractBits<u64>(codeWord, 15, 5, true);  // imm
-			out->Reg[1] = ExtractBits(codeWord, 20, 12) + 65;       // csr
-		}
-		break;
+            out->Reg[0] = ExtractBits(codeWord, 7, 5);              // rd
+            out->Imm[0] = ExtractBits<u64>(codeWord, 15, 5, true);  // imm
+            out->Reg[1] = ExtractBits(codeWord, 20, 12) + 65;       // csr
+        }
+        break;
 
-	case OP_IMMW:
-		out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
-		out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
-		out->Imm[0] = ExtractBits<u64>(codeWord, 20, 12, true);    // imm
-		break;
+    case OP_IMMW:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
+        out->Imm[0] = ExtractBits<u64>(codeWord, 20, 12, true);    // imm
+        break;
 
-	case OP_INTW:
-		out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
-		out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
-		out->Reg[2] = ExtractBits(codeWord, 20, 5);     // rs2
-		break;
+    case OP_INTW:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
+        out->Reg[2] = ExtractBits(codeWord, 20, 5);     // rs2
+        break;
 
     case OP_ATOMIC:
         out->Reg[0] = ExtractBits(codeWord, 7, 5);      // rd
@@ -219,56 +219,56 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
         out->Reg[2] = ExtractBits(codeWord, 20, 5);     // rs2
         break;
 
-	case OP_FLD:
-		out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
-		out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
-		out->Imm[0] = ExtractBits<u64>(codeWord, 20, 12, true);
-		break;
+    case OP_FLD:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5);     // rs1
+        out->Imm[0] = ExtractBits<u64>(codeWord, 20, 12, true);
+        break;
 
-	case OP_FST:
-	{
-		out->Reg[0] = ExtractBits(codeWord, 15, 5);     // rs1
-		out->Reg[1] = ExtractBits(codeWord, 20, 5);     // rs2
+    case OP_FST:
+    {
+        out->Reg[0] = ExtractBits(codeWord, 15, 5);     // rs1
+        out->Reg[1] = ExtractBits(codeWord, 20, 5);     // rs2
 
-		u64 imm =
-			(ExtractBits<u64>(codeWord, 7, 5) << 0) |
-			(ExtractBits<u64>(codeWord, 25, 7) << 5);
-		out->Imm[0] = ExtractBits<u64>(imm, 0, 12, true);
-		break;
-	}
+        u64 imm =
+            (ExtractBits<u64>(codeWord, 7, 5) << 0) |
+            (ExtractBits<u64>(codeWord, 25, 7) << 5);
+        out->Imm[0] = ExtractBits<u64>(imm, 0, 12, true);
+        break;
+    }
 
-	case OP_FMADD:
-		out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
-		out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
-		out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
-		out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
-		break;
+    case OP_FMADD:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+        out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+        out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
+        break;
 
-	case OP_FMSUB:
-		out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
-		out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
-		out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
-		out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
-		break;
+    case OP_FMSUB:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+        out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+        out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
+        break;
 
-	case OP_FNMSUB:
-		out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
-		out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
-		out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
-		out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
-		break;
+    case OP_FNMSUB:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+        out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+        out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
+        break;
 
-	case OP_FNMADD:
-		out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
-		out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
-		out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
-		out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
-		break;
+    case OP_FNMADD:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+        out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+        out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
+        break;
 
-	case OP_FLOAT: //正しい？
+    case OP_FLOAT: //正しい？
         if(ExtractBits<u64>(codeWord, 26, 6) == 0x38){
-  		    out->Reg[0] = ExtractBits(codeWord, 7, 5);           // rd 整数レジスタ
-  		    out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+            out->Reg[0] = ExtractBits(codeWord, 7, 5);           // rd 整数レジスタ
+            out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
         }
         else if(ExtractBits<u64>(codeWord, 26, 6) == 0x3c){
           out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd 
@@ -276,8 +276,8 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
         }
         else{
           out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
-  		    out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
-  		    out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+            out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+            out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
         }
         break;
 

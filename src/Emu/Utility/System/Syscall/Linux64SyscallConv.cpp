@@ -328,23 +328,23 @@ void Linux64SyscallConv::syscall_open(OpEmulationState* opState)
 }
 void Linux64SyscallConv::syscall_openat(OpEmulationState* opState)
 {
-	
-	std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    
+    std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
 
-	int result = GetVirtualSystem()->Open(
-		fileName.c_str(),
-		(int)OpenFlagTargetToHost(static_cast<u32>(m_args[3]))
-	);
-	std::string fd = "/dev/tty";
-	if (fd == fileName) {
-		result = 1;
-	}
+    int result = GetVirtualSystem()->Open(
+        fileName.c_str(),
+        (int)OpenFlagTargetToHost(static_cast<u32>(m_args[3]))
+    );
+    std::string fd = "/dev/tty";
+    if (fd == fileName) {
+        result = 1;
+    }
 
 
-	if (result == -1)
-		SetResult(false, GetVirtualSystem()->GetErrno());
-	else
-		SetResult(true, result);
+    if (result == -1)
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    else
+        SetResult(true, result);
 }
 
 void Linux64SyscallConv::syscall_close(OpEmulationState* opState)
@@ -451,19 +451,19 @@ void Linux64SyscallConv::syscall_writev(OpEmulationState* opState)
 }
 void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
 {
-	unsigned int bufSize = (unsigned int)m_args[4];
-	TargetBuffer buf(GetMemorySystem(), m_args[3], bufSize);
-	std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
-	
-	int result = GetVirtualSystem()->ReadLinkAt((int)m_args[1], fileName, buf.Get(), bufSize);
+    unsigned int bufSize = (unsigned int)m_args[4];
+    TargetBuffer buf(GetMemorySystem(), m_args[3], bufSize);
+    std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    
+    int result = GetVirtualSystem()->ReadLinkAt((int)m_args[1], fileName, buf.Get(), bufSize);
 
-	if (result == -1) {
-		SetResult(false, GetVirtualSystem()->GetErrno());
-	}
-	else {
-		m_simulatorSystem->NotifySyscallReadFileToMemory(Addr(opState->GetPID(), opState->GetTID(), m_args[3]), bufSize);
-		SetResult(true, 0);
-	}
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        m_simulatorSystem->NotifySyscallReadFileToMemory(Addr(opState->GetPID(), opState->GetTID(), m_args[3]), bufSize);
+        SetResult(true, 0);
+    }
 }
 void Linux64SyscallConv::syscall_lseek(OpEmulationState* opState)
 {

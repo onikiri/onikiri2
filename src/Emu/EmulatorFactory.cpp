@@ -58,9 +58,9 @@ EmulatorIF* EmulatorFactory::Create(const String& systemName, SystemIF* simSyste
     else if (systemName == "RISCV32Linux") {
         return new RISCV32Linux::RISCV32LinuxEmulator(simSystem);
     }
-	else if (systemName == "RISCV64Linux") {
-		return new RISCV64Linux::RISCV64LinuxEmulator(simSystem);
-	}
+    else if (systemName == "RISCV64Linux") {
+        return new RISCV64Linux::RISCV64LinuxEmulator(simSystem);
+    }
 
     THROW_RUNTIME_ERROR(
         "Unknown system name specified.\n"

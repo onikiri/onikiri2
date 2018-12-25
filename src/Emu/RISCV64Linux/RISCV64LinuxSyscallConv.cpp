@@ -142,12 +142,12 @@ static struct {
     SYSCALLNAME(gettimeofday, 2, "pp"),
     SYSCALLNAME(brk, 1, "p"),
     SYSCALLNAME(open, 3, "sxx"),
-	SYSCALLNAME(openat, 4, "nsxx"),
+    SYSCALLNAME(openat, 4, "nsxx"),
     SYSCALLNAME(unlink, 1, "s"),
     SYSCALLNAME(stat, 2, "sp"),
-	SYSCALLNAME(uname, 1, "p"),
-	SYSCALLNAME(writev, 3, "npn"),
-	SYSCALLNAME(mmap, 6, "pxxxnx"),
+    SYSCALLNAME(uname, 1, "p"),
+    SYSCALLNAME(writev, 3, "npn"),
+    SYSCALLNAME(mmap, 6, "pxxxnx"),
     SYSCALLNAME(munmap, 2, "px"),
     SYSCALLNAME(readlinkat, 4, "nssn"),
     SYSCALLNAME(sigaction, 3 , "npp")
@@ -294,43 +294,43 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
 
     case syscall_id_uname:
-		syscall_uname(opState);
-		break;
+        syscall_uname(opState);
+        break;
 
-	case syscall_id_openat:
-		syscall_openat(opState);
-		break;
+    case syscall_id_openat:
+        syscall_openat(opState);
+        break;
 
-	case syscall_id_writev:
-		syscall_writev(opState);
-		break;
+    case syscall_id_writev:
+        syscall_writev(opState);
+        break;
 
-	case syscall_id_readlinkat:
-		syscall_readlinkat(opState);
-		break;
+    case syscall_id_readlinkat:
+        syscall_readlinkat(opState);
+        break;
 
     case syscall_id_munmap:
         syscall_munmap(opState);
         break;
     case syscall_id_mmap:
-		syscall_mmap(opState);
-		break;
+        syscall_mmap(opState);
+        break;
 
-	case syscall_id_geteuid:
-		syscall_geteuid(opState);
-		break;
+    case syscall_id_geteuid:
+        syscall_geteuid(opState);
+        break;
 
-	case syscall_id_getuid:
-		syscall_getuid(opState);
-		break;
+    case syscall_id_getuid:
+        syscall_getuid(opState);
+        break;
 
-	case syscall_id_getegid:
-		syscall_getegid(opState);
-		break;
+    case syscall_id_getegid:
+        syscall_getegid(opState);
+        break;
 
-	case syscall_id_getgid:
-		syscall_getgid(opState);
-		break;
+    case syscall_id_getgid:
+        syscall_getgid(opState);
+        break;
 /*
     case syscall_id_readv:
         syscall_readv(opState);
