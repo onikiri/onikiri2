@@ -165,8 +165,8 @@ namespace {
 
 #define RISCV64_DSTOP(n) RISCV64DstOperand<n>
 #define RISCV64_SRCOP(n) RISCV64SrcOperand<n>
-#define RISCV64_SRCOPFLOAT(n) AsFP< float, Cast<u32, SrcOperand<n> > > // lower 32-bit holds float value
-#define RISCV64_SRCOPDOUBLE(n) AsFP< double, SrcOperand<n> >
+#define RISCV64_SRCOPFLOAT(n) AsFP< f32, Cast<u32, SrcOperand<n> > > // lower 32-bit holds float value
+#define RISCV64_SRCOPDOUBLE(n) AsFP< f64, SrcOperand<n> >
 
 #define D0 RISCV64_DSTOP(0)
 #define D1 RISCV64_DSTOP(1)
