@@ -665,20 +665,20 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     { "fcvt.d.wu/rmm",  MASK_FCVT,    OPCODE_FCVT(0x69, 1, 4),  1,{ { OpClassCode::ifCONV, {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, CastFP< f64, Cast< u32, S0>, IntConst<int, FE_TONEAREST> > > } } },
     { "fcvt.d.wu",      MASK_FCVT,    OPCODE_FCVT(0x69, 1, 7),  1,{ { OpClassCode::ifCONV, {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, CastFP< f64, Cast< u32, S0>, RISCV64RoundModeFromFCSR > > } } },
 
-    // FCVT.S.D instruction will never round, but have RM field.
-    { "fcvt.s.d/rne",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 0),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_TONEAREST> > > } } },
-    { "fcvt.s.d/rtz",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 1),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_TOWARDZERO> > > } } },
-    { "fcvt.s.d/rdn",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 2),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_DOWNWARD> > > } } },
-    { "fcvt.s.d/rup",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 3),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_UPWARD> > > } } },
-    { "fcvt.s.d/rmm",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 4),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_TONEAREST> > > } } },
-    { "fcvt.s.d",       MASK_FCVT,    OPCODE_FCVT(0x20, 1, 7),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, CastFP< f64, SF0, RISCV64RoundModeFromFCSR > > } } },
+    // FCVT.D.S instruction will never round, but have RM field.
+    { "fcvt.s.d/rne",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 0),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fcvt.s.d/rtz",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 1),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_TOWARDZERO> > > > } } },
+    { "fcvt.s.d/rdn",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 2),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_DOWNWARD> > > > } } },
+    { "fcvt.s.d/rup",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 3),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_UPWARD> > > > } } },
+    { "fcvt.s.d/rmm",   MASK_FCVT,    OPCODE_FCVT(0x20, 1, 4),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fcvt.s.d",       MASK_FCVT,    OPCODE_FCVT(0x20, 1, 7),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, RISCV64RoundModeFromFCSR > > > } } },
 
-    { "fcvt.d.s/rne",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 0),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_TONEAREST> > > > } } },
-    { "fcvt.d.s/rtz",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 1),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_TOWARDZERO> > > > } } },
-    { "fcvt.d.s/rdn",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 2),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_DOWNWARD> > > > } } },
-    { "fcvt.d.s/rup",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 3),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_UPWARD> > > > } } },
-    { "fcvt.d.s/rmm",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 4),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, IntConst<int, FE_TONEAREST> > > > } } },
-    { "fcvt.d.s",       MASK_FCVT,    OPCODE_FCVT(0x21, 0, 7),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64NanBoxing< CastFP< f32, SD0, RISCV64RoundModeFromFCSR > > > } } },
+    { "fcvt.d.s/rne",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 0),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_TONEAREST> > > } } },
+    { "fcvt.d.s/rtz",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 1),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_TOWARDZERO> > > } } },
+    { "fcvt.d.s/rdn",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 2),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_DOWNWARD> > > } } },
+    { "fcvt.d.s/rup",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 3),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_UPWARD> > > } } },
+    { "fcvt.d.s/rmm",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 4),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_TONEAREST> > > } } },
+    { "fcvt.d.s",       MASK_FCVT,    OPCODE_FCVT(0x21, 0, 7),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, RISCV64RoundModeFromFCSR > > } } },
 
     //move
     //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
