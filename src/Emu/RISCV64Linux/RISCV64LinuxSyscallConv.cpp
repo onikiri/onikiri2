@@ -151,7 +151,8 @@ static struct {
     SYSCALLNAME(munmap, 2, "px"),
     SYSCALLNAME(mremap, 4, "pxxx"),
     SYSCALLNAME(readlinkat, 4, "nssn"),
-    SYSCALLNAME(sigaction, 3 , "npp")
+    SYSCALLNAME(sigaction, 3 , "npp"),
+    SYSCALLNAME(ioctl, 3, "xxx"),
     /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
@@ -172,7 +173,6 @@ static struct {
     SYSCALLNAME(rename, 2, "ss"),
     SYSCALLNAME(mprotect, 3, "pxx"),
     SYSCALLNAME(chmod, 2, "sx"),
-    SYSCALLNAME(ioctl, 3, "xxx"),
     SYSCALLNAME(time, 1, "p"),
     SYSCALLNAME(times, 1, "p"),
     //SYSCALLNAME(settimeofday, 2, "pp"),
@@ -253,6 +253,9 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     SetResult(false, 0);
     switch (GetArg(0)) {
+    case syscall_id_ioctl:
+        syscall_ioctl(opState);
+        break;
     case syscall_id_close:
         syscall_close(opState);
         break;
@@ -403,9 +406,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_lstat:
 //  case syscall_id_lstat64:
         syscall_lstat64(opState);
-        break;
-    case syscall_id_ioctl:
-        syscall_ioctl(opState);
         break;
     //case syscall_id_readlink:
     //  syscall_readlink(opState);
