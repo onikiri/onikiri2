@@ -344,7 +344,7 @@ namespace Onikiri {
             //compare
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64FPEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, u64> //あってる？
+            struct RISCV64FPEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
             {
                 bool operator()(EmulatorUtility::OpEmulationState* opState)
                 {
@@ -356,7 +356,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64FPLess : public std::unary_function<EmulatorUtility::OpEmulationState*, u64> //あってる？
+            struct RISCV64FPLess : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
             {
                 bool operator()(EmulatorUtility::OpEmulationState* opState)
                 {
@@ -368,7 +368,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64FPLessEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, u64> //あってる？
+            struct RISCV64FPLessEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
             {
                 bool operator()(EmulatorUtility::OpEmulationState* opState)
                 {
