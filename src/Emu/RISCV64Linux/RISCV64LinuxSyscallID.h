@@ -61,6 +61,8 @@ namespace Onikiri {
 
             const int syscall_id_gettimeofday = 169;
             
+            const int syscall_id_getpid = 172;
+            const int syscall_id_gettid = 173;
             const int syscall_id_getuid = 174;
             const int syscall_id_geteuid = 175;
             const int syscall_id_getgid = 176;
@@ -87,7 +89,6 @@ namespace Onikiri {
             const int syscall_id_time = 13;
 
             const int syscall_id_chmod = 15;
-            const int syscall_id_getpid = 20;
 
             const int syscall_id_setuid = 23;
             const int syscall_id_getuid = 24;
@@ -135,7 +136,6 @@ namespace Onikiri {
             const int syscall_id_chown = 181;
 
             const int syscall_id_madvise = 205;
-            const int syscall_id_gettid = 207;
             const int syscall_id_tkill = 208;
             const int syscall_id_tgkill = 250;
             */

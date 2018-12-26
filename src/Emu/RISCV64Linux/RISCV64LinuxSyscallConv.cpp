@@ -328,6 +328,11 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_geteuid(opState);
         break;
 
+    case syscall_id_getpid:
+    case syscall_id_gettid:
+        syscall_getpid(opState);
+        break;
+
     case syscall_id_getuid:
         syscall_getuid(opState);
         break;
@@ -368,10 +373,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_fcntl:
         syscall_fcntl(opState);
-        break;
-    case syscall_id_getpid:
-    case syscall_id_gettid:
-        syscall_getpid(opState);
         break;
     ////case syscall_id_setuid:
     ////    syscall_setuid(opState);
