@@ -177,6 +177,16 @@ namespace Onikiri {
             //
             // FP operations
             //
+
+            template<typename TSrc>
+            struct RISCV64NanBoxing : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+            {
+                u64 operator()(EmulatorUtility::OpEmulationState* opState) const
+                {
+                    return 0xffffffff00000000 | AsIntFunc<u32, f32>(TSrc()(opState));
+                }
+            };
+
             struct RISCV64RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
             {
                 int operator()(EmulatorUtility::OpEmulationState* opState) const
