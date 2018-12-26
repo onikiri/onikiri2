@@ -182,7 +182,7 @@ namespace Onikiri {
                 int operator()(EmulatorUtility::OpEmulationState* opState) const
                 {
                     // TODO: Select a round mode from FCSR
-                    return FE_TOWARDZERO;
+                    return FE_TONEAREST;
                 }
             };
 
