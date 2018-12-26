@@ -516,8 +516,8 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     { "fsgnj.s",    MASK_FLOAT,   OPCODE_FLOAT(0x10, 0),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   SetSext< D0, FPFLOATCopySign<S1, S0> > } } },
     { "fsgnjn.s",   MASK_FLOAT,   OPCODE_FLOAT(0x10, 1),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   SetSext< D0, FPFLOATCopySignNeg<S1, S0> > } } },
     { "fsgnjx.s",   MASK_FLOAT,   OPCODE_FLOAT(0x10, 2),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   SetSext< D0, FPFLOATCopySignXor<S1, S0> > } } },
-    { "fmv.x.w",    MASK_MV,      OPCODE_MV(0x70),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   SetSext< D0, AsInt<s32, SF0> > } } },
-    { "fmv.w.x",    MASK_MV,      OPCODE_MV(0x78),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   SetSext< D0, Cast< s32, S0> > } } }, //これでいいのか？
+    { "fmv.x.w",    MASK_MV,      OPCODE_MV(0x70),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   SetSext< D0, AsInt<u32, SF0> > } } },
+    { "fmv.w.x",    MASK_MV,      OPCODE_MV(0x78),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64NanBoxing< AsFP< f32, Cast< u32, S0> > > > } } },
 
     //compare
     //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
@@ -727,8 +727,8 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
 
     //move
     //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    { "fmv.x.d",    MASK_MV,      OPCODE_MV(0x71),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, S0> } } }, //　IEEE 754-2008?
-    { "fmv.d.x",    MASK_MV,      OPCODE_MV(0x79),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, S0> } } }, //これでいいのか？
+    { "fmv.x.d",    MASK_MV,      OPCODE_MV(0x71),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, S0> } } },
+    { "fmv.d.x",    MASK_MV,      OPCODE_MV(0x79),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, S0> } } },
 
   //class
     //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
