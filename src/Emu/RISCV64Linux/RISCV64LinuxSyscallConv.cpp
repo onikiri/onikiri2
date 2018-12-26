@@ -132,6 +132,7 @@ static struct {
     int argcnt;
     const char* argtempl;
 } syscallTable[] = {
+    SYSCALLNAME(getcwd, 2, "px"),
     SYSCALLNAME(close, 1, "n"),
     SYSCALLNAME(lseek, 3, "nxn"),
     SYSCALLNAME(read, 3, "npn"),
@@ -165,7 +166,6 @@ static struct {
     SYSCALLNAME(fcntl, 3, "nnp"),
     SYSCALLNAME(chdir, 1, "p"),
     SYSCALLNAME(fchdir, 1, "n"),
-    SYSCALLNAME(getcwd, 2, "px"),
     SYSCALLNAME(mkdir, 2, "sx"),
     SYSCALLNAME(rmdir, 1, "s"),
     SYSCALLNAME(readlink, 3, "spx"),
@@ -253,6 +253,9 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     SetResult(false, 0);
     switch (GetArg(0)) {
+    case syscall_id_getcwd:
+        syscall_getcwd(opState);
+        break;
     case syscall_id_ioctl:
         syscall_ioctl(opState);
         break;
@@ -458,9 +461,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_ignore(opState);
         break;
 
-    case syscall_id_getcwd:
-        syscall_getcwd(opState);
-        break;
 */
     default:
         {
