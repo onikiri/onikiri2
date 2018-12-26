@@ -149,6 +149,7 @@ static struct {
     SYSCALLNAME(writev, 3, "npn"),
     SYSCALLNAME(mmap, 6, "pxxxnx"),
     SYSCALLNAME(munmap, 2, "px"),
+    SYSCALLNAME(mremap, 4, "pxxx"),
     SYSCALLNAME(readlinkat, 4, "nssn"),
     SYSCALLNAME(sigaction, 3 , "npp")
     /*
@@ -169,8 +170,6 @@ static struct {
     SYSCALLNAME(readlink, 3, "spx"),
     SYSCALLNAME(link, 2, "ss"),
     SYSCALLNAME(rename, 2, "ss"),
-    SYSCALLNAME(mmap, 6, "pxxxnx"),
-    SYSCALLNAME(mremap, 4, "pxxx"),
     SYSCALLNAME(mprotect, 3, "pxx"),
     SYSCALLNAME(chmod, 2, "sx"),
     SYSCALLNAME(ioctl, 3, "xxx"),
@@ -311,6 +310,9 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     case syscall_id_munmap:
         syscall_munmap(opState);
+        break;
+    case syscall_id_mremap:
+        syscall_mremap(opState);
         break;
     case syscall_id_mmap:
         syscall_mmap(opState);
