@@ -402,7 +402,7 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     //RV32F
     //LOAD/STORE
     //{Name,    Mask,       Opcode,           nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
-    { "flw",    MASK_LD,    OPCODE_FLD(2),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, Load<u32, RISCV64Addr<S0, S1> > > } } },
+    { "flw",    MASK_LD,    OPCODE_FLD(2),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, RISCV64NanBoxing< AsFP<f32, Load<u32, RISCV64Addr<S0, S1> > > > > } } },
     { "fsw",    MASK_ST,    OPCODE_FST(2),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u32, S0, RISCV64Addr<S1, S2> > } } },
 
     //FLOAT
