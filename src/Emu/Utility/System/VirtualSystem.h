@@ -109,6 +109,10 @@ namespace Onikiri {
             // ターゲットの作業ディレクトリを設定する
             void SetInitialWorkingDir(const boost::filesystem::path& dir);
 
+            // Set the file name of a command file
+            // This file name must be absolute one
+            void SetCommandFileName(const boost::filesystem::path& absCmdFileName);
+
             // システムコール群
             int GetErrno();
 
@@ -127,7 +131,7 @@ namespace Onikiri {
             int Read(int targetFD, void *buffer, unsigned int count);
             int Write(int targetFD, void* buffer, unsigned int count);
             int Close(int targetFD);
-            int ReadLinkAt(int targetFD, std::string pathname, void *buffer, unsigned int count);
+            int ReadLinkAt(int targetFD, const char* pathname, void *buffer, unsigned int count);
 
             int Stat(const char* path, HostStat* s);
             int FStat(int fd, HostStat* s);
@@ -186,6 +190,7 @@ namespace Onikiri {
             DelayUnlinker m_delayUnlinker;
 
             boost::filesystem::path m_cwd;
+            boost::filesystem::path m_absCmdFileName;
 
             // 時刻
             int EmulationModeStrToInt( const std::string& );
