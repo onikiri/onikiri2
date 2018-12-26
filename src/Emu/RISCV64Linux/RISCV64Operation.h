@@ -265,19 +265,27 @@ namespace Onikiri {
             {
                 Type operator()(EmulatorUtility::OpEmulationState* opState)
                 {
-                    typedef typename EmulatorUtility::signed_type<Type>::type SignedType;
                     typedef typename TSrc::result_type FPType;
-                    // 2の補数を仮定
-                    const SignedType maxValue = std::numeric_limits<SignedType>::max(); //ここ理解できてない（稲岡）
-                    const SignedType minValue = std::numeric_limits<SignedType>::min();
-                    FPType value = static_cast<FPType>(TSrc()(opState));
 
-                    if (value > static_cast<FPType>(maxValue))
+                    const Type maxValue = std::numeric_limits<Type>::max();
+                    const Type minValue = std::numeric_limits<Type>::min();
+                    FPType value = TSrc()(opState);
+
+                    if (std::isnan(value)) // NaN
+                        return maxValue;
+                    else if (std::isinf(value) && !signbit(value)) // +Inf
+                        return maxValue;
+                    else if (std::isinf(value) && signbit(value)) // -Inf
+                        return minValue;
+                    else if (value > static_cast<FPType>(maxValue))
                         return maxValue;
                     else if (value < static_cast<FPType>(minValue))
                         return minValue;
-                    else
-                        return static_cast<Type>(value);
+                    else {
+                        Onikiri::ScopedFESetRound sr(RoundMode()(opState));
+                        volatile Type ret = static_cast<Type>(value);
+                        return ret;
+                    }
                 }
             };
 
