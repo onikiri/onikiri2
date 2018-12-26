@@ -144,8 +144,8 @@ namespace Onikiri {
             {
                 Type operator()(OpEmulationState* opState)
                 {
-                    Type lhs = TSrc1()(opState);
-                    Type rhs = TSrc2()(opState);
+                    Type lhs = static_cast<Type>(TSrc1()(opState));
+                    Type rhs = static_cast<Type>(TSrc2()(opState));
 
                     if (lhs > rhs) {
                         return rhs;
@@ -162,8 +162,8 @@ namespace Onikiri {
             {
                 Type operator()(OpEmulationState* opState)
                 {
-                    Type lhs = TSrc1()(opState);
-                    Type rhs = TSrc2()(opState);
+                    Type lhs = static_cast<Type>(TSrc1()(opState));
+                    Type rhs = static_cast<Type>(TSrc2()(opState));
 
                     if (lhs < rhs) {
                         return rhs;
@@ -589,28 +589,6 @@ namespace Onikiri {
                         return src1;
                     }
                     return src1 % src2;
-                }
-            };
-
-            template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64Min : public std::unary_function<OpEmulationState*, u64>
-            {
-                u64 operator()(OpEmulationState* opState)
-                {
-                    Type src1 = static_cast<Type>(TSrc1()(opState));
-                    Type src2 = static_cast<Type>(TSrc2()(opState));
-                    return static_cast<u64>(std::min(src1, src2));
-                }
-            };
-
-            template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64Max : public std::unary_function<OpEmulationState*, u64>
-            {
-                u64 operator()(OpEmulationState* opState)
-                {
-                    Type src1 = static_cast<Type>(TSrc1()(opState));
-                    Type src2 = static_cast<Type>(TSrc2()(opState));
-                    return static_cast<u64>(std::max(src1, src2));
                 }
             };
 
