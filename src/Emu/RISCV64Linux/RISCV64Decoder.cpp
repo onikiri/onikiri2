@@ -32,6 +32,7 @@
 #include <pch.h>
 
 #include "Emu/RISCV64Linux/RISCV64Decoder.h"
+#include "Emu/RISCV64Linux/RISCV64Info.h"
 
 #include "SysDeps/Endian.h"
 #include "Emu/Utility/DecoderUtility.h"
@@ -284,5 +285,8 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
     default:
         //THROW_RUNTIME_ERROR("Unknown op code");
         break;
+    }
+    for (int reg : out->Reg) {
+        ASSERT( -1 <= reg && reg < RISCV64Info::RegisterCount, "The decoded register number (%d) is out of range.", reg );
     }
 }
