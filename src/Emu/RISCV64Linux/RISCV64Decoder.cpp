@@ -189,7 +189,7 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
         ) {
             out->Reg[0] = ExtractBits(codeWord, 7, 5);          // rd 
             out->Reg[1] = ExtractBits(codeWord, 15, 5);         // rs1
-            out->Reg[2] = ExtractBits(codeWord, 25, 12) + 65;   // csr
+            out->Imm[0] = ExtractBits(codeWord, 20, 12);   // csr
         }
         else if (
             ExtractBits<u64>(codeWord, 12, 3) == 0x5 || 
@@ -197,8 +197,8 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
             ExtractBits<u64>(codeWord, 12, 3) == 0x7
         ) {
             out->Reg[0] = ExtractBits(codeWord, 7, 5);              // rd
-            out->Imm[0] = ExtractBits<u64>(codeWord, 15, 5, true);  // imm
-            out->Reg[1] = ExtractBits(codeWord, 20, 12) + 65;       // csr
+            out->Imm[0] = ExtractBits<u64>(codeWord, 15, 5);  // imm
+            out->Imm[1] = ExtractBits(codeWord, 20, 12);       // csr
         }
         break;
 

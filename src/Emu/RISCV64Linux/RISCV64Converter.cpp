@@ -296,27 +296,27 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     //{Name,    Mask,       Opcode,          nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"csrrw",   MASK_CSR,   OPCODE_CSR(1),   2,  {
         {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV64SyscallSetArg} ,
-        {OpClassCode::syscall_branch,   {R0, R2}, {R1, R2, -1, -1}, RISCV64CSRRW<D0, D1, S0, S1>},
+        {OpClassCode::syscall_branch,   {R0, -1}, {R1, I0, -1, -1}, RISCV64CSRRW<D0, S0, S1>},
     }},
     {"csrrs",   MASK_CSR,   OPCODE_CSR(2),   2,  {
         {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV64SyscallSetArg} ,
-        {OpClassCode::syscall_branch,   {R0, R2}, {R1, R2, -1, -1}, RISCV64CSRRS<D0, D1, S0, S1>},
+        {OpClassCode::syscall_branch,   {R0, -1}, {R1, I0, -1, -1}, RISCV64CSRRS<D0, S0, S1>},
     }},
     {"csrrc",   MASK_CSR,   OPCODE_CSR(3),   2,  {
         {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV64SyscallSetArg} ,
-        {OpClassCode::syscall_branch,   {R0, R2}, {R1, R2, -1, -1}, RISCV64CSRRC<D0, D1, S0, S1>},
+        {OpClassCode::syscall_branch,   {R0, -1}, {R1, I0, -1, -1}, RISCV64CSRRC<D0, S0, S1>},
     }},
     {"csrrwi",   MASK_CSR,   OPCODE_CSR(5),   2,  {
         {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV64SyscallSetArg} ,
-        {OpClassCode::syscall_branch,   {R0, R1}, {I0, R1, -1, -1}, RISCV64CSRRW<D0, D1, S0, S1>},
+        {OpClassCode::syscall_branch,   {R0, -1}, {I0, I1, -1, -1}, RISCV64CSRRW<D0, S0, S1>},
     }},
     {"csrrsi",   MASK_CSR,   OPCODE_CSR(6),   2,  {
         {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV64SyscallSetArg} ,
-        {OpClassCode::syscall_branch,   {R0, R1}, {I0, R1, -1, -1}, RISCV64CSRRS<D0, D1, S0, S1>},
+        {OpClassCode::syscall_branch,   {R0, -1}, {I0, I1, -1, -1}, RISCV64CSRRS<D0, S0, S1>},
     }},
     {"csrrci",   MASK_CSR,   OPCODE_CSR(7),   2,  {
         {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV64SyscallSetArg} ,
-        {OpClassCode::syscall_branch,   {R0, R1}, {I0, R1, -1, -1}, RISCV64CSRRC<D0, D1, S0, S1>},
+        {OpClassCode::syscall_branch,   {R0, -1}, {I0, I1, -1, -1}, RISCV64CSRRC<D0, S0, S1>},
     }},
     
 

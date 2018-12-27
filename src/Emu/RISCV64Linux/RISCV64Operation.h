@@ -661,7 +661,7 @@ namespace Onikiri {
                 DstOperand<0>::SetOperand(opState, error ? (u64)-1 : val);
             }
 
-            template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
+            template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRW(OpEmulationState* opState)
             {
                 TDest::SetOperand(opState, 0);
@@ -670,7 +670,7 @@ namespace Onikiri {
                 //CSR_D::SetOperand(opState, TSrc1()(opState));
             }
 
-            template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
+            template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRS(OpEmulationState* opState)
             {
                 TDest::SetOperand(opState, 0);
@@ -679,7 +679,7 @@ namespace Onikiri {
                 //CSR_D::SetOperand(opState, TSrc1()(opState) | CSR_S()(opState));
             }
 
-            template <typename TDest, typename CSR_D, typename TSrc1, typename CSR_S>
+            template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRC(OpEmulationState* opState)
             {
                 TDest::SetOperand(opState, 0);
