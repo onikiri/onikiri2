@@ -584,10 +584,10 @@ void RISCV64LinuxSyscallConv::syscall_stat32(OpEmulationState* opState)
 
 void RISCV64LinuxSyscallConv::syscall_fstatat32(OpEmulationState* opState)
 {
-    u64 fd = m_args[1];
+    s64 fd = (s64)m_args[1];
     HostStat st;
     string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
-    u64 flag = m_args[4];
+    s64 flag = (s64)m_args[4];
     int result = -1;
     /*
     ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
