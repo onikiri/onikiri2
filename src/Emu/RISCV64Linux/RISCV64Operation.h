@@ -661,31 +661,62 @@ namespace Onikiri {
                 DstOperand<0>::SetOperand(opState, error ? (u64)-1 : val);
             }
 
+            namespace {
+                enum class RISCV64CSR
+                {
+                    FFLAGS  = 0x001,
+                    FRM     = 0x002,
+                    FCSR    = 0x003,
+                    CYCLE   = 0xC00,
+                    TIME    = 0xC01,
+                    INSTRET = 0xC02,
+                };
+
+                const char* to_string(RISCV64CSR csr)
+                {
+                    switch (csr)
+                    {
+                    case RISCV64CSR::FFLAGS : return "FFLAGS";
+                    case RISCV64CSR::FRM    : return "FRM";
+                    case RISCV64CSR::FCSR   : return "FCSR";
+                    case RISCV64CSR::CYCLE  : return "CYCLE";
+                    case RISCV64CSR::TIME   : return "TIME";
+                    case RISCV64CSR::INSTRET: return "INSTRET";
+                    default                 : return "<invalid>";
+                    }
+                }
+
+            } // namespace `anonymous'
+
             template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRW(OpEmulationState* opState)
             {
                 TDest::SetOperand(opState, 0);
-                RUNTIME_WARNING("CSR is accessed.");
-                //TDest::SetOperand(opState, CSR_S()(opState));
-                //CSR_D::SetOperand(opState, TSrc1()(opState));
+                RUNTIME_WARNING("Write access to CSR '%s'. This operation has not been implemented yet.", to_string((RISCV64CSR)CSR_S()(opState)));
             }
 
             template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRS(OpEmulationState* opState)
             {
                 TDest::SetOperand(opState, 0);
-                RUNTIME_WARNING("CSR is accessed.");
-                //TDest::SetOperand(opState, CSR_S()(opState));
-                //CSR_D::SetOperand(opState, TSrc1()(opState) | CSR_S()(opState));
+                if (TSrc1()(opState) == 0) {
+                    // 'CSRRS rd, csr, x0' instruction expanded from 'CSRR rd, csr' pseudo instruction
+                    if ((RISCV64CSR)CSR_S()(opState) == RISCV64CSR::FRM) {
+                        // It is not a matter that returning 0 when FRM is read.
+                        // This is an ad-hoc code to prevent unnecessary warnings.
+                    } else {
+                        RUNTIME_WARNING("Read access to CSR '%s'. This operation has not been implemented yet.", to_string((RISCV64CSR)CSR_S()(opState)));
+                    }
+                } else {
+                    RUNTIME_WARNING("Write access to CSR '%s'. This operation has not been implemented yet.", to_string((RISCV64CSR)CSR_S()(opState)));
+                }
             }
 
             template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRC(OpEmulationState* opState)
             {
                 TDest::SetOperand(opState, 0);
-                RUNTIME_WARNING("CSR is accessed.");
-                //TDest::SetOperand(opState, CSR_S()(opState));
-                //CSR_D::SetOperand(opState, ~(TSrc1()(opState)) & CSR_S()(opState));
+                RUNTIME_WARNING("Write access to CSR '%s'. This operation has not been implemented yet.", to_string((RISCV64CSR)CSR_S()(opState)));
             }
             
 
