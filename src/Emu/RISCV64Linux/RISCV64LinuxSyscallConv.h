@@ -68,6 +68,7 @@ namespace Onikiri {
 
             virtual u32 OpenFlagTargetToHost(u32 flag);
             virtual void syscall_fstat32(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_fstatat32(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_stat32(EmulatorUtility::OpEmulationState* opState);
             virtual void write_stat32(u64 dest, const EmulatorUtility::HostStat &src);
         };

@@ -330,16 +330,27 @@ void Linux64SyscallConv::syscall_open(OpEmulationState* opState)
 }
 void Linux64SyscallConv::syscall_openat(OpEmulationState* opState)
 {
-    
+    s64 fd = (s64)m_args[1];
     std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
 
-    int result = GetVirtualSystem()->Open(
-        fileName.c_str(),
-        (int)OpenFlagTargetToHost(static_cast<u32>(m_args[3]))
-    );
-    std::string fd = "/dev/tty";
-    if (fd == fileName) {
+    if (fileName == std::string("/dev/tty")) {
         result = 1;
+    }
+    else {
+        if (fd == -100) {
+            result = GetVirtualSystem()->Open(
+                fileName.c_str(),
+                (int)OpenFlagTargetToHost(static_cast<u32>(m_args[3]))
+            );
+        }
+        else {
+            THROW_RUNTIME_ERROR(
+                "'openat' does not support reading fd other than 'AT_FDCWD (-100)', "
+                "but '%d' is specified.", fd
+            );
+        }
+
     }
 
 
