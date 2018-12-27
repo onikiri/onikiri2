@@ -455,9 +455,9 @@ void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
 {
     unsigned int bufSize = (unsigned int)m_args[4];
     TargetBuffer buf(GetMemorySystem(), m_args[3], bufSize);
-    std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    const string& fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
     
-    int result = GetVirtualSystem()->ReadLinkAt((int)m_args[1], fileName, buf.Get(), bufSize);
+    int result = GetVirtualSystem()->ReadLinkAt((int)m_args[1], fileName.c_str(), buf.Get(), bufSize);
 
     if (result == -1) {
         SetResult(false, GetVirtualSystem()->GetErrno());

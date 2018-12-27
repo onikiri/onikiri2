@@ -39,6 +39,8 @@ namespace Onikiri {
         // https://github.com/riscv/riscv-linux/blob/riscv-next/include/uapi/asm-generic/unistd.h
         namespace SyscallID {
 
+            const int syscall_id_getcwd = 17;
+            const int syscall_id_ioctl = 29;
             const int syscall_id_openat = 56;
 
             const int syscall_id_close = 57;
@@ -60,6 +62,8 @@ namespace Onikiri {
 
             const int syscall_id_gettimeofday = 169;
             
+            const int syscall_id_getpid = 172;
+            const int syscall_id_gettid = 173;
             const int syscall_id_getuid = 174;
             const int syscall_id_geteuid = 175;
             const int syscall_id_getgid = 176;
@@ -68,6 +72,7 @@ namespace Onikiri {
             
             const int syscall_id_brk = 214;
             const int syscall_id_munmap = 215;
+            const int syscall_id_mremap = 216;
 
             const int syscall_id_mmap = 222;
 
@@ -85,7 +90,6 @@ namespace Onikiri {
             const int syscall_id_time = 13;
 
             const int syscall_id_chmod = 15;
-            const int syscall_id_getpid = 20;
 
             const int syscall_id_setuid = 23;
             const int syscall_id_getuid = 24;
@@ -102,7 +106,6 @@ namespace Onikiri {
             const int syscall_id_getgid = 47;
             const int syscall_id_geteuid = 49;
             const int syscall_id_getegid = 50;
-            const int syscall_id_ioctl = 54;
             const int syscall_id_fcntl = 55;
             const int syscall_id_dup2 = 63;
             const int syscall_id_setreuid = 70;
@@ -128,15 +131,12 @@ namespace Onikiri {
             const int syscall_id_readv = 145;
             const int syscall_id_writev = 146;
 
-            const int syscall_id_mremap = 163;
             const int syscall_id_rt_sigaction = 173;
             const int syscall_id_rt_sigprocmask = 174;
 
             const int syscall_id_chown = 181;
-            const int syscall_id_getcwd = 182;
 
             const int syscall_id_madvise = 205;
-            const int syscall_id_gettid = 207;
             const int syscall_id_tkill = 208;
             const int syscall_id_tgkill = 250;
             */

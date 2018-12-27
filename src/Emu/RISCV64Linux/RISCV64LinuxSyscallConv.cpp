@@ -132,6 +132,7 @@ static struct {
     int argcnt;
     const char* argtempl;
 } syscallTable[] = {
+    SYSCALLNAME(getcwd, 2, "px"),
     SYSCALLNAME(close, 1, "n"),
     SYSCALLNAME(lseek, 3, "nxn"),
     SYSCALLNAME(read, 3, "npn"),
@@ -149,9 +150,11 @@ static struct {
     SYSCALLNAME(writev, 3, "npn"),
     SYSCALLNAME(mmap, 6, "pxxxnx"),
     SYSCALLNAME(munmap, 2, "px"),
+    SYSCALLNAME(mremap, 4, "pxxx"),
     SYSCALLNAME(readlinkat, 4, "nssn"),
     SYSCALLNAME(sigaction, 3 , "npp"),
-    SYSCALLNAME(fstatat, 4, "nspn")
+    SYSCALLNAME(fstatat, 4, "nspn"),
+    SYSCALLNAME(ioctl, 3, "xxx")
     /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
@@ -164,17 +167,13 @@ static struct {
     SYSCALLNAME(fcntl, 3, "nnp"),
     SYSCALLNAME(chdir, 1, "p"),
     SYSCALLNAME(fchdir, 1, "n"),
-    SYSCALLNAME(getcwd, 2, "px"),
     SYSCALLNAME(mkdir, 2, "sx"),
     SYSCALLNAME(rmdir, 1, "s"),
     SYSCALLNAME(readlink, 3, "spx"),
     SYSCALLNAME(link, 2, "ss"),
     SYSCALLNAME(rename, 2, "ss"),
-    SYSCALLNAME(mmap, 6, "pxxxnx"),
-    SYSCALLNAME(mremap, 4, "pxxx"),
     SYSCALLNAME(mprotect, 3, "pxx"),
     SYSCALLNAME(chmod, 2, "sx"),
-    SYSCALLNAME(ioctl, 3, "xxx"),
     SYSCALLNAME(time, 1, "p"),
     SYSCALLNAME(times, 1, "p"),
     //SYSCALLNAME(settimeofday, 2, "pp"),
@@ -255,6 +254,12 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     SetResult(false, 0);
     switch (GetArg(0)) {
+    case syscall_id_getcwd:
+        syscall_getcwd(opState);
+        break;
+    case syscall_id_ioctl:
+        syscall_ioctl(opState);
+        break;
     case syscall_id_close:
         syscall_close(opState);
         break;
@@ -310,11 +315,14 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_readlinkat(opState);
         break;
     case syscall_id_fstatat:
-        syscall_fstat32(opState);
+        syscall_fstatat32(opState);
         break;
 
     case syscall_id_munmap:
         syscall_munmap(opState);
+        break;
+    case syscall_id_mremap:
+        syscall_mremap(opState);
         break;
     case syscall_id_mmap:
         syscall_mmap(opState);
@@ -322,6 +330,11 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     case syscall_id_geteuid:
         syscall_geteuid(opState);
+        break;
+
+    case syscall_id_getpid:
+    case syscall_id_gettid:
+        syscall_getpid(opState);
         break;
 
     case syscall_id_getuid:
@@ -365,10 +378,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_fcntl:
         syscall_fcntl(opState);
         break;
-    case syscall_id_getpid:
-    case syscall_id_gettid:
-        syscall_getpid(opState);
-        break;
     ////case syscall_id_setuid:
     ////    syscall_setuid(opState);
     ////    break;
@@ -405,9 +414,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_lstat:
 //  case syscall_id_lstat64:
         syscall_lstat64(opState);
-        break;
-    case syscall_id_ioctl:
-        syscall_ioctl(opState);
         break;
     //case syscall_id_readlink:
     //  syscall_readlink(opState);
@@ -460,9 +466,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_ignore(opState);
         break;
 
-    case syscall_id_getcwd:
-        syscall_getcwd(opState);
-        break;
 */
     default:
         {
@@ -579,7 +582,21 @@ void RISCV64LinuxSyscallConv::syscall_stat32(OpEmulationState* opState)
     }
 }
 
-
+void RISCV64LinuxSyscallConv::syscall_fstatat32(OpEmulationState* opState)
+{
+    /*
+    HostStat st;
+    string path = StrCpyToHost(GetMemorySystem(), m_args[1]);
+    int result = GetVirtualSystem()->Stat(path.c_str(), &st);
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        write_stat32((u64)m_args[2], st);
+        SetResult(true, result);
+    }
+    */
+}
 void RISCV64LinuxSyscallConv::write_stat32(u64 dest, const HostStat &src)
 {
     static u32 host_st_mode[] =

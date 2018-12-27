@@ -158,16 +158,18 @@ void ProcessState::Init(
         m_syscallConv->SetSystem( simSystem );
         m_loader = loader;
 
-        string targetBase = pcp.GetTargetBasePath();
+        const string& targetBase = pcp.GetTargetBasePath();
 
         m_virtualSystem->SetInitialWorkingDir(
             CompletePath( pcp.GetTargetWorkPath(), targetBase )
         );
 
+        const string& cmdFileName = CompletePath(pcp.GetCommand(), targetBase);
         m_loader->LoadBinary(
             m_memorySystem,
-            CompletePath( pcp.GetCommand(), targetBase )
+            cmdFileName
         );
+        m_virtualSystem->SetCommandFileName(cmdFileName);
 
         m_codeRange = m_loader->GetCodeRange();
 

@@ -243,6 +243,11 @@ void VirtualSystem::SetInitialWorkingDir(const boost::filesystem::path& dir)
     m_cwd = dir;
 }
 
+void VirtualSystem::SetCommandFileName(const boost::filesystem::path& absCmdFileName)
+{
+    m_absCmdFileName = absCmdFileName;
+}
+
 bool VirtualSystem::AddFDMap(int targetFD, int hostFD, bool autoclose)
 {
     if (!m_fdConv.AddMap(targetFD, hostFD))
@@ -382,25 +387,20 @@ int VirtualSystem::Close(int fd)
     return result;
 }
 
-int VirtualSystem::ReadLinkAt(int targetFD, std::string pathname, void *buffer, unsigned int count) {
-    if (pathname == "/proc/self/exe") {
-
-        //If it is as it is it will contain ./.
-        string s = m_cwd.string();
-        s.pop_back();
-        s.pop_back();
-        s.pop_back();
-        //I do not know the name of the executable binary
-        s += "result_linux";
-
-        if (s.size() >= count) {
-            THROW_RUNTIME_ERROR(" %d >= %d; too long path: %s", s.size(), count, pathname.c_str());
+// readlink at
+int VirtualSystem::ReadLinkAt(int targetFD, const char* pathname, void *buffer, unsigned int count) {
+    if (string("/proc/self/exe") == pathname) {
+        if (m_absCmdFileName.size() >= count) {
+            return -1;
         }
-        ::strncpy(static_cast<char*>(buffer), s.c_str(), sizeof(char)*count-1);
+        ::strncpy(static_cast<char*>(buffer), m_absCmdFileName.string().c_str(), sizeof(char)*count-1);
         return 0;
     }
     else {
-        THROW_RUNTIME_ERROR("error in ReadLinkAt: directory: %s", pathname.c_str());
+        THROW_RUNTIME_ERROR(
+            "'readlinkat' does not support reading other than '/proc/self/exe', "
+            "but '%s' is specified.", pathname
+        );
         return -1;
     }
 }
