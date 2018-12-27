@@ -40,6 +40,7 @@ namespace Onikiri {
         namespace SyscallID {
 
             const int syscall_id_getcwd = 17;
+            const int syscall_id_fcntl = 25;
             const int syscall_id_ioctl = 29;
             const int syscall_id_openat = 56;
 

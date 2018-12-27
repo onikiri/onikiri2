@@ -154,7 +154,8 @@ static struct {
     SYSCALLNAME(readlinkat, 4, "nssn"),
     SYSCALLNAME(sigaction, 3 , "npp"),
     SYSCALLNAME(fstatat, 4, "nspn"),
-    SYSCALLNAME(ioctl, 3, "xxx")
+    SYSCALLNAME(ioctl, 3, "xxx"),
+    SYSCALLNAME(fcntl, 3, "nnp")
     /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
@@ -347,6 +348,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     case syscall_id_getgid:
         syscall_getgid(opState);
+        break;
+
+    case syscall_id_fcntl:
+        syscall_fcntl(opState);
         break;
 /*
     case syscall_id_readv:
