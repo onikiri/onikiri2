@@ -258,50 +258,36 @@ namespace Onikiri {
 
             //conversion
 
-            // TSrc の浮動小数点数をTypeの符号付き整数型に変換する．
-            // Typeで表せる最大値を超えている場合は最大値を，最小値を下回っている場合は最小値を返す．
+            // Convert floating point number TSrc to integer Type.
             template <typename Type, typename TSrc, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
             struct RISCV64FPToInt : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
             {
                 Type operator()(EmulatorUtility::OpEmulationState* opState)
                 {
-                    typedef typename EmulatorUtility::signed_type<Type>::type SignedType;
                     typedef typename TSrc::result_type FPType;
-                    // 2の補数を仮定
-                    const SignedType maxValue = std::numeric_limits<SignedType>::max(); //ここ理解できてない（稲岡）
-                    const SignedType minValue = std::numeric_limits<SignedType>::min();
-                    FPType value = static_cast<FPType>(TSrc()(opState));
 
-                    if (value > static_cast<FPType>(maxValue))
+                    const Type maxValue = std::numeric_limits<Type>::max();
+                    const Type minValue = std::numeric_limits<Type>::min();
+                    FPType value = TSrc()(opState);
+
+                    if (std::isnan(value)) // NaN
+                        return maxValue;
+                    else if (std::isinf(value) && !signbit(value)) // +Inf
+                        return maxValue;
+                    else if (std::isinf(value) && signbit(value)) // -Inf
+                        return minValue;
+                    else if (value > static_cast<FPType>(maxValue))
                         return maxValue;
                     else if (value < static_cast<FPType>(minValue))
                         return minValue;
-                    else
-                        return static_cast<Type>(value);
+                    else {
+                        Onikiri::ScopedFESetRound sr(RoundMode()(opState));
+                        volatile Type ret = static_cast<Type>(value);
+                        return ret;
+                    }
                 }
             };
 
-            //符号なし整数型に変換
-            template <typename Type, typename TSrc, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-            struct RISCV64FPToIntU : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
-            {
-                Type operator()(EmulatorUtility::OpEmulationState* opState)
-                {
-                    typedef typename EmulatorUtility::unsigned_type<Type>::type UnsignedType;
-                    typedef typename TSrc::result_type FPType;
-                    // 2の補数を仮定
-                    const UnsignedType maxValue = std::numeric_limits<UnsignedType>::max();
-                    const UnsignedType minValue = std::numeric_limits<UnsignedType>::min();
-                    FPType value = static_cast<FPType>(TSrc()(opState));
-
-                    if (value > static_cast<FPType>(maxValue))
-                        return maxValue;
-                    else if (value < static_cast<FPType>(minValue))
-                        return minValue;
-                    else
-                        return static_cast<Type>(value);
-                }
-            };
 
             // sign from src1 and the rest from src2
             //FLOAT版、GenericOperationに入れてもいいかも

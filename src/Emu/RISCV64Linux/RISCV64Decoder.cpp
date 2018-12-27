@@ -228,7 +228,7 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
     case OP_FST:
     {
         out->Reg[0] = ExtractBits(codeWord, 15, 5);     // rs1
-        out->Reg[1] = ExtractBits(codeWord, 20, 5);     // rs2
+        out->Reg[1] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
 
         u64 imm =
             (ExtractBits<u64>(codeWord, 7, 5) << 0) |
