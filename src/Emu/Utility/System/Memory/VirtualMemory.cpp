@@ -338,8 +338,9 @@ void VirtualMemory::ReadMemory( MemAccess* access )
     // アクセスがマップ単位境界をまたいでいないか
     if ((addr ^ (addr+access->size-1)) >> VIRTUAL_MEMORY_PAGE_SIZE_BITS != 0) {
         access->result = MemAccess::MAR_READ_UNALIGNED_ADDRESS;
-        access->value = 0;
-        return;
+        // RISC-Vの圧縮命令は、ページ境界をまたぐことがある
+        // access->value = 0;
+        // return;
     }
     
     // Check attribute

@@ -221,6 +221,7 @@ namespace Onikiri {
             opInfo.SetMicroOpNum( microNum );
             opInfo.SetMicroOpIndex( microOpIndex );
             opInfo.SetMnemonic(mnemonic);
+            opInfo.SetInstructionSizeInByte(Traits::CalculateInstructionSize(opInfo));
 
             // 未定義命令の場合，命令語を即値として入れる
             if (opInfoDef.Iclass == OpClassCode::UNDEF) {

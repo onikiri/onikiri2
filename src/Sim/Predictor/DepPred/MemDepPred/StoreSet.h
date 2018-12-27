@@ -54,7 +54,6 @@ namespace Onikiri {
         public PhysicalResourceNode
     {
     private:
-        static const int WORD_BITS = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
         static const u64 INVALID_STORESET_ID = 1;
         typedef AdrHasher HasherType;
         typedef Addr StoreSetID;

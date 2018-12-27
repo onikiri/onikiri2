@@ -69,6 +69,7 @@ namespace Onikiri
                 m_immNum(0), 
                 m_microOpNum(0), 
                 m_microOpIndex(0), 
+                m_instructionSizeInByte(0),
                 m_mnemonic("")
             {
                 std::fill(m_srcReg.begin(), m_srcReg.end(), -1);
@@ -150,6 +151,10 @@ namespace Onikiri
             void SetMicroOpNum( int microOpNum )    {   m_microOpNum = microOpNum;      }
             void SetMicroOpIndex( int microOpIndex ){   m_microOpIndex = microOpIndex;  }
 
+            // 命令のサイズを設定
+            void SetInstructionSizeInByte(int size) { m_instructionSizeInByte = size; }
+            int GetInstructionSizeInByte() const { return m_instructionSizeInByte; }
+
             // ニーモニックを設定 (ポインタは一時的な文字列を指していてはいけない)
             void SetMnemonic(const char* mnemonic) { m_mnemonic = mnemonic; }
 
@@ -219,6 +224,9 @@ namespace Onikiri
 
             int m_microOpNum;   // The number of micro-ops for its instruction.
             int m_microOpIndex; // The position of this micro op in its instruction.
+
+            // 命令語のサイズ
+            int m_instructionSizeInByte;
 
             // ニーモニック
             const char* m_mnemonic;

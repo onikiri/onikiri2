@@ -155,7 +155,7 @@ void GShare::Retired(OpIterator op)
 int GShare::GetPHTIndex(int localThreadID, const PC& pc)
 {
     // pc の下位ビットを切り捨て
-    u64 p = pc.address >> SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
+    u64 p = pc.address >> m_core->GetInstructionWordByteShift();
 
     // p から jBit + kBit 幅を切り出す
     if(m_addrXORConvolute){

@@ -270,11 +270,7 @@ void InorderSystem::Run()
 
             // 次のPCをアップデート
             if ( infoIndex == infoCount - 1 ) {
-                if (op->GetTaken()) {
-                    curThreadPC = op->GetTakenPC();
-                }else {
-                    curThreadPC.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
-                }
+                curThreadPC = op->GetNextPC();
             }
 
             inorderList->Commit( op );

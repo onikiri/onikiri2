@@ -73,6 +73,57 @@ namespace {
     static const int OP_FNMSUB = 0x4b;  // Float neg mul sub
     static const int OP_FNMADD = 0x4f;  // Float neg mul add
     static const int OP_FLOAT = 0x53;   // Float
+
+    static constexpr int OP_C_ADDI4SPN  = 0x0000;
+    static constexpr int OP_C_FLD       = 0x2000;
+    static constexpr int OP_C_LW        = 0x4000;
+    static constexpr int OP_C_LD        = 0x6000;
+    static constexpr int OP_C_FSD       = 0xa000;
+    static constexpr int OP_C_SW        = 0xc000;
+    static constexpr int OP_C_SD        = 0xe000;
+    static constexpr int OP_C_ADDI      = 0x0001;
+    static constexpr int OP_C_ADDIW     = 0x2001;
+    static constexpr int OP_C_LI        = 0x4001;
+    static constexpr int OP_C_LUIorSP   = 0x6001;
+    static constexpr int OP_C_MISC_ALU  = 0x8001;
+    static constexpr int OP_C_J         = 0xa001;
+    static constexpr int OP_C_BEQZ      = 0xc001;
+    static constexpr int OP_C_BENZ      = 0xe001;
+    static constexpr int OP_C_SLLI      = 0x0002;
+    static constexpr int OP_C_FLDSP     = 0x2002;
+    static constexpr int OP_C_LWSP      = 0x4002;
+    static constexpr int OP_C_LDSP      = 0x6002;
+    static constexpr int OP_C_JALRMVADD = 0x8002;
+    static constexpr int OP_C_FSDSP     = 0xa002;
+    static constexpr int OP_C_SWSP      = 0xc002;
+    static constexpr int OP_C_SDSP      = 0xe002;
+
+
+    constexpr int PopulareRegisterOffset = 8;
+
+    int ExtractCompressed_rs2(u32 codeWord) { return ExtractBits(codeWord, 2, 3) + PopulareRegisterOffset; }
+    int ExtractCompressed_rs1(u32 codeWord) { return ExtractBits(codeWord, 7, 3) + PopulareRegisterOffset; }
+    int Extract_rs2(u32 codeWord) { return ExtractBits(codeWord, 2, 5); }
+    int Extract_rs1(u32 codeWord) { return ExtractBits(codeWord, 7, 5); }
+    u64 ExtractCompressed_imm6(u32 codeWord) { return ExtractBits<u64>(codeWord, 12, 1, true) << 5 | ExtractBits(codeWord, 2, 5); }
+    u64 ExtractDispX8_Quadrant0(u32 codeWord) { return ExtractBits<u64>(codeWord, 5, 2, false) << 6 | ExtractBits(codeWord, 10, 3) << 3; }
+    u64 ExtractDispX4_Quadrant0(u32 codeWord) { return ExtractBits<u64>(codeWord, 5, 1, false) << 6 | ExtractBits(codeWord, 10, 3) << 3 | ExtractBits(codeWord, 6, 1) << 2; }
+
+    enum C_SP { LOAD, STORE };
+    template<C_SP IsStore>
+        u64 ExtractDispX8_Quadrant2(u32 codeWord) {
+            u64 ix = IsStore ? Extract_rs1(codeWord) : Extract_rs2(codeWord);
+            return ExtractBits(ix, 3, 2) << 3
+                 | ExtractBits(codeWord, 12, 1) << 5
+                 | ExtractBits<u64>(ix, 0, 3, false) << 6;
+        }
+    template<C_SP IsStore>
+        u64 ExtractDispX4_Quadrant2(u32 codeWord) {
+            u64 ix = IsStore ? Extract_rs1(codeWord) : Extract_rs2(codeWord);
+            return ExtractBits(ix, 2, 3) << 2
+                 | ExtractBits(codeWord, 12, 1) << 5
+                 | ExtractBits<u64>(ix, 0, 2, false) << 6;
+        }
 }
 
 RISCV64Decoder::DecodedInsn::DecodedInsn()
@@ -93,6 +144,131 @@ RISCV64Decoder::RISCV64Decoder()
 {
 }
 
+void RISCV64Decoder::DecodeCompressedInstruction(u32 codeWord, DecodedInsn* out)
+{
+    switch( codeWord & 0xe003 ) {
+    case OP_C_ADDI4SPN:
+        out->Reg[0] = ExtractCompressed_rs2(codeWord);
+        out->Imm[0] = ExtractBits(codeWord, 6, 1) << 2
+                    | ExtractBits(codeWord, 5, 1) << 3
+                    | ExtractBits(codeWord, 11, 2) << 4
+                    | ExtractBits<u64>(codeWord, 7, 4, false) << 6;
+        break;
+    case OP_C_FLD:
+        out->Reg[0] = ExtractCompressed_rs2(codeWord) + 32;
+        out->Reg[1] = ExtractCompressed_rs1(codeWord);
+        out->Imm[0] = ExtractDispX8_Quadrant0(codeWord);
+        break;
+    case OP_C_LW:
+        out->Reg[0] = ExtractCompressed_rs2(codeWord);
+        out->Reg[1] = ExtractCompressed_rs1(codeWord);
+        out->Imm[0] = ExtractDispX4_Quadrant0(codeWord);
+        break;
+    case OP_C_LD:
+        out->Reg[0] = ExtractCompressed_rs2(codeWord);
+        out->Reg[1] = ExtractCompressed_rs1(codeWord);
+        out->Imm[0] = ExtractDispX8_Quadrant0(codeWord);
+        break;
+    case OP_C_FSD:
+        out->Reg[0] = ExtractCompressed_rs1(codeWord);
+        out->Reg[1] = ExtractCompressed_rs2(codeWord) + 32;
+        out->Imm[0] = ExtractDispX8_Quadrant0(codeWord);
+        break;
+    case OP_C_SW:
+        out->Reg[0] = ExtractCompressed_rs1(codeWord);
+        out->Reg[1] = ExtractCompressed_rs2(codeWord);
+        out->Imm[0] = ExtractDispX4_Quadrant0(codeWord);
+        break;
+    case OP_C_SD:
+        out->Reg[0] = ExtractCompressed_rs1(codeWord);
+        out->Reg[1] = ExtractCompressed_rs2(codeWord);
+        out->Imm[0] = ExtractDispX8_Quadrant0(codeWord);
+        break;
+    case OP_C_ADDI:
+    case OP_C_ADDIW:
+    case OP_C_LI:
+        out->Reg[0] = Extract_rs1(codeWord);
+        out->Imm[0] = ExtractCompressed_imm6(codeWord);
+        break;
+    case OP_C_LUIorSP:
+        out->Reg[0] = Extract_rs1(codeWord);
+        if( out->Reg[0] == 2 ) {
+            // ADDI16SP
+            out->Imm[0] = ExtractBits(codeWord, 6, 1) << 4
+                        | ExtractBits(codeWord, 2, 1) << 5
+                        | ExtractBits(codeWord, 5, 1) << 6
+                        | ExtractBits(codeWord, 3, 2) << 7
+                        | ExtractBits<u64>(codeWord, 12, 1, true) << 9;
+        } else {
+            out->Imm[0] = ExtractCompressed_imm6(codeWord);
+        }
+        break;
+    case OP_C_MISC_ALU:
+        if( ExtractBits(codeWord, 10, 2) != 3 ) {
+            // C.SRLI, C.SRAI, C.ANDI
+            out->Reg[0] = ExtractCompressed_rs1(codeWord);
+            out->Imm[0] = ExtractCompressed_imm6(codeWord);
+        } else {
+            // C.SUB, C.XOR, C.OR, C.AND, C.SUBW, C.ADDW
+            out->Reg[0] = ExtractCompressed_rs1(codeWord);
+            out->Reg[1] = ExtractCompressed_rs2(codeWord);
+        }
+        break;
+    case OP_C_J:
+        out->Imm[0] = ExtractBits(codeWord, 3, 3) << 1
+                    | ExtractBits(codeWord, 11, 1) << 4
+                    | ExtractBits(codeWord, 2, 1) << 5
+                    | ExtractBits(codeWord, 7, 1) << 6
+                    | ExtractBits(codeWord, 6, 1) << 7
+                    | ExtractBits(codeWord, 9, 2) << 8
+                    | ExtractBits(codeWord, 8, 1) << 10
+                    | ExtractBits<u64>(codeWord, 12, 1, true) << 11;
+        break;
+    case OP_C_BEQZ:
+    case OP_C_BENZ:
+        out->Reg[0] = ExtractCompressed_rs1(codeWord);
+        out->Imm[0] = ExtractBits(codeWord, 3, 2) << 1
+                    | ExtractBits(codeWord, 10, 2) << 3
+                    | ExtractBits(codeWord, 2, 1) << 5
+                    | ExtractBits(codeWord, 5, 2) << 6
+                    | ExtractBits<u64>(codeWord, 12, 1, true) << 8;
+        break;
+    case OP_C_SLLI:
+        out->Reg[0] = Extract_rs1(codeWord);
+        out->Imm[0] = ExtractCompressed_imm6(codeWord);
+        break;
+    case OP_C_FLDSP:
+        out->Reg[0] = Extract_rs1(codeWord) + 32;
+        out->Imm[0] = ExtractDispX8_Quadrant2<C_SP::LOAD>(codeWord);
+        break;
+    case OP_C_LWSP:
+        out->Reg[0] = Extract_rs1(codeWord);
+        out->Imm[0] = ExtractDispX4_Quadrant2<C_SP::LOAD>(codeWord);
+        break;
+    case OP_C_LDSP:
+        out->Reg[0] = Extract_rs1(codeWord);
+        out->Imm[0] = ExtractDispX8_Quadrant2<C_SP::LOAD>(codeWord);
+        break;
+    case OP_C_JALRMVADD:
+        out->Reg[0] = Extract_rs1(codeWord);
+        out->Reg[1] = Extract_rs2(codeWord);
+        break;
+    case OP_C_FSDSP:
+        out->Reg[0] = Extract_rs2(codeWord) + 32;
+        out->Imm[0] = ExtractDispX8_Quadrant2<C_SP::STORE>(codeWord);
+        break;
+    case OP_C_SWSP:
+        out->Reg[0] = Extract_rs2(codeWord);
+        out->Imm[0] = ExtractDispX4_Quadrant2<C_SP::STORE>(codeWord);
+        break;
+    case OP_C_SDSP:
+        out->Reg[0] = Extract_rs2(codeWord);
+        out->Imm[0] = ExtractDispX8_Quadrant2<C_SP::STORE>(codeWord);
+        break;
+    }
+}
+
+
 void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
 {
     out->clear();
@@ -100,6 +276,7 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
 
     u32 opcode = codeWord & 0x7f;
 
+    if ((opcode&3) != 3) { DecodeCompressedInstruction(codeWord, out); return; }
 
     switch (opcode) {
     case OP_AUIPC:
@@ -177,7 +354,6 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
         u64 imm =
             (ExtractBits<u64>(codeWord, 7,  5) << 0) |
             (ExtractBits<u64>(codeWord, 25, 7) << 5);
-
         out->Imm[0] = ExtractBits<u64>(imm, 0, 12, true);
         break;
     }

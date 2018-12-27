@@ -333,7 +333,7 @@ void Retirer::Commit( OpIterator op )
     {
         // Simulation is finished when a committed 'op' is a branch 
         // that jumps to an address 0.
-        if( op->GetOpClass().IsBranch() && op->GetTakenPC().address == 0 ) {
+        if( op->GetOpClass().IsBranch() && op->GetNextPC().address == 0 ) {
             FinishThread( op->GetThread() );
         }
 

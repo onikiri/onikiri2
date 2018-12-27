@@ -44,6 +44,8 @@
 
 namespace Onikiri 
 {
+    class Core;
+
     // Prediction result of BTB
     struct BTBPredict
     {
@@ -57,9 +59,9 @@ namespace Onikiri
     class BTB : public PhysicalResourceNode
     {
     private:
-        static const int WORD_BITS = SimISAInfo::INSTRUCTION_WORD_BYTE_SHIFT;
-        typedef shttl::static_off_hasher<u64, WORD_BITS> HasherType;
+        typedef shttl::dynamic_off_hasher<u64> HasherType;
         typedef shttl::setassoc_table< std::pair<u64, BTBPredict>, HasherType> SetAssocTableType;
+        Core* m_core;
         SetAssocTableType* m_table;
 
         int m_numEntryBits;
@@ -94,6 +96,7 @@ namespace Onikiri
         END_PARAM_MAP()
         
         BEGIN_RESOURCE_MAP()
+            RESOURCE_ENTRY( Core, "core", m_core )
         END_RESOURCE_MAP()
 
         using PhysicalResourceNode::LoadParam;

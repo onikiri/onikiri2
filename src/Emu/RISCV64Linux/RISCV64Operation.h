@@ -93,9 +93,9 @@ namespace Onikiri {
                 opState->SetTakenPC(target);
             }
 
-            inline u64 RISCV64NextPC(OpEmulationState* opState)
+            inline u64 RISCV64NotTakenPC(OpEmulationState* opState)
             {
-                return (u64)opState->GetPC() + 4;
+                return opState->GetNotTakenPC();
             }
 
             inline u64 RISCV64CurPC(OpEmulationState* opState)
@@ -534,7 +534,7 @@ namespace Onikiri {
                     RISCV64BranchRelUncond<TSrcDisp>(opState);
                 }
                 else {
-                    opState->SetTakenPC(RISCV64NextPC(opState));
+                    opState->SetTakenPC(RISCV64NotTakenPC(opState));
                 }
             }
 
@@ -542,7 +542,7 @@ namespace Onikiri {
             template <typename TDest, typename TSrcDisp>
             inline void RISCV64CallRelUncond(OpEmulationState* opState)
             {
-                RISCV64RegisterType ret = static_cast<RISCV64RegisterType>(RISCV64NextPC(opState));
+                RISCV64RegisterType ret = static_cast<RISCV64RegisterType>(RISCV64NotTakenPC(opState));
                 RISCV64BranchRelUncond<TSrcDisp>(opState);
                 TDest::SetOperand(opState, ret);
             }
@@ -550,7 +550,7 @@ namespace Onikiri {
             template <typename TDest, typename TSrcTarget, typename TSrcDisp>
             inline void RISCV64CallAbsUncond(OpEmulationState* opState)
             {
-                RISCV64RegisterType ret = static_cast<RISCV64RegisterType>(RISCV64NextPC(opState));
+                RISCV64RegisterType ret = static_cast<RISCV64RegisterType>(RISCV64NotTakenPC(opState));
                 RISCV64BranchAbsUncond<TSrcTarget, TSrcDisp>(opState);
                 TDest::SetOperand(opState, ret);
             }

@@ -133,12 +133,10 @@ PC BPred::Predict( OpIterator op, PC predIndexPC )
         if( !result ){
             THROW_RUNTIME_ERROR( "Pre-executed result cannot be retrieved from a forward emulator." );
         }
-        return
-            result->GetTaken() ? result->GetTakenPC() : NextPC( result->GetPC() );
+        return result->GetNextPC();
     }
 
 
-    SimPC pc = op->GetPC();
     BTBPredict btbPred = m_btb->Predict(predIndexPC);
     bool btbHit     = btbPred.hit;
 
@@ -146,7 +144,7 @@ PC BPred::Predict( OpIterator op, PC predIndexPC )
 
     // BTBにヒットしなかった場合，分岐予測は（更新も含めて）行わない
     if(!btbHit)
-        return pc.Next();
+        return op->GetNotTakenPC();
 
 
     PC branchTarget = btbPred.target;
@@ -157,12 +155,12 @@ PC BPred::Predict( OpIterator op, PC predIndexPC )
     switch(btbPred.type){
     case BT_NON:
         ASSERT(0, "BT_NON is invalid.");
-        return pc.Next();
+        return op->GetNotTakenPC();
 
     case BT_CONDITIONAL:
         // taken / not taken の予測に応じて、次のPCを返す
         // not taken と予測した場合，次のopのPCを返す
-        return predTaken ? branchTarget : pc.Next();        
+        return predTaken ? branchTarget : op->GetNotTakenPC();
 
     case BT_UNCONDITIONAL:
         // 無条件分岐なら BTB の予測を返す
@@ -170,8 +168,7 @@ PC BPred::Predict( OpIterator op, PC predIndexPC )
 
     case BT_CALL:
         // call なら RAS に push して、BTB の予測を返す
-        // (インクリメントはPush内で行われる
-        m_ras[op->GetLocalTID()]->Push(pc);
+        m_ras[op->GetLocalTID()]->Push(op->GetNotTakenPC());
         return branchTarget;
 
     case BT_RETURN:
@@ -181,7 +178,7 @@ PC BPred::Predict( OpIterator op, PC predIndexPC )
     case BT_CONDITIONAL_RETURN:
         // 条件付リターンの場合はDirPredをひいてTakenならPop        
         // not taken なら次のPCを返す
-        return predTaken ? m_ras[op->GetLocalTID()]->Pop() : pc.Next();
+        return predTaken ? m_ras[op->GetLocalTID()]->Pop() : op->GetNotTakenPC();
 
     case BT_END:
         break;
@@ -190,7 +187,7 @@ PC BPred::Predict( OpIterator op, PC predIndexPC )
     // ここには未到達のはず
     THROW_RUNTIME_ERROR("reached end of Bpred::Predict\n");
 
-    return pc.Next();   // warning よけ
+    return op->GetNotTakenPC();   // warning よけ
 }
 
 // op の実行終了時に呼ばれる
@@ -245,7 +242,7 @@ void BPred::Commit( OpIterator op )
     // ヒット率
     PC pcTaken  = op->GetTakenPC();
     PC pcPred   = op->GetPredPC();
-    PC pcNext   = NextPC( op->GetPC() );
+    PC pcNext   = op->GetNotTakenPC();
     bool taken  = conditional ? op->GetTaken() : true;
     PC pcResult = taken ? pcTaken : pcNext;
 

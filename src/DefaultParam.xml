@@ -130,7 +130,9 @@
               <EmulatorIF  Name = "emulator" />
             </MemOrderManager>
 
-            <CounterBasedHitMissPred Name="counterBasedHitMissPred" Count="CoreCount"/>
+            <CounterBasedHitMissPred Name="counterBasedHitMissPred" Count="CoreCount">
+              <Core Name = "core" />
+            </CounterBasedHitMissPred>
             <OptimisticHitMissPred   Name="optimisticHitMissPred"   Count="CoreCount"/>
             <PessimisticHitMissPred  Name="pessimisticHitMissPred"  Count="CoreCount"/>
 
@@ -286,6 +288,10 @@
                 <CheckpointMaster Name= "checkpointMaster" />
               </GlobalHistory>
             </GShare>
+
+            <BTB Name = "btb" Count="CoreCount">
+              <Core Name = "core" />
+            </BTB>
 
             <RoundRobinFetchThreadSteerer Name = "roundRobinFetchThreadSteerer" Count = "CoreCount">
               <Connection   Name = "thread" />

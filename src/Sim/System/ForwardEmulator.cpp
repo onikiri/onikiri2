@@ -131,7 +131,6 @@ void ForwardEmulator::OnFetch( OpIterator simOp )
     EmulationOp* emuOp = &entry->emuOp;
     emuOp->SetMem( this );
     emuOp->SetPC( context->pc );
-    emuOp->SetTakenPC( Addr( tid, simOp->GetTID(), context->pc.address + SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE ) );
     emuOp->SetOpInfo( opInfo );
     emuOp->SetTaken( false );
     // Set source operands.
@@ -384,13 +383,7 @@ ForwardEmulator::InflightOp*
 // Calculate a next PC from the executed state of an op.
 PC ForwardEmulator::GetExecutedNextPC( PC current, OpStateIF* state ) const
 {
-    if( state->GetTaken() ){
-        return state->GetTakenPC();
-    }
-    else{
-        current.address += SimISAInfo::INSTRUCTION_WORD_BYTE_SIZE;
-        return current;
-    }
+    return state->GetNextPC();
 }
 
 // Update fixed pc/retirement id with execution results.
