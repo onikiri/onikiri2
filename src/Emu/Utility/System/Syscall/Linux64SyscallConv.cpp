@@ -595,7 +595,31 @@ void Linux64SyscallConv::syscall_access(OpEmulationState* opState)
     else
         SetResult(true, result);
 }
+void Linux64SyscallConv::syscall_faccessat(OpEmulationState* opState)
+{
+    s64 fd = m_args[1];
+    //s64 flags = m_args[4];
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
+    /*
+    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
+    なので通常のaccessと同じ動作をする
+    */
+    if (fd == -100) {
+        result = GetVirtualSystem()->Access(path.c_str(), (int)AccessModeTargetToHost((u32)m_args[3]));
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'faccessat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
 
+    if (result == -1)
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    else
+        SetResult(true, result);
+}
 void Linux64SyscallConv::syscall_unlink(OpEmulationState* opState)
 {
     string path = StrCpyToHost( GetMemorySystem(), m_args[1] );
