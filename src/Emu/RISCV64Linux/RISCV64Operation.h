@@ -272,9 +272,9 @@ namespace Onikiri {
 
                     if (std::isnan(value)) // NaN
                         return maxValue;
-                    else if (std::isinf(value) && !signbit(value)) // +Inf
+                    else if (std::isinf(value) && !std::signbit(value)) // +Inf
                         return maxValue;
-                    else if (std::isinf(value) && signbit(value)) // -Inf
+                    else if (std::isinf(value) && std::signbit(value)) // -Inf
                         return minValue;
                     else if (value > static_cast<FPType>(maxValue))
                         return maxValue;
