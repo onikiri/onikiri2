@@ -3,12 +3,14 @@
 #define ONIKIRI2_COMPLIANCE_TEST_H
 
 
-// "_rsd_begin_output_data" must be aligned
+// "_onikiri2_begin_output_data" must be aligned
 #define RV_COMPLIANCE_DATA_BEGIN \
     .align 4 ;\
     _onikiri2_begin_output_data:
 
+// "_onikiri2_end_output_data" also must be aligned
 #define RV_COMPLIANCE_DATA_END \
+    .align 4; \
     _onikiri2_end_output_data:
 
 // レジスタ保存

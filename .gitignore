@@ -42,7 +42,7 @@ benchmark/SPECCPU2000_INT/*/bin/*
 benchmark/SPECCPU2000_FP/run/*
 benchmark/SPECCPU2000_FP/*/bin/*
 
-benchmark/RISCV_COMPLIANCE/tmp/
+benchmark/RISCV_COMPLIANCE/tmp/*/
 benchmark/RISCV-COMPLIANCE/tmp/riscv-compliance/
 
 

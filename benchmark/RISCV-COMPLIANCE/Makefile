@@ -26,19 +26,25 @@ distclean:
 #
 
 # 入力ファイル
-SRC_TESTS = \
-    add \
-	addi \
+SRC_APPS = \
+	andi bltu lbu 
+
+#	andi    bltu     lbu  lwu  simple  slti   sraw   subw \
+	add     auipc  bne      ld   or   sll     sltiu  srl    sw \
+	addi    beq    fence_i  lh   ori  slli    sltu   srli   xor \
+	addiw   bge    jal      lhu  sb   slliw   sra    srliw  xori \
+	addw    bgeu   jalr     lui  sd   sllw    srai   srlw \
+	and     blt    lb       lw   sh   slt     sraiw  sub \
 
 SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/rv64ui
-SRCS = $(SRC_TESTS:%=$(SRC_DIR)/%.S)
+REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/references
+DST_DIR = ./tmp/work/rv64ui
+RESULTS_DIR = ./tmp/sig/rv64ui
 
-# 出力
-DST_DIR = ./work/rv64ui
-DSTS = $(SRC_TESTS:%=$(DST_DIR)/%)
+DSTS = $(SRC_APPS:%=$(DST_DIR)/%)
+RESULTS = $(SRC_APPS:%=$(RESULTS_DIR)/%)
 
 # リファレンス出力
-REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/references
 
 TARGET = ./target-onikiri2
 XCFLAGS = -g -static -I $(TARGET) -I $(RISCV_COMPLIANCE_PATH)/riscv-test-env
@@ -54,6 +60,19 @@ build: $(DSTS)
 $(DST_DIR)/%: $(SRC_DIR)/%.S $(TARGET)/* Makefile
 	$(CC) $(XCFLAGS) -o $@ $< $(TARGET)/main.c
 
+
 # テスト
-test:
-	../../project/gcc/onikiri2/a.out	
+test: build
+	rm $(RESULTS_DIR) -r
+	mkdir -p $(RESULTS_DIR)
+	$(MAKE) $(RESULTS)
+
+$(RESULTS_DIR)/%: 
+	@../../project/gcc/onikiri2/a.out param.xml \
+		-x /Session/Emulator/Processes/Process/@Command=$(DST_DIR)/$(notdir $@) \
+		-x /Session/Emulator/Processes/Process/@STDOUT=$@ \
+		> $@.xml
+	@diff $(REF_DIR)/$(notdir $@).reference_output $@; 
+	@echo Check $(notdir $@) ... OK
+
+
