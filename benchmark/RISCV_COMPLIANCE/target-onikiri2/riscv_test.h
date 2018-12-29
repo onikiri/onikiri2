@@ -6,6 +6,7 @@
 #ifndef ONIKIRI2_RISCV_TEST_H
 #define ONIKIRI2_RISCV_TEST_H
 
+
 #define RVTEST_RV64U
 
 // エントリポイント

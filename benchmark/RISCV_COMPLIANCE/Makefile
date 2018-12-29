@@ -27,7 +27,18 @@ distclean:
 
 # 入力ファイル
 SRC_APPS = \
-	andi bltu lbu 
+	andi    bltu     lbu    simple  slti \
+	add       bne         or        sltiu      sw \
+	addi    beq    fence_i  lh   ori  slli    sltu      xor \
+	   bge    jal      lhu  sb      sra      xori \
+	    bgeu   jalr     lui         srai    \
+	and     blt    lb       lw   sh   slt       sub \
+	
+# sll  srl srli
+# リファレンスが存在しない & ソースがバグってる？
+#	lwu sraw　subw ld addiw srliw　addw　srlw sd sllw sraiw
+# バグってる RV_COMPLIANCE_CODE_END がぬけてる
+# auipc
 
 #	andi    bltu     lbu  lwu  simple  slti   sraw   subw \
 	add     auipc  bne      ld   or   sll     sltiu  srl    sw \
@@ -63,7 +74,7 @@ $(DST_DIR)/%: $(SRC_DIR)/%.S $(TARGET)/* Makefile
 
 # テスト
 test: build
-	rm $(RESULTS_DIR) -r
+	rm $(RESULTS_DIR) -r -f
 	mkdir -p $(RESULTS_DIR)
 	$(MAKE) $(RESULTS)
 

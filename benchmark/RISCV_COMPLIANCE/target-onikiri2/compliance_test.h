@@ -2,6 +2,29 @@
 #ifndef ONIKIRI2_COMPLIANCE_TEST_H
 #define ONIKIRI2_COMPLIANCE_TEST_H
 
+// エントリポイント
+// main.c から関数として呼ばれる
+// 全レジスタを保存する
+#define RV_COMPLIANCE_CODE_BEGIN \
+    .text ;\
+    .align 4 ;\
+    .global onikiri2_test_main ;\
+    onikiri2_test_main: ;\
+        ONIKIRI2_SAVE_REGS() ;\
+
+// 終了
+// スタックポインタを含むレジスタが破壊されているので，復元し，
+// 検証用のシグニチャをダンプした後，main.c に返る
+#define RV_COMPLIANCE_CODE_END \
+    onikiri2_test_main_end: ; \
+        ONIKIRI2_RESTORE_REGS() ;\
+        ONIKIRI2_SAVE_REGS() ;\
+        la a0, _onikiri2_begin_output_data ;\
+        la a1, _onikiri2_end_output_data ;  \
+        jal onikiri2_rvtest_print_result ;  \
+        ONIKIRI2_RESTORE_REGS() ;\
+        ret ;
+
 
 // "_onikiri2_begin_output_data" must be aligned
 #define RV_COMPLIANCE_DATA_BEGIN \

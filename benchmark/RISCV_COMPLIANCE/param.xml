@@ -24,7 +24,9 @@
     />
   </Simulator>
   
+<!--
   <Environment>
     <OutputXML FileName='result.xml' Level='Detail'/>
   </Environment>
+-->
 </Session>
