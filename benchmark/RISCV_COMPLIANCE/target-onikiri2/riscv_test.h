@@ -8,6 +8,7 @@
 
 
 #define RVTEST_RV64U
+#define RVTEST_RV64UF
 
 // エントリポイント
 // main.c から関数として呼ばれる

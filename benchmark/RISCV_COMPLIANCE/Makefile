@@ -25,46 +25,64 @@ distclean:
 # --- Build binaries
 #
 
+# RV64UI
 # 入力ファイル
-SRC_APPS = \
+# リファレンスが存在しない & ソースがバグってる？
+#	lwu sraw　subw ld addiw srliw　addw　srlw sd sllw sraiw
+# バグってる RV_COMPLIANCE_CODE_END がぬけてる
+# 	auipc
+RV64UI_SRC_APPS = \
 	andi    bltu     lbu     simple  slti \
 	add     bne      or      sltiu   sw \
 	addi    beq      fence_i lh      ori  slli    sltu      xor \
 	bge     jal      lhu     sb      sra      xori \
 	bgeu    jalr     lui     srai    \
 	and     blt      lb      lw   sh   slt       sub \
-	sll     srl      srli \
-	
-# 
-# リファレンスが存在しない & ソースがバグってる？
-#	lwu sraw　subw ld addiw srliw　addw　srlw sd sllw sraiw
-# バグってる RV_COMPLIANCE_CODE_END がぬけてる
-# auipc
+	sll     srl      srli 
+RV64UI_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/rv64ui
+RV64UI_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/references
+RV64UI_BIN_DIR = ./tmp/work/rv64ui
+RV64UI_RESULT_DIR = ./tmp/sig/rv64ui
 
-#	andi    bltu     lbu  lwu  simple  slti   sraw   subw \
-	add     auipc  bne      ld   or   sll     sltiu  srl    sw \
-	addi    beq    fence_i  lh   ori  slli    sltu   srli   xor \
-	addiw   bge    jal      lhu  sb   slliw   sra    srliw  xori \
-	addw    bgeu   jalr     lui  sd   sllw    srai   srlw \
-	and     blt    lb       lw   sh   slt     sraiw  sub \
+# RV64UF
+RV64UF_SRC_APPS = \
+	fclass  fcvt    fdiv    fmin  move \
+	fadd    fcmp    fcvt_w  fmadd  ldst  recoding
+RV64UF_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32uf/rv64uf
+RV64UF_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32uf/references
+RV64UF_BIN_DIR = ./tmp/work/rv64uf
+RV64UF_RESULT_DIR = ./tmp/sig/rv64uf
 
-SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/rv64ui
-REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/references
-BIN_DIR = ./tmp/work/rv64ui
-RESULT_FILES_DIR = ./tmp/sig/rv64ui
 
-BIN_FILES = $(SRC_APPS:%=$(BIN_DIR)/%)
-RESULT_FILES = $(SRC_APPS:%=$(RESULT_FILES_DIR)/%)
-TEST_GOALS = $(SRC_APPS:%=test-%)
+SRC_APPS = $(RV64UF_SRC_APPS)
+SRC_DIR =  $(RV64UF_SRC_DIR)
+REF_DIR =  $(RV64UF_REF_DIR)
+BIN_DIR =  $(RV64UF_BIN_DIR)
+RESULT_DIR =  $(RV64UF_RESULT_DIR)
+
+#SRC_APPS = $(RV64UI_SRC_APPS)
+#SRC_DIR =  $(RV64UI_SRC_DIR)
+#REF_DIR =  $(RV64UI_REF_DIR)
+#BIN_DIR =  $(RV64UI_BIN_DIR)
+#RESULT_DIR =  $(RV64UI_RESULT_DIR)
+
+
+
+BIN_FILES    = $(SRC_APPS:%=$(BIN_DIR)/%)
+RESULT_FILES = $(SRC_APPS:%=$(RESULT_DIR)/%)
+TEST_GOALS   = $(SRC_APPS:%=test-%)
 
 # リファレンス出力
 
+# ビルド設定
 TARGET_DIR = ./target-onikiri2
 XCFLAGS = -g -static -I $(TARGET_DIR) -I $(RISCV_COMPLIANCE_PATH)/riscv-test-env
 
 
-all: $(RISCV_COMPLIANCE_PATH)
-	$(MAKE) build
+all: init
+	$(MAKE) test
+
+init: $(RISCV_COMPLIANCE_PATH)
 
 # ビルド
 build: $(BIN_FILES) 
@@ -78,27 +96,27 @@ $(BIN_DIR)/%: $(SRC_DIR)/%.S $(TARGET_DIR)/* Makefile $(BIN_DIR)
 
 # テスト
 test: build
-	rm $(RESULT_FILES_DIR) -r -f
+	rm $(RESULT_DIR) -r -f
 	$(MAKE) $(RESULT_FILES)
 	@echo "==== Test Successful (test-riscv-compliance) ===="
 
-$(RESULT_FILES_DIR):
-	mkdir -p $(RESULT_FILES_DIR)
+$(RESULT_DIR):
+	mkdir -p $(RESULT_DIR)
 
-$(RESULT_FILES_DIR)/%: $(RESULT_FILES_DIR)
-	@../../project/gcc/onikiri2/a.out param.xml \
+$(RESULT_DIR)/%: $(RESULT_DIR)
+	../../project/gcc/onikiri2/a.out param.xml \
 		-x /Session/Emulator/Processes/Process/@Command=$(BIN_DIR)/$(notdir $@) \
 		-x /Session/Emulator/Processes/Process/@STDOUT=$@ \
 		> $@.xml
-	@diff $(REF_DIR)/$(notdir $@).reference_output $@; 
+	diff $(REF_DIR)/$(notdir $@).reference_output $@; 
 	@echo Check $(notdir $@) ... OK
 
 .PHONY: $(TEST_GOALS)
 $(TEST_GOALS): 
 	$(MAKE) $(BIN_DIR)/$(patsubst test-%,%,$@)
-	rm $(RESULT_FILES_DIR)/$(patsubst test-%,%,$@)
-	$(MAKE) $(RESULT_FILES_DIR)/$(patsubst test-%,%,$@)
+	rm $(RESULT_DIR)/$(patsubst test-%,%,$@) -f
+	$(MAKE) $(RESULT_DIR)/$(patsubst test-%,%,$@)
 
 clean:
 	rm $(BIN_DIR) -f -r
-	rm $(RESULT_FILES_DIR) -r -f
+	rm $(RESULT_DIR) -r -f

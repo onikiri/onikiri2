@@ -4,7 +4,8 @@
 // "_onikiri2_begin_output_data" must be aligned
 #define RVTEST_DATA_BEGIN \
     .align 4 ;\
-    _onikiri2_begin_output_data:
+    _onikiri2_begin_output_data: ;\
+    test_res:
 
 // "_onikiri2_end_output_data" also must be aligned
 #define RVTEST_DATA_END \
