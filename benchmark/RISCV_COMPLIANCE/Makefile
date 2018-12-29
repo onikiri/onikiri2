@@ -27,14 +27,15 @@ distclean:
 
 # 入力ファイル
 SRC_APPS = \
-	andi    bltu     lbu    simple  slti \
-	add       bne         or        sltiu      sw \
-	addi    beq    fence_i  lh   ori  slli    sltu      xor \
-	   bge    jal      lhu  sb      sra      xori \
-	    bgeu   jalr     lui         srai    \
-	and     blt    lb       lw   sh   slt       sub \
+	andi    bltu     lbu     simple  slti \
+	add     bne      or      sltiu   sw \
+	addi    beq      fence_i lh      ori  slli    sltu      xor \
+	bge     jal      lhu     sb      sra      xori \
+	bgeu    jalr     lui     srai    \
+	and     blt      lb      lw   sh   slt       sub \
+	sll     srl      srli \
 	
-# sll  srl srli
+# 
 # リファレンスが存在しない & ソースがバグってる？
 #	lwu sraw　subw ld addiw srliw　addw　srlw sd sllw sraiw
 # バグってる RV_COMPLIANCE_CODE_END がぬけてる
@@ -49,41 +50,55 @@ SRC_APPS = \
 
 SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/rv64ui
 REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ui/references
-DST_DIR = ./tmp/work/rv64ui
-RESULTS_DIR = ./tmp/sig/rv64ui
+BIN_DIR = ./tmp/work/rv64ui
+RESULT_FILES_DIR = ./tmp/sig/rv64ui
 
-DSTS = $(SRC_APPS:%=$(DST_DIR)/%)
-RESULTS = $(SRC_APPS:%=$(RESULTS_DIR)/%)
+BIN_FILES = $(SRC_APPS:%=$(BIN_DIR)/%)
+RESULT_FILES = $(SRC_APPS:%=$(RESULT_FILES_DIR)/%)
+TEST_GOALS = $(SRC_APPS:%=test-%)
 
 # リファレンス出力
 
-TARGET = ./target-onikiri2
-XCFLAGS = -g -static -I $(TARGET) -I $(RISCV_COMPLIANCE_PATH)/riscv-test-env
+TARGET_DIR = ./target-onikiri2
+XCFLAGS = -g -static -I $(TARGET_DIR) -I $(RISCV_COMPLIANCE_PATH)/riscv-test-env
 
 
 all: $(RISCV_COMPLIANCE_PATH)
-	mkdir -p $(DST_DIR)
 	$(MAKE) build
 
 # ビルド
-build: $(DSTS) 
+build: $(BIN_FILES) 
 
-$(DST_DIR)/%: $(SRC_DIR)/%.S $(TARGET)/* Makefile
-	$(CC) $(XCFLAGS) -o $@ $< $(TARGET)/main.c
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(BIN_DIR)/%: $(SRC_DIR)/%.S $(TARGET_DIR)/* Makefile $(BIN_DIR)
+	$(CC) $(XCFLAGS) -o $@ $< $(TARGET_DIR)/main.c
 
 
 # テスト
 test: build
-	rm $(RESULTS_DIR) -r -f
-	mkdir -p $(RESULTS_DIR)
-	$(MAKE) $(RESULTS)
+	rm $(RESULT_FILES_DIR) -r -f
+	$(MAKE) $(RESULT_FILES)
+	@echo "==== Test Successful (test-riscv-compliance) ===="
 
-$(RESULTS_DIR)/%: 
+$(RESULT_FILES_DIR):
+	mkdir -p $(RESULT_FILES_DIR)
+
+$(RESULT_FILES_DIR)/%: $(RESULT_FILES_DIR)
 	@../../project/gcc/onikiri2/a.out param.xml \
-		-x /Session/Emulator/Processes/Process/@Command=$(DST_DIR)/$(notdir $@) \
+		-x /Session/Emulator/Processes/Process/@Command=$(BIN_DIR)/$(notdir $@) \
 		-x /Session/Emulator/Processes/Process/@STDOUT=$@ \
 		> $@.xml
 	@diff $(REF_DIR)/$(notdir $@).reference_output $@; 
 	@echo Check $(notdir $@) ... OK
 
+.PHONY: $(TEST_GOALS)
+$(TEST_GOALS): 
+	$(MAKE) $(BIN_DIR)/$(patsubst test-%,%,$@)
+	rm $(RESULT_FILES_DIR)/$(patsubst test-%,%,$@)
+	$(MAKE) $(RESULT_FILES_DIR)/$(patsubst test-%,%,$@)
 
+clean:
+	rm $(BIN_DIR) -f -r
+	rm $(RESULT_FILES_DIR) -r -f
