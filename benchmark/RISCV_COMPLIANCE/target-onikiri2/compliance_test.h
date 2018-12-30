@@ -2,6 +2,11 @@
 #ifndef ONIKIRI2_COMPLIANCE_TEST_H
 #define ONIKIRI2_COMPLIANCE_TEST_H
 
+
+#define RV_COMPLIANCE_RV32M
+#define RV_COMPLIANCE_HALT
+
+
 // エントリポイント
 // main.c から関数として呼ばれる
 // 全レジスタを保存する

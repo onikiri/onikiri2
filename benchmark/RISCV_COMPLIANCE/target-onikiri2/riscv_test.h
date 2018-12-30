@@ -6,9 +6,22 @@
 #ifndef ONIKIRI2_RISCV_TEST_H
 #define ONIKIRI2_RISCV_TEST_H
 
+#include "compliance_test.h"
+#include "compliance_io.h"
 
 #define RVTEST_RV64U
 #define RVTEST_RV64UF
+
+// "_onikiri2_begin_output_data" must be aligned
+#define RVTEST_DATA_BEGIN \
+    .align 4 ;\
+    _onikiri2_begin_output_data: ;\
+    test_res:
+
+// "_onikiri2_end_output_data" also must be aligned
+#define RVTEST_DATA_END \
+    .align 4; \
+    _onikiri2_end_output_data:
 
 // エントリポイント
 // main.c から関数として呼ばれる

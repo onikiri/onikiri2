@@ -1,7 +1,7 @@
 # git の管理から除外するために，
 # tmp 以下に全てをインストールする
-INSTALL_PATH = ./tmp
-RISCV_COMPLIANCE_PATH = $(INSTALL_PATH)/riscv-compliance
+WORK_PATH = ./tmp
+RISCV_COMPLIANCE_PATH = $(WORK_PATH)/riscv-compliance
 
 CC = /home/shioya/opt/gcc/riscv64-linux/7.1.1/bin/riscv64-unknown-linux-gnu-gcc
 
@@ -13,12 +13,12 @@ CC = /home/shioya/opt/gcc/riscv64-linux/7.1.1/bin/riscv64-unknown-linux-gnu-gcc
 
 # checkout riscv-compliane
 $(RISCV_COMPLIANCE_PATH): 
-	mkdir $(INSTALL_PATH) -p
-	cd $(INSTALL_PATH) ;\
+	mkdir $(WORK_PATH) -p
+	cd $(WORK_PATH) ;\
 		git clone https://github.com/riscv/riscv-compliance
 
 distclean:
-	rm $(INSTALL_PATH) -r -f
+	rm $(WORK_PATH) -r -f
 
 
 #
@@ -45,26 +45,30 @@ RV64UI_BIN_DIR = ./tmp/work/rv64ui
 RV64UI_RESULT_DIR = ./tmp/sig/rv64ui
 
 # RV64UF
+# バグってる（TEST_CASE マクロが test_macros じゃなくて aw_test_macros を使ってる）：
+#   ldst
 RV64UF_SRC_APPS = \
 	fclass  fcvt    fdiv    fmin  move \
-	fadd    fcmp    fcvt_w  fmadd  ldst  recoding
+	fadd    fcmp    fcvt_w  fmadd recoding
 RV64UF_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32uf/rv64uf
 RV64UF_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32uf/references
 RV64UF_BIN_DIR = ./tmp/work/rv64uf
 RV64UF_RESULT_DIR = ./tmp/sig/rv64uf
 
+# RV64I
+RV64I_SRC_APPS = \
+	ADDIW  ADDW  SLLIW  SLLW  SRAIW  SRAW  SRLIW  SRLW  SUBW 
+RV64I_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv64i/src
+RV64I_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv64i/references
+RV64I_BIN_DIR = ./tmp/work/rv64i
+RV64I_RESULT_DIR = ./tmp/sig/rv64i
 
-SRC_APPS = $(RV64UF_SRC_APPS)
-SRC_DIR =  $(RV64UF_SRC_DIR)
-REF_DIR =  $(RV64UF_REF_DIR)
-BIN_DIR =  $(RV64UF_BIN_DIR)
-RESULT_DIR =  $(RV64UF_RESULT_DIR)
 
-#SRC_APPS = $(RV64UI_SRC_APPS)
-#SRC_DIR =  $(RV64UI_SRC_DIR)
-#REF_DIR =  $(RV64UI_REF_DIR)
-#BIN_DIR =  $(RV64UI_BIN_DIR)
-#RESULT_DIR =  $(RV64UI_RESULT_DIR)
+SRC_APPS = $(RV64UI_SRC_APPS)
+SRC_DIR =  $(RV64UI_SRC_DIR)
+REF_DIR =  $(RV64UI_REF_DIR)
+BIN_DIR =  $(RV64UI_BIN_DIR)
+RESULT_DIR =  $(RV64UI_RESULT_DIR)
 
 
 
