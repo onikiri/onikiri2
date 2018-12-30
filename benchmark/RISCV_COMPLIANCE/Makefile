@@ -3,16 +3,26 @@
 WORK_PATH = ./tmp
 RISCV_COMPLIANCE_PATH = $(WORK_PATH)/riscv-compliance
 
-CC = /home/shioya/opt/gcc/riscv64-linux/7.1.1/bin/riscv64-unknown-linux-gnu-gcc
+ENV_CFG = env.cfg
+
+# ENV_CFG が存在してたら読み込む
+ifneq ("$(wildcard $(ENV_CFG))","")
+	include $(ENV_CFG)
+endif
+
 
 .DEFAULT_GOAL = all
 
 #
 # --- Clone riscv-compliance
 #
+$(ENV_CFG):
+	@echo CC= > $(ENV_CFG)
+	@echo Edit '$(ENV_CFG)' to set a cross compiler path to CC
+	false
 
 # checkout riscv-compliane
-$(RISCV_COMPLIANCE_PATH): 
+$(RISCV_COMPLIANCE_PATH): $(ENV_CFG)
 	mkdir $(WORK_PATH) -p
 	cd $(WORK_PATH) ;\
 		git clone https://github.com/riscv/riscv-compliance
@@ -119,7 +129,7 @@ XCFLAGS = -g -static -I $(TARGET_DIR) -I $(RISCV_COMPLIANCE_PATH)/riscv-test-env
 all: init
 	$(MAKE) test
 
-init: $(RISCV_COMPLIANCE_PATH)
+init: $(ENV_CFG) $(RISCV_COMPLIANCE_PATH)
 
 # ビルド
 build: $(BIN_FILES) 
