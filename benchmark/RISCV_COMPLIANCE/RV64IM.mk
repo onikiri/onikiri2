@@ -1,0 +1,17 @@
+
+# RV64IM
+RV64IM_SRC_APPS = \
+	DIVW MULW REMUW REMW 
+RV64IM_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv64im/src
+RV64IM_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv64im/references
+RV64IM_BIN_DIR = ./tmp/work/rv64im
+RV64IM_RESULT_DIR = ./tmp/sig/rv64im
+
+
+SRC_APPS = $(RV64IM_SRC_APPS)
+SRC_DIR =  $(RV64IM_SRC_DIR)
+REF_DIR =  $(RV64IM_REF_DIR)
+BIN_DIR =  $(RV64IM_BIN_DIR)
+RESULT_DIR =  $(RV64IM_RESULT_DIR)
+
+include TestBody.mk
