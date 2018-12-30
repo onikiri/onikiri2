@@ -45,7 +45,7 @@ RV64UI_BIN_DIR = ./tmp/work/rv64ui
 RV64UI_RESULT_DIR = ./tmp/sig/rv64ui
 
 # RV64UF
-# バグってる（TEST_CASE マクロが test_macros じゃなくて aw_test_macros を使ってる）：
+# バグってる（TEST_CASE マクロが test_macros じゃなくて aw_test_macros のものを想定）：
 #   ldst
 RV64UF_SRC_APPS = \
 	fclass  fcvt    fdiv    fmin  move \
@@ -55,6 +55,31 @@ RV64UF_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32uf/references
 RV64UF_BIN_DIR = ./tmp/work/rv64uf
 RV64UF_RESULT_DIR = ./tmp/sig/rv64uf
 
+# RV64UD
+# バグってる（TEST_CASE マクロが test_macros じゃなくて aw_test_macros のものを想定）：
+#   move structural
+RV64UD_SRC_APPS = \
+	fclass  fcvt    fdiv    fmin  \
+	fadd    fcmp    fcvt_w  fmadd recoding \
+	ldst
+RV64UD_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ud/rv64ud
+RV64UD_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ud/references
+RV64UD_BIN_DIR = ./tmp/work/rv64ud
+RV64UD_RESULT_DIR = ./tmp/sig/rv64ud
+
+# RV64UA
+# バグってる
+#   amoadd_d amomax_d amomin_d amoor_d
+#   amoand_d  amomaxu_d  amominu_d  amoswap_d
+RV64UA_SRC_APPS = \
+	amoand_w   amomaxu_w  amominu_w  amoswap_w \
+	amoadd_w  amomax_w   amomin_w   amoor_w    amoxor_w \
+  lrsc
+RV64UA_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ua/rv64ua
+RV64UA_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ua/references
+RV64UA_BIN_DIR = ./tmp/work/rv64ua
+RV64UA_RESULT_DIR = ./tmp/sig/rv64ua
+
 # RV64I
 RV64I_SRC_APPS = \
 	ADDIW  ADDW  SLLIW  SLLW  SRAIW  SRAW  SRLIW  SRLW  SUBW 
@@ -63,12 +88,20 @@ RV64I_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv64i/references
 RV64I_BIN_DIR = ./tmp/work/rv64i
 RV64I_RESULT_DIR = ./tmp/sig/rv64i
 
+# RV64IM
+RV64IM_SRC_APPS = \
+	DIVW MULW REMUW REMW 
+RV64IM_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv64im/src
+RV64IM_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv64im/references
+RV64IM_BIN_DIR = ./tmp/work/rv64im
+RV64IM_RESULT_DIR = ./tmp/sig/rv64im
 
-SRC_APPS = $(RV64UI_SRC_APPS)
-SRC_DIR =  $(RV64UI_SRC_DIR)
-REF_DIR =  $(RV64UI_REF_DIR)
-BIN_DIR =  $(RV64UI_BIN_DIR)
-RESULT_DIR =  $(RV64UI_RESULT_DIR)
+
+SRC_APPS = $(RV64UA_SRC_APPS)
+SRC_DIR =  $(RV64UA_SRC_DIR)
+REF_DIR =  $(RV64UA_REF_DIR)
+BIN_DIR =  $(RV64UA_BIN_DIR)
+RESULT_DIR =  $(RV64UA_RESULT_DIR)
 
 
 
