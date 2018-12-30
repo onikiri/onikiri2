@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+
+  <Emulator TargetArchitecture="RISCV64Linux">
+    <Processes>
+      <Process 
+        Command='work/rv64ui/add'
+        TargetBasePath='./'
+        TargetWorkPath=''
+        CommandArguments=''
+        STDIN=''
+        STDOUT='add.out'
+      />
+    </Processes>
+  </Emulator>
+
+  <Simulator>
+    <!-- Mode='Simulation' -->
+    <!-- Mode='EmulationWithDebug' -->
+    <System
+      Mode='Simulation'
+      SimulationInsns='323000' 
+      SkipInsns='0' 
+    />
+  </Simulator>
+  
+<!--
+  <Environment>
+    <OutputXML FileName='result.xml' Level='Detail'/>
+  </Environment>
+-->
+</Session>
