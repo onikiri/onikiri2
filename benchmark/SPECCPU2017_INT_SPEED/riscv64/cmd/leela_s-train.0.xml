@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/leela_s" CommandArguments="train.sgf " STDERR="train.err" STDIN="" STDOUT="train.out" TargetBasePath="./" TargetWorkPath="../../run/leela_s/train/input" />
-</Processes>
-</Emulator>
-</Session>

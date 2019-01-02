@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/fotonik3d_s" CommandArguments="" STDERR="fotonik3d_s.err" STDIN="" STDOUT="fotonik3d_s.log" TargetBasePath="./" TargetWorkPath="../../run/fotonik3d_s/train/input" />
-</Processes>
-</Emulator>
-</Session>

@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/lbm_s" CommandArguments="2000 reference.dat 0 0 200_200_260_ldc.of " STDERR="lbm.err" STDIN="" STDOUT="lbm.out" TargetBasePath="./" TargetWorkPath="../../run/lbm_s/refspeed/input" />
-</Processes>
-</Emulator>
-</Session>

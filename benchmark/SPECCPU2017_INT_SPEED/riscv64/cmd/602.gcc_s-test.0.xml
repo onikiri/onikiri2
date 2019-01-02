@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gcc_s" CommandArguments="t1.c -O3 -finline-limit=50000 -o t1.opts-O3_-finline-limit_50000.s " STDERR="t1.opts-O3_-finline-limit_50000.err" STDIN="" STDOUT="t1.opts-O3_-finline-limit_50000.out" TargetBasePath="./" TargetWorkPath="../../run/602.gcc_s/test/input" />
+</Processes>
+</Emulator>
+</Session>

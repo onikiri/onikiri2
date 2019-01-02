@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/cactuBSSN_s" CommandArguments="spec_train.par " STDERR="spec_train.err" STDIN="" STDOUT="spec_train.out" TargetBasePath="./" TargetWorkPath="../../run/cactuBSSN_s/train/input" />
-</Processes>
-</Emulator>
-</Session>

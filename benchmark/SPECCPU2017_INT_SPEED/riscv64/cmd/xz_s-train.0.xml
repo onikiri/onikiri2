@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/xz_s" CommandArguments="input.combined.xz 40 a841f68f38572a49d86226b7ff5baeb31bd19dc637a922a972b2e6d1257a890f6a544ecab967c313e370478c74f760eb229d4eef8a8d2836d233d3e9dd1430bf 6356684 -1 8 " STDERR="input.combined-40-8.err" STDIN="" STDOUT="input.combined-40-8.out" TargetBasePath="./" TargetWorkPath="../../run/xz_s/train/input" />
-</Processes>
-</Emulator>
-</Session>

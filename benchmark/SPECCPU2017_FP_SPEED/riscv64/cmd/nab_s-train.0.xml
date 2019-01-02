@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/nab_s" CommandArguments="aminos 391519156 1000 " STDERR="aminos.err" STDIN="" STDOUT="aminos.out" TargetBasePath="./" TargetWorkPath="../../run/nab_s/train/input" />
-</Processes>
-</Emulator>
-</Session>

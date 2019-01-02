@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/perlbench_s" CommandArguments="-I./lib checkspam.pl 2500 5 25 11 150 1 1 1 1 " STDERR="checkspam.2500.5.25.11.150.1.1.1.1.err" STDIN="" STDOUT="checkspam.2500.5.25.11.150.1.1.1.1.out" TargetBasePath="./" TargetWorkPath="../../run/perlbench_s/refspeed/input" />
-</Processes>
-</Emulator>
-</Session>

@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/bwaves_s" CommandArguments="bwaves_2 " STDERR="bwaves_2.err" STDIN="bwaves_2.in" STDOUT="bwaves_2.out" TargetBasePath="./" TargetWorkPath="../../run/bwaves_s/test/input" />
-</Processes>
-</Emulator>
-</Session>

@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/xz_s" CommandArguments="IMG_2560.cr2.xz 40 ec03e53b02deae89b6650f1de4bed76a012366fb3d4bdc791e8633d1a5964e03004523752ab008eff0d9e693689c53056533a05fc4b277f0086544c6c3cbbbf6 40822692 40824404 4 " STDERR="IMG_2560.cr2-40-4.err" STDIN="" STDOUT="IMG_2560.cr2-40-4.out" TargetBasePath="./" TargetWorkPath="../../run/xz_s/train/input" />
-</Processes>
-</Emulator>
-</Session>

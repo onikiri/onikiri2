@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/roms_s" CommandArguments="" STDERR="ocean_benchmark1.err" STDIN="ocean_benchmark1.in" STDOUT="ocean_benchmark1.log" TargetBasePath="./" TargetWorkPath="../../run/654.roms_s/train/input" />
+</Processes>
+</Emulator>
+</Session>

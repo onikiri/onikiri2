@@ -1,0 +1,6 @@
+echo diff -s ../run/602.gcc_s/refspeed/input/gcc-pp.opts-O5_-finline-limit_1000_-fselective-scheduling_-fselective-scheduling2.s ../run/602.gcc_s/refspeed/output/gcc-pp.opts-O5_-finline-limit_1000_-fselective-scheduling_-fselective-scheduling2.s
+diff -s ../run/602.gcc_s/refspeed/input/gcc-pp.opts-O5_-finline-limit_1000_-fselective-scheduling_-fselective-scheduling2.s ../run/602.gcc_s/refspeed/output/gcc-pp.opts-O5_-finline-limit_1000_-fselective-scheduling_-fselective-scheduling2.s
+echo diff -s ../run/602.gcc_s/refspeed/input/gcc-pp.opts-O5_-finline-limit_24000_-fgcse_-fgcse-las_-fgcse-lm_-fgcse-sm.s ../run/602.gcc_s/refspeed/output/gcc-pp.opts-O5_-finline-limit_24000_-fgcse_-fgcse-las_-fgcse-lm_-fgcse-sm.s
+diff -s ../run/602.gcc_s/refspeed/input/gcc-pp.opts-O5_-finline-limit_24000_-fgcse_-fgcse-las_-fgcse-lm_-fgcse-sm.s ../run/602.gcc_s/refspeed/output/gcc-pp.opts-O5_-finline-limit_24000_-fgcse_-fgcse-las_-fgcse-lm_-fgcse-sm.s
+echo diff -s ../run/602.gcc_s/refspeed/input/gcc-pp.opts-O5_-fipa-pta.s ../run/602.gcc_s/refspeed/output/gcc-pp.opts-O5_-fipa-pta.s
+diff -s ../run/602.gcc_s/refspeed/input/gcc-pp.opts-O5_-fipa-pta.s ../run/602.gcc_s/refspeed/output/gcc-pp.opts-O5_-fipa-pta.s

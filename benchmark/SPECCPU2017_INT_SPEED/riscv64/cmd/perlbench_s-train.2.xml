@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/perlbench_s" CommandArguments="-I. -I./lib scrabbl.pl " STDERR="scrabbl.err" STDIN="scrabbl.in" STDOUT="scrabbl.out" TargetBasePath="./" TargetWorkPath="../../run/perlbench_s/train/input" />
-</Processes>
-</Emulator>
-</Session>
