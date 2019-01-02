@@ -22,7 +22,7 @@ $(ENV_CFG):
 	false
 
 # checkout riscv-compliane
-$(RISCV_COMPLIANCE_PATH): $(ENV_CFG)
+$(RISCV_COMPLIANCE_PATH): 
 	mkdir $(WORK_PATH) -p
 	cd $(WORK_PATH) ;\
 		git clone https://github.com/riscv/riscv-compliance

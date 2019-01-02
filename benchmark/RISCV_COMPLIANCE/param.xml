@@ -4,12 +4,12 @@
   <Emulator TargetArchitecture="RISCV64Linux">
     <Processes>
       <Process 
-        Command='work/rv64ui/add'
+        Command='a.out'
         TargetBasePath='./'
         TargetWorkPath=''
         CommandArguments=''
         STDIN=''
-        STDOUT='add.out'
+        STDOUT=''
       />
     </Processes>
   </Emulator>
@@ -18,7 +18,7 @@
     <!-- Mode='Simulation' -->
     <!-- Mode='EmulationWithDebug' -->
     <System
-      Mode='Simulation'
+      Mode='Emulation'
       SimulationInsns='323000' 
       SkipInsns='0' 
     />
