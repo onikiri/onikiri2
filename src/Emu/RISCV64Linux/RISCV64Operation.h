@@ -673,8 +673,8 @@ namespace Onikiri {
 
                 enum class RISCV64FRM
                 {
-                    RNE = 0, //Round to Nearest, ties to Even
-                    RTZ = 1, //Round towards Zero
+                    RNE = 0, // Round to Nearest, ties to Even
+                    RTZ = 1, // Round towards Zero
                     RDN = 2, // Round Down (towards −infinity)
                     RUP = 3, // Round Up (towards +infinity)
                     RMM = 4, // Round to Nearest, ties to Max Magnitude
