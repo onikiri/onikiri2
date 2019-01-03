@@ -164,6 +164,7 @@ namespace Onikiri {
             virtual void syscall_gettimeofday(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_clock_gettime(EmulatorUtility::OpEmulationState* opState);
             
+            virtual void syscall_sysinfo(EmulatorUtility::OpEmulationState* opState);
 
             virtual void syscall_getcwd(EmulatorUtility::OpEmulationState* opState);
 

@@ -161,6 +161,7 @@ static struct {
     SYSCALLNAME(unlinkat, 3, "nsn"),
     SYSCALLNAME(clock_gettime, 2, "np"),
     SYSCALLNAME(getrusage, 2, "xp"),
+    SYSCALLNAME(sysinfo, 1, "p"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -377,6 +378,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     // gcc が実行時間の取得に使用
     case syscall_id_getrusage:
         syscall_ignore(opState);
+        break;
+
+    case syscall_id_sysinfo:
+        syscall_sysinfo(opState);
         break;
 
     /*

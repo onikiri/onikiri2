@@ -143,6 +143,25 @@ namespace {
 
     typedef s64 linux64_time_t;
 
+
+    struct linux64_sysinfo {
+        s64 linux64_uptime;
+        u64 linux64_loads[3];
+        u64 linux64_totalram;
+        u64 linux64_freeram;
+        u64 linux64_sharedram;
+        u64 linux64_bufferram;
+        u64 linux64_totalswap;
+        u64 linux64_freeswap;
+        u16 linux64_procs;
+        u16 linux64_pad;
+        u64 linux64_totalhigh;
+        u64 linux64_freehigh;
+        u32 linux64_mem_unit;
+        //u8 linux64_f[20 - 2 * sizeof(u64) - sizeof(u32)];   // padding
+    };
+
+
     //const int LINUX_F_DUPFD = 0;
     const int LINUX_F_GETFD = 1;
     const int LINUX_F_SETFD = 2;
@@ -746,6 +765,36 @@ void Linux64SyscallConv::syscall_clock_gettime(EmulatorUtility::OpEmulationState
     tv_buf->linux64_tv_sec = EndianHostToSpecified((u64)t, GetMemorySystem()->IsBigEndian());
     // Return nano-seconds
     tv_buf->linux64_tv_nsec = EndianHostToSpecified((u64)t * 1000 * 1000 * 1000, GetMemorySystem()->IsBigEndian());
+
+    SetResult(true, 0);
+}
+
+void Linux64SyscallConv::syscall_sysinfo(EmulatorUtility::OpEmulationState* opState)
+{
+    TargetBuffer buf(GetMemorySystem(), m_args[1], sizeof(linux64_sysinfo));
+    linux64_sysinfo* sysinfo = static_cast<linux64_sysinfo*>(buf.Get());
+
+    // Seconds since boot
+    s64 t = GetVirtualSystem()->GetTime();
+    sysinfo->linux64_uptime = EndianHostToSpecified((u64)t, GetMemorySystem()->IsBigEndian());
+
+    // 1, 5, 15 min load averages
+    sysinfo->linux64_loads[0] = 
+    sysinfo->linux64_loads[1] = 
+    sysinfo->linux64_loads[2] = 1;
+
+    const s64 GB = 1024 * 1024 * 1024;
+    sysinfo->linux64_totalram   = 8 * GB;
+    sysinfo->linux64_freeram    = 4 * GB;
+    sysinfo->linux64_sharedram  = 2 * GB;
+    sysinfo->linux64_bufferram  = 2 * GB;
+    sysinfo->linux64_totalswap  = 8 * GB;
+    sysinfo->linux64_freeswap   = 4 * GB;
+    sysinfo->linux64_procs = 10;
+    sysinfo->linux64_pad = 0;
+    sysinfo->linux64_totalhigh = 4 * GB;
+    sysinfo->linux64_freehigh = 2 * GB;
+    sysinfo->linux64_mem_unit = 4096;
 
     SetResult(true, 0);
 }
