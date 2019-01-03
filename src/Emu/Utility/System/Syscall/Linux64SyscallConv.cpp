@@ -136,6 +136,10 @@ namespace {
         s64 linux64_tv_sec;
         s64 linux64_tv_usec;
     };
+    struct linux64_timespec {
+        s64 linux64_tv_sec;
+        s64 linux64_tv_nsec;
+    };
 
     typedef s64 linux64_time_t;
 
@@ -728,6 +732,20 @@ void Linux64SyscallConv::syscall_gettimeofday(OpEmulationState* opState)
     s64 t = GetVirtualSystem()->GetTime();
     tv_buf->linux64_tv_sec = EndianHostToSpecified((u64)t, GetMemorySystem()->IsBigEndian());
     tv_buf->linux64_tv_usec = EndianHostToSpecified((u64)t * 1000 * 1000, GetMemorySystem()->IsBigEndian());
+
+    SetResult(true, 0);
+}
+
+void Linux64SyscallConv::syscall_clock_gettime(EmulatorUtility::OpEmulationState* opState)
+{
+    //int clkID = (int)m_args[1];
+    TargetBuffer buf(GetMemorySystem(), m_args[2], sizeof(linux64_timespec));
+    linux64_timespec* tv_buf = static_cast<linux64_timespec*>(buf.Get());
+
+    s64 t = GetVirtualSystem()->GetTime();
+    tv_buf->linux64_tv_sec = EndianHostToSpecified((u64)t, GetMemorySystem()->IsBigEndian());
+    // Return nano-seconds
+    tv_buf->linux64_tv_nsec = EndianHostToSpecified((u64)t * 1000 * 1000 * 1000, GetMemorySystem()->IsBigEndian());
 
     SetResult(true, 0);
 }

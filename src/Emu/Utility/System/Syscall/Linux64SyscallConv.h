@@ -158,9 +158,12 @@ namespace Onikiri {
             void kill_helper(EmulatorUtility::OpEmulationState* opState, int pid, int sig);
 
             virtual void syscall_ignore(EmulatorUtility::OpEmulationState* opState);
+
             virtual void syscall_time(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_times(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_gettimeofday(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_clock_gettime(EmulatorUtility::OpEmulationState* opState);
+            
 
             virtual void syscall_getcwd(EmulatorUtility::OpEmulationState* opState);
 
