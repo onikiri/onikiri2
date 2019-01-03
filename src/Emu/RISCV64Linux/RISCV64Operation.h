@@ -34,10 +34,12 @@
 
 #include "SysDeps/fenv.h"
 #include "Utility/RuntimeError.h"
+#include "Emu/Utility/DecoderUtility.h"
 #include "Emu/Utility/GenericOperation.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/ProcessState.h"
 #include "Emu/Utility/System/Memory/MemorySystem.h"
+#include "Emu/Utility/System/VirtualSystem.h"
 
 
 namespace Onikiri {
@@ -697,12 +699,20 @@ namespace Onikiri {
                     switch (csrNum) {
                     case RISCV64CSR::FFLAGS:
                     case RISCV64CSR::FRM:
+                        return process->GetControlRegister(static_cast<u64>(csrNum));
+                        return process->GetControlRegister(static_cast<u64>(csrNum));
+
                     case RISCV64CSR::FCSR:
+                        return
+                            process->GetControlRegister(static_cast<u64>(RISCV64CSR::FFLAGS)) |
+                            (process->GetControlRegister(static_cast<u64>(RISCV64CSR::FRM)) << 5);
+
                     case RISCV64CSR::CYCLE:
                     case RISCV64CSR::TIME:
                     case RISCV64CSR::INSTRET:
-                        return 0;
-                    default: 
+                        return process->GetVirtualSystem()->GetInsnTick();
+                    default:
+                        RUNTIME_WARNING("Unimplemented CSR is read: %d", static_cast<int>(csrNum));
                         return process->GetControlRegister(static_cast<u64>(csrNum));
                     }
                 }
@@ -713,12 +723,22 @@ namespace Onikiri {
                     switch (csrNum) {
                     case RISCV64CSR::FFLAGS:
                     case RISCV64CSR::FRM:
-                    case RISCV64CSR::FCSR:
+                        process->SetControlRegister(static_cast<u64>(csrNum), value);
+                        break;
+
+                    case RISCV64CSR::FCSR:  // Map to FFLAGS/FRM
+                        process->SetControlRegister(static_cast<u64>(RISCV64CSR::FFLAGS), ExtractBits(value, 4, 0));
+                        process->SetControlRegister(static_cast<u64>(RISCV64CSR::FRM), ExtractBits(value, 7, 5));
+                        break;
+
+                    // These registers are read-only
                     case RISCV64CSR::CYCLE:
                     case RISCV64CSR::TIME:
                     case RISCV64CSR::INSTRET:
-                        return;
+                        break;
+
                     default:
+                        RUNTIME_WARNING("Unimplemented CSR is written: %d", static_cast<int>(csrNum));
                         process->SetControlRegister(static_cast<u64>(csrNum), value);
                     }
                 }
