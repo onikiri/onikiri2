@@ -130,8 +130,8 @@ namespace Onikiri {
 
             // 制御レジスタ
             static const int MAX_CONTROL_REGISTER_NUM = 4096;
-            void SetControlRegister(int index, u64 value);
-            u64 GetControlRegister(int index);
+            void SetControlRegister(u64 index, u64 value);
+            u64 GetControlRegister(u64 index);
 
         private:
             void Init(const ProcessCreateParam& pcp, SystemIF* simSystem, SyscallConvIF* syscallConv, LoaderIF* loader, bool bigEndian);

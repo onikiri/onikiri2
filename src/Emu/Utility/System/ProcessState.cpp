@@ -142,20 +142,20 @@ u64 ProcessState::GetThreadUniqueValue()
     return m_threadUniqueValue;
 }
 
-void ProcessState::SetControlRegister(int index, u64 value)
+void ProcessState::SetControlRegister(u64 index, u64 value)
 {
-    if (index < 0 || index >= MAX_CONTROL_REGISTER_NUM) {
+    if (index >= MAX_CONTROL_REGISTER_NUM) {
         THROW_RUNTIME_ERROR("A control register out of range accessed.: %d", index);
     }
-    m_controlRegs[index] = value;
+    m_controlRegs[(size_t)index] = value;
 }
 
-u64 ProcessState::GetControlRegister(int index)
+u64 ProcessState::GetControlRegister(u64 index)
 {
-    if (index < 0 || index >= MAX_CONTROL_REGISTER_NUM) {
+    if (index >= MAX_CONTROL_REGISTER_NUM) {
         THROW_RUNTIME_ERROR("A control register out of range accessed.: %d", index);
     }
-    return m_controlRegs.at(index);
+    return m_controlRegs.at((size_t)index);
 }
 
 void ProcessState::Init(
