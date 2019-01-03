@@ -341,7 +341,7 @@ void Linux64SyscallConv::syscall_openat(OpEmulationState* opState)
         result = 1;
     }
     else {
-        if (fd == -100) {
+        if (fd == LINUX_AT_FDCWD) {
             result = GetVirtualSystem()->Open(
                 fileName.c_str(),
                 (int)OpenFlagTargetToHost(static_cast<u32>(m_args[3]))
@@ -608,7 +608,7 @@ void Linux64SyscallConv::syscall_faccessat(OpEmulationState* opState)
     ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
     なので通常のaccessと同じ動作をする
     */
-    if (fd == -100) {
+    if (fd == LINUX_AT_FDCWD) {
         result = GetVirtualSystem()->Access(path.c_str(), (int)AccessModeTargetToHost((u32)m_args[3]));
     }
     else {
