@@ -372,6 +372,8 @@ namespace Onikiri {
                 }
             };
 
+            // 指数部が全て1で，仮数部が非ゼロなら NaN
+            // さらに，仮数部の最上位が 0 なら Signaling
             bool IsSignalingNAN(f64 fpValue) {
                 u64 intValue = AsIntFunc<u64>(fpValue);
                 return 
