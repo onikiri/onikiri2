@@ -43,6 +43,9 @@ namespace Onikiri
 
     static bool g_inException = false;
     static bool g_suppressWarning = false;
+    
+    static const int MAX_OUTPUTTED_WARNING = 100;
+    static int g_numOutputtedWarning = 0;
 
     static String DebugWhere( const RuntimeErrorInfo& info ){
         return String().format(
@@ -129,6 +132,11 @@ namespace Onikiri
         if( !g_suppressWarning ){
             printf( "%s\n\n", msg.c_str() );
         }
+        g_numOutputtedWarning++;
+        if (g_numOutputtedWarning > MAX_OUTPUTTED_WARNING) {
+            THROW_RUNTIME_ERROR("Too many warnings are outputted.");
+        }
+
     }
 
     //
