@@ -151,6 +151,9 @@ namespace {
     const int LINUX_SEEK_SET = 0;
     const int LINUX_SEEK_CUR = 1;
     const int LINUX_SEEK_END = 2;
+
+    const int LINUX_AT_FDCWD = -100;
+    const int LINUX_AT_REMOVEDIR = 0x200;
 }
 
 
@@ -620,6 +623,7 @@ void Linux64SyscallConv::syscall_faccessat(OpEmulationState* opState)
     else
         SetResult(true, result);
 }
+
 void Linux64SyscallConv::syscall_unlink(OpEmulationState* opState)
 {
     string path = StrCpyToHost( GetMemorySystem(), m_args[1] );
@@ -628,6 +632,30 @@ void Linux64SyscallConv::syscall_unlink(OpEmulationState* opState)
         SetResult(false, GetVirtualSystem()->GetErrno());
     else
         SetResult(true, result);
+}
+
+void Linux64SyscallConv::syscall_unlinkat(OpEmulationState* opState)
+{
+    int fd = (int)m_args[1];
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int flag = (int)m_args[3];
+    if (flag & LINUX_AT_REMOVEDIR) {
+        THROW_RUNTIME_ERROR("syscall_unlinkat does not support LINUX_AT_REMOVEDIR.");
+    }
+
+    if (fd == LINUX_AT_FDCWD) {
+        int result = GetVirtualSystem()->Unlink(path.c_str());
+        if (result == -1)
+            SetResult(false, GetVirtualSystem()->GetErrno());
+        else
+            SetResult(true, result);
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'unlinkat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
 }
 
 void Linux64SyscallConv::syscall_rename(OpEmulationState* opState)

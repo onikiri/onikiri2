@@ -157,7 +157,8 @@ static struct {
     SYSCALLNAME(ioctl, 3, "xxx"),
     SYSCALLNAME(fcntl, 3, "nnp"),
     SYSCALLNAME(faccessat, 4, "npnn"),
-    SYSCALLNAME(ftruncate, 2, "nn")
+    SYSCALLNAME(ftruncate, 2, "nn"),
+    SYSCALLNAME(unlinkat, 3, "nsn")
     /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
@@ -319,6 +320,9 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_fstatat:
         syscall_fstatat32(opState);
+        break;
+    case syscall_id_unlinkat:
+        syscall_unlinkat(opState);
         break;
 
     case syscall_id_munmap:
