@@ -105,6 +105,7 @@ ProcessState::ProcessState(int pid)
 {
     m_loader = 0;
     m_syscallConv = 0;
+    m_controlRegs.fill(0);
 }
 
 ProcessState::~ProcessState()
@@ -141,7 +142,21 @@ u64 ProcessState::GetThreadUniqueValue()
     return m_threadUniqueValue;
 }
 
+void ProcessState::SetControlRegister(int index, u64 value)
+{
+    if (index < 0 || index >= MAX_CONTROL_REGISTER_NUM) {
+        THROW_RUNTIME_ERROR("A control register out of range accessed.: %d", index);
+    }
+    m_controlRegs[index] = value;
+}
 
+u64 ProcessState::GetControlRegister(int index)
+{
+    if (index < 0 || index >= MAX_CONTROL_REGISTER_NUM) {
+        THROW_RUNTIME_ERROR("A control register out of range accessed.: %d", index);
+    }
+    return m_controlRegs.at(index);
+}
 
 void ProcessState::Init(
     const ProcessCreateParam& pcp, 
