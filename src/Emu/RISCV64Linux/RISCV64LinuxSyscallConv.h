@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/VirtualSystem.h"
-#include "Emu/Utility/System/Syscall/Linux32SyscallConv.h"
+#include "Emu/Utility/System/Syscall/Linux64SyscallConv.h"
 
 namespace Onikiri {
 
@@ -46,7 +46,7 @@ namespace Onikiri {
 
     namespace RISCV64Linux {
 
-        class RISCV64LinuxSyscallConv : public EmulatorUtility::Linux32SyscallConv
+        class RISCV64LinuxSyscallConv : public EmulatorUtility::Linux64SyscallConv
         {
         private:
             RISCV64LinuxSyscallConv();

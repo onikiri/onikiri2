@@ -56,7 +56,7 @@ using namespace Onikiri::POSIX;
 
 
 RISCV64LinuxSyscallConv::RISCV64LinuxSyscallConv(ProcessState* processState) : 
-    Linux32SyscallConv(processState)
+    Linux64SyscallConv(processState)
 {
 }
 
