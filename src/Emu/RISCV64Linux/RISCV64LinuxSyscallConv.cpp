@@ -160,7 +160,8 @@ static struct {
     SYSCALLNAME(ftruncate, 2, "nn"),
     SYSCALLNAME(unlinkat, 3, "nsn"),
     SYSCALLNAME(clock_gettime, 2, "np"),
-    
+    SYSCALLNAME(getrusage, 2, "xp"),
+
     /*
     SYSCALLNAME(readv, 3, "npn"),
     SYSCALLNAME(writev, 3, "npn"),
@@ -199,7 +200,6 @@ static struct {
     SYSCALLNAME(getegid, 0, ""),
     //SYSCALLNAME(setreuid, 2),
     //SYSCALLNAME(setregid, 2),
-    SYSCALLNAME(getrusage, 2, "xp"),
     SYSCALLNAME(getrlimit, 2, "np"),
     SYSCALLNAME(setrlimit, 2, "np"),
     SYSCALLNAME(dup, 1, "n"),
@@ -373,7 +373,13 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_clock_gettime:
         syscall_clock_gettime(opState);
         break;
-/*
+
+    // gcc が実行時間の取得に使用
+    case syscall_id_getrusage:
+        syscall_ignore(opState);
+        break;
+
+    /*
     case syscall_id_readv:
         syscall_readv(opState);
         break;
@@ -486,10 +492,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     //  syscall_mkdir(opState);
     //  break;
 
-    // gcc が実行時間の取得に使用
-    case syscall_id_getrusage:
-        syscall_ignore(opState);
-        break;
 
 */
     default:

@@ -65,6 +65,8 @@ namespace Onikiri {
 
             const int syscall_id_uname = 160;
 
+            const int syscall_id_getrusage = 165;
+
             const int syscall_id_gettimeofday = 169;
             
             const int syscall_id_getpid = 172;
@@ -117,7 +119,6 @@ namespace Onikiri {
             const int syscall_id_setregid = 71;
             const int syscall_id_setrlimit = 75;
             const int syscall_id_getrlimit = 76;
-            const int syscall_id_getrusage = 77;
             const int syscall_id_readlink = 85;
             const int syscall_id_mmap = 90;
             const int syscall_id_truncate = 92;
