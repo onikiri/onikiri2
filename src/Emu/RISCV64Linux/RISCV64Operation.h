@@ -680,6 +680,7 @@ namespace Onikiri {
                     RMM = 4, // Round to Nearest, ties to Max Magnitude
                 };
 
+                /*
                 const char* CSR_NumToStr(RISCV64CSR csr)
                 {
                     switch (csr){
@@ -691,7 +692,7 @@ namespace Onikiri {
                     case RISCV64CSR::INSTRET: return "INSTRET";
                     default                 : return "<invalid>";
                     }
-                }
+                }*/
 
                 u64 GetCSR_Value(OpEmulationState* opState, RISCV64CSR csrNum)
                 {
