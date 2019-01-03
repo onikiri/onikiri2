@@ -372,6 +372,20 @@ namespace Onikiri {
                 }
             };
 
+            bool IsSignalingNAN(f64 fpValue) {
+                u64 intValue = AsIntFunc<u64>(fpValue);
+                return 
+                    (((intValue >> 51) & 0xFFF) == 0xFFE) && 
+                    (intValue & 0x7FFFFFFFFFFFFull);
+            }
+
+            bool IsSignalingNAN(f32 fpValue) {
+                u32 intValue = AsIntFunc<u32>(fpValue);
+                return 
+                    (((intValue >> 22) & 0x1FF) == 0x1FE) && 
+                    (intValue & 0x3FFFFF);
+            }
+
             //ここを頑張る
             template <typename Type, typename TSrc1>
             struct RISCV64FCLASS : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
@@ -379,26 +393,21 @@ namespace Onikiri {
                 u64 operator()(EmulatorUtility::OpEmulationState* opState)
                 {
                     Type value = static_cast<Type>(TSrc1()(opState));
+
                     switch(std::fpclassify(value)) {
-                case FP_INFINITE:
-                            if(std::signbit(value)) return (u64)0x0000000000000001;
-                            else return (u64)0x0000000000000080;
-                            break;
-                case FP_NAN:       return (u64)0x0000000000000100;
-                case FP_NORMAL:
-                            if(std::signbit(value)) return (u64)0x0000000000000002;
-                            else return (u64)0x0000000000000040;
-                            break;
-                case FP_SUBNORMAL:
-                            if(std::signbit(value)) return (u64)0x0000000000000004;
-                            else return (u64)0x0000000000000020;
-                            break;
-                case FP_ZERO:
-                            if(std::signbit(value)) return (u64)0x0000000000000008;
-                            else return (u64)0x0000000000000010;
-                            break;
-                default:           return 0x0000000000000000;
-                }
+                    case FP_INFINITE:
+                        return std::signbit(value) ? (u64)(1 << 0) : (u64)(1 << 7);
+                    case FP_NAN:
+                        return IsSignalingNAN(value) ? (u64)(1 << 8) : (u64)(1 << 9);
+                    case FP_NORMAL:
+                        return std::signbit(value) ? (u64)(1 << 1) : (u64)(1 << 6);
+                    case FP_SUBNORMAL:
+                        return std::signbit(value) ? (u64)(1 << 2) : (u64)(1 << 5);
+                    case FP_ZERO:
+                        return std::signbit(value) ? (u64)(1 << 3) : (u64)(1 << 4);
+                    default:
+                        return 0;
+                    }
                 }
             };
 
