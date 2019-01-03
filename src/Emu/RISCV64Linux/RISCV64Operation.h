@@ -34,10 +34,12 @@
 
 #include "SysDeps/fenv.h"
 #include "Utility/RuntimeError.h"
+#include "Emu/Utility/DecoderUtility.h"
 #include "Emu/Utility/GenericOperation.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/ProcessState.h"
 #include "Emu/Utility/System/Memory/MemorySystem.h"
+#include "Emu/Utility/System/VirtualSystem.h"
 
 
 namespace Onikiri {
@@ -184,15 +186,6 @@ namespace Onikiri {
                 u64 operator()(EmulatorUtility::OpEmulationState* opState) const
                 {
                     return 0xffffffff00000000 | AsIntFunc<u32, f32>(TSrc()(opState));
-                }
-            };
-
-            struct RISCV64RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
-            {
-                int operator()(EmulatorUtility::OpEmulationState* opState) const
-                {
-                    // TODO: Select a round mode from FCSR
-                    return FE_TONEAREST;
                 }
             };
 
@@ -644,6 +637,8 @@ namespace Onikiri {
                 syscallConv->SetArg(0, SrcOperand<0>()(opState));
                 syscallConv->SetArg(1, SrcOperand<1>()(opState));
                 syscallConv->SetArg(2, SrcOperand<2>()(opState));
+                // Make dependency between this op and the next op so that 
+                // they are executed in-order
                 DstOperand<0>::SetOperand(opState, SrcOperand<0>()(opState));
             }
 
@@ -661,6 +656,10 @@ namespace Onikiri {
                 DstOperand<0>::SetOperand(opState, error ? (u64)-1 : val);
             }
 
+
+            //
+            // CSR Operations
+            //
             namespace {
                 enum class RISCV64CSR
                 {
@@ -672,10 +671,19 @@ namespace Onikiri {
                     INSTRET = 0xC02,
                 };
 
-                const char* to_string(RISCV64CSR csr)
+                enum class RISCV64FRM
                 {
-                    switch (csr)
-                    {
+                    RNE = 0, //Round to Nearest, ties to Even
+                    RTZ = 1, //Round towards Zero
+                    RDN = 2, // Round Down (towards −infinity)
+                    RUP = 3, // Round Up (towards +infinity)
+                    RMM = 4, // Round to Nearest, ties to Max Magnitude
+                };
+
+                /*
+                const char* CSR_NumToStr(RISCV64CSR csr)
+                {
+                    switch (csr){
                     case RISCV64CSR::FFLAGS : return "FFLAGS";
                     case RISCV64CSR::FRM    : return "FRM";
                     case RISCV64CSR::FCSR   : return "FCSR";
@@ -684,6 +692,58 @@ namespace Onikiri {
                     case RISCV64CSR::INSTRET: return "INSTRET";
                     default                 : return "<invalid>";
                     }
+                }*/
+
+                u64 GetCSR_Value(OpEmulationState* opState, RISCV64CSR csrNum)
+                {
+                    ProcessState* process = opState->GetProcessState();
+                    switch (csrNum) {
+                    case RISCV64CSR::FFLAGS:
+                    case RISCV64CSR::FRM:
+                        return process->GetControlRegister(static_cast<u64>(csrNum));
+
+                    case RISCV64CSR::FCSR:
+                        return
+                            process->GetControlRegister(static_cast<u64>(RISCV64CSR::FFLAGS)) |
+                            (process->GetControlRegister(static_cast<u64>(RISCV64CSR::FRM)) << 5);
+
+                    case RISCV64CSR::CYCLE:
+                    case RISCV64CSR::TIME:
+                    case RISCV64CSR::INSTRET:
+                        return process->GetVirtualSystem()->GetInsnTick();
+                    default:
+                        RUNTIME_WARNING("Unimplemented CSR is read: %d", static_cast<int>(csrNum));
+                        return process->GetControlRegister(static_cast<u64>(csrNum));
+                    }
+                }
+                
+                void SetCSR_Value(OpEmulationState* opState, RISCV64CSR csrNum, u64 value)
+                {
+                    ProcessState* process = opState->GetProcessState();
+                    switch (csrNum) {
+                    case RISCV64CSR::FFLAGS:
+                        process->SetControlRegister(static_cast<u64>(csrNum), ExtractBits(value, 4, 0));
+                        break;
+
+                    case RISCV64CSR::FRM:
+                        process->SetControlRegister(static_cast<u64>(csrNum), ExtractBits(value, 2, 0));
+                        break;
+
+                    case RISCV64CSR::FCSR:  // Map to FFLAGS/FRM
+                        process->SetControlRegister(static_cast<u64>(RISCV64CSR::FFLAGS), ExtractBits(value, 4, 0));
+                        process->SetControlRegister(static_cast<u64>(RISCV64CSR::FRM), ExtractBits(value, 7, 5));
+                        break;
+
+                    // These registers are read-only
+                    case RISCV64CSR::CYCLE:
+                    case RISCV64CSR::TIME:
+                    case RISCV64CSR::INSTRET:
+                        break;
+
+                    default:
+                        RUNTIME_WARNING("Unimplemented CSR is written: %d", static_cast<int>(csrNum));
+                        process->SetControlRegister(static_cast<u64>(csrNum), value);
+                    }
                 }
 
             } // namespace `anonymous'
@@ -691,34 +751,57 @@ namespace Onikiri {
             template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRW(OpEmulationState* opState)
             {
-                TDest::SetOperand(opState, 0);
-                RUNTIME_WARNING("Write access to CSR '%s'. This operation has not been implemented yet.", to_string((RISCV64CSR)CSR_S()(opState)));
+                u64 srcValue = static_cast<u64>(SrcOperand<0>()(opState));
+                RISCV64CSR csrNum = (RISCV64CSR)CSR_S()(opState);
+                u64 csrValue = GetCSR_Value(opState, csrNum);
+                SetCSR_Value(opState, csrNum, srcValue);
+                TDest::SetOperand(opState, csrValue);
             }
 
             template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRS(OpEmulationState* opState)
             {
-                TDest::SetOperand(opState, 0);
-                if (TSrc1()(opState) == 0) {
-                    // 'CSRRS rd, csr, x0' instruction expanded from 'CSRR rd, csr' pseudo instruction
-                    if ((RISCV64CSR)CSR_S()(opState) == RISCV64CSR::FRM) {
-                        // It is not a matter that returning 0 when FRM is read.
-                        // This is an ad-hoc code to prevent unnecessary warnings.
-                    } else {
-                        RUNTIME_WARNING("Read access to CSR '%s'. This operation has not been implemented yet.", to_string((RISCV64CSR)CSR_S()(opState)));
-                    }
-                } else {
-                    RUNTIME_WARNING("Write access to CSR '%s'. This operation has not been implemented yet.", to_string((RISCV64CSR)CSR_S()(opState)));
-                }
+                u64 srcValue = static_cast<u64>(SrcOperand<0>()(opState));
+                RISCV64CSR csrNum = (RISCV64CSR)CSR_S()(opState);
+                u64 csrValue = GetCSR_Value(opState, csrNum);
+                SetCSR_Value(opState, csrNum, csrValue | srcValue);
+                TDest::SetOperand(opState, csrValue);    // Return the original value
             }
 
             template <typename TDest, typename TSrc1, typename CSR_S>
             inline void RISCV64CSRRC(OpEmulationState* opState)
             {
-                TDest::SetOperand(opState, 0);
-                RUNTIME_WARNING("Write access to CSR '%s'. This operation has not been implemented yet.", to_string((RISCV64CSR)CSR_S()(opState)));
+                u64 srcValue = static_cast<u64>(SrcOperand<0>()(opState));
+                RISCV64CSR csrNum = (RISCV64CSR)CSR_S()(opState);
+                u64 csrValue = GetCSR_Value(opState, csrNum);
+                SetCSR_Value(opState, csrNum, csrValue & (~srcValue));
+                TDest::SetOperand(opState, csrValue);    // Return the original value
             }
             
+            // Return a current rounding mode specified by FRM
+            struct RISCV64RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+            {
+                int operator()(EmulatorUtility::OpEmulationState* opState) const
+                {
+                    u64 frm = GetCSR_Value(opState, RISCV64CSR::FRM);
+                    switch (static_cast<RISCV64FRM>(frm)) {
+                    case RISCV64FRM::RNE:
+                        return FE_TONEAREST;
+                    case RISCV64FRM::RTZ:
+                        return FE_TOWARDZERO;
+                    case RISCV64FRM::RDN:
+                        return FE_DOWNWARD;
+                    case RISCV64FRM::RUP:
+                        return FE_UPWARD;
+                    case RISCV64FRM::RMM:
+                        return FE_TONEAREST;
+                    default:
+                        RUNTIME_WARNING("Undefined rounding mode: %d", (int)frm);
+                        return FE_TONEAREST;
+                    }
+                }
+            };
+
 
         } // namespace Operation {
     } // namespace RISCV64Linux {

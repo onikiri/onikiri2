@@ -128,6 +128,11 @@ namespace Onikiri {
             void SetThreadUniqueValue(u64 value);
             u64 GetThreadUniqueValue();
 
+            // 制御レジスタ
+            static const int MAX_CONTROL_REGISTER_NUM = 4096;
+            void SetControlRegister(u64 index, u64 value);
+            u64 GetControlRegister(u64 index);
+
         private:
             void Init(const ProcessCreateParam& pcp, SystemIF* simSystem, SyscallConvIF* syscallConv, LoaderIF* loader, bool bigEndian);
             void InitMemoryMap(const ProcessCreateParam& createParam);
@@ -145,6 +150,9 @@ namespace Onikiri {
             
             // rduniq, wruniq でアクセスするスレッド固有の値
             u64 m_threadUniqueValue;
+
+            // Control registers
+            std::array<u64, MAX_CONTROL_REGISTER_NUM> m_controlRegs;
         };
 
     } // namespace EmulatorUtility
