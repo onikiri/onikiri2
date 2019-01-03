@@ -162,6 +162,9 @@ static struct {
     SYSCALLNAME(clock_gettime, 2, "np"),
     SYSCALLNAME(getrusage, 2, "xp"),
     SYSCALLNAME(sysinfo, 1, "p"),
+    SYSCALLNAME(getrlimit, 2, "np"),
+    SYSCALLNAME(setrlimit, 2, "np"),
+    SYSCALLNAME(prlimit64, 4, "nnpp"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -201,8 +204,6 @@ static struct {
     SYSCALLNAME(getegid, 0, ""),
     //SYSCALLNAME(setreuid, 2),
     //SYSCALLNAME(setregid, 2),
-    SYSCALLNAME(getrlimit, 2, "np"),
-    SYSCALLNAME(setrlimit, 2, "np"),
     SYSCALLNAME(dup, 1, "n"),
 
     SYSCALLNAME(rt_sigaction, 3, "xxx"),
@@ -384,6 +385,17 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_sysinfo(opState);
         break;
 
+    // gcc が stack の拡張に使用するだけ
+    case syscall_id_getrlimit:
+        syscall_ignore(opState);
+        break;
+    case syscall_id_setrlimit:
+        syscall_ignore(opState);
+        break;
+    case syscall_id_prlimit64:
+        syscall_ignore(opState);
+        break;
+
     /*
     case syscall_id_readv:
         syscall_readv(opState);
@@ -485,13 +497,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_ignore(opState);
         break;
 
-    // gcc が stack の拡張に使用するだけ
-    case syscall_id_getrlimit:
-        syscall_ignore(opState);
-        break;
-    case syscall_id_setrlimit:
-        syscall_ignore(opState);
-        break;
 
     //case syscall_id_mkdir:
     //  syscall_mkdir(opState);
