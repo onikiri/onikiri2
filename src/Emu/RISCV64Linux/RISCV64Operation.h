@@ -189,15 +189,6 @@ namespace Onikiri {
                 }
             };
 
-            struct RISCV64RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
-            {
-                int operator()(EmulatorUtility::OpEmulationState* opState) const
-                {
-                    // TODO: Select a round mode from FCSR
-                    return FE_TONEAREST;
-                }
-            };
-
             template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
             struct RISCV64MADD : public std::unary_function<OpEmulationState*, Type>
             {
@@ -680,6 +671,15 @@ namespace Onikiri {
                     INSTRET = 0xC02,
                 };
 
+                enum class RISCV64FRM
+                {
+                    RNE = 0, //Round to Nearest, ties to Even
+                    RTZ = 1, //Round towards Zero
+                    RDN = 2, // Round Down (towards −infinity)
+                    RUP = 3, // Round Up (towards +infinity)
+                    RMM = 4, // Round to Nearest, ties to Max Magnitude
+                };
+
                 const char* CSR_NumToStr(RISCV64CSR csr)
                 {
                     switch (csr){
@@ -699,7 +699,6 @@ namespace Onikiri {
                     switch (csrNum) {
                     case RISCV64CSR::FFLAGS:
                     case RISCV64CSR::FRM:
-                        return process->GetControlRegister(static_cast<u64>(csrNum));
                         return process->GetControlRegister(static_cast<u64>(csrNum));
 
                     case RISCV64CSR::FCSR:
@@ -722,8 +721,11 @@ namespace Onikiri {
                     ProcessState* process = opState->GetProcessState();
                     switch (csrNum) {
                     case RISCV64CSR::FFLAGS:
+                        process->SetControlRegister(static_cast<u64>(csrNum), ExtractBits(value, 4, 0));
+                        break;
+
                     case RISCV64CSR::FRM:
-                        process->SetControlRegister(static_cast<u64>(csrNum), value);
+                        process->SetControlRegister(static_cast<u64>(csrNum), ExtractBits(value, 2, 0));
                         break;
 
                     case RISCV64CSR::FCSR:  // Map to FFLAGS/FRM
@@ -775,6 +777,30 @@ namespace Onikiri {
                 TDest::SetOperand(opState, csrValue);    // Return the original value
             }
             
+            // Return a current rounding mode specified by FRM
+            struct RISCV64RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+            {
+                int operator()(EmulatorUtility::OpEmulationState* opState) const
+                {
+                    u64 frm = GetCSR_Value(opState, RISCV64CSR::FRM);
+                    switch (static_cast<RISCV64FRM>(frm)) {
+                    case RISCV64FRM::RNE:
+                        return FE_TONEAREST;
+                    case RISCV64FRM::RTZ:
+                        return FE_TOWARDZERO;
+                    case RISCV64FRM::RDN:
+                        return FE_DOWNWARD;
+                    case RISCV64FRM::RUP:
+                        return FE_UPWARD;
+                    case RISCV64FRM::RMM:
+                        return FE_TONEAREST;
+                    default:
+                        RUNTIME_WARNING("Undefined rounding mode: %d", (int)frm);
+                        return FE_TONEAREST;
+                    }
+                }
+            };
+
 
         } // namespace Operation {
     } // namespace RISCV64Linux {
