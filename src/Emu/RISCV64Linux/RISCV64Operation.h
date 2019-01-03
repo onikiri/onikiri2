@@ -644,6 +644,8 @@ namespace Onikiri {
                 syscallConv->SetArg(0, SrcOperand<0>()(opState));
                 syscallConv->SetArg(1, SrcOperand<1>()(opState));
                 syscallConv->SetArg(2, SrcOperand<2>()(opState));
+                // Make dependency between this op and the next op so that 
+                // they are executed in-order
                 DstOperand<0>::SetOperand(opState, SrcOperand<0>()(opState));
             }
 
