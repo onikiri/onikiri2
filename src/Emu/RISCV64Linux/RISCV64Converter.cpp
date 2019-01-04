@@ -734,6 +734,9 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     { "fclass.d",   MASK_FCLASS,  OPCODE_FCLASS(0x71),      1,{ { OpClassCode::fADD,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV64FCLASS< f64, SD0> > } } },
 
+  // pseudo instruction (special case of addi)
+    {"nop",   MASK_EXACT, OPCODE_IMM(0), 1, { {OpClassCode::iNOP, {R0, -1}, {R1, I0, -1, -1}, NoOperation} } },
+    {"mv",    MASK_IMM | (0xfff << 20), OPCODE_IMM(0), 1, { {OpClassCode::iMOV, {R0, -1}, {R1, I0, -1, -1}, Set<D0, S0>} } },
 
 
 };
