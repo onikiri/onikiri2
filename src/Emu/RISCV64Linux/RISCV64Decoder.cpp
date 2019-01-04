@@ -272,22 +272,32 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
         out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
         break;
 
-    case OP_FLOAT: //正しい？
-        if(ExtractBits<u64>(codeWord, 26, 6) == 0x38){
-            out->Reg[0] = ExtractBits(codeWord, 7, 5);           // rd 整数レジスタ
-            out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+    case OP_FLOAT:
+    {
+        u32 bits_31_30 = ExtractBits(codeWord, 30, 2);
+        u32 bits_28 = ExtractBits(codeWord, 28, 1);
+        if (bits_31_30 == 3) { // FCVT/FMV/FCLASS
+            if (bits_28) {
+                out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd  (fp)
+                out->Reg[1] = ExtractBits(codeWord, 15, 5);          // rs1 (int)
+            }
+            else{
+                out->Reg[0] = ExtractBits(codeWord, 7, 5);           // rd  (int)
+                out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1 (fp)
+            }
         }
-        else if(ExtractBits<u64>(codeWord, 26, 6) == 0x3c){
-          out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd 
-          out->Reg[1] = ExtractBits(codeWord, 15, 5);          // rs1 整数レジスタ
+        else if (bits_31_30 == 2) { // FEQ/FLT/FLE
+            out->Reg[0] = ExtractBits(codeWord, 7, 5);          // rd  (int)
+            out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;    // rs1 (fp)
+            out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;    // rs2 (fp)
         }
-        else{
-          out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
-            out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
-            out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+        else {
+            out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;     // rd  (fp)
+            out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;    // rs1 (fp)
+            out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;    // rs2 (fp)
         }
         break;
-
+    }
     default:
         //THROW_RUNTIME_ERROR("Unknown op code");
         break;
