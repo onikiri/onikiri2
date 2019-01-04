@@ -792,9 +792,7 @@ int RISCV64Converter::GetActualRegNumber(int regTemplate, const DecodedInsn& dec
 bool RISCV64Converter::IsZeroReg(int regNum) const
 {
     const int IntZeroReg = 0;
-    const int FPZeroReg = 32;
-
-    return regNum == IntZeroReg || regNum == FPZeroReg;
+    return regNum == IntZeroReg;    // FP にはゼロレジスタは存在しない
 }
 
 
