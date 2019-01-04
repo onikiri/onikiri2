@@ -800,16 +800,16 @@ namespace Onikiri {
                     ProcessState* process = opState->GetProcessState();
                     switch (csrNum) {
                     case RISCV64CSR::FFLAGS:
-                        process->SetControlRegister(static_cast<u64>(csrNum), ExtractBits(value, 4, 0));
+                        process->SetControlRegister(static_cast<u64>(csrNum), ExtractBits(value, 0, 5));
                         break;
 
                     case RISCV64CSR::FRM:
-                        process->SetControlRegister(static_cast<u64>(csrNum), ExtractBits(value, 2, 0));
+                        process->SetControlRegister(static_cast<u64>(csrNum), ExtractBits(value, 0, 2));
                         break;
 
                     case RISCV64CSR::FCSR:  // Map to FFLAGS/FRM
-                        process->SetControlRegister(static_cast<u64>(RISCV64CSR::FFLAGS), ExtractBits(value, 4, 0));
-                        process->SetControlRegister(static_cast<u64>(RISCV64CSR::FRM), ExtractBits(value, 7, 5));
+                        process->SetControlRegister(static_cast<u64>(RISCV64CSR::FFLAGS), ExtractBits(value, 0, 5));
+                        process->SetControlRegister(static_cast<u64>(RISCV64CSR::FRM), ExtractBits(value, 5, 3));
                         break;
 
                     // These registers are read-only
