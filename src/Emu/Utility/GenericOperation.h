@@ -143,7 +143,7 @@ struct AsInt : public std::unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
-        return AsFPFunc<Type>( TSrc()(opState) );
+        return AsIntFunc<Type>( TSrc()(opState) );
     }
 };
 
