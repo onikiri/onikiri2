@@ -441,14 +441,14 @@ namespace Onikiri {
 
             // 指数部が全て1で，仮数部が非ゼロなら NaN
             // さらに，仮数部の最上位が 0 なら Signaling
-            bool IsSignalingNAN(f64 fpValue) {
+            inline bool IsSignalingNAN(f64 fpValue) {
                 u64 intValue = AsIntFunc<u64>(fpValue);
                 return 
                     (((intValue >> 51) & 0xFFF) == 0xFFE) && 
                     (intValue & 0x7FFFFFFFFFFFFull);
             }
 
-            bool IsSignalingNAN(f32 fpValue) {
+            inline bool IsSignalingNAN(f32 fpValue) {
                 u32 intValue = AsIntFunc<u32>(fpValue);
                 return 
                     (((intValue >> 22) & 0x1FF) == 0x1FE) && 
