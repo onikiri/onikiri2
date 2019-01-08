@@ -58,7 +58,10 @@ build: $(BIN_FILES)
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
-$(BIN_DIR)/%: $(SRC_DIR)/%.S $(TARGET_DIR)/* Makefile $(BIN_DIR)
+# "|" が入っているのは，ディレクトリを order-only-prerequisites とするため
+# そうしないと，中身のバイナリが更新されるたびに BIN_DIR 自体がが更新されたと
+# みなされる
+$(BIN_DIR)/%: $(SRC_DIR)/%.S $(TARGET_DIR)/* Makefile | $(BIN_DIR)
 	$(CC) $(XCFLAGS) -o $@ $< $(TARGET_DIR)/main.c
 
 
@@ -71,7 +74,7 @@ test: build
 $(RESULT_DIR):
 	mkdir -p $(RESULT_DIR)
 
-$(RESULT_DIR)/%: $(RESULT_DIR)
+$(RESULT_DIR)/%: | $(RESULT_DIR)
 	../../project/gcc/onikiri2/a.out param.xml \
 		-x /Session/Emulator/Processes/Process/@Command=$(BIN_DIR)/$(notdir $@) \
 		-x /Session/Emulator/Processes/Process/@STDOUT=$@ \
