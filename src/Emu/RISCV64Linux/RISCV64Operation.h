@@ -296,7 +296,7 @@ namespace Onikiri {
                     Type ths = TSrc3()(opState); //変数名適当です
 
                     Onikiri::ScopedFESetRound sr(RoundMode()(opState));
-                    volatile Type rvalue = std::fma(-lhs, rhs, ths);
+                    volatile Type rvalue = std::fma(-lhs, rhs, -ths);
                     return rvalue;
                 }
             };
@@ -311,7 +311,7 @@ namespace Onikiri {
                     Type ths = TSrc3()(opState); //変数名適当です
 
                     Onikiri::ScopedFESetRound sr(RoundMode()(opState));
-                    volatile Type rvalue = std::fma(-lhs, rhs, -ths);
+                    volatile Type rvalue = std::fma(-lhs, rhs, ths);
                     return rvalue;
                 }
             };
