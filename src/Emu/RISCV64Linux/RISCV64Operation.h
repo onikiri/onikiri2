@@ -182,7 +182,7 @@ namespace Onikiri {
 
             template <>
             f64 CanonicalNAN<f64>() {
-                return AsFPFunc<f64, u64>(0x77ff800000000000ull);
+                return AsFPFunc<f64, u64>(0x7ff8000000000000ull);
             }
 
             template <>
