@@ -702,11 +702,53 @@ namespace Onikiri {
                 }
             }
 
-            template <typename Type, typename TDst, typename TAddr, typename Operation>
-            void RISCV64AtomicOperation(OpEmulationState* opState)
+            namespace {
+                enum class RISCV64pseudoCSR {
+                    RESERVED_ADDRESS = 4096,
+                    RESERVING = 4097,
+                };
+            }
+
+            // We cannot use the Load instead of the RISCV64AtomicLoad
+            // because atomic instructions are not iLD instructions,
+            // and this confuses the MemOrderManager.
+            //
+            // I assume it is sufficient that the processor remember
+            // only the reserved address. (or need the infomation of size?)
+            template <typename Type, typename TDest, typename TAddr>
+            void RISCV64LoadReserved(OpEmulationState* opState)
             {
-                Set<TDst, RISCV64AtomicLoad<Type, TAddr>>(opState);
-                RISCV64AtomicStore<Type, Operation, TAddr>(opState);
+                Set<TDest, RISCV64AtomicLoad<Type, TAddr>>(opState);
+                // Set reserved address
+                ProcessState* process = opState->GetProcessState();
+                process->SetControlRegister(static_cast<u64>(RISCV64pseudoCSR::RESERVED_ADDRESS), TAddr()(opState));
+                process->SetControlRegister(static_cast<u64>(RISCV64pseudoCSR::RESERVING), 1);
+            }
+
+            template <typename Type, typename TDest, typename TValue, typename TAddr>
+            void RISCV64StoreConditional(OpEmulationState* opState)
+            {
+                ProcessState* process = opState->GetProcessState();
+                u64 reserved_addr = process->GetControlRegister(static_cast<u64>(RISCV64pseudoCSR::RESERVED_ADDRESS));
+                u64 reserving = process->GetControlRegister(static_cast<u64>(RISCV64pseudoCSR::RESERVING));
+                u64 addr = TAddr()(opState);
+                if (reserving && reserved_addr == addr)
+                {
+                    // We cannot use the Store instead of the RISCV64AtomicStore. See above.
+                    RISCV64AtomicStore<Type, TValue, TAddr>(opState);
+                    // 0 means success (always success; we assume only single thread execution)
+                    Set<TDest, IntConst<u64, 0>>(opState);
+                    // Release reserved address.
+                    process->SetControlRegister(static_cast<u64>(RISCV64pseudoCSR::RESERVING), 0);
+                }
+                else {
+                    // No store.
+
+                    // 1 means 'unspecified failure'.
+                    Set<TDest, IntConst<u64, 1>>(opState);
+                    // Don't release reserved address. Is this right?
+
+                }
             }
 
             void RISCV64SyscallSetArg(EmulatorUtility::OpEmulationState* opState)

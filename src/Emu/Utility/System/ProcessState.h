@@ -129,7 +129,7 @@ namespace Onikiri {
             u64 GetThreadUniqueValue();
 
             // 制御レジスタ
-            static const int MAX_CONTROL_REGISTER_NUM = 4096;
+            static constexpr std::size_t MAX_CONTROL_REGISTER_NUM = 4098;
             void SetControlRegister(u64 index, u64 value);
             u64 GetControlRegister(u64 index);
 

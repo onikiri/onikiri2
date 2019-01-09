@@ -370,8 +370,8 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     // It is not always necessary to stop all the instructions
     // but for the sake of simplicity, I implemented by using OpClalssCode::syscall
     //{Name,         Mask,          Opcode,                 nOp,{ OpClassCode,         Dst[],       Src[],               OpInfoType::EmulationFunc}[]}
-    { "lr.w"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 2),    1, { { OpClassCode::iLD, { R0, -1 }, { R1, -1, -1, -1 },    SetSext<D0, Load<u32, S0> > } } },
-    { "sc.w"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 3),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Store<u32, S1, S0>, Set<D0, IntConst<u64, 0> > > } } }, // 0 is 'success'
+    { "lr.w"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 2),    1, { { OpClassCode::iLD, { R0, -1 }, { R1, -1, -1, -1 },    RISCV64LoadReserved<u32, D0, S0> } } },
+    { "sc.w"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 3),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    RISCV64StoreConditional<u32, D0, S1, S0> } } },
     { "amoswap.w",   MASK_ATOMIC,   OPCODE_ATOMIC(2, 1),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<SetSext<D0, Load<u32, S0> >, Store<u32, S1, S0> > } } },
     { "amoadd.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 0),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 },    Store<u32, IntAdd    <u32, S1, TeeSetSext<D0, Load<u32, S0> > >, S0> } } },
     { "amoxor.w" ,   MASK_ATOMIC,   OPCODE_ATOMIC(2, 4),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 },    Store<u32, BitXor    <u32, S1, TeeSetSext<D0, Load<u32, S0> > >, S0>  } } },
@@ -387,8 +387,8 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     // It is not always necessary to stop all the instructions
     // but for the sake of simplicity, I implemented by using OpClalssCode::syscall
     //{Name,         Mask,          Opcode,                 nOp,{ OpClassCode,         Dst[],       Src[],               OpInfoType::EmulationFunc}[]}
-    { "lr.d"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 2),    1, { { OpClassCode::iLD, { R0, -1 }, { R1, -1, -1, -1 },    Set<D0, Load<u64, S0> > } } },
-    { "sc.d"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 3),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    Sequence2<Store<u64, S1, S0>, Set<D0, IntConst<u64, 0> > > } } }, // 0 is 'success'
+    { "lr.d"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 2),    1, { { OpClassCode::iLD, { R0, -1 }, { R1, -1, -1, -1 },    RISCV64LoadReserved<u64, D0, S0> } } },
+    { "sc.d"     ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 3),    1, { { OpClassCode::iST, { R0, -1 }, { R1, R2, -1, -1 },    RISCV64StoreConditional<u64, D0, S1, S0> } } },
     { "amoswap.d",   MASK_ATOMIC,   OPCODE_ATOMIC(3, 1),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 },     Sequence2<SetSext<D0, Load<u64, S0> >, Store<u64, S1, S0> > } } },
     { "amoadd.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 0),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 },     Store<u64, IntAdd    <u64, S1, TeeSet<D0, Load<u64, S0> > >, S0>  } } },
     { "amoxor.d" ,   MASK_ATOMIC,   OPCODE_ATOMIC(3, 4),    1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 },     Store<u64, BitXor    <u64, S1, TeeSet<D0, Load<u64, S0> > >, S0>  } } },
