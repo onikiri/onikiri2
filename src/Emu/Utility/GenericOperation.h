@@ -492,6 +492,27 @@ inline void Store(OpEmulationState* opState)
     WriteMemory<Type>(opState, TAddr()(opState), static_cast<Type>( TValue()(opState) ));
 }
 
+template <typename TDest, typename TFunc>
+struct TeeSet // : public std::unary_function<OpEmulationState*, decltype(TFunc()(static_cast<OpEmulationState*>(nullptr)))> // std::unary_function is deprecated in C++11. Don't use.
+{
+    auto operator()(OpEmulationState* opState) -> decltype(TFunc()(opState))
+    {
+        auto value = TFunc()(opState);
+        TDest::SetOperand(opState, value);
+        return value;
+    }
+};
+
+template <typename TDest, typename TFunc>
+struct TeeSetSext // : public std::unary_function<OpEmulationState*, decltype(TFunc()(static_cast<OpEmulationState*>(nullptr)))> // std::unary_function is deprecated in C++11. Don't use.
+{
+    auto operator()(OpEmulationState* opState) -> decltype(TFunc()(opState))
+    {
+        auto value = cast_to_signed(TFunc()(opState));
+        TDest::SetOperand(opState, value);
+        return value;
+    }
+};
 
 // **********************************
 //    int arithmetic operations
