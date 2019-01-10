@@ -129,6 +129,16 @@ namespace Onikiri {
             u64 GetThreadUniqueValue();
 
             // 制御レジスタ
+            // You have to set the maximum number of control registers in
+            // all architectures to MAX_CONTROL_REGISTER_NUM.
+            //
+            // The number of control registers have to include
+            // not only real registers but also virtual registers
+            // (for example, reservation status registers for load-linked).
+            //
+            // Currently, the architecture having the maximum number of
+            // control registers is RISC-V, which has 4096 CSRs and
+            // 2 reservation status registers.
             static constexpr std::size_t MAX_CONTROL_REGISTER_NUM = 4098;
             void SetControlRegister(u64 index, u64 value);
             u64 GetControlRegister(u64 index);

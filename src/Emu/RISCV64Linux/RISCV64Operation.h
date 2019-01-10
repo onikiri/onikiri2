@@ -703,7 +703,10 @@ namespace Onikiri {
             }
 
             namespace {
+                // Virtual control status registers for holding the
+                // reservation status of the 'load-reserved' instruction.
                 enum class RISCV64pseudoCSR {
+                    // 0 - 4095 are used for RISCV64CSR (real CSRs)
                     RESERVED_ADDRESS = 4096,
                     RESERVING = 4097,
                 };
