@@ -6,10 +6,10 @@
 # リファレンスがおかしい
 #   ldst
 # NaN と例外フラグの対応が不完全
-#   fcvt fdiv fmin fadd fcmp
+#   fcvt fdiv fmin fadd fcmp fmadd
 RV64UD_SRC_APPS = \
 	fclass            \
-	fmadd recoding 
+	recoding 
 
 RV64UD_SRC_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ud/rv64ud
 RV64UD_REF_DIR = $(RISCV_COMPLIANCE_PATH)/riscv-test-suite/rv32ud/references
