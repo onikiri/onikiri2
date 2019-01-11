@@ -540,7 +540,47 @@ void Linux64SyscallConv::syscall_fstat64(OpEmulationState* opState)
         SetResult(true, result);
     }
 }
+void Linux64SyscallConv::syscall_fstatat64(OpEmulationState* opState)
+{
+    s64 fd = (s64)m_args[1];
+    HostStat st;
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    s64 flag = (s64)m_args[4];
+    int result = -1;
+    /*
+    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
+    なので通常のstatと同じ動作をする
+    */
+    if (fd == -100) {
+        /*
+        flagが0の時はstatとして, AT_SYMLINK_NOFOLLOWの場合はlstatとして動作する
+        lstatが必要になれば実装し, ここにも反映する
+        */
+        if (flag == 0) {
+            result = GetVirtualSystem()->Stat(path.c_str(), &st);
+        }
+        else {
+            THROW_RUNTIME_ERROR(
+                "'fstatat' does not support reading flag other than '0', "
+                "but '%d' is specified.", flag
+            );
+        }
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'fstatat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        write_stat64((u64)m_args[3], st);
+        SetResult(true, result);
+    }
 
+}
 void Linux64SyscallConv::syscall_stat64(OpEmulationState* opState)
 {
     HostStat st;

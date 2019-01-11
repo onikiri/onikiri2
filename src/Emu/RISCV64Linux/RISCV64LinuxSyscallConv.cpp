@@ -283,7 +283,7 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_write(opState);
         break;
     case syscall_id_fstat:
-        syscall_fstat32(opState);
+        syscall_fstat64(opState);
         break;
 
     case syscall_id_chdir:
@@ -307,7 +307,7 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_unlink(opState);
         break;
     case syscall_id_stat:
-        syscall_stat32(opState);
+        syscall_stat64(opState);
         break;
 
     case syscall_id_sigaction:
@@ -330,7 +330,7 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_readlinkat(opState);
         break;
     case syscall_id_fstatat:
-        syscall_fstatat32(opState);
+        syscall_fstatat64(opState);
         break;
     case syscall_id_unlinkat:
         syscall_unlinkat(opState);
@@ -592,161 +592,5 @@ u32 RISCV64LinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
     return conv.TargetToHost(flag);
 }
 
-// Implementation of fstat for 32bit environment
-void RISCV64LinuxSyscallConv::syscall_fstat32(EmulatorUtility::OpEmulationState* opState)
-{
-    HostStat st;
-    int result = GetVirtualSystem()->FStat((int)m_args[1], &st);
-    if (result == -1) {
-        SetResult(false, GetVirtualSystem()->GetErrno());
-    }
-    else {
-#ifdef HOST_IS_WINDOWS
-        /*
-        st.st_rdev は Windows では st.st_dev と同じだが、
-        (http://msdn.microsoft.com/ja-jp/library/14h5k7ff.aspx)
-        Linux では特殊なファイルの場合ここの値が変わる。
-        標準出力だとどうやら 0x8801 になるらしい？（要出典）
-        この st_rdev で実行パスが変わることがあるため、ホストの入出力を使用する場合は
-        とりあえず 0x8801 とする。
-        （例えば mcf では if(st.st_rdev >> 4) で Copyright の書込み先を変えるようで、
-        そのためにここの値が正しくないと実行パスが変わる）
-        */
-        if(GetVirtualSystem()->GetDelayUnlinker()->GetMapPath((int)m_args[1]) == "HostIO"){
-            st.st_rdev = 0x8801;
-        }
-#endif
-        write_stat32((u64)m_args[2], st);
-        SetResult(true, result);
-    }
-}
-void RISCV64LinuxSyscallConv::syscall_stat32(OpEmulationState* opState)
-{
-    HostStat st;
-    string path = StrCpyToHost(GetMemorySystem(), m_args[1]);
-    int result = GetVirtualSystem()->Stat(path.c_str(), &st);
-    if (result == -1) {
-        SetResult(false, GetVirtualSystem()->GetErrno());
-    }
-    else {
-        write_stat32((u64)m_args[2], st);
-        SetResult(true, result);
-    }
-}
 
-void RISCV64LinuxSyscallConv::syscall_fstatat32(OpEmulationState* opState)
-{
-    s64 fd = (s64)m_args[1];
-    HostStat st;
-    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
-    s64 flag = (s64)m_args[4];
-    int result = -1;
-    /*
-    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
-    なので通常のstatと同じ動作をする
-    */
-    if (fd == -100) {
-        /*
-        flagが0の時はstatとして, AT_SYMLINK_NOFOLLOWの場合はlstatとして動作する
-        lstatが必要になれば実装し, ここにも反映する
-        */
-        if (flag == 0) {
-            result = GetVirtualSystem()->Stat(path.c_str(), &st);
-        }
-        else {
-            THROW_RUNTIME_ERROR(
-                "'fstatat' does not support reading flag other than '0', "
-                "but '%d' is specified.", flag
-            );
-        }
-    }
-    else {
-        THROW_RUNTIME_ERROR(
-            "'fstatat' does not support reading fd other than 'AT_FDCWD (-100)', "
-            "but '%d' is specified.", fd
-        );
-    }
-    if (result == -1) {
-        SetResult(false, GetVirtualSystem()->GetErrno());
-    }
-    else {
-        write_stat32((u64)m_args[3], st);
-        SetResult(true, result);
-    }
-    
-}
-void RISCV64LinuxSyscallConv::write_stat32(u64 dest, const HostStat &src)
-{
-    static u32 host_st_mode[] =
-    {
-        POSIX_S_IFDIR,
-        POSIX_S_IFCHR,
-        POSIX_S_IFREG,
-        POSIX_S_IFIFO,
-    };
-    static u32 RISCV64_st_mode[] =
-    {
-        0040000, // _S_IFDIR
-        0020000, // _S_IFCHR
-        0100000, // _S_IFREG
-        0010000, // _S_IFIFO
-    };
-    static int st_mode_size = sizeof(host_st_mode)/sizeof(host_st_mode[0]);
-    SyscallConstConvBitwise conv(
-        host_st_mode,
-        RISCV64_st_mode, 
-        st_mode_size
-    );
-
-    TargetBuffer buf(GetMemorySystem(), dest, sizeof(RISCV64_stat));
-    RISCV64_stat* t_buf = static_cast<RISCV64_stat*>(buf.Get());
-    memset(t_buf, 0, sizeof(RISCV64_stat));
-
-    t_buf->st_dev = src.st_dev;
-    t_buf->st_ino = src.st_ino;
-    t_buf->st_rdev = src.st_rdev;
-    t_buf->st_size = src.st_size;
-    t_buf->st_uid = src.st_uid;
-    t_buf->st_gid = src.st_gid;
-    t_buf->st_nlink = src.st_nlink;
-    /*
-    t_buf->st_atime = src.st_atime;
-    t_buf->st_mtime = src.st_mtime;
-    t_buf->st_ctime = src.st_ctime;
-    */
-
-    // st_blksize : 効率的にファイル・システムIO が行える"好ましい"ブロック・サイズ
-    //              CentOS4 では32768
-    // st_blocks  : ファイルに割り当てられた512B の数
-    //              CentOS4 では8 刻みになる？
-
-#if defined(HOST_IS_WINDOWS) || defined(HOST_IS_CYGWIN)
-    static const int BLOCK_UNIT = 512*8;
-    t_buf->st_mode    = conv.HostToTarget(src.st_mode);
-    t_buf->st_blocks  = (src.st_size+BLOCK_UNIT-1)/BLOCK_UNIT*8;
-    t_buf->st_blksize = 32768;
-#else
-    t_buf->st_blocks = src.st_blocks;
-    t_buf->st_mode = src.st_mode;
-    t_buf->st_blksize = src.st_blksize;
-#endif
-
-    // hostのstat(src)の要素とtargetのstatの要素のサイズが異なるかもしれないので，一旦targetのstatに代入してからエンディアンを変換する
-    bool bigEndian = GetMemorySystem()->IsBigEndian();
-    EndianHostToSpecifiedInPlace(t_buf->st_dev, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_ino, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_rdev, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_size, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_uid, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_gid, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_nlink, bigEndian);
-    /*
-    EndianHostToSpecifiedInPlace(t_buf->st_atime, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_mtime, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_ctime, bigEndian);
-    */
-    EndianHostToSpecifiedInPlace(t_buf->st_mode, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_blocks, bigEndian);
-    EndianHostToSpecifiedInPlace(t_buf->st_blksize, bigEndian);
-}
 
