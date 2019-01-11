@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/soplex" CommandArguments="-m1200 train.mps " STDERR="train.stderr" STDIN="" STDOUT="train.out" TargetBasePath="./" TargetWorkPath="../../run/450.soplex/train/input" />
+</Processes>
+</Emulator>
+</Session>

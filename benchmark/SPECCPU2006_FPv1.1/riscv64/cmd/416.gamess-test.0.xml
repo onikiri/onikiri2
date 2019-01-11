@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gamess" CommandArguments=" " STDERR="exam29.err" STDIN="exam29.config" STDOUT="exam29.out" TargetBasePath="./" TargetWorkPath="../../run/416.gamess/test/input" />
+</Processes>
+</Emulator>
+</Session>

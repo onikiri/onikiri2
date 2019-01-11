@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/povray" CommandArguments="SPEC-benchmark-train.ini " STDERR="SPEC-benchmark-train.stderr" STDIN="" STDOUT="SPEC-benchmark-train.stdout" TargetBasePath="./" TargetWorkPath="../../run/453.povray/train/input" />
+</Processes>
+</Emulator>
+</Session>

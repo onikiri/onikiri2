@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/sphinx3" CommandArguments="ctlfile . args.an4 " STDERR="an4.err" STDIN="" STDOUT="an4.log" TargetBasePath="./" TargetWorkPath="../../run/482.sphinx3/train/input" />
+</Processes>
+</Emulator>
+</Session>
