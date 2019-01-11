@@ -302,7 +302,9 @@ void RISCV64Decoder::Decode(u32 codeWord, DecodedInsn* out)
         //THROW_RUNTIME_ERROR("Unknown op code");
         break;
     }
-    for (int reg : out->Reg) {
+#ifdef ONIKIRI_DEBUG
+    for (int reg : out->Reg) {  // if ONIKIRI_DEBUG is not defined, it causes warning.
         ASSERT( -1 <= reg && reg < RISCV64Info::RegisterCount, "The decoded register number (%d) is out of range.", reg );
     }
+#endif
 }
