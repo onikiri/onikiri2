@@ -45,6 +45,7 @@ namespace Onikiri {
             const int syscall_id_unlinkat = 35;
             const int syscall_id_ftruncate = 46;
             const int syscall_id_faccessat = 48;
+            const int syscall_id_chdir = 49;
             const int syscall_id_openat = 56;
 
             const int syscall_id_close = 57;
@@ -99,7 +100,6 @@ namespace Onikiri {
             const int syscall_id_creat = 8;
             const int syscall_id_link = 9;
 
-            const int syscall_id_chdir = 12;
             const int syscall_id_time = 13;
 
             const int syscall_id_chmod = 15;

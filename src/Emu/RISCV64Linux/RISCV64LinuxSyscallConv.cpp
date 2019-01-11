@@ -165,6 +165,7 @@ static struct {
     SYSCALLNAME(getrlimit, 2, "np"),
     SYSCALLNAME(setrlimit, 2, "np"),
     SYSCALLNAME(prlimit64, 4, "nnpp"),
+    SYSCALLNAME(chdir, 1, "s"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -176,7 +177,6 @@ static struct {
     SYSCALLNAME(truncate, 2, "px"),
     SYSCALLNAME(ftruncate, 2, "nx"),
     SYSCALLNAME(fcntl, 3, "nnp"),
-    SYSCALLNAME(chdir, 1, "p"),
     SYSCALLNAME(fchdir, 1, "n"),
     SYSCALLNAME(mkdir, 2, "sx"),
     SYSCALLNAME(rmdir, 1, "s"),
@@ -283,6 +283,11 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_fstat:
         syscall_fstat32(opState);
         break;
+
+    case syscall_id_chdir:
+        syscall_chdir(opState);
+        break;
+
     case syscall_id_exit:
     case syscall_id_exit_group:
         syscall_exit(opState);

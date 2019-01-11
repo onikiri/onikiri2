@@ -647,6 +647,16 @@ void Linux64SyscallConv::syscall_faccessat(OpEmulationState* opState)
         SetResult(true, result);
 }
 
+void Linux64SyscallConv::syscall_chdir(EmulatorUtility::OpEmulationState* opState)
+{
+    string path = StrCpyToHost(GetMemorySystem(), m_args[1]);
+    int result = GetVirtualSystem()->ChDir(path.c_str());
+    if (result == -1)
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    else
+        SetResult(true, result);
+}
+
 void Linux64SyscallConv::syscall_unlink(OpEmulationState* opState)
 {
     string path = StrCpyToHost( GetMemorySystem(), m_args[1] );

@@ -285,8 +285,13 @@ char* VirtualSystem::GetCWD(char* buf, int maxlen)
 
 int VirtualSystem::ChDir(const char* path)
 {
-    ASSERT(0);
-    return -1;
+    if (path[0] == '/') {   // Absolute path
+        m_cwd = path;
+    }
+    else {
+        m_cwd += string("/") + path;
+    }
+    return 0;
 }
 
 int VirtualSystem::GetPID()
