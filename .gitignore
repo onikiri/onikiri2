@@ -37,10 +37,10 @@ benchmark/SPECCPU2006_FP/run/*
 benchmark/SPECCPU2006_FP/*/bin/*
 
 benchmark/SPECCPU2006_INTv1.1/run/*
-benchmark/SPECCPU2006_INTv1.1/*/bin/*
+benchmark/SPECCPU2006_INTv1.1/*/bin*/*
 
 benchmark/SPECCPU2006_FPv1.1/run/*
-benchmark/SPECCPU2006_FPv1.1/*/bin/*
+benchmark/SPECCPU2006_FPv1.1/*/bin*/*
 
 benchmark/SPECCPU2000_INT/run/*
 benchmark/SPECCPU2000_INT/*/bin/*
