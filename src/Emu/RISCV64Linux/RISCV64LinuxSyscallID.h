@@ -49,6 +49,8 @@ namespace Onikiri {
             const int syscall_id_openat = 56;
 
             const int syscall_id_close = 57;
+            const int syscall_id_pipe2 = 59;
+
             const int syscall_id_lseek = 62;
             const int syscall_id_read = 63;
             const int syscall_id_write = 64;
@@ -85,6 +87,8 @@ namespace Onikiri {
             const int syscall_id_brk = 214;
             const int syscall_id_munmap = 215;
             const int syscall_id_mremap = 216;
+
+            const int syscall_id_clone = 220;
 
             const int syscall_id_mmap = 222;
 

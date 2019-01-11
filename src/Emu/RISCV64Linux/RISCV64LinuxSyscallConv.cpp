@@ -166,6 +166,8 @@ static struct {
     SYSCALLNAME(setrlimit, 2, "np"),
     SYSCALLNAME(prlimit64, 4, "nnpp"),
     SYSCALLNAME(chdir, 1, "s"),
+    SYSCALLNAME(pipe2, 1, "pn"),
+    SYSCALLNAME(clone , 1, "npppp"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -509,6 +511,14 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
 
 */
+    case syscall_id_pipe2:
+        THROW_RUNTIME_ERROR("Unsupported syscall 'pipe2' is called");
+        break;
+
+    case syscall_id_clone:
+        THROW_RUNTIME_ERROR("Unsupported syscall 'clone' is called");
+        break;
+
     default:
         {
             stringstream ss;
