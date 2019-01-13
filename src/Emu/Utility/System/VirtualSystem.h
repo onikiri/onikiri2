@@ -122,7 +122,7 @@ namespace Onikiri {
             int GetGID();
             int GetEGID();
 
-            char* GetCWD(char* buf, int maxlen);
+            int GetCWD(char* buf, int maxlen);
             int ChDir(const char* path);
 
             // ファイルを開く．開いたファイルは自動でFDの変換表に追加される

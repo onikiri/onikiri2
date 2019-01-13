@@ -277,10 +277,10 @@ void VirtualSystem::RemoveAutoCloseFD(int fd)
         m_autoCloseFD.erase(e);
 }
 
-char* VirtualSystem::GetCWD(char* buf, int maxlen)
+int VirtualSystem::GetCWD(char* buf, int maxlen)
 {
     strncpy(buf, m_cwd.string().c_str(), maxlen);
-    return buf;
+    return (int)strlen(buf) + 1; // +1 for NULL?
 }
 
 int VirtualSystem::ChDir(const char* path)

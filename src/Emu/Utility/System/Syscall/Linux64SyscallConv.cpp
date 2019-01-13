@@ -332,12 +332,12 @@ void Linux64SyscallConv::syscall_getcwd(OpEmulationState* opState)
     int bufSize = (int)m_args[2];
 
     TargetBuffer buf(GetMemorySystem(), m_args[1], bufSize+1);
-    void *result = GetVirtualSystem()->GetCWD(static_cast<char*>(buf.Get()), bufSize);
-    if (result == NULL) {
+    int length = GetVirtualSystem()->GetCWD(static_cast<char*>(buf.Get()), bufSize);
+    if (length == 0) {
         SetResult(false, GetVirtualSystem()->GetErrno());
     }
     else {
-        SetResult(true, m_args[1]);
+        SetResult(true, length);
     }
 }
 
