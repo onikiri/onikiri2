@@ -77,6 +77,7 @@ namespace {
         riscv32_time_t tv_nsec;
     };
 
+    // "stat" structure is different for each ISA, so specific one is defined here
     struct riscv32_stat
     {
         s64 st_dev;

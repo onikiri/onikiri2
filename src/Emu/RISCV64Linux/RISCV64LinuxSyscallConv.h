@@ -68,7 +68,8 @@ namespace Onikiri {
 
             virtual u32 OpenFlagTargetToHost(u32 flag);
             
-            
+            // Called from fstat/lstat/stat implemented in a base class
+            virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
         };
 
     } // namespace RISCV64Linux

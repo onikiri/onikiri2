@@ -69,34 +69,32 @@ RISCV64LinuxSyscallConv::~RISCV64LinuxSyscallConv()
 
 namespace {
 
-    typedef s32 RISCV64_time_t;
+    typedef s64 RISCV64_time_t;
 
-    struct RISCV64_timespec
+    struct riscv64_timespec
     {
         RISCV64_time_t tv_sec;
         RISCV64_time_t tv_nsec;
     };
-
-    struct RISCV64_stat
+    
+    // "stat" structure is different for each ISA, so specific one is defined here
+    struct riscv64_stat
     {
         s64 st_dev;
-        s32 st_ino;
-        s32 __st_ino_pad;
+        s64 st_ino;
         s32 st_mode;
         s32 st_nlink;
         s32 st_uid;
         s32 st_gid;
         s64 st_rdev;
         s64 __pad1;
-        s32 st_size;
-        s32 __st_size_pad;
+        s64 st_size;
         s32 st_blksize;
         s32 __pad2;
-        s32 st_blocks;
-        s32 __st_blocks_pad;
-        RISCV64_timespec st_atim;
-        RISCV64_timespec st_mtim;
-        RISCV64_timespec st_ctim;
+        s64 st_blocks;
+        riscv64_timespec st_atim;
+        riscv64_timespec st_mtim;
+        riscv64_timespec st_ctim;
         s32 __glibc_reserved[2];
     };
     /*
@@ -590,6 +588,80 @@ u32 RISCV64LinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
         open_flags_size);
 
     return conv.TargetToHost(flag);
+}
+void RISCV64LinuxSyscallConv::write_stat64(u64 dest, const HostStat &src)
+{
+    static u32 host_st_mode[] =
+    {
+        POSIX_S_IFDIR,
+        POSIX_S_IFCHR,
+        POSIX_S_IFREG,
+        POSIX_S_IFIFO,
+    };
+    static u32 RISCV64_st_mode[] =
+    {
+        0040000, // _S_IFDIR
+        0020000, // _S_IFCHR
+        0100000, // _S_IFREG
+        0010000, // _S_IFIFO
+    };
+    static int st_mode_size = sizeof(host_st_mode) / sizeof(host_st_mode[0]);
+    SyscallConstConvBitwise conv(
+        host_st_mode,
+        RISCV64_st_mode,
+        st_mode_size
+    );
+
+    TargetBuffer buf(GetMemorySystem(), dest, sizeof(riscv64_stat));
+    riscv64_stat* t_buf = static_cast<riscv64_stat*>(buf.Get());
+    memset(t_buf, 0, sizeof(riscv64_stat));
+
+    t_buf->st_dev = src.st_dev;
+    t_buf->st_ino = src.st_ino;
+    t_buf->st_rdev = src.st_rdev;
+    t_buf->st_size = src.st_size;
+    t_buf->st_uid = src.st_uid;
+    t_buf->st_gid = src.st_gid;
+    t_buf->st_nlink = src.st_nlink;
+    /*
+    t_buf->st_atime = src.st_atime;
+    t_buf->st_mtime = src.st_mtime;
+    t_buf->st_ctime = src.st_ctime;
+    */
+
+    // st_blksize : 効率的にファイル・システムIO が行える"好ましい"ブロック・サイズ
+    //              CentOS4 では32768
+    // st_blocks  : ファイルに割り当てられた512B の数
+    //              CentOS4 では8 刻みになる？
+
+#if defined(HOST_IS_WINDOWS) || defined(HOST_IS_CYGWIN)
+    static const int BLOCK_UNIT = 512 * 8;
+    t_buf->st_mode = conv.HostToTarget(src.st_mode);
+    t_buf->st_blocks = (src.st_size + BLOCK_UNIT - 1) / BLOCK_UNIT * 8;
+    t_buf->st_blksize = 32768;
+#else
+    t_buf->st_blocks = src.st_blocks;
+    t_buf->st_mode = src.st_mode;
+    t_buf->st_blksize = src.st_blksize;
+#endif
+
+    // hostのstat(src)の要素とtargetのstatの要素のサイズが異なるかもしれないので，一旦targetのstatに代入してからエンディアンを変換する
+    bool bigEndian = GetMemorySystem()->IsBigEndian();
+    EndianHostToSpecifiedInPlace(t_buf->st_dev, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_ino, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_rdev, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_size, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_uid, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_gid, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_nlink, bigEndian);
+    /*
+    EndianHostToSpecifiedInPlace(t_buf->st_atime, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_mtime, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_ctime, bigEndian);
+    */
+    EndianHostToSpecifiedInPlace(t_buf->st_mode, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_blocks, bigEndian);
+    EndianHostToSpecifiedInPlace(t_buf->st_blksize, bigEndian);
 }
 
 
