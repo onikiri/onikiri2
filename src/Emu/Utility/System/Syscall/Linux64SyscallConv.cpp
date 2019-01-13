@@ -176,6 +176,7 @@ namespace {
     const int LINUX_SEEK_END = 2;
 
     const int LINUX_AT_FDCWD = -100;
+    const int LINUX_AT_SYMLINK_NOFOLLO = 0x100;
     const int LINUX_AT_REMOVEDIR = 0x200;
 }
 
@@ -552,16 +553,16 @@ void Linux64SyscallConv::syscall_fstatat64(OpEmulationState* opState)
     なので通常のstatと同じ動作をする
     */
     if (fd == LINUX_AT_FDCWD) {
-        /*
-        flagが0の時はstatとして, AT_SYMLINK_NOFOLLOWの場合はlstatとして動作する
-        lstatが必要になれば実装し, ここにも反映する
-        */
+        // flag が 0 の時は stat として, AT_SYMLINK_NOFOLLOW の場合は lstat として動作する
         if (flag == 0) {
             result = GetVirtualSystem()->Stat(path.c_str(), &st);
         }
+        else if (flag == LINUX_AT_SYMLINK_NOFOLLO){
+            result = GetVirtualSystem()->LStat(path.c_str(), &st);
+        }
         else {
             THROW_RUNTIME_ERROR(
-                "'fstatat' does not support reading flag other than '0', "
+                "'fstatat' does not support reading flag other than '0' and 'AT_SYMLINK_NOFOLLO(0x100)', "
                 "but '%d' is specified.", flag
             );
         }
