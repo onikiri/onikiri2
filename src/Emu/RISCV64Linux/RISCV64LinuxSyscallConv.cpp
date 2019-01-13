@@ -533,26 +533,24 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 }
 
 namespace {
-    const int PPC64_CLK_TCK = 100;
-
-    const int PPC64_MREMAP_MAYMOVE = 1;
-    const int PPC64_MAP_NORESERVE = 0x00040;
-    const int PPC64_MAP_ANONYMOUS = 0x20;
+    const int RISCV64_CLK_TCK = 100;
+    const int RISCV64_MREMAP_MAYMOVE = 1;
+    const int RISCV64_MAP_ANONYMOUS = 0x20;
 }
 
 int RISCV64LinuxSyscallConv::Get_MAP_ANONYMOUS()
 {
-    return PPC64_MAP_ANONYMOUS;
+    return RISCV64_MAP_ANONYMOUS;
 }
 
 int RISCV64LinuxSyscallConv::Get_MREMAP_MAYMOVE()
 {
-    return PPC64_MREMAP_MAYMOVE;
+    return RISCV64_MREMAP_MAYMOVE;
 }
 
 int RISCV64LinuxSyscallConv::Get_CLK_TCK()
 {
-    return PPC64_CLK_TCK;
+    return RISCV64_CLK_TCK;
 }
 
 u32 RISCV64LinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
