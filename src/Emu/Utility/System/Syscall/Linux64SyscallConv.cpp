@@ -551,7 +551,7 @@ void Linux64SyscallConv::syscall_fstatat64(OpEmulationState* opState)
     ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
     なので通常のstatと同じ動作をする
     */
-    if (fd == -100) {
+    if (fd == LINUX_AT_FDCWD) {
         /*
         flagが0の時はstatとして, AT_SYMLINK_NOFOLLOWの場合はlstatとして動作する
         lstatが必要になれば実装し, ここにも反映する
