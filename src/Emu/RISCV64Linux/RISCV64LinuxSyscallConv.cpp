@@ -166,6 +166,7 @@ static struct {
     SYSCALLNAME(chdir, 1, "s"),
     SYSCALLNAME(pipe2, 1, "pn"),
     SYSCALLNAME(clone , 1, "npppp"),
+    SYSCALLNAME(times, 1, "p"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -186,7 +187,6 @@ static struct {
     SYSCALLNAME(mprotect, 3, "pxx"),
     SYSCALLNAME(chmod, 2, "sx"),
     SYSCALLNAME(time, 1, "p"),
-    SYSCALLNAME(times, 1, "p"),
     //SYSCALLNAME(settimeofday, 2, "pp"),
 
     SYSCALLNAME(uname, 1, "p"),
@@ -380,6 +380,9 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_clock_gettime:
         syscall_clock_gettime(opState);
         break;
+    case syscall_id_times:
+        syscall_times(opState);
+        break;
 
     // gcc が実行時間の取得に使用
     case syscall_id_getrusage:
@@ -473,9 +476,6 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     //  break;
     case syscall_id_time:
         syscall_time(opState);
-        break;
-    case syscall_id_times:
-        syscall_times(opState);
         break;
 
     case syscall_id_dup:
