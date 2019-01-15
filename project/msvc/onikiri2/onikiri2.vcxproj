@@ -292,6 +292,7 @@
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConvIF.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\VirtualPath.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\VirtualSystem.h" />
     <ClInclude Include="..\..\..\src\Env\Param\ParamXMLPrinter.h" />
     <ClInclude Include="..\..\..\src\Lib\shttl\table.h" />
@@ -642,6 +643,7 @@
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualPath.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualSystem.cpp" />
     <ClCompile Include="..\..\..\src\Interface\Addr.cpp" />
     <ClCompile Include="..\..\..\src\Interface\MemAccess.cpp" />
