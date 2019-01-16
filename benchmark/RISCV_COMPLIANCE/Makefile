@@ -11,8 +11,7 @@ test-RV64IM:
 	$(MAKE) -f RV64IM.mk
 
 test-RV64UA:
-	# All of these tests are buggy.
-	#$(MAKE) -f RV64UA.mk
+	$(MAKE) -f RV64UA.mk
 
 test-RV64UD:
 	$(MAKE) -f RV64UD.mk
