@@ -94,11 +94,12 @@ const VirtualPath ProcessCreateParam::GetTargetBasePath() const
 
     filesystem::path xmlDirPath(xmlFilePath.c_str());
     xmlDirPath.remove_filename();
+    auto basePath = xmlDirPath.append(m_targetBasePath);
 
     VirtualPath virtualBasePath;
-    virtualBasePath.SetGuestRoot("/ONIKIRI/DATA/ROOT/DIRECTORY");
-    virtualBasePath.SetHostRoot(xmlDirPath.string());
-    virtualBasePath.SetVirtualPath(m_targetBasePath);
+    virtualBasePath.SetGuestRoot("/ONIKIRI_ROOT/");
+    virtualBasePath.SetHostRoot(basePath.string());
+    virtualBasePath.SetVirtualPath("./");
 
     return virtualBasePath;
 }

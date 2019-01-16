@@ -46,7 +46,7 @@ namespace
         String n = p;
         do {
             p = n;
-            n = p.regex_replace(regex("[^/\\.]+/\\.\\./"), "");
+            n = p.regex_replace(regex("[^/\\.]+/\\.\\."), "");
             n = n.regex_replace(regex("//"), "/");
             n = n.regex_replace(regex("/\\./"), "/");
             n = n.regex_replace(regex("/$"), "");
