@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2019 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -28,11 +28,12 @@
 // 
 // 
 
+#ifndef EMU_UTILITY_VIRTUALSYSTEM_H
+#define EMU_UTILITY_VIRTUALSYSTEM_H
 
-#ifndef __EMULATORUTILITY_VIRTUALSYSTEM_H__
-#define __EMULATORUTILITY_VIRTUALSYSTEM_H__
 
 #include "SysDeps/posix.h"
+#include "Emu/Utility/System/VirtualPath.h"
 
 namespace Onikiri {
     namespace EmulatorUtility {
@@ -107,11 +108,11 @@ namespace Onikiri {
             // VirtualSystemでOpenしていないファイルを明示的にFDの変換表に追加する(stdin, stdout, stderr等)
             bool AddFDMap(int targetFD, int hostFD, bool autoclose = false);
             // ターゲットの作業ディレクトリを設定する
-            void SetInitialWorkingDir(const boost::filesystem::path& dir);
+            void SetInitialWorkingDir(const VirtualPath& dir);
 
             // Set the file name of a command file
             // This file name must be absolute one
-            void SetCommandFileName(const boost::filesystem::path& absCmdFileName);
+            void SetCommandFileName(const VirtualPath& absCmdFileName);
 
             // システムコール群
             int GetErrno();
@@ -180,7 +181,7 @@ namespace Onikiri {
                 PARAM_ENTRY( "@EmulationMode", m_timeEmulationModeStr )
             END_PARAM_MAP()
         private:
-            boost::filesystem::path GetHostPath(const char* targetPath);
+            String GetHostPath(const char* targetPath);
             void AddAutoCloseFD(int fd);
             void RemoveAutoCloseFD(int fd);
 
@@ -189,8 +190,8 @@ namespace Onikiri {
             std::vector<int> m_autoCloseFD;
             DelayUnlinker m_delayUnlinker;
 
-            boost::filesystem::path m_cwd;
-            boost::filesystem::path m_absCmdFileName;
+            VirtualPath m_cwd;
+            VirtualPath m_absCmdFileName;
 
             // 時刻
             int EmulationModeStrToInt( const std::string& );

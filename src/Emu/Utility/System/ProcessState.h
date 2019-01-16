@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2019 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,14 +29,15 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_PROCESSINFO_H__
-#define __EMULATORUTILITY_PROCESSINFO_H__
+#ifndef EMU_UTILITY_PROCESS_STATE_H
+#define EMU_UTILITY_PROCESS_STATE_H
 
 #include <boost/pool/pool.hpp>
 
 #include "Interface/EmulatorIF.h"
 #include "Interface/OpStateIF.h"
 #include "Env/Param/ParamExchange.h"
+#include "Emu/Utility/System/VirtualPath.h"
 
 namespace Onikiri {
     class SystemIF;
@@ -55,7 +56,7 @@ namespace Onikiri {
             explicit ProcessCreateParam(int processNumber);
             ~ProcessCreateParam();
 
-            const String  GetTargetBasePath() const;
+            const VirtualPath GetTargetBasePath() const;
             const String& GetTargetWorkPath() const { return m_targetWorkPath; }
             const String& GetCommand() const { return m_command; }
             const String& GetCommandArguments() const { return m_commandArguments; }

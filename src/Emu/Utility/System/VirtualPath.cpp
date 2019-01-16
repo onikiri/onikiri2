@@ -46,7 +46,7 @@ namespace
         String n = p;
         do {
             p = n;
-            n = p.regex_replace(regex("([^/\\.]+)/\\.\\./"), "");
+            n = p.regex_replace(regex("[^/\\.]+/\\.\\./"), "");
             n = n.regex_replace(regex("//"), "/");
             n = n.regex_replace(regex("/\\./"), "/");
             n = n.regex_replace(regex("/$"), "");
@@ -61,13 +61,13 @@ namespace
 
     String CompletePath(const String& path, const String& base)
     {
-        return CanonicalizePath(IsAbsPath(path) ? path : String(base + "/" + path));
+        return IsAbsPath(path) ? path : String(base + "/" + path);
     }
 }
 
-void VirtualPath::SetVirtualRoot(const String& virtualRoot)
+void VirtualPath::SetGuestRoot(const String& guestRoot)
 {
-    m_virtualRoot = CanonicalizePath(virtualRoot);
+    m_guestRoot = CanonicalizePath(guestRoot);
 }
 
 void VirtualPath::SetHostRoot(const String& hostRoot)
@@ -75,6 +75,8 @@ void VirtualPath::SetHostRoot(const String& hostRoot)
     m_hostRoot = CanonicalizePath(hostRoot);
 }
 
+/*
+// path から m_hostRoot を除いたパスを virtual path として設定
 void VirtualPath::SetHostAbsPath(const String& path)
 {
     String cPath = CanonicalizePath(path);
@@ -90,10 +92,16 @@ void VirtualPath::SetHostAbsPath(const String& path)
         );
     }
 }
+*/
 
-void VirtualPath::SetVirtualRelPath(const String& path)
+void VirtualPath::SetVirtualPath(const String& path)
 {
     m_virtualPath = CanonicalizePath(path);
+}
+
+void VirtualPath::AppendVirtualPath(const String& path)
+{
+    m_virtualPath = CanonicalizePath(m_virtualPath + "/" + path);
 }
 
 String VirtualPath::ToHost() const
@@ -101,8 +109,30 @@ String VirtualPath::ToHost() const
     return CompletePath(m_virtualPath, m_hostRoot);
 }
 
-String VirtualPath::ToVirtual() const
+String VirtualPath::CompleteInHost(const String& path) const
 {
-    return CompletePath(m_virtualPath, m_virtualRoot);
+    String cPath = CanonicalizePath(CompletePath(path, m_virtualPath));
+    regex p = regex(string("^") + m_guestRoot);
+    if (cPath.regex_search(p)) {
+        cPath = cPath.regex_replace(p, m_hostRoot + "/");
+    }
+    return CompletePath(cPath, m_hostRoot);
+}
+
+String VirtualPath::ToGuest() const
+{
+    return CompletePath(m_virtualPath, m_guestRoot);
+}
+
+String VirtualPath::CompleteInGuest(const String& path) const
+{
+    String cPath = CanonicalizePath(CompletePath(path, m_virtualPath));
+    regex p = regex(string("^") + m_guestRoot);
+    if (cPath.regex_search(p)) {
+        return path;
+    }
+    else {
+        return CompletePath(path, m_guestRoot);
+    }
 }
 

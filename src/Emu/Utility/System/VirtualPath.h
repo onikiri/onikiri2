@@ -36,6 +36,11 @@
 namespace Onikiri {
 namespace EmulatorUtility {
 
+    // ファイルパスの仮想化を行うクラス
+    // ホストの実際のパスを，Linux ベースのゲストのパスにマップする
+    // たとえば "C:\test\data\test.txt" の "C:\test\data" を 
+    // ゲストの "/ONIKIRI" にマップし，ゲスト側から "/ONIKIRI/test.txt"
+    // でアクセスできるようにする
     class VirtualPath
     {
     public:
@@ -43,16 +48,36 @@ namespace EmulatorUtility {
         {
         }
 
-        void SetHostAbsPath(const String& path);
-        void SetVirtualRoot(const String& virtualRoot);
-        void SetHostRoot(const String& hostRoot);
-        void SetVirtualRelPath(const String& path);
+        //void SetHostAbsPath(const String& path);
 
+        // 仮想パスのルートを設定する
+        // /ONIKIRI/test.txt
+        void SetGuestRoot(const String& guestRoot);
+        
+        // ホスト側のルートを設定する
+        void SetHostRoot(const String& hostRoot);
+
+        // 仮想/ホスト のルートからの相対仮想パスを設定する
+        void SetVirtualPath(const String& path);
+
+        // 相対仮想パスを設定するの末尾にパスを追加する
+        // 自動的に / が追加される
+        void AppendVirtualPath(const String& path);
+
+        // 現在の仮想パスをホスト/仮想側で表した場合のパスを返す
         String ToHost() const;
-        String ToVirtual() const;
+        String ToGuest() const;
+
+        // 現在の仮想パス上での path の，ホストでのパスを返す
+        String CompleteInHost(const String& path) const;
+
+        // 現在の仮想パス上での path の仮想でのパスを返す
+        String CompleteInGuest(const String& path) const;
+
+
     protected:
-        String m_virtualPath;          // e.g. test.txt
-        String m_virtualRoot;   // e.g. /ONIKIRI
+        String m_virtualPath;   // e.g. test.txt
+        String m_guestRoot;     // e.g. /ONIKIRI
         String m_hostRoot;      // e.g. Z:\work
     };
 

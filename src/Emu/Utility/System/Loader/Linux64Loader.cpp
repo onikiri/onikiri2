@@ -56,15 +56,15 @@ Linux64Loader::~Linux64Loader()
 {
 }
 
-void Linux64Loader::LoadBinary(MemorySystem* memory, const String& command)
+void Linux64Loader::LoadBinary(MemorySystem* memory, const String& hostBinaryPath)
 {
     Elf64Reader elfReader;
 
     try {
-        elfReader.Open(command.c_str());
+        elfReader.Open(hostBinaryPath.c_str());
 
         if (elfReader.GetMachine() != m_machine)
-            throw runtime_error((command + " : machine type does not match").c_str());
+            throw runtime_error((hostBinaryPath + " : machine type does not match").c_str());
 
         m_bigEndian = elfReader.IsBigEndian();
 

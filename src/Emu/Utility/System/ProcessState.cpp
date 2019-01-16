@@ -36,6 +36,7 @@
 #include "Env/Env.h"
 #include "SysDeps/posix.h"
 
+#include "Emu/Utility/System/VirtualPath.h"
 #include "Emu/Utility/System/VirtualSystem.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/Memory/MemorySystem.h"
@@ -73,7 +74,7 @@ ProcessCreateParam::~ProcessCreateParam()
     ReleaseParam();
 }
 
-const String ProcessCreateParam::GetTargetBasePath() const
+const VirtualPath ProcessCreateParam::GetTargetBasePath() const
 {
     ParamXMLPath xPath;
     xPath.AddArray( 
@@ -91,13 +92,15 @@ const String ProcessCreateParam::GetTargetBasePath() const
         );
     }
 
-    filesystem::path xmlDirPath( xmlFilePath.c_str() );
+    filesystem::path xmlDirPath(xmlFilePath.c_str());
     xmlDirPath.remove_filename();
 
-    return CompletePath( 
-        m_targetBasePath, 
-        xmlDirPath.string()
-    );
+    VirtualPath virtualBasePath;
+    virtualBasePath.SetGuestRoot("/ONIKIRI/DATA/ROOT/DIRECTORY");
+    virtualBasePath.SetHostRoot(xmlDirPath.string());
+    virtualBasePath.SetVirtualPath(m_targetBasePath);
+
+    return virtualBasePath;
 }
 
 ProcessState::ProcessState(int pid)
@@ -173,17 +176,15 @@ void ProcessState::Init(
         m_syscallConv->SetSystem( simSystem );
         m_loader = loader;
 
-        const string& targetBase = pcp.GetTargetBasePath();
+        const VirtualPath targetBase = pcp.GetTargetBasePath();
 
-        m_virtualSystem->SetInitialWorkingDir(
-            CompletePath( pcp.GetTargetWorkPath(), targetBase )
-        );
+        VirtualPath workDir = targetBase;
+        workDir.SetVirtualPath(pcp.GetTargetWorkPath());
+        m_virtualSystem->SetInitialWorkingDir(workDir);
 
-        const string& cmdFileName = CompletePath(pcp.GetCommand(), targetBase);
-        m_loader->LoadBinary(
-            m_memorySystem,
-            cmdFileName
-        );
+        VirtualPath cmdFileName = targetBase;
+        cmdFileName.SetVirtualPath(pcp.GetCommand());
+        m_loader->LoadBinary(m_memorySystem, cmdFileName.ToHost());
         m_virtualSystem->SetCommandFileName(cmdFileName);
 
         m_codeRange = m_loader->GetCodeRange();
@@ -227,12 +228,12 @@ void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
     //u64 stack = m_memorySystem->MMap(0, stackBytes);
 
     // 引数の設定
-    string targetBase = pcp.GetTargetBasePath();
+    VirtualPath targetBase = pcp.GetTargetBasePath();
     m_loader->InitArgs(
         m_memorySystem,
         stack, 
         stackBytes, 
-        CompletePath( pcp.GetCommand(), targetBase ),
+        targetBase.CompleteInGuest(pcp.GetCommand()), // for argv, this path is virtual one
         pcp.GetCommandArguments() 
     );
 
@@ -253,9 +254,6 @@ void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
 
 void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
 {
-    string targetBase = pcp.GetTargetBasePath();
-    string targetWork = 
-        CompletePath( pcp.GetTargetWorkPath(), targetBase );
 
 
     // stdin stdout stderr の設定
@@ -291,6 +289,9 @@ void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
             m_virtualSystem->GetDelayUnlinker()->AddMap(std_fd[i], "HostIO");
         }
         else {
+            VirtualPath targetBase = pcp.GetTargetBasePath();
+            String targetWork = targetBase.CompleteInHost(pcp.GetTargetWorkPath());
+
             string filename = CompletePath(std_filename[i], targetWork );
             FILE *fp = fopen( filename.c_str(), omode[i].c_str() );
             if (fp == NULL) {
