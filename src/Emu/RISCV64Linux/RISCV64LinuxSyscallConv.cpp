@@ -167,6 +167,7 @@ static struct {
     SYSCALLNAME(pipe2, 1, "pn"),
     SYSCALLNAME(clone , 1, "npppp"),
     SYSCALLNAME(times, 1, "p"),
+    SYSCALLNAME(getdents64, 1, "npn"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -270,6 +271,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_close:
         syscall_close(opState);
+        break;
+
+    case syscall_id_getdents64:
+        syscall_getdents64(opState);
         break;
     case syscall_id_lseek:
         syscall_lseek(opState);

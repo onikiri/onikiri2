@@ -505,6 +505,11 @@ void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
         SetResult(true, 0);
     }
 }
+
+void Linux64SyscallConv::syscall_getdents64(EmulatorUtility::OpEmulationState* opState)
+{
+}
+
 void Linux64SyscallConv::syscall_lseek(OpEmulationState* opState)
 {
     s64 result = GetVirtualSystem()->LSeek((int)m_args[1], m_args[2], (int)SeekWhenceTargetToHost((u32)m_args[3]));

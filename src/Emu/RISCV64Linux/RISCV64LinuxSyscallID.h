@@ -51,6 +51,8 @@ namespace Onikiri {
             const int syscall_id_close = 57;
             const int syscall_id_pipe2 = 59;
 
+            const int syscall_id_getdents64 = 61;
+
             const int syscall_id_lseek = 62;
             const int syscall_id_read = 63;
             const int syscall_id_write = 64;

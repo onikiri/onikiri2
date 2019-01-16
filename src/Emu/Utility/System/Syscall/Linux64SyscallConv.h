@@ -104,6 +104,7 @@ namespace Onikiri {
             virtual void syscall_writev(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_readlinkat(EmulatorUtility::OpEmulationState* opState);
 
+            virtual void syscall_getdents64(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_lseek(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_unlink(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_unlinkat(EmulatorUtility::OpEmulationState* opState);
