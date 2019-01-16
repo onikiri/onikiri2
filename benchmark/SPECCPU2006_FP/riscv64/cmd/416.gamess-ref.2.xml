@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/416.gamess/ref/'
-        Command='./bin/gamess'
+        TargetBasePath='../../'
+        TargetWorkPath='run/416.gamess/ref/'
+        Command='riscv64/bin/gamess'
         CommandArguments=''
         STDIN='triazolium.config'
       />

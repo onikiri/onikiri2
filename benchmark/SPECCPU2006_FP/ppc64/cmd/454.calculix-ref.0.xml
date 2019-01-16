@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/454.calculix/ref/'
-        Command='./bin/454.calculix.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/454.calculix/ref/'
+        Command='ppc64/bin/454.calculix.ppc64'
         CommandArguments='-i  hyperviscoplastic'
         STDIN=''
       />

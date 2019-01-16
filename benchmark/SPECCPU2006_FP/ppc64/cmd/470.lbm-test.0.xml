@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/470.lbm/test/'
-        Command='./bin/470.lbm.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/470.lbm/test/'
+        Command='ppc64/bin/470.lbm.ppc64'
         CommandArguments='20 reference.dat 0 1 100_100_130_cf_a.of'
         STDIN=''
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/401.bzip2/train/'
-        Command='./bin/401.bzip2.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/401.bzip2/train/'
+        Command='ppc64/bin/401.bzip2.ppc64'
         CommandArguments='input.combined 80'
         STDIN=''
       />

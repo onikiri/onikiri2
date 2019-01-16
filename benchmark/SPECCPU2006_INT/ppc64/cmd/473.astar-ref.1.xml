@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/473.astar/ref/'
-        Command='./bin/473.astar.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/473.astar/ref/'
+        Command='ppc64/bin/473.astar.ppc64'
         CommandArguments='rivers.cfg'
         STDIN=''
       />

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gobmk" CommandArguments="--quiet --mode gtp " STDERR="buzco.err" STDIN="buzco.tst" STDOUT="buzco.out" TargetBasePath="./" TargetWorkPath="../../run/445.gobmk/train/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/gobmk" CommandArguments="--quiet --mode gtp " STDERR="buzco.err" STDIN="buzco.tst" STDOUT="buzco.out" TargetBasePath="../../" TargetWorkPath="run/445.gobmk/train/input" />
 </Processes>
 </Emulator>
 </Session>

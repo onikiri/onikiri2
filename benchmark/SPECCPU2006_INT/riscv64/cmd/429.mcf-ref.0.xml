@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/429.mcf/ref/'
-        Command='./bin/mcf'
+        TargetBasePath='../../'
+        TargetWorkPath='run/429.mcf/ref/'
+        Command='riscv64/bin/mcf'
         CommandArguments='inp.in'
         STDIN=''
       />

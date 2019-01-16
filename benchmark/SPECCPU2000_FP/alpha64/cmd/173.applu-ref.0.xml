@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/173.applu/ref/'
-        Command='./bin/173.applu.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/173.applu/ref/'
+        Command='alpha64/bin/173.applu.alpha64'
         CommandArguments=''
         STDIN='applu.in'
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/465.tonto/train/'
-        Command='./bin/tonto'
+        TargetBasePath='../../'
+        TargetWorkPath='run/465.tonto/train/'
+        Command='riscv32/bin/tonto'
         CommandArguments=''
         STDIN=''
       />

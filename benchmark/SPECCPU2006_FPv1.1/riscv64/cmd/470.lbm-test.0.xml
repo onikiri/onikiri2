@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/lbm" CommandArguments="20 reference.dat 0 1 100_100_130_cf_a.of " STDERR="lbm.err" STDIN="" STDOUT="lbm.out" TargetBasePath="./" TargetWorkPath="../../run/470.lbm/test/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/lbm" CommandArguments="20 reference.dat 0 1 100_100_130_cf_a.of " STDERR="lbm.err" STDIN="" STDOUT="lbm.out" TargetBasePath="../../" TargetWorkPath="run/470.lbm/test/input" />
 </Processes>
 </Emulator>
 </Session>

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/168.wupwise/ref/'
-        Command='./bin/168.wupwise.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/168.wupwise/ref/'
+        Command='alpha64/bin/168.wupwise.alpha64'
         CommandArguments=''
         STDIN=''
       />

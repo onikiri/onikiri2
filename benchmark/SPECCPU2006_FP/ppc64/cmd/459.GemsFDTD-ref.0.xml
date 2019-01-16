@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/459.GemsFDTD/ref/'
-        Command='./bin/459.GemsFDTD.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/459.GemsFDTD/ref/'
+        Command='ppc64/bin/459.GemsFDTD.ppc64'
         CommandArguments=''
         STDIN=''
       />

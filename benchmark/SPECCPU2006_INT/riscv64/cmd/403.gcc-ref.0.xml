@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/403.gcc/ref/'
-        Command='./bin/gcc'
+        TargetBasePath='../../'
+        TargetWorkPath='run/403.gcc/ref/'
+        Command='riscv64/bin/gcc'
         CommandArguments='166.i -o 166.s'
         STDIN=''
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/400.perlbench/train/'
-        Command='./bin/perlbench'
+        TargetBasePath='../../'
+        TargetWorkPath='run/400.perlbench/train/'
+        Command='riscv32/bin/perlbench'
         CommandArguments='-I./lib splitmail.pl 535 13 25 24 1091'
         STDIN=''
       />

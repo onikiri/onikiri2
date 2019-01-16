@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/437.leslie3d/test/'
-        Command='./bin/437.leslie3d.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/437.leslie3d/test/'
+        Command='alpha64/bin/437.leslie3d.alpha64'
         CommandArguments=''
         STDIN='leslie3d.in'
       />

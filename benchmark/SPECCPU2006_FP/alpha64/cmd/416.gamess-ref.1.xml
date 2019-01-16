@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/416.gamess/ref/'
-        Command='./bin/416.gamess.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/416.gamess/ref/'
+        Command='alpha64/bin/416.gamess.alpha64'
         CommandArguments=''
         STDIN='h2ocu2+.gradient.config'
       />

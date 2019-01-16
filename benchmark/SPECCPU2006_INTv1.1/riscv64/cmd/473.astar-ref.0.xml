@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/astar" CommandArguments="BigLakes2048.cfg " STDERR="BigLakes2048.err" STDIN="" STDOUT="BigLakes2048.out" TargetBasePath="./" TargetWorkPath="../../run/473.astar/ref/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/astar" CommandArguments="BigLakes2048.cfg " STDERR="BigLakes2048.err" STDIN="" STDOUT="BigLakes2048.out" TargetBasePath="../../" TargetWorkPath="run/473.astar/ref/input" />
 </Processes>
 </Emulator>
 </Session>

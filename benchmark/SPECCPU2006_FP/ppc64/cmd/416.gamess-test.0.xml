@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/416.gamess/test/'
-        Command='./bin/416.gamess.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/416.gamess/test/'
+        Command='ppc64/bin/416.gamess.ppc64'
         CommandArguments=''
         STDIN='exam29.config'
       />

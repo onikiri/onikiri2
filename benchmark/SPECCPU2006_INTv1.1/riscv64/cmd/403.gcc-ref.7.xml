@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gcc" CommandArguments="s04.i -o s04.s " STDERR="s04.err" STDIN="" STDOUT="s04.out" TargetBasePath="./" TargetWorkPath="../../run/403.gcc/ref/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/gcc" CommandArguments="s04.i -o s04.s " STDERR="s04.err" STDIN="" STDOUT="s04.out" TargetBasePath="../../" TargetWorkPath="run/403.gcc/ref/input" />
 </Processes>
 </Emulator>
 </Session>

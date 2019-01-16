@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/401.bzip2/train/'
-        Command='./bin/bzip2'
+        TargetBasePath='../../'
+        TargetWorkPath='run/401.bzip2/train/'
+        Command='riscv32/bin/bzip2'
         CommandArguments='byoudoin.jpg 5'
         STDIN=''
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/453.povray/ref/'
-        Command='./bin/453.povray.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/453.povray/ref/'
+        Command='ppc64/bin/453.povray.ppc64'
         CommandArguments='SPEC-benchmark-ref.ini'
         STDIN=''
       />

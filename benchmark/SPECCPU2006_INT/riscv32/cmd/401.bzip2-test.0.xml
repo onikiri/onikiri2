@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/401.bzip2/test/'
-        Command='./bin/bzip2'
+        TargetBasePath='../../'
+        TargetWorkPath='run/401.bzip2/test/'
+        Command='riscv32/bin/bzip2'
         CommandArguments='input.program 5'
         STDIN=''
       />

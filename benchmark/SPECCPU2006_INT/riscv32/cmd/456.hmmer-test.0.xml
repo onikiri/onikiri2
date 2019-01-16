@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/456.hmmer/test/'
-        Command='./bin/hmmer'
+        TargetBasePath='../../'
+        TargetWorkPath='run/456.hmmer/test/'
+        Command='riscv32/bin/hmmer'
         CommandArguments='--fixed 0 --mean 325 --num 45000 --sd 200 --seed 0 bombesin.hmm'
         STDIN=''
       />

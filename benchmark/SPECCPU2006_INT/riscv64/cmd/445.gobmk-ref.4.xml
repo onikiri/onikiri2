@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/445.gobmk/ref/'
-        Command='./bin/gobmk'
+        TargetBasePath='../../'
+        TargetWorkPath='run/445.gobmk/ref/'
+        Command='riscv64/bin/gobmk'
         CommandArguments='--quiet --mode gtp'
         STDIN='trevord.tst'
       />

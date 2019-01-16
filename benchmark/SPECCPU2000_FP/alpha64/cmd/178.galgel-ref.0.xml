@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/178.galgel/ref/'
-        Command='./bin/178.galgel.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/178.galgel/ref/'
+        Command='alpha64/bin/178.galgel.alpha64'
         CommandArguments=''
         STDIN='galgel.in'
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/445.gobmk/train/'
-        Command='./bin/gobmk'
+        TargetBasePath='../../'
+        TargetWorkPath='run/445.gobmk/train/'
+        Command='riscv32/bin/gobmk'
         CommandArguments='--quiet --mode gtp'
         STDIN='buzco.tst'
       />

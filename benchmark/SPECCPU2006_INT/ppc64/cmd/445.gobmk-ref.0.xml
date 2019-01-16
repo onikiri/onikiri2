@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/445.gobmk/ref/'
-        Command='./bin/445.gobmk.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/445.gobmk/ref/'
+        Command='ppc64/bin/445.gobmk.ppc64'
         CommandArguments='--quiet --mode gtp'
         STDIN='13x13.tst'
       />

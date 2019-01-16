@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/456.hmmer/ref/'
-        Command='./bin/456.hmmer.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/456.hmmer/ref/'
+        Command='ppc64/bin/456.hmmer.ppc64'
         CommandArguments='--fixed 0 --mean 500 --num 500000 --sd 350 --seed 0 retro.hmm'
         STDIN=''
       />

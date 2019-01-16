@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/462.libquantum/train/'
-        Command='./bin/libquantum'
+        TargetBasePath='../../'
+        TargetWorkPath='run/462.libquantum/train/'
+        Command='riscv32/bin/libquantum'
         CommandArguments='143 25'
         STDIN=''
       />

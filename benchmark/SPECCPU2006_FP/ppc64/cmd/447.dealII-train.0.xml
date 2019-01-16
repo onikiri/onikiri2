@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/447.dealII/train/'
-        Command='./bin/447.dealII.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/447.dealII/train/'
+        Command='ppc64/bin/447.dealII.ppc64'
         CommandArguments='10'
         STDIN=''
       />

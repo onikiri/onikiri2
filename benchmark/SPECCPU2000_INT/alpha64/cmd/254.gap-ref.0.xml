@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/254.gap/ref/'
-        Command='./bin/254.gap.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/254.gap/ref/'
+        Command='alpha64/bin/254.gap.alpha64'
         CommandArguments='-l ./ -q -m 192M'
         STDIN='ref.in'
       />

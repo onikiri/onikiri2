@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gcc_s" CommandArguments="gcc-pp.c -O5 -fipa-pta -o gcc-pp.opts-O5_-fipa-pta.s " STDERR="gcc-pp.opts-O5_-fipa-pta.err" STDIN="" STDOUT="gcc-pp.opts-O5_-fipa-pta.out" TargetBasePath="./" TargetWorkPath="../../run/602.gcc_s/refspeed/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/gcc_s" CommandArguments="gcc-pp.c -O5 -fipa-pta -o gcc-pp.opts-O5_-fipa-pta.s " STDERR="gcc-pp.opts-O5_-fipa-pta.err" STDIN="" STDOUT="gcc-pp.opts-O5_-fipa-pta.out" TargetBasePath="../../" TargetWorkPath="run/602.gcc_s/refspeed/input" />
 </Processes>
 </Emulator>
 </Session>

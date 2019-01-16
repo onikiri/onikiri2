@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/410.bwaves/ref/'
-        Command='./bin/bwaves'
+        TargetBasePath='../../'
+        TargetWorkPath='run/410.bwaves/ref/'
+        Command='riscv32/bin/bwaves'
         CommandArguments=''
         STDIN=''
       />

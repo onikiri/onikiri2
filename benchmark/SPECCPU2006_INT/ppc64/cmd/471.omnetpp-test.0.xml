@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/471.omnetpp/test/'
-        Command='./bin/471.omnetpp.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/471.omnetpp/test/'
+        Command='ppc64/bin/471.omnetpp.ppc64'
         CommandArguments='omnetpp.ini'
         STDIN=''
       />

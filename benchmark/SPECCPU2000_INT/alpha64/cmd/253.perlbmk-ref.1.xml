@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/253.perlbmk/ref/'
-        Command='./bin/253.perlbmk.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/253.perlbmk/ref/'
+        Command='alpha64/bin/253.perlbmk.alpha64'
         CommandArguments='-I. -I./lib makerand.pl'
         STDIN=''
       />

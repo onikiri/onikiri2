@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/mcf" CommandArguments="inp.in " STDERR="inp.err" STDIN="" STDOUT="inp.out" TargetBasePath="./" TargetWorkPath="../../run/429.mcf/train/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/mcf" CommandArguments="inp.in " STDERR="inp.err" STDIN="" STDOUT="inp.out" TargetBasePath="../../" TargetWorkPath="run/429.mcf/train/input" />
 </Processes>
 </Emulator>
 </Session>
