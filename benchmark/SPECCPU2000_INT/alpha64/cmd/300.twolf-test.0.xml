@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/300.twolf/test/'
-        Command='./bin/300.twolf.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/300.twolf/test/'
+        Command='alpha64/bin/300.twolf.alpha64'
         CommandArguments='test'
         STDIN=''
       />

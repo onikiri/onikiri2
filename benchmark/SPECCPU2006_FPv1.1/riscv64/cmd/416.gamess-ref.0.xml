@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gamess" CommandArguments=" " STDERR="cytosine.2.err" STDIN="cytosine.2.config" STDOUT="cytosine.2.out" TargetBasePath="./" TargetWorkPath="../../run/416.gamess/ref/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/gamess" CommandArguments=" " STDERR="cytosine.2.err" STDIN="cytosine.2.config" STDOUT="cytosine.2.out" TargetBasePath="../../" TargetWorkPath="run/416.gamess/ref/input" />
 </Processes>
 </Emulator>
 </Session>

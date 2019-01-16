@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/403.gcc/ref/'
-        Command='./bin/403.gcc.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/403.gcc/ref/'
+        Command='ppc64/bin/403.gcc.ppc64'
         CommandArguments='expr.i -o expr.s'
         STDIN=''
       />

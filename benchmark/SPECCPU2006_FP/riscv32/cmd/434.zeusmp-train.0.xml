@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/434.zeusmp/train/'
-        Command='./bin/zeusmp'
+        TargetBasePath='../../'
+        TargetWorkPath='run/434.zeusmp/train/'
+        Command='riscv32/bin/zeusmp'
         CommandArguments=''
         STDIN=''
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/188.ammp/test/'
-        Command='./bin/188.ammp.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/188.ammp/test/'
+        Command='alpha64/bin/188.ammp.alpha64'
         CommandArguments=''
         STDIN='ammp.in'
       />

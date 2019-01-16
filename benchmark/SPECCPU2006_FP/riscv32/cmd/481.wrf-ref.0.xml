@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/481.wrf/ref/'
-        Command='./bin/wrf'
+        TargetBasePath='../../'
+        TargetWorkPath='run/481.wrf/ref/'
+        Command='riscv32/bin/wrf'
         CommandArguments=''
         STDIN=''
       />

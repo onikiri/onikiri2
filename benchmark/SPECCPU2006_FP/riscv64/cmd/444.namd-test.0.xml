@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/444.namd/test/'
-        Command='./bin/namd'
+        TargetBasePath='../../'
+        TargetWorkPath='run/444.namd/test/'
+        Command='riscv64/bin/namd'
         CommandArguments='--input namd.input --iterations 1 --output namd.out '
         STDIN=''
       />

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/omnetpp" CommandArguments="omnetpp.ini " STDERR="omnetpp.err" STDIN="" STDOUT="omnetpp.log" TargetBasePath="./" TargetWorkPath="../../run/471.omnetpp/train/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/omnetpp" CommandArguments="omnetpp.ini " STDERR="omnetpp.err" STDIN="" STDOUT="omnetpp.log" TargetBasePath="../../" TargetWorkPath="run/471.omnetpp/train/input" />
 </Processes>
 </Emulator>
 </Session>

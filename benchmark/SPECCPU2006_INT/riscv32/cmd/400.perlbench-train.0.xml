@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/400.perlbench/train/'
-        Command='./bin/perlbench'
+        TargetBasePath='../../'
+        TargetWorkPath='run/400.perlbench/train/'
+        Command='riscv32/bin/perlbench'
         CommandArguments='-I./lib diffmail.pl 2 550 15 24 23 100'
         STDIN=''
       />

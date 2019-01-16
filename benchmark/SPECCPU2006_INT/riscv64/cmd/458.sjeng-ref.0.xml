@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/458.sjeng/ref/'
-        Command='./bin/sjeng'
+        TargetBasePath='../../'
+        TargetWorkPath='run/458.sjeng/ref/'
+        Command='riscv64/bin/sjeng'
         CommandArguments='ref.txt'
         STDIN=''
       />

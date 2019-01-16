@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/473.astar/train/'
-        Command='./bin/astar'
+        TargetBasePath='../../'
+        TargetWorkPath='run/473.astar/train/'
+        Command='riscv32/bin/astar'
         CommandArguments='BigLakes1024.cfg'
         STDIN=''
       />

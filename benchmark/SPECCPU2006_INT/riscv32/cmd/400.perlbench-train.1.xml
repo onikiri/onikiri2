@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/400.perlbench/train/'
-        Command='./bin/perlbench'
+        TargetBasePath='../../'
+        TargetWorkPath='run/400.perlbench/train/'
+        Command='riscv32/bin/perlbench'
         CommandArguments='-I./lib perfect.pl b 3'
         STDIN=''
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/436.cactusADM/test/'
-        Command='./bin/436.cactusADM.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/436.cactusADM/test/'
+        Command='ppc64/bin/436.cactusADM.ppc64'
         CommandArguments='benchADM.par'
         STDIN=''
       />

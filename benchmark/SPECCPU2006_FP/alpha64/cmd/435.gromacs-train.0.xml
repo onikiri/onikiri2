@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/435.gromacs/train/'
-        Command='./bin/435.gromacs.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/435.gromacs/train/'
+        Command='alpha64/bin/435.gromacs.alpha64'
         CommandArguments='-silent -deffnm gromacs -nice 0'
         STDIN=''
       />

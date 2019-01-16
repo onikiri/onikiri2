@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/435.gromacs/ref/'
-        Command='./bin/gromacs'
+        TargetBasePath='../../'
+        TargetWorkPath='run/435.gromacs/ref/'
+        Command='riscv32/bin/gromacs'
         CommandArguments='-silent -deffnm gromacs -nice 0'
         STDIN=''
       />

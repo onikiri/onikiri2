@@ -238,12 +238,12 @@ VirtualSystem::~VirtualSystem()
     for_each(m_autoCloseFD.begin(), m_autoCloseFD.end(), posix_close);
 }
 
-void VirtualSystem::SetInitialWorkingDir(const boost::filesystem::path& dir)
+void VirtualSystem::SetInitialWorkingDir(const VirtualPath& dir)
 {
     m_cwd = dir;
 }
 
-void VirtualSystem::SetCommandFileName(const boost::filesystem::path& absCmdFileName)
+void VirtualSystem::SetCommandFileName(const VirtualPath& absCmdFileName)
 {
     m_absCmdFileName = absCmdFileName;
 }
@@ -279,17 +279,17 @@ void VirtualSystem::RemoveAutoCloseFD(int fd)
 
 int VirtualSystem::GetCWD(char* buf, int maxlen)
 {
-    strncpy(buf, m_cwd.string().c_str(), maxlen);
+    strncpy(buf, m_cwd.ToGuest().c_str(), maxlen);
     return (int)strlen(buf) + 1; // +1 for NULL?
 }
 
 int VirtualSystem::ChDir(const char* path)
 {
     if (path[0] == '/') {   // Absolute path
-        m_cwd = path;
+        m_cwd.SetVirtualPath(path);
     }
     else {
-        m_cwd += string("/") + path;
+        m_cwd.AppendVirtualPath(path);
     }
     return 0;
 }
@@ -321,13 +321,13 @@ int VirtualSystem::GetEGID()
 
 int VirtualSystem::Open(const char* filename, int oflag)
 {
-    int hostFD = posix_open(GetHostPath(filename).string().c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
+    int hostFD = posix_open(GetHostPath(filename).c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
 
     // FDの対応表に追加
     if (hostFD != -1) {
         int targetFD = m_fdConv.GetFirstFreeFD();
         AddFDMap(targetFD, hostFD, true);
-        m_delayUnlinker.AddMap(targetFD, GetHostPath(filename).string());
+        m_delayUnlinker.AddMap(targetFD, GetHostPath(filename));
         return targetFD;
     }
     else {
@@ -395,10 +395,10 @@ int VirtualSystem::Close(int fd)
 // readlink at
 int VirtualSystem::ReadLinkAt(int targetFD, const char* pathname, void *buffer, unsigned int count) {
     if (string("/proc/self/exe") == pathname) {
-        if (m_absCmdFileName.size() >= count) {
+        if (m_absCmdFileName.ToGuest().size() >= count) {
             return -1;
         }
-        ::strncpy(static_cast<char*>(buffer), m_absCmdFileName.string().c_str(), sizeof(char)*count-1);
+        ::strncpy(static_cast<char*>(buffer), m_absCmdFileName.ToGuest().c_str(), sizeof(char)*count-1);
         return 0;
     }
     else {
@@ -418,11 +418,11 @@ int VirtualSystem::FStat(int fd, HostStat* buffer)
 
 int VirtualSystem::Stat(const char* path, posix_struct_stat* s)
 {
-    return posix_stat(GetHostPath(path).string().c_str(), s);
+    return posix_stat(GetHostPath(path).c_str(), s);
 }
 int VirtualSystem::LStat(const char* path, posix_struct_stat* s)
 {
-    return posix_lstat(GetHostPath(path).string().c_str(), s);
+    return posix_lstat(GetHostPath(path).c_str(), s);
 }
 
 s64 VirtualSystem::LSeek(int fd, s64 offset, int whence)
@@ -433,7 +433,7 @@ s64 VirtualSystem::LSeek(int fd, s64 offset, int whence)
 
 int VirtualSystem::Access(const char* path, int mode)
 {
-    return posix_access(GetHostPath(path).string().c_str(), mode);
+    return posix_access(GetHostPath(path).c_str(), mode);
 }
 
 int VirtualSystem::Unlink(const char* path)
@@ -446,10 +446,10 @@ int VirtualSystem::Unlink(const char* path)
     エラーを返すので挙動が変わってしまう。
     ここでは Windows の挙動を Unix に合わせるため DelayUnlinker クラスを用いる
     */
-    int unlinkerr = posix_unlink(GetHostPath(path).string().c_str());
+    int unlinkerr = posix_unlink(GetHostPath(path).c_str());
 #ifdef HOST_IS_WINDOWS
     if( posix_geterrno() == 0xd ){
-        m_delayUnlinker.AddUnlinkPath(GetHostPath(path).string());
+        m_delayUnlinker.AddUnlinkPath(GetHostPath(path));
         return 0;
     }
 #endif
@@ -458,12 +458,15 @@ int VirtualSystem::Unlink(const char* path)
 
 int VirtualSystem::Rename(const char* oldpath, const char* newpath)
 {
-    return posix_rename((m_cwd/oldpath).string().c_str(), (m_cwd/newpath).string().c_str());
+    return posix_rename(
+        m_cwd.CompleteInHost(oldpath).c_str(), 
+        m_cwd.CompleteInHost(newpath).c_str()
+    );
 }
 
 int VirtualSystem::Truncate(const char* path, s64 length)
 {
-    return posix_truncate(GetHostPath(path).string().c_str(), length);
+    return posix_truncate(GetHostPath(path).c_str(), length);
 }
 
 int VirtualSystem::FTruncate(int fd, s64 length)
@@ -475,16 +478,15 @@ int VirtualSystem::FTruncate(int fd, s64 length)
 int VirtualSystem::MkDir(const char* path, int mode)
 {
     namespace fs = filesystem;
-    if (fs::create_directory( GetHostPath(path) ))
+    if (fs::create_directory( GetHostPath(path).c_str() ))
         return 0;
     else 
         return -1;
 }
 
-boost::filesystem::path VirtualSystem::GetHostPath(const char* targetPath)
+String VirtualSystem::GetHostPath(const char* targetPath)
 {
-    namespace fs = filesystem;
-    return fs::absolute(fs::path(targetPath), m_cwd);
+    return m_cwd.CompleteInHost(targetPath);
 }
 
 //

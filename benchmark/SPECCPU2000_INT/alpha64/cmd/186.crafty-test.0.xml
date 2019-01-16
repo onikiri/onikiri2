@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/186.crafty/test/'
-        Command='./bin/186.crafty.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/186.crafty/test/'
+        Command='alpha64/bin/186.crafty.alpha64'
         CommandArguments=''
         STDIN='crafty.in'
       />

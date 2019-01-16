@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/197.parser/test/'
-        Command='./bin/197.parser.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/197.parser/test/'
+        Command='alpha64/bin/197.parser.alpha64'
         CommandArguments='2.1.dict -batch'
         STDIN='test.in'
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/473.astar/test/'
-        Command='./bin/473.astar.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/473.astar/test/'
+        Command='alpha64/bin/473.astar.alpha64'
         CommandArguments='lake.cfg'
         STDIN=''
       />

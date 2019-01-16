@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/187.facerec/test/'
-        Command='./bin/187.facerec.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/187.facerec/test/'
+        Command='alpha64/bin/187.facerec.alpha64'
         CommandArguments=''
         STDIN='test.in'
       />

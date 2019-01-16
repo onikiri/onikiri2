@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/482.sphinx3/ref/'
-        Command='./bin/482.sphinx3.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/482.sphinx3/ref/'
+        Command='alpha64/bin/482.sphinx3.alpha64'
         CommandArguments='ctlfile . args.an4'
         STDIN=''
       />

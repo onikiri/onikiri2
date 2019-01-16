@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/450.soplex/ref/'
-        Command='./bin/450.soplex.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/450.soplex/ref/'
+        Command='ppc64/bin/450.soplex.ppc64'
         CommandArguments='-m3500 ref.mps'
         STDIN=''
       />

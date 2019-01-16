@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gcc" CommandArguments="integrate.i -o integrate.s " STDERR="integrate.err" STDIN="" STDOUT="integrate.out" TargetBasePath="./" TargetWorkPath="../../run/403.gcc/train/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/gcc" CommandArguments="integrate.i -o integrate.s " STDERR="integrate.err" STDIN="" STDOUT="integrate.out" TargetBasePath="../../" TargetWorkPath="run/403.gcc/train/input" />
 </Processes>
 </Emulator>
 </Session>

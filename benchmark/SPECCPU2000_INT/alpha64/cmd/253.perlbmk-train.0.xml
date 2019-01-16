@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/253.perlbmk/train/'
-        Command='./bin/253.perlbmk.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/253.perlbmk/train/'
+        Command='alpha64/bin/253.perlbmk.alpha64'
         CommandArguments='-I./lib diffmail.pl 2 350 15 24 23 150'
         STDIN=''
       />

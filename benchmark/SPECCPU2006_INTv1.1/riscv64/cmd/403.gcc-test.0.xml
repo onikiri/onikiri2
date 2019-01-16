@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gcc" CommandArguments="cccp.i -o cccp.s " STDERR="cccp.err" STDIN="" STDOUT="cccp.out" TargetBasePath="./" TargetWorkPath="../../run/403.gcc/test/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/gcc" CommandArguments="cccp.i -o cccp.s " STDERR="cccp.err" STDIN="" STDOUT="cccp.out" TargetBasePath="../../" TargetWorkPath="run/403.gcc/test/input" />
 </Processes>
 </Emulator>
 </Session>

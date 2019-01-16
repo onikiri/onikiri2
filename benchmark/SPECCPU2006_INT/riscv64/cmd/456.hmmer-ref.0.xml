@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/456.hmmer/ref/'
-        Command='./bin/hmmer'
+        TargetBasePath='../../'
+        TargetWorkPath='run/456.hmmer/ref/'
+        Command='riscv64/bin/hmmer'
         CommandArguments='nph3.hmm swiss41'
         STDIN=''
       />

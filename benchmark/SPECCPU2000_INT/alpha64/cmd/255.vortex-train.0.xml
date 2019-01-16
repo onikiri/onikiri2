@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/255.vortex/train/'
-        Command='./bin/255.vortex.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/255.vortex/train/'
+        Command='alpha64/bin/255.vortex.alpha64'
         CommandArguments='lendian.raw'
         STDIN=''
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/252.eon/ref/'
-        Command='./bin/252.eon.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/252.eon/ref/'
+        Command='alpha64/bin/252.eon.alpha64'
         CommandArguments='chair.control.kajiya chair.camera chair.surfaces chair.kajiya.ppm ppm pixels_out.kajiya'
         STDIN=''
       />

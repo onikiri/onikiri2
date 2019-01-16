@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/453.povray/test/'
-        Command='./bin/povray'
+        TargetBasePath='../../'
+        TargetWorkPath='run/453.povray/test/'
+        Command='riscv32/bin/povray'
         CommandArguments='SPEC-benchmark-test.ini'
         STDIN=''
       />

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/454.calculix/train/'
-        Command='./bin/454.calculix.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/454.calculix/train/'
+        Command='alpha64/bin/454.calculix.alpha64'
         CommandArguments='-i  stairs'
         STDIN=''
       />

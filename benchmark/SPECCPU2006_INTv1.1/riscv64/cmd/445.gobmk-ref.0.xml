@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="../bin/gobmk" CommandArguments="--quiet --mode gtp " STDERR="13x13.err" STDIN="13x13.tst" STDOUT="13x13.out" TargetBasePath="./" TargetWorkPath="../../run/445.gobmk/ref/input" />
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/gobmk" CommandArguments="--quiet --mode gtp " STDERR="13x13.err" STDIN="13x13.tst" STDOUT="13x13.out" TargetBasePath="../../" TargetWorkPath="run/445.gobmk/ref/input" />
 </Processes>
 </Emulator>
 </Session>

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/191.fma3d/ref/'
-        Command='./bin/191.fma3d.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/191.fma3d/ref/'
+        Command='alpha64/bin/191.fma3d.alpha64'
         CommandArguments=''
         STDIN=''
       />

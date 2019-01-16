@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/433.milc/train/'
-        Command='./bin/433.milc.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/433.milc/train/'
+        Command='ppc64/bin/433.milc.ppc64'
         CommandArguments=''
         STDIN='su3imp.in'
       />

@@ -1086,6 +1086,9 @@
     <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64OpInfo.h">
       <Filter>src\Emu\RISCV64Linux</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\VirtualPath.h">
+      <Filter>src\Emu\Utility\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Main.cpp">
@@ -1570,6 +1573,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxSyscallConv.cpp">
       <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualPath.cpp">
+      <Filter>src\Emu\Utility\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/256.bzip2/ref/'
-        Command='./bin/256.bzip2.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/256.bzip2/ref/'
+        Command='alpha64/bin/256.bzip2.alpha64'
         CommandArguments='input.graphic 58'
         STDIN=''
       />

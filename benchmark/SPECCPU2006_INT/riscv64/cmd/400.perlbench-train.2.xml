@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/400.perlbench/train/'
-        Command='./bin/perlbench'
+        TargetBasePath='../../'
+        TargetWorkPath='run/400.perlbench/train/'
+        Command='riscv64/bin/perlbench'
         CommandArguments='-I. -I./lib scrabbl.pl'
         STDIN='scrabbl.in'
       />
