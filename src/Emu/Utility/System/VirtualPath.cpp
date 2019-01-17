@@ -114,9 +114,15 @@ String VirtualPath::CompleteInHost(const String& path) const
     String cPath = CanonicalizePath(CompletePath(path, m_virtualPath));
     regex p = regex(string("^") + m_guestRoot);
     if (cPath.regex_search(p)) {
-        cPath = cPath.regex_replace(p, m_hostRoot + "/");
+        // if "path" is a absolute path (includes m_guestRoot)
+        // A guest program can pass a full path
+        return cPath.regex_replace(p, m_hostRoot + "/");    
     }
-    return CompletePath(cPath, m_hostRoot);
+    else {
+        // If "path" is relative one, add m_hostRoot
+        return CompletePath(cPath, m_hostRoot);
+
+    }
 }
 
 String VirtualPath::ToGuest() const
@@ -129,6 +135,8 @@ String VirtualPath::CompleteInGuest(const String& path) const
     String cPath = CanonicalizePath(CompletePath(path, m_virtualPath));
     regex p = regex(string("^") + m_guestRoot);
     if (cPath.regex_search(p)) {
+        // if "path" is a absolute path (includes m_guestRoot)
+        // A guest program can pass a full path
         return path;
     }
     else {

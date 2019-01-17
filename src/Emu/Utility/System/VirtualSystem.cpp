@@ -459,7 +459,7 @@ int VirtualSystem::Unlink(const char* path)
 int VirtualSystem::Rename(const char* oldpath, const char* newpath)
 {
     return posix_rename(
-        m_cwd.CompleteInHost(oldpath).c_str(), 
+        m_cwd.CompleteInHost(oldpath).c_str(),
         m_cwd.CompleteInHost(newpath).c_str()
     );
 }
