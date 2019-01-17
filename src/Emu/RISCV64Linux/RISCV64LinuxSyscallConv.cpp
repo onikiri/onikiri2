@@ -558,6 +558,8 @@ int RISCV64LinuxSyscallConv::Get_CLK_TCK()
     return RISCV64_CLK_TCK;
 }
 
+// LinuxSyscallConv calls this method when open() is called
+// because these flags seem to depend on each architecture?
 u32 RISCV64LinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
 {
     static u32 host_open_flags[] =
@@ -570,9 +572,12 @@ u32 RISCV64LinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
         //O_NONBLOCK,
         //O_SYNC,
         POSIX_O_TRUNC,
+        POSIX_O_DIRECTORY,
     };
+
     // see bits/fcntl.h
-    static u32 ppc64_open_flags[] =
+    // or linux-headers/include/asm-generic/fcntl.h
+    static u32 riscv64_open_flags[] =
     {
         00, 01, 02, // O_RDONLY, O_WRONLY, O_RDWR,
         02000,  // O_APPEND
@@ -581,17 +586,20 @@ u32 RISCV64LinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
         //00400,    // O_NOCTTY
         //04000,    // O_NONBLOCK
         //010000,   // O_SYNC
-        01000,  // O_TRUNC
+        01000,      // O_TRUNC
+        00200000    // O_DIRECTORY	
     };
     static int open_flags_size = sizeof(host_open_flags)/sizeof(host_open_flags[0]);
 
     SyscallConstConvBitwise conv(
         host_open_flags,
-        ppc64_open_flags, 
-        open_flags_size);
+        riscv64_open_flags,
+        open_flags_size
+    );
 
     return conv.TargetToHost(flag);
 }
+
 void RISCV64LinuxSyscallConv::write_stat64(u64 dest, const HostStat &src)
 {
     static u32 host_st_mode[] =
