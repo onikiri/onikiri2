@@ -159,6 +159,14 @@ namespace Onikiri {
             {
                 return m_fdConv.HostToTarget(hostFD);
             }
+            const String& FDTargetToFileName(int targetFD)
+            {
+                return m_delayUnlinker.GetMapPath(targetFD);
+            }
+            bool IsFDTargetHostIO(int targetFD)
+            {
+                return m_delayUnlinker.GetMapPath(targetFD) == "HostIO";
+            }
 
             // 時刻の取得
             s64 GetTime();
