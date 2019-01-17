@@ -159,7 +159,7 @@ namespace Onikiri {
             {
                 return m_fdConv.HostToTarget(hostFD);
             }
-            const String& FDTargetToFileName(int targetFD)
+            String FDTargetToFileName(int targetFD)
             {
                 return m_delayUnlinker.GetMapPath(targetFD);
             }
