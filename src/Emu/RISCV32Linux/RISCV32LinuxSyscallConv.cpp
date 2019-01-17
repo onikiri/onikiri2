@@ -504,7 +504,7 @@ void RISCV32LinuxSyscallConv::syscall_fstat32(EmulatorUtility::OpEmulationState*
         （例えば mcf では if(st.st_rdev >> 4) で Copyright の書込み先を変えるようで、
         そのためにここの値が正しくないと実行パスが変わる）
         */
-        if(GetVirtualSystem()->GetDelayUnlinker()->GetMapPath((int)m_args[1]) == "HostIO"){
+        if (GetVirtualSystem()->IsFDTargetHostIO((int)m_args[1])) {
             st.st_rdev = 0x8801;
         }
 #endif

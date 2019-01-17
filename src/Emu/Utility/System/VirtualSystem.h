@@ -163,9 +163,13 @@ namespace Onikiri {
             {
                 return m_delayUnlinker.GetMapPath(targetFD);
             }
+            String GetHostIO_Name()
+            {
+                return "HostIO";
+            }
             bool IsFDTargetHostIO(int targetFD)
             {
-                return m_delayUnlinker.GetMapPath(targetFD) == "HostIO";
+                return m_delayUnlinker.GetMapPath(targetFD) == GetHostIO_Name();
             }
 
             // 時刻の取得

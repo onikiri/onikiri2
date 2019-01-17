@@ -515,8 +515,6 @@ void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
 
 void Linux64SyscallConv::syscall_getdents64(EmulatorUtility::OpEmulationState* opState)
 {
-    //if (GetVirtualSystem()->GetDelayUnlinker()->GetMapPath((int)m_args[1]) == "HostIO") {
-    //}
 }
 
 void Linux64SyscallConv::syscall_lseek(OpEmulationState* opState)
