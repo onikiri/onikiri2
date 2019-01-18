@@ -168,6 +168,10 @@ static struct {
     SYSCALLNAME(clone , 1, "npppp"),
     SYSCALLNAME(times, 1, "p"),
     SYSCALLNAME(getdents64, 1, "npn"),
+    SYSCALLNAME(getuid, 0, ""),
+    SYSCALLNAME(getgid, 0, ""),
+    SYSCALLNAME(geteuid, 0, ""),
+    SYSCALLNAME(getegid, 0, ""),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -196,13 +200,9 @@ static struct {
 
     SYSCALLNAME(gettid, 0, ""),
     SYSCALLNAME(setuid, 1, "x"),
-    SYSCALLNAME(getuid, 0, ""),
     //SYSCALLNAME(seteuid, 1, "x"),
     SYSCALLNAME(setgid, 1, "x"),
-    SYSCALLNAME(getgid, 0, ""),
     //SYSCALLNAME(setegid, 1, "x"),
-    SYSCALLNAME(geteuid, 0, ""),
-    SYSCALLNAME(getegid, 0, ""),
     //SYSCALLNAME(setreuid, 2),
     //SYSCALLNAME(setregid, 2),
     SYSCALLNAME(dup, 1, "n"),
