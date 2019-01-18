@@ -78,7 +78,7 @@ int FDConv::HostToTarget(int hostFD) const
     else
         return InvalidFD;
 }
-bool FDConv::AddMap(int targetFD, int hostFD)
+bool FDConv::AddMap(int targetFD, int hostFD, const String& hostFileName)
 {
     if (targetFD < 0 || hostFD < 0)
         return false;
@@ -88,6 +88,9 @@ bool FDConv::AddMap(int targetFD, int hostFD)
 
     m_FDTargetToHostTable[targetFD] = hostFD;
 
+    FileContext context;
+    context.hostFileName = hostFileName;
+    m_targetFD_ContextMap[targetFD] = context;
     return true;
 }
 
@@ -101,7 +104,7 @@ bool FDConv::RemoveMap(int targetFD)
         return false;
 
     m_FDTargetToHostTable[targetFD] = InvalidFD;
-
+    m_targetFD_ContextMap[targetFD] = FileContext();
     return true;
 }
 
@@ -119,6 +122,14 @@ int FDConv::GetFirstFreeFD()
         ExtendFDMap();
         return result;
     }
+}
+
+FDConv::FileContext& FDConv::GetContext(int targetFD)
+{
+    if (m_targetFD_ContextMap[targetFD].hostFileName == "") {
+        THROW_RUNTIME_ERROR("Invalid target file descriptor [%d]", targetFD);
+    }
+    return m_targetFD_ContextMap[targetFD];
 }
 
 // m_FDTargetToHostTable のサイズを大きくする
@@ -163,12 +174,6 @@ bool DelayUnlinker::RemoveMap(int targetFD)
     m_targetFDToPathTable[targetFD] = "";
 
     return true;
-}
-
-string DelayUnlinker::GetMapPath(int targetFD)
-{
-    ASSERT( m_targetFDToPathTable[targetFD] != "", "Invalid map path." )
-    return m_targetFDToPathTable[targetFD];
 }
 
 bool DelayUnlinker::AddUnlinkPath(string path)
@@ -248,9 +253,9 @@ void VirtualSystem::SetCommandFileName(const VirtualPath& absCmdFileName)
     m_absCmdFileName = absCmdFileName;
 }
 
-bool VirtualSystem::AddFDMap(int targetFD, int hostFD, bool autoclose)
+bool VirtualSystem::AddFDMap(int targetFD, int hostFD, const String& hostFileName, bool autoclose)
 {
-    if (!m_fdConv.AddMap(targetFD, hostFD))
+    if (!m_fdConv.AddMap(targetFD, hostFD, hostFileName))
         return false;
 
     if (autoclose)
@@ -319,20 +324,53 @@ int VirtualSystem::GetEGID()
     return posix_getegid();
 }
 
+// Called from Open, and read stream is used in GetDents 
+void VirtualSystem::ReadDirectoryEntries(int targetFD, const char* guestFileName)
+{
+    FDConv::FileContext* fileContext = &m_fdConv.GetContext(targetFD);
+    String hostFileName = fileContext->hostFileName;
+
+    // Enumerate files in an opened directory
+    namespace fs = boost::filesystem;
+    const fs::path path(hostFileName.c_str());
+    for (const auto& e : boost::make_iterator_range(fs::directory_iterator(path), {})) {
+        HostDirent dirent;
+        dirent.isDir = fs::is_directory(e);
+        dirent.name = e.path().filename().string();
+
+        // Windows stat always returns 0 for "ino", but 
+        // some guest programs recognize "ino 0" as a invalid file,
+        // so a dummy number is used
+        dirent.ino = 1;
+
+        //HostStat stat;
+        //Stat(String(guestFileName) + "/" + dirent.name, &stat);
+        //dirent.ino = stat.st_ino;
+
+        fileContext->dirStream.push_back(dirent);
+    }
+}
+
 int VirtualSystem::Open(const char* filename, int oflag)
 {
-    int hostFD = posix_open(GetHostPath(filename).c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
+    String hostFileName = GetHostPath(filename);
+    int hostFD = posix_open(hostFileName.c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
 
     // FDの対応表に追加
-    if (hostFD != -1) {
-        int targetFD = m_fdConv.GetFirstFreeFD();
-        AddFDMap(targetFD, hostFD, true);
-        m_delayUnlinker.AddMap(targetFD, GetHostPath(filename));
-        return targetFD;
-    }
-    else {
+    if (hostFD == -1) {
         return -1;
     }
+    int targetFD = m_fdConv.GetFirstFreeFD();
+    AddFDMap(targetFD, hostFD, hostFileName, true);
+    m_delayUnlinker.AddMap(targetFD, hostFileName);
+
+
+    // Open a directory stream.
+    // Read directory entries 
+    if (oflag & POSIX_O_DIRECTORY) {
+        ReadDirectoryEntries(targetFD, filename);
+    }
+    return targetFD;
 }
 
 int VirtualSystem::Dup(int fd)
@@ -342,8 +380,9 @@ int VirtualSystem::Dup(int fd)
     // FDの対応表に追加
     if (dupHostFD != -1) {
         int targetFD = m_fdConv.GetFirstFreeFD();
-        AddFDMap(targetFD, dupHostFD, true);
-        m_delayUnlinker.AddMap(targetFD, m_delayUnlinker.GetMapPath(fd));
+        String hostFileName = m_fdConv.GetContext(fd).hostFileName;
+        AddFDMap(targetFD, dupHostFD, hostFileName, true);
+        m_delayUnlinker.AddMap(targetFD, hostFileName);
         return targetFD;
     }
     else {
@@ -379,11 +418,12 @@ int VirtualSystem::Close(int fd)
         // closeに成功したら自動クローズリストから除外
         RemoveAutoCloseFD(hostFD);
 
+        String hostFileName = m_fdConv.GetContext(fd).hostFileName;
         m_fdConv.RemoveMap(fd);
 #ifdef HOST_IS_WINDOWS
         if( m_delayUnlinker.IfUnlinkable(fd) ){
-            m_delayUnlinker.RemoveUnlinkPath(m_delayUnlinker.GetMapPath(fd));
-            posix_unlink(m_delayUnlinker.GetMapPath(fd).c_str());
+            m_delayUnlinker.RemoveUnlinkPath(hostFileName);
+            posix_unlink(hostFileName.c_str());
         }
 #endif
         m_delayUnlinker.RemoveMap(fd);
@@ -482,6 +522,30 @@ int VirtualSystem::MkDir(const char* path, int mode)
         return 0;
     else 
         return -1;
+}
+
+// Returns a single HostDirent entry from targetFD
+// getdents64 cannot be available in Windows/Cygwin directly,
+// so this system call is emulated in software.
+// Return:
+//   -1: error
+//    1: success 
+//    0: reach to the end of directory stream
+// A stream is loaded in ReadDirectoryEntries called from Open
+int VirtualSystem::GetDents(int targetFD, HostDirent* dirent)
+{
+    FDConv::FileContext* context = &m_fdConv.GetContext(targetFD);
+    if (context->hostFileName == "") {
+        return -1;
+    }
+
+    if (context->dirStream.size() == 0) {
+        return 0;
+    }
+
+    *dirent = context->dirStream.front();
+    context->dirStream.pop_front();
+    return 1;
 }
 
 String VirtualSystem::GetHostPath(const char* targetPath)

@@ -776,7 +776,17 @@ namespace Onikiri {
 
                 u64 error = (u64)syscallConv->GetResult(EmulatorUtility::SyscallConvIF::ErrorFlagIndex);
                 u64 val = (u64)syscallConv->GetResult(EmulatorUtility::SyscallConvIF::RetValueIndex);
-                DstOperand<0>::SetOperand(opState, error ? (u64)-1 : val);
+                
+                // When error occurs, an error number is coded into a register 
+                // in the range [-4095, -1] in RISCV linux
+                if (error) {
+                    if (val == 0)
+                        val = (u64)-1;
+                    else
+                        val = (u64)(-((s64)val));
+                }
+
+                DstOperand<0>::SetOperand(opState, val);
             }
 
 

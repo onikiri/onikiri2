@@ -39,11 +39,34 @@ namespace Onikiri {
     namespace EmulatorUtility {
         typedef POSIX::posix_struct_stat HostStat;
 
+        // For GetDents
+        struct HostDirent
+        {
+            String  name;   // name
+            u64     ino;    // i-node number
+            bool    isDir;  // This entry is a directory or not
+            HostDirent()
+            {
+                ino = 0;
+                isDir = false;
+            }
+        };
+
         // targetとhost間のFD変換を行うクラス
         class FDConv
         {
         public:
             static const int InvalidFD = -1;
+
+            struct FileContext
+            {
+                String hostFileName;
+                std::deque<HostDirent> dirStream;
+                FileContext()
+                {
+                    hostFileName = "";
+                }
+            };
 
             FDConv();
             ~FDConv();
@@ -53,19 +76,23 @@ namespace Onikiri {
             int HostToTarget(int hostFD) const;
 
             // FDの対応を追加
-            bool AddMap(int targetFD, int hostFD);
+            bool AddMap(int targetFD, int hostFD, const String& hostFileName);
 
             // FDの対応を削除
             bool RemoveMap(int targetFD);
 
             // 空いている target のFDを返す
             int GetFirstFreeFD();
+
+            // Get file context from target FD
+            FileContext& GetContext(int targetFD);
         private:
             void ExtendFDMap();
             void ExtendFDMap(size_t size);
 
             // targetのfdをhostのfdに変換する表．hostのfdが割り当てられていなければInvalidFDが入っている
             std::vector<int> m_FDTargetToHostTable;
+            std::map<int, FileContext> m_targetFD_ContextMap;
         };
         
         // プロセスが open 中のファイルを unlink したときの挙動を
@@ -81,8 +108,6 @@ namespace Onikiri {
             bool AddMap(int targetFD, std::string path);
             // TargetFD<>path の対応を削除
             bool RemoveMap(int targetFD);
-            // TargetFD<>path の対応するパスを取得
-            std::string GetMapPath(int targetFD);
             // 削除候補の path を追加
             bool AddUnlinkPath(std::string path);
             // 削除候補の path を Unlink するかどうか
@@ -106,7 +131,7 @@ namespace Onikiri {
             ~VirtualSystem();
 
             // VirtualSystemでOpenしていないファイルを明示的にFDの変換表に追加する(stdin, stdout, stderr等)
-            bool AddFDMap(int targetFD, int hostFD, bool autoclose = false);
+            bool AddFDMap(int targetFD, int hostFD, const String& hostFileName, bool autoclose = false);
             // ターゲットの作業ディレクトリを設定する
             void SetInitialWorkingDir(const VirtualPath& dir);
 
@@ -150,6 +175,8 @@ namespace Onikiri {
 
             int MkDir(const char* path, int mode);
 
+            int GetDents(int targetFD, HostDirent* dirent);
+
             // targetのFDとhostのFDの変換を行う
             int FDTargetToHost(int targetFD) const
             {
@@ -158,6 +185,18 @@ namespace Onikiri {
             int FDHostToTarget(int hostFD) const
             {
                 return m_fdConv.HostToTarget(hostFD);
+            }
+            String FDTargetToFileName(int targetFD)
+            {
+                return m_fdConv.GetContext(targetFD).hostFileName;
+            }
+            String GetHostIO_Name()
+            {
+                return "HostIO";
+            }
+            bool IsFDTargetHostIO(int targetFD)
+            {
+                return m_fdConv.GetContext(targetFD).hostFileName == GetHostIO_Name();
             }
 
             // 時刻の取得
@@ -184,6 +223,7 @@ namespace Onikiri {
             String GetHostPath(const char* targetPath);
             void AddAutoCloseFD(int fd);
             void RemoveAutoCloseFD(int fd);
+            void ReadDirectoryEntries(int fd, const char* filename);
 
             FDConv m_fdConv;
             // デストラクト時に自動でcloseするfd

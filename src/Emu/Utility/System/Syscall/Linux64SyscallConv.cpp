@@ -161,6 +161,13 @@ namespace {
         //u8 linux64_f[20 - 2 * sizeof(u64) - sizeof(u32)];   // padding
     };
 
+    struct linux64_dirent {
+        u64 d_ino;
+        s64 d_off;
+        u16 d_reclen;
+        u8  d_type;   
+        char d_name[256];
+    };
 
     //const int LINUX_F_DUPFD = 0;
     const int LINUX_F_GETFD = 1;
@@ -178,6 +185,9 @@ namespace {
     const int LINUX_AT_FDCWD = -100;
     const int LINUX_AT_SYMLINK_NOFOLLO = 0x100;
     const int LINUX_AT_REMOVEDIR = 0x200;
+
+    const int LINUX_DT_DIR = 4;
+    const int LINUX_DT_REG = 8;
 }
 
 
@@ -506,8 +516,39 @@ void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
     }
 }
 
+// getdents64 cannot be available in Windows/Cygwin directly,
+// so this system call is emulated in software.
 void Linux64SyscallConv::syscall_getdents64(EmulatorUtility::OpEmulationState* opState)
 {
+    int fd = (int)m_args[1];
+    u64 maxSize = m_args[3];
+    bool isBigEndian = GetMemorySystem()->IsBigEndian();
+
+    TargetBuffer buf(GetMemorySystem(), m_args[2], maxSize);
+    linux64_dirent* dirent = static_cast<linux64_dirent*>(buf.Get());
+    size_t size = 0;
+
+    while (size + sizeof(linux64_dirent) <= maxSize) {
+        HostDirent hostDirEnt;
+        int ret = GetVirtualSystem()->GetDents(fd, &hostDirEnt);
+        if (ret == -1) {
+            SetResult(false, 1);    // 1: Operation not permitted
+            return;
+        }
+        if (ret == 0) { // Reach to the end of a stream
+            break;
+        }
+
+        dirent->d_ino = hostDirEnt.ino;
+        dirent->d_reclen = EndianHostToSpecified((u16)sizeof(linux64_dirent), isBigEndian);
+        dirent->d_off = EndianHostToSpecified((s64)size, isBigEndian);
+        dirent->d_type = hostDirEnt.isDir ? LINUX_DT_DIR : LINUX_DT_REG;
+        strncpy(dirent->d_name, hostDirEnt.name.c_str(), sizeof(dirent->d_name));
+
+        size += sizeof(linux64_dirent);
+        dirent++;
+    }
+    SetResult(true, (u64)size);
 }
 
 void Linux64SyscallConv::syscall_lseek(OpEmulationState* opState)
@@ -538,7 +579,7 @@ void Linux64SyscallConv::syscall_fstat64(OpEmulationState* opState)
         （例えば mcf では if(st.st_rdev >> 4) で Copyright の書込み先を変えるようで、
         そのためにここの値が正しくないと実行パスが変わる）
         */
-        if(GetVirtualSystem()->GetDelayUnlinker()->GetMapPath((int)m_args[1]) == "HostIO"){
+        if(GetVirtualSystem()->IsFDTargetHostIO((int)m_args[1])){
             st.st_rdev = 0x8801;
         }
 #endif
