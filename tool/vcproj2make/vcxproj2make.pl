@@ -1,5 +1,5 @@
 #
-# Visual Studio 2010/2012 Project File Converter
+# Visual Studio 2010/2012/2015/2017 Project File Converter
 #
 
 use strict;
@@ -283,6 +283,16 @@ sub OutputMake($$$$$)
 			$des .= " \\\n\t-o a.out";
 		}
 		$des .= "\n";
+		
+		# output binary
+		$des .= "OUTPUT_BINARY = ";
+		if( exists($platform->{'-OutputFile'}) ){
+			$des .= " \\\n\t".$platform->{'-OutputFile'};
+		}
+		else{
+			$des .= " \\\n\ta.out";
+		}
+		$des .= "\n";
 
 		# clean
 		$des .= "CLEARFILTER = ";
@@ -400,7 +410,9 @@ sub OutputMake($$$$$)
 	$des .= "\n\n";
 
 	# link
-	$des .= 'all: $(WORK_DIR) $(CUSTOMOUTPUTS) $(OBJS)';
+	$des .= 'all: $(OUTPUT_BINARY)';
+	$des .= "\n\n";
+	$des .= '$(OUTPUT_BINARY): $(WORK_DIR) $(CUSTOMOUTPUTS) $(OBJS)';
 	$des .= "\n\t".'$(CXX) $(OBJS) $(LDFLAGS)';
 	$des .= "\n\n";
 
@@ -467,8 +479,8 @@ sub OutputMake($$$$$)
 
 sub main
 {
-	print "Visual Studio 2010/2012 project file converter.\n";
-	print "2012/10/24 Ryota Shioya\n\n";
+	print "Visual Studio 2010/2012/2015/2017 project file converter.\n";
+	print "2019/01/18 Ryota Shioya\n\n";
 
 	my $cfgFileName = $ARGV[0];
 	my $file = new IO::File;
