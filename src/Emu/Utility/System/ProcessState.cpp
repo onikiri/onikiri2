@@ -286,8 +286,9 @@ void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
     for (int i = 0; i < 3; i ++) {
         if (std_filename[i].empty()) {
             // 入出力として指定されたファイル名が空ならばホストの入出力を使用する
-            m_virtualSystem->AddFDMap(std_fd[i], std_fd[i], false);
-            m_virtualSystem->GetDelayUnlinker()->AddMap(std_fd[i], "HostIO");
+            String hostIO_Name = m_virtualSystem->GetHostIO_Name();
+            m_virtualSystem->AddFDMap(std_fd[i], std_fd[i], hostIO_Name, false);
+            m_virtualSystem->GetDelayUnlinker()->AddMap(std_fd[i], hostIO_Name);
         }
         else {
             VirtualPath targetBase = pcp.GetTargetBasePath();
@@ -299,7 +300,7 @@ void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
                 THROW_RUNTIME_ERROR("Cannot open file '%s'.", filename.c_str());
             }
             m_autoCloseFile.push_back(fp);
-            m_virtualSystem->AddFDMap(std_fd[i], posix_fileno(fp), false);
+            m_virtualSystem->AddFDMap(std_fd[i], posix_fileno(fp), filename, false);
             m_virtualSystem->GetDelayUnlinker()->AddMap(std_fd[i], filename);
         }
     }

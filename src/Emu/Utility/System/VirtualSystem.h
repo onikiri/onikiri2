@@ -45,6 +45,16 @@ namespace Onikiri {
         public:
             static const int InvalidFD = -1;
 
+            struct FileContext
+            {
+                String hostFileName;
+
+                FileContext()
+                {
+                    hostFileName = "";
+                }
+            };
+
             FDConv();
             ~FDConv();
 
@@ -53,7 +63,7 @@ namespace Onikiri {
             int HostToTarget(int hostFD) const;
 
             // FDの対応を追加
-            bool AddMap(int targetFD, int hostFD);
+            bool AddMap(int targetFD, int hostFD, const String& hostFileName);
 
             // FDの対応を削除
             bool RemoveMap(int targetFD);
@@ -66,6 +76,7 @@ namespace Onikiri {
 
             // targetのfdをhostのfdに変換する表．hostのfdが割り当てられていなければInvalidFDが入っている
             std::vector<int> m_FDTargetToHostTable;
+            std::map<int, FileContext> m_targetFD_ContextMap;
         };
         
         // プロセスが open 中のファイルを unlink したときの挙動を
@@ -106,7 +117,7 @@ namespace Onikiri {
             ~VirtualSystem();
 
             // VirtualSystemでOpenしていないファイルを明示的にFDの変換表に追加する(stdin, stdout, stderr等)
-            bool AddFDMap(int targetFD, int hostFD, bool autoclose = false);
+            bool AddFDMap(int targetFD, int hostFD, const String& hostFileName, bool autoclose = false);
             // ターゲットの作業ディレクトリを設定する
             void SetInitialWorkingDir(const VirtualPath& dir);
 

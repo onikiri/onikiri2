@@ -78,7 +78,7 @@ int FDConv::HostToTarget(int hostFD) const
     else
         return InvalidFD;
 }
-bool FDConv::AddMap(int targetFD, int hostFD)
+bool FDConv::AddMap(int targetFD, int hostFD, const String& hostFileName)
 {
     if (targetFD < 0 || hostFD < 0)
         return false;
@@ -88,6 +88,9 @@ bool FDConv::AddMap(int targetFD, int hostFD)
 
     m_FDTargetToHostTable[targetFD] = hostFD;
 
+    FileContext context;
+    context.hostFileName = hostFileName;
+    m_targetFD_ContextMap[targetFD] = context;
     return true;
 }
 
@@ -101,7 +104,7 @@ bool FDConv::RemoveMap(int targetFD)
         return false;
 
     m_FDTargetToHostTable[targetFD] = InvalidFD;
-
+    m_targetFD_ContextMap[targetFD] = FileContext();
     return true;
 }
 
@@ -248,9 +251,9 @@ void VirtualSystem::SetCommandFileName(const VirtualPath& absCmdFileName)
     m_absCmdFileName = absCmdFileName;
 }
 
-bool VirtualSystem::AddFDMap(int targetFD, int hostFD, bool autoclose)
+bool VirtualSystem::AddFDMap(int targetFD, int hostFD, const String& hostFileName, bool autoclose)
 {
-    if (!m_fdConv.AddMap(targetFD, hostFD))
+    if (!m_fdConv.AddMap(targetFD, hostFD, hostFileName))
         return false;
 
     if (autoclose)
@@ -321,13 +324,14 @@ int VirtualSystem::GetEGID()
 
 int VirtualSystem::Open(const char* filename, int oflag)
 {
-    int hostFD = posix_open(GetHostPath(filename).c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
+    String hostFileName = GetHostPath(filename);
+    int hostFD = posix_open(hostFileName.c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
 
     // FDの対応表に追加
     if (hostFD != -1) {
         int targetFD = m_fdConv.GetFirstFreeFD();
-        AddFDMap(targetFD, hostFD, true);
-        m_delayUnlinker.AddMap(targetFD, GetHostPath(filename));
+        AddFDMap(targetFD, hostFD, hostFileName, true);
+        m_delayUnlinker.AddMap(targetFD, hostFileName);
         return targetFD;
     }
     else {
@@ -342,8 +346,9 @@ int VirtualSystem::Dup(int fd)
     // FDの対応表に追加
     if (dupHostFD != -1) {
         int targetFD = m_fdConv.GetFirstFreeFD();
-        AddFDMap(targetFD, dupHostFD, true);
-        m_delayUnlinker.AddMap(targetFD, m_delayUnlinker.GetMapPath(fd));
+        String hostFileName = m_delayUnlinker.GetMapPath(fd);
+        AddFDMap(targetFD, dupHostFD, hostFileName, true);
+        m_delayUnlinker.AddMap(targetFD, hostFileName);
         return targetFD;
     }
     else {
