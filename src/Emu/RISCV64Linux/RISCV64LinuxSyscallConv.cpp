@@ -165,14 +165,15 @@ static struct {
     SYSCALLNAME(prlimit64, 4, "nnpp"),
     SYSCALLNAME(chdir, 1, "s"),
     SYSCALLNAME(pipe2, 1, "pn"),
-    SYSCALLNAME(clone , 1, "npppp"),
+    SYSCALLNAME(clone , 5, "npppp"),
     SYSCALLNAME(times, 1, "p"),
-    SYSCALLNAME(getdents64, 1, "npn"),
+    SYSCALLNAME(getdents64, 3, "npn"),
     SYSCALLNAME(getuid, 0, ""),
     SYSCALLNAME(getgid, 0, ""),
     SYSCALLNAME(geteuid, 0, ""),
     SYSCALLNAME(getegid, 0, ""),
     SYSCALLNAME(getpid, 0, ""),
+    SYSCALLNAME(mkdirat, 3, "nsx"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -410,6 +411,9 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         syscall_ignore(opState);
         break;
 
+    case syscall_id_mkdirat:
+        syscall_mkdirat(opState);
+        break;
     /*
     case syscall_id_readv:
         syscall_readv(opState);
