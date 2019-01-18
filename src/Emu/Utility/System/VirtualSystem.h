@@ -70,6 +70,9 @@ namespace Onikiri {
 
             // 空いている target のFDを返す
             int GetFirstFreeFD();
+
+            // Get file context from target FD
+            FileContext& GetContext(int targetFD);
         private:
             void ExtendFDMap();
             void ExtendFDMap(size_t size);
@@ -92,8 +95,6 @@ namespace Onikiri {
             bool AddMap(int targetFD, std::string path);
             // TargetFD<>path の対応を削除
             bool RemoveMap(int targetFD);
-            // TargetFD<>path の対応するパスを取得
-            std::string GetMapPath(int targetFD);
             // 削除候補の path を追加
             bool AddUnlinkPath(std::string path);
             // 削除候補の path を Unlink するかどうか
@@ -172,7 +173,7 @@ namespace Onikiri {
             }
             String FDTargetToFileName(int targetFD)
             {
-                return m_delayUnlinker.GetMapPath(targetFD);
+                return m_fdConv.GetContext(targetFD).hostFileName;
             }
             String GetHostIO_Name()
             {
@@ -180,7 +181,7 @@ namespace Onikiri {
             }
             bool IsFDTargetHostIO(int targetFD)
             {
-                return m_delayUnlinker.GetMapPath(targetFD) == GetHostIO_Name();
+                return m_fdConv.GetContext(targetFD).hostFileName == GetHostIO_Name();
             }
 
             // 時刻の取得

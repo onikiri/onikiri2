@@ -124,6 +124,14 @@ int FDConv::GetFirstFreeFD()
     }
 }
 
+FDConv::FileContext& FDConv::GetContext(int targetFD)
+{
+    if (m_targetFD_ContextMap[targetFD].hostFileName == "") {
+        THROW_RUNTIME_ERROR("Invalid target file descriptor [%d]", targetFD);
+    }
+    return m_targetFD_ContextMap[targetFD];
+}
+
 // m_FDTargetToHostTable のサイズを大きくする
 void FDConv::ExtendFDMap()
 {
@@ -166,12 +174,6 @@ bool DelayUnlinker::RemoveMap(int targetFD)
     m_targetFDToPathTable[targetFD] = "";
 
     return true;
-}
-
-string DelayUnlinker::GetMapPath(int targetFD)
-{
-    ASSERT( m_targetFDToPathTable[targetFD] != "", "Invalid map path." )
-    return m_targetFDToPathTable[targetFD];
 }
 
 bool DelayUnlinker::AddUnlinkPath(string path)
@@ -346,7 +348,7 @@ int VirtualSystem::Dup(int fd)
     // FDの対応表に追加
     if (dupHostFD != -1) {
         int targetFD = m_fdConv.GetFirstFreeFD();
-        String hostFileName = m_delayUnlinker.GetMapPath(fd);
+        String hostFileName = m_fdConv.GetContext(fd).hostFileName;
         AddFDMap(targetFD, dupHostFD, hostFileName, true);
         m_delayUnlinker.AddMap(targetFD, hostFileName);
         return targetFD;
@@ -384,11 +386,12 @@ int VirtualSystem::Close(int fd)
         // closeに成功したら自動クローズリストから除外
         RemoveAutoCloseFD(hostFD);
 
+        String hostFileName = m_fdConv.GetContext(fd).hostFileName;
         m_fdConv.RemoveMap(fd);
 #ifdef HOST_IS_WINDOWS
         if( m_delayUnlinker.IfUnlinkable(fd) ){
-            m_delayUnlinker.RemoveUnlinkPath(m_delayUnlinker.GetMapPath(fd));
-            posix_unlink(m_delayUnlinker.GetMapPath(fd).c_str());
+            m_delayUnlinker.RemoveUnlinkPath(hostFileName);
+            posix_unlink(hostFileName.c_str());
         }
 #endif
         m_delayUnlinker.RemoveMap(fd);
