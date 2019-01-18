@@ -172,6 +172,7 @@ static struct {
     SYSCALLNAME(getgid, 0, ""),
     SYSCALLNAME(geteuid, 0, ""),
     SYSCALLNAME(getegid, 0, ""),
+    SYSCALLNAME(getpid, 0, ""),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
