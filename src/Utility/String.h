@@ -130,7 +130,8 @@ namespace Onikiri
 
         // Regular expression support
         bool regex_search(
-            std::smatch match, const std::regex& re, 
+            std::smatch match, 
+            const std::regex& re, 
             std::regex_constants::match_flag_type flags = std::regex_constants::match_default
         ) const {
             return std::regex_search(*this, match, re, flags);
@@ -144,9 +145,9 @@ namespace Onikiri
             return std::regex_search(*this, re, flags);
         }
 
-        template <typename T>
         String regex_replace(
-            const std::regex& re, const T& fmt, 
+            const std::regex& re, 
+            const String& fmt, 
             std::regex_constants::match_flag_type flags = std::regex_constants::match_default
         ) const {
             return std::regex_replace(*this, re, fmt, flags);
