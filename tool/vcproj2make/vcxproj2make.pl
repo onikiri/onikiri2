@@ -14,16 +14,16 @@ use Data::Dumper;
 
 sub ParseXML($)
 {
-	my $input = shift;
-	
-	if(!(-e $input)){
-		print "error: '$input' is not found.\n";
-		return undef;
-	}
-	
-	my $xml  = XML::TreePP->new();
-	my $hash = $xml->parsefile( $input );
-	return $hash;
+    my $input = shift;
+    
+    if(!(-e $input)){
+        print "error: '$input' is not found.\n";
+        return undef;
+    }
+    
+    my $xml  = XML::TreePP->new();
+    my $hash = $xml->parsefile( $input );
+    return $hash;
 }
 
 #
@@ -31,19 +31,19 @@ sub ParseXML($)
 #
 sub NodeToList($)
 {
-	my $node = shift;
-	my $ret = [];
-	
-	if(ref($node) eq 'ARRAY'){
-		foreach my $i ( @{$node} ){
-			push(@{$ret}, $i);
-		}
-	}
-	else{
-		push(@{$ret}, $node);
-	}
-	
-	return $ret;
+    my $node = shift;
+    my $ret = [];
+    
+    if(ref($node) eq 'ARRAY'){
+        foreach my $i ( @{$node} ){
+            push(@{$ret}, $i);
+        }
+    }
+    else{
+        push(@{$ret}, $node);
+    }
+    
+    return $ret;
 }
 
 #
@@ -52,36 +52,36 @@ sub NodeToList($)
 
 sub GetChildText( $ )
 {
-	my $node = shift;
+    my $node = shift;
 
-	if(ref($node) eq 'HASH'){
-		return $node->{'#text'};
-	}
-	else{
-		return $node;
-	}
+    if(ref($node) eq 'HASH'){
+        return $node->{'#text'};
+    }
+    else{
+        return $node;
+    }
 }
 
 sub FindMatchNodesFromList($$$)
 {
-	my $list    = shift;
-	my $attr    = shift;
-	my $pattern = shift;
-	
-	if(ref($list) ne 'ARRAY'){
-		return undef;
-	}
+    my $list    = shift;
+    my $attr    = shift;
+    my $pattern = shift;
+    
+    if(ref($list) ne 'ARRAY'){
+        return undef;
+    }
 
-	# Escape '|' character 
-	$pattern =~ s/\|/\\\|/g;
-	
-	my @ret;
-	foreach my $i ( @{$list} ){
-		if($i->{$attr} =~ /$pattern/){
-			push( @ret, $i );
-		}
-	}
-	return \@ret;
+    # Escape '|' character 
+    $pattern =~ s/\|/\\\|/g;
+    
+    my @ret;
+    foreach my $i ( @{$list} ){
+        if($i->{$attr} =~ /$pattern/){
+            push( @ret, $i );
+        }
+    }
+    return \@ret;
 }
 
 #
@@ -90,26 +90,26 @@ sub FindMatchNodesFromList($$$)
 #
 sub EnumerateFiles
 {
-	my $node = shift;
-	my $list = {};
-	
-	
-	my @itemGroupList = @{ NodeToList( $node->{'ItemGroup'} ) };
-	
-	my @clCompileList;
-	foreach my $itemGroup ( @itemGroupList ){
-		if( exists( $itemGroup->{'ClCompile'} ) ){
-			push( @clCompileList, @{ NodeToList( $itemGroup->{'ClCompile'} ) } );
-		}
-	}
+    my $node = shift;
+    my $list = {};
+    
+    
+    my @itemGroupList = @{ NodeToList( $node->{'ItemGroup'} ) };
+    
+    my @clCompileList;
+    foreach my $itemGroup ( @itemGroupList ){
+        if( exists( $itemGroup->{'ClCompile'} ) ){
+            push( @clCompileList, @{ NodeToList( $itemGroup->{'ClCompile'} ) } );
+        }
+    }
 
-	foreach my $clCompile ( @clCompileList ){
-		my $file = $clCompile->{'-Include'};
-		$file =~ s/\\/\//g;
-		$list->{ $file } = $clCompile;
-	}
+    foreach my $clCompile ( @clCompileList ){
+        my $file = $clCompile->{'-Include'};
+        $file =~ s/\\/\//g;
+        $list->{ $file } = $clCompile;
+    }
 
-	return $list;
+    return $list;
 }
 
 #
@@ -118,31 +118,31 @@ sub EnumerateFiles
 
 sub GetDefaultCompilerConfiguration($$)
 {
-	my $vcproj = shift;
-	my $cnvCfg = shift;
-	
-	my $srcCfgName = $cnvCfg->{'MakeConfiguration'}->{'-SourceConfiguration'};
+    my $vcproj = shift;
+    my $cnvCfg = shift;
+    
+    my $srcCfgName = $cnvCfg->{'MakeConfiguration'}->{'-SourceConfiguration'};
 
-	my $cfgList = 
-		NodeToList( 
-			$vcproj->{'Project'}->{'ItemDefinitionGroup'}
-		);
-	my $targetCfg  = FindMatchNodesFromList( $cfgList, '-Condition', $srcCfgName );
+    my $cfgList = 
+        NodeToList( 
+            $vcproj->{'Project'}->{'ItemDefinitionGroup'}
+        );
+    my $targetCfg  = FindMatchNodesFromList( $cfgList, '-Condition', $srcCfgName );
 
-	
-	if( $#{$targetCfg} != 0 ){
-		print("Source configuration name '$srcCfgName' is not found.\n");
-	}
+    
+    if( $#{$targetCfg} != 0 ){
+        print("Source configuration name '$srcCfgName' is not found.\n");
+    }
 
-	if( !exists($targetCfg->[0]->{'ClCompile'}) ){
-		print(
-			"Extracting default compiler configuration failed. ".
-			"Proper 'Project/ItemDefinitionGroup/ClCompile' does not exist.\n"
-		);
-	}
-	
-	my $clCompile = $targetCfg->[0]->{'ClCompile'};
-	return $clCompile;
+    if( !exists($targetCfg->[0]->{'ClCompile'}) ){
+        print(
+            "Extracting default compiler configuration failed. ".
+            "Proper 'Project/ItemDefinitionGroup/ClCompile' does not exist.\n"
+        );
+    }
+    
+    my $clCompile = $targetCfg->[0]->{'ClCompile'};
+    return $clCompile;
 }
 
 #
@@ -151,351 +151,351 @@ sub GetDefaultCompilerConfiguration($$)
 #
 sub GetEffectiveCompilerConfiguration($$$$)
 {
-	my $src = shift;
-	my $srcCfg = shift;
-	my $defCfg = shift;
-	my $cnvCfg = shift;
+    my $src = shift;
+    my $srcCfg = shift;
+    my $defCfg = shift;
+    my $cnvCfg = shift;
 
-	# A target configuration name (ex. Release|Win32) is set.
-	my $srcCfgName = $cnvCfg->{'MakeConfiguration'}->{'-SourceConfiguration'};
+    # A target configuration name (ex. Release|Win32) is set.
+    my $srcCfgName = $cnvCfg->{'MakeConfiguration'}->{'-SourceConfiguration'};
 
-	# Initially, default configurations are copied to returned value.
-	my %ret = %{$defCfg};
-	
-	# Each configuration for each file.
-	my $fileCfg = $srcCfg->{$src} ;
-	
-	# $fileCfg corresponds to the following data structure.
-	#
-	# <ClCompile Include="...">
+    # Initially, default configurations are copied to returned value.
+    my %ret = %{$defCfg};
+    
+    # Each configuration for each file.
+    my $fileCfg = $srcCfg->{$src} ;
+    
+    # $fileCfg corresponds to the following data structure.
+    #
+    # <ClCompile Include="...">
     #   <ForcedIncludeFiles Condition="...'Debug|Win32'...">pch.h;...
     #   <ForcedIncludeFiles Condition="...'FastDebug|Win32'...">pch.h;...
-	#   ...
-	#
-	#
-	foreach my $cfgName ( keys( %{$fileCfg} )){
-		my $fileCfgList = NodeToList( $fileCfg->{$cfgName} );
+    #   ...
+    #
+    #
+    foreach my $cfgName ( keys( %{$fileCfg} )){
+        my $fileCfgList = NodeToList( $fileCfg->{$cfgName} );
 
-		if( $#{$fileCfgList} == 0 ){
-			
-		}
-		else{
-			my $list = FindMatchNodesFromList( $fileCfgList, '-Condition', $srcCfgName );
-			if( $#{$list} > 0 ){
-				print "There are multiple nodes that have same 'Condition'. The first one is chosen.\n";
-			}
-			
-			# A matched configuration is overrided.
-			if( $#{$list} == 0 ){
-				$ret{ $cfgName } = $list->[0];
-			}
-		}
-	}
-	
-	return \%ret;
+        if( $#{$fileCfgList} == 0 ){
+            
+        }
+        else{
+            my $list = FindMatchNodesFromList( $fileCfgList, '-Condition', $srcCfgName );
+            if( $#{$list} > 0 ){
+                print "There are multiple nodes that have same 'Condition'. The first one is chosen.\n";
+            }
+            
+            # A matched configuration is overrided.
+            if( $#{$list} == 0 ){
+                $ret{ $cfgName } = $list->[0];
+            }
+        }
+    }
+    
+    return \%ret;
 }
 
 sub OutputMake($$$$$)
 {
-	my $src      = shift;
-	my $srcCfg   = shift;
-	my $vcproj   = shift;
-	my $cnvCfg      = shift;
-	my $cfgFileName = shift;
-	
-	my $des;
-	$des .=
-		"# \n".
-		"# *** DO NOT EDIT THIS FILE DIRECTLY ***\n".
-		"# \n".
-		"# This file is generated from '".
-		$cnvCfg->{'MakeConfiguration'}->{'-SourceFile'}."'\n".
-		"# \n".
-		"# The Visual Studio project file (~.vcxproj) is a general XML file and \n".
-		"# edit the project file or use Visual Studio IDE.\n".
-		"# \n".
-		"\n";
+    my $src      = shift;
+    my $srcCfg   = shift;
+    my $vcproj   = shift;
+    my $cnvCfg      = shift;
+    my $cfgFileName = shift;
+    
+    my $des;
+    $des .=
+        "# \n".
+        "# *** DO NOT EDIT THIS FILE DIRECTLY ***\n".
+        "# \n".
+        "# This file is generated from '".
+        $cnvCfg->{'MakeConfiguration'}->{'-SourceFile'}."'\n".
+        "# \n".
+        "# The Visual Studio project file (~.vcxproj) is a general XML file and \n".
+        "# edit the project file or use Visual Studio IDE.\n".
+        "# \n".
+        "\n";
 
-	$des .= "default: all\n\n\n";
+    $des .= "default: all\n\n\n";
 
-	
-	# default pre-compiled header
-	my $defaultCompilerCfg = GetDefaultCompilerConfiguration($vcproj, $cnvCfg);
+    
+    # default pre-compiled header
+    my $defaultCompilerCfg = GetDefaultCompilerConfiguration($vcproj, $cnvCfg);
 
-	# working directory
-	my $workPath = '$(WORK_DIR)';
+    # working directory
+    my $workPath = '$(WORK_DIR)';
 
-	# detect host 
-	$des .= 'HOST_TYPE = $(shell uname)'."\n\n";
+    # detect host 
+    $des .= 'HOST_TYPE = $(shell uname)'."\n\n";
 
-	foreach my $platform ( @{$cnvCfg->{'MakeConfiguration'}->{'Platforms'}->{'Platform'}} ){
+    foreach my $platform ( @{$cnvCfg->{'MakeConfiguration'}->{'Platforms'}->{'Platform'}} ){
 
-		$des .= sprintf("# Platform: %s\n", $platform->{'-Name'});
-		$des .= sprintf(
-			'ifneq (,$(findstring %s,$(HOST_TYPE)))'."\n",
-			 $platform->{'-HostString'} );
+        $des .= sprintf("# Platform: %s\n", $platform->{'-Name'});
+        $des .= sprintf(
+            'ifneq (,$(findstring %s,$(HOST_TYPE)))'."\n",
+             $platform->{'-HostString'} );
 
-		# Make PCH strings
-		#my $pch = $platform->{'-PrecompiledHeader'};
-		#if($path ne ''){
-		#}
-		#$des .= sprintf("WORK_DIR = %s\n", $path);
+        # Make PCH strings
+        #my $pch = $platform->{'-PrecompiledHeader'};
+        #if($path ne ''){
+        #}
+        #$des .= sprintf("WORK_DIR = %s\n", $path);
 
-		# Make WORK_DIR strings
-		my $path = $platform->{'-WorkingDirectory'};
-		if($path ne ''){
-			$path = $path."/";
-		}
-		$des .= sprintf("WORK_DIR = %s\n", $path);
+        # Make WORK_DIR strings
+        my $path = $platform->{'-WorkingDirectory'};
+        if($path ne ''){
+            $path = $path."/";
+        }
+        $des .= sprintf("WORK_DIR = %s\n", $path);
 
-		# Make CXX flag strings
-		$des .= sprintf("CXX = %s\n", $platform->{'-CXX'});
-		$des .= sprintf("CXXFLAGS = %s", $platform->{'-CXXFlags'});
-		if(ref($platform->{'IncludeDirectories'}) eq 'HASH'){
-			foreach my $i ( @{ NodeToList($platform->{'IncludeDirectories'}->{'Directory'}) }){
-				if($i ne ''){
-					$des .= " \\\n\t-I".$i->{'-Path'};
-				}
-			}
-		}
-		$des .= "\n";
-		
-		# Make LDFLAGS flag strings
-		$des .= sprintf("LDFLAGS = %s", $platform->{'-LDFlags'});
-		if(ref($platform->{'LibraryDirectories'}) eq 'HASH'){
-			foreach my $i ( @{ NodeToList($platform->{'LibraryDirectories'}->{'Directory'}) }){
-				if($i ne ''){
-					$des .= " \\\n\t-L".$i->{'-Path'};
-				}
-			}
-		}
-		if(ref($platform->{'Libraries'}) eq 'HASH'){
-			foreach my $i ( @{ NodeToList($platform->{'Libraries'}->{'Library'}) }){
-				if($i ne ''){
-					$des .= " \\\n\t-l".$i->{'-Name'};
-				}
-			}
-		}
-		if( exists($platform->{'-OutputFile'}) ){
-			$des .= " \\\n\t-o ".$platform->{'-OutputFile'};
-		}
-		else{
-			$des .= " \\\n\t-o a.out";
-		}
-		$des .= "\n";
-		
-		# output binary
-		$des .= "OUTPUT_BINARY = ";
-		if( exists($platform->{'-OutputFile'}) ){
-			$des .= " \\\n\t".$platform->{'-OutputFile'};
-		}
-		else{
-			$des .= " \\\n\ta.out";
-		}
-		$des .= "\n";
+        # Make CXX flag strings
+        $des .= sprintf("CXX = %s\n", $platform->{'-CXX'});
+        $des .= sprintf("CXXFLAGS = %s", $platform->{'-CXXFlags'});
+        if(ref($platform->{'IncludeDirectories'}) eq 'HASH'){
+            foreach my $i ( @{ NodeToList($platform->{'IncludeDirectories'}->{'Directory'}) }){
+                if($i ne ''){
+                    $des .= " \\\n\t-I".$i->{'-Path'};
+                }
+            }
+        }
+        $des .= "\n";
+        
+        # Make LDFLAGS flag strings
+        $des .= sprintf("LDFLAGS = %s", $platform->{'-LDFlags'});
+        if(ref($platform->{'LibraryDirectories'}) eq 'HASH'){
+            foreach my $i ( @{ NodeToList($platform->{'LibraryDirectories'}->{'Directory'}) }){
+                if($i ne ''){
+                    $des .= " \\\n\t-L".$i->{'-Path'};
+                }
+            }
+        }
+        if(ref($platform->{'Libraries'}) eq 'HASH'){
+            foreach my $i ( @{ NodeToList($platform->{'Libraries'}->{'Library'}) }){
+                if($i ne ''){
+                    $des .= " \\\n\t-l".$i->{'-Name'};
+                }
+            }
+        }
+        if( exists($platform->{'-OutputFile'}) ){
+            $des .= " \\\n\t-o ".$platform->{'-OutputFile'};
+        }
+        else{
+            $des .= " \\\n\t-o a.out";
+        }
+        $des .= "\n";
+        
+        # output binary
+        $des .= "OUTPUT_BINARY = ";
+        if( exists($platform->{'-OutputFile'}) ){
+            $des .= " \\\n\t".$platform->{'-OutputFile'};
+        }
+        else{
+            $des .= " \\\n\ta.out";
+        }
+        $des .= "\n";
 
-		# clean
-		$des .= "CLEARFILTER = ";
-		foreach my $i ( split( /\s/, $platform->{'-CleanTargets'} ) ){
-			$des .= $workPath.$i." ";
-		}
-		$des .= $platform->{'-OutputFile'};
-		$des .= "\n";
-		
-		# Custom build steps
-		my @customBuildOutputFiles = ();
-		if( ref($platform->{'CustomBuildConfigurations'}) eq 'HASH' ){
-			foreach my $customBuild ( @{ NodeToList($platform->{'CustomBuildConfigurations'}->{'CustomBuild'}) }){
-				my $outputFile = $customBuild->{'-OutputFile'};
-				my $inputFile  = $customBuild->{'-InputFile'};
-				my $command    = $customBuild->{'-Command'};
-				$des .= "$outputFile: $inputFile\n";
-				$des .= "\t$command\n";
-				
-				push( @customBuildOutputFiles, $outputFile );
-			}
-		}
+        # clean
+        $des .= "CLEARFILTER = ";
+        foreach my $i ( split( /\s/, $platform->{'-CleanTargets'} ) ){
+            $des .= $workPath.$i." ";
+        }
+        $des .= $platform->{'-OutputFile'};
+        $des .= "\n";
+        
+        # Custom build steps
+        my @customBuildOutputFiles = ();
+        if( ref($platform->{'CustomBuildConfigurations'}) eq 'HASH' ){
+            foreach my $customBuild ( @{ NodeToList($platform->{'CustomBuildConfigurations'}->{'CustomBuild'}) }){
+                my $outputFile = $customBuild->{'-OutputFile'};
+                my $inputFile  = $customBuild->{'-InputFile'};
+                my $command    = $customBuild->{'-Command'};
+                $des .= "$outputFile: $inputFile\n";
+                $des .= "\t$command\n";
+                
+                push( @customBuildOutputFiles, $outputFile );
+            }
+        }
 
-		$des .= "CUSTOMOUTPUTS = \\\n";
-		foreach my $i ( @customBuildOutputFiles ){
-			$des .= "\t$i \\\n"
-		}
-		$des .= "\n";
-		
+        $des .= "CUSTOMOUTPUTS = \\\n";
+        foreach my $i ( @customBuildOutputFiles ){
+            $des .= "\t$i \\\n"
+        }
+        $des .= "\n";
+        
 
-		# Epilogue of this platform section.
-		$des .= "endif\n\n";
-		
-	}
-	
-	my $usePCH = $cnvCfg->{'MakeConfiguration'}->{'-UsePrecompiledHeader'};
+        # Epilogue of this platform section.
+        $des .= "endif\n\n";
+        
+    }
+    
+    my $usePCH = $cnvCfg->{'MakeConfiguration'}->{'-UsePrecompiledHeader'};
 
-	# Make object file and pch name list
-	my $srcObjPair = [];
-	my $srcPCHPair = [];
-	my $objID = 0;
-	my $pchID = 0;
-	my $pchMap = {};
-	foreach my $i (@{$src}){
-		my $obj;
-		
-		my $cfg     =
-			 GetEffectiveCompilerConfiguration($i, $srcCfg, $defaultCompilerCfg, $cnvCfg);
-		my $pchFlag = GetChildText( $cfg->{'PrecompiledHeader'} );
-		my $pchSrc  = GetChildText( $cfg->{'PrecompiledHeaderFile'} );
-		my $pch;
-		
-		$pchSrc =~ /([^\/]+)\.([^\/]+)$/;
-		if(exists($pchMap->{$pchSrc})){
-			$pch = $pchMap->{$pchSrc};
-		}
-		else{
-			$pchSrc =~ /([^\/]+)\.([^\.]+)$/;
-			$pch = "$workPath$1.$pchID.h";
-			$pchMap->{$pchSrc} = $pch;
-			$pchID++;
-		}
-		my $gch = "$pch.gch";
-				
-		
-		if($pchFlag eq 'Create' && $usePCH){
-			# Create PCH
-			$i =~ /^(.+\/)([^\/]+)$/;
-			$pchSrc = $1.$pchSrc;
+    # Make object file and pch name list
+    my $srcObjPair = [];
+    my $srcPCHPair = [];
+    my $objID = 0;
+    my $pchID = 0;
+    my $pchMap = {};
+    foreach my $i (@{$src}){
+        my $obj;
+        
+        my $cfg     =
+             GetEffectiveCompilerConfiguration($i, $srcCfg, $defaultCompilerCfg, $cnvCfg);
+        my $pchFlag = GetChildText( $cfg->{'PrecompiledHeader'} );
+        my $pchSrc  = GetChildText( $cfg->{'PrecompiledHeaderFile'} );
+        my $pch;
+        
+        $pchSrc =~ /([^\/]+)\.([^\/]+)$/;
+        if(exists($pchMap->{$pchSrc})){
+            $pch = $pchMap->{$pchSrc};
+        }
+        else{
+            $pchSrc =~ /([^\/]+)\.([^\.]+)$/;
+            $pch = "$workPath$1.$pchID.h";
+            $pchMap->{$pchSrc} = $pch;
+            $pchID++;
+        }
+        my $gch = "$pch.gch";
+                
+        
+        if($pchFlag eq 'Create' && $usePCH){
+            # Create PCH
+            $i =~ /^(.+\/)([^\/]+)$/;
+            $pchSrc = $1.$pchSrc;
 
-			push( @{$srcPCHPair}, 
-				{
-					'src' => $pchSrc,
-					'gch' => $gch,
-					'pch' => $pch,
-				} );
-			
-			#print Dumper ($srcPCHPair);
-		}
-		else{
-			$i =~ /([^\/]+)\.([^\.]+)$/;
-			$obj = "$1.$objID.o";
-			
-			my $elem = 
-			{
-				'src' => $i,
-				'obj' => $workPath.$obj,
-			};
-			
-			if($pchFlag eq 'Use' && $usePCH){
-				#use PCH
-				$elem->{'pch'} = $pch;
-				$elem->{'gch'} = $gch;
-			}
+            push( @{$srcPCHPair}, 
+                {
+                    'src' => $pchSrc,
+                    'gch' => $gch,
+                    'pch' => $pch,
+                } );
+            
+            #print Dumper ($srcPCHPair);
+        }
+        else{
+            $i =~ /([^\/]+)\.([^\.]+)$/;
+            $obj = "$1.$objID.o";
+            
+            my $elem = 
+            {
+                'src' => $i,
+                'obj' => $workPath.$obj,
+            };
+            
+            if($pchFlag eq 'Use' && $usePCH){
+                #use PCH
+                $elem->{'pch'} = $pch;
+                $elem->{'gch'} = $gch;
+            }
 
-			push( @{$srcObjPair}, $elem );
-			$objID++;
-		}
-	}
-	
-	# object list
-	$des .= "\n\n";
-	$des .= "OBJS = \\\n";
-	foreach my $i ( @{$srcObjPair} ){
-		$des .= "\t".$i->{'obj'}." \\\n";
-	}
-	$des .= "\n\n";
+            push( @{$srcObjPair}, $elem );
+            $objID++;
+        }
+    }
+    
+    # object list
+    $des .= "\n\n";
+    $des .= "OBJS = \\\n";
+    foreach my $i ( @{$srcObjPair} ){
+        $des .= "\t".$i->{'obj'}." \\\n";
+    }
+    $des .= "\n\n";
 
-	# pch list
-	$des .= "\n\n";
-	$des .= "PCHS = \\\n";
-	foreach my $i ( @{$srcPCHPair} ){
-		$des .= "\t".$i->{'gch'}." \\\n";
-	}
-	$des .= "\n\n";
+    # pch list
+    $des .= "\n\n";
+    $des .= "PCHS = \\\n";
+    foreach my $i ( @{$srcPCHPair} ){
+        $des .= "\t".$i->{'gch'}." \\\n";
+    }
+    $des .= "\n\n";
 
-	# link
-	$des .= 'all: $(OUTPUT_BINARY)';
-	$des .= "\n\n";
-	$des .= '$(OUTPUT_BINARY): $(WORK_DIR) $(CUSTOMOUTPUTS) $(OBJS)';
-	$des .= "\n\t".'$(CXX) $(OBJS) $(LDFLAGS)';
-	$des .= "\n\n";
+    # link
+    $des .= 'all: $(OUTPUT_BINARY)';
+    $des .= "\n\n";
+    $des .= '$(OUTPUT_BINARY): $(WORK_DIR) $(CUSTOMOUTPUTS) $(OBJS)';
+    $des .= "\n\t".'$(CXX) $(OBJS) $(LDFLAGS)';
+    $des .= "\n\n";
 
-	# makefile rebuilding
-	$cfgFileName =~ /([^\/]+)$/;
-	my $relCfgFileName = $1;
-	
-	my $scriptPath = $0;
-	my $cfgPath = $cfgFileName;
-	if( !($scriptPath =~ /^\//) ){
-		while($cfgPath =~ s/(^[^\/]+\/)//){
-			$scriptPath = "../".$scriptPath;
-		}
-	}
-	
-	$des .= "Makefile : ".$cnvCfg->{'MakeConfiguration'}->{'-SourceFile'}." $relCfgFileName\n";
-	$des .= "\trm -rf ".'$(CLEARFILTER)'."\n";
-	$des .= "\tperl $scriptPath $relCfgFileName\n\n";
+    # makefile rebuilding
+    $cfgFileName =~ /([^\/]+)$/;
+    my $relCfgFileName = $1;
+    
+    my $scriptPath = $0;
+    my $cfgPath = $cfgFileName;
+    if( !($scriptPath =~ /^\//) ){
+        while($cfgPath =~ s/(^[^\/]+\/)//){
+            $scriptPath = "../".$scriptPath;
+        }
+    }
+    
+    $des .= "Makefile : ".$cnvCfg->{'MakeConfiguration'}->{'-SourceFile'}." $relCfgFileName\n";
+    $des .= "\trm -rf ".'$(CLEARFILTER)'."\n";
+    $des .= "\tperl $scriptPath $relCfgFileName\n\n";
 
-	# work 
-	$des .= '$(WORK_DIR)'.": \n";
-	$des .= "\tmkdir $workPath \n\n";
-	
-	# clean
-	$des .= "clean: \n";
-	$des .= "\trm -rf ".'$(CLEARFILTER)'."\n\n";
-	
-	# makefile
-	$des .= '$(OBJS): '."Makefile\n\n";
+    # work 
+    $des .= '$(WORK_DIR)'.": \n";
+    $des .= "\tmkdir $workPath \n\n";
+    
+    # clean
+    $des .= "clean: \n";
+    $des .= "\trm -rf ".'$(CLEARFILTER)'."\n\n";
+    
+    # makefile
+    $des .= '$(OBJS): '."Makefile\n\n";
 
-	# dependency
-	$des .= 'ifneq ($(MAKECMDGOALS),clean)'."\n";
-	$des .= '-include $(OBJS:.o=.d)'."\n";
-	$des .= '-include $(PCHS:.gch=.d)'."\n";
-	$des .= 'endif'."\n\n";
+    # dependency
+    $des .= 'ifneq ($(MAKECMDGOALS),clean)'."\n";
+    $des .= '-include $(OBJS:.o=.d)'."\n";
+    $des .= '-include $(PCHS:.gch=.d)'."\n";
+    $des .= 'endif'."\n\n";
 
-	# -- compile
+    # -- compile
 
-	#pch
-	$des .= "\n\n";
-	foreach my $i ( @{$srcPCHPair} ){
-		$des .= "$i->{'gch'}: $i->{'src'}\n";
-		$des .= "\t".'$(CXX) $(CXXFLAGS)'." -x c++-header $i->{'src'} -o $i->{'gch'} -MMD";
-		$des .= "\n\n";
-	}
+    #pch
+    $des .= "\n\n";
+    foreach my $i ( @{$srcPCHPair} ){
+        $des .= "$i->{'gch'}: $i->{'src'}\n";
+        $des .= "\t".'$(CXX) $(CXXFLAGS)'." -x c++-header $i->{'src'} -o $i->{'gch'} -MMD";
+        $des .= "\n\n";
+    }
 
-	#obj
-	$des .= "\n\n";
-	foreach my $i ( @{$srcObjPair} ){
-		my $gch;
-		my $pch;
-		if( exists($i->{'pch'}) ){
-			$gch = $i->{'gch'};
-			$pch = '-include '.$i->{'pch'};
-		}
+    #obj
+    $des .= "\n\n";
+    foreach my $i ( @{$srcObjPair} ){
+        my $gch;
+        my $pch;
+        if( exists($i->{'pch'}) ){
+            $gch = $i->{'gch'};
+            $pch = '-include '.$i->{'pch'};
+        }
 
-		$des .= "$i->{'obj'}: $i->{'src'} $gch\n";
-		$des .= "\t".'$(CXX) $(CXXFLAGS)'." -c $i->{'src'} -o $i->{'obj'} $pch -MMD";
-		$des .= "\n\n";
-	}
-	
-	return $des;
+        $des .= "$i->{'obj'}: $i->{'src'} $gch\n";
+        $des .= "\t".'$(CXX) $(CXXFLAGS)'." -c $i->{'src'} -o $i->{'obj'} $pch -MMD";
+        $des .= "\n\n";
+    }
+    
+    return $des;
 }
 
 sub main
 {
-	print "Visual Studio 2010/2012/2015/2017 project file converter.\n";
-	print "2019/01/18 Ryota Shioya\n\n";
+    print "Visual Studio 2010/2012/2015/2017 project file converter.\n";
+    print "2019/01/18 Ryota Shioya\n\n";
 
-	my $cfgFileName = $ARGV[0];
-	my $file = new IO::File;
-	my $cfg = ParseXML( $cfgFileName );
+    my $cfgFileName = $ARGV[0];
+    my $file = new IO::File;
+    my $cfg = ParseXML( $cfgFileName );
 
-	$cfgFileName =~ /^(.+\/)([^\/]+)$/;
-	my $relCfgPath = $1;
+    $cfgFileName =~ /^(.+\/)([^\/]+)$/;
+    my $relCfgPath = $1;
 
-	my $root = ParseXML( $relCfgPath . $cfg->{'MakeConfiguration'}->{'-SourceFile'} );
-	my $fileParam = EnumerateFiles( $root->{'Project'} );
-	my $fileCppList = [ keys(%{$fileParam}) ];
-	my $outMake = OutputMake( $fileCppList, $fileParam, $root, $cfg, $cfgFileName );
-	$file->open($relCfgPath . "Makefile","w");
-	$file->print($outMake);
-	$file->close();
+    my $root = ParseXML( $relCfgPath . $cfg->{'MakeConfiguration'}->{'-SourceFile'} );
+    my $fileParam = EnumerateFiles( $root->{'Project'} );
+    my $fileCppList = [ keys(%{$fileParam}) ];
+    my $outMake = OutputMake( $fileCppList, $fileParam, $root, $cfg, $cfgFileName );
+    $file->open($relCfgPath . "Makefile","w");
+    $file->print($outMake);
+    $file->close();
 
 
 }
