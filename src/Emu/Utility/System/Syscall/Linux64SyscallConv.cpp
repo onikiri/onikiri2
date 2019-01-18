@@ -520,34 +520,35 @@ void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
 // so this system call is emulated in software.
 void Linux64SyscallConv::syscall_getdents64(EmulatorUtility::OpEmulationState* opState)
 {
-    /*
     int fd = (int)m_args[1];
     u64 maxSize = m_args[3];
+    bool isBigEndian = GetMemorySystem()->IsBigEndian();
 
     TargetBuffer buf(GetMemorySystem(), m_args[2], maxSize);
-    linux64_dirent* direntBegin = static_cast<linux64_dirent*>(buf.Get());
-    linux64_dirent* dirent = direntBegin;
+    linux64_dirent* dirent = static_cast<linux64_dirent*>(buf.Get());
     size_t size = 0;
 
-    String difName = GetVirtualSystem()->FDTargetToFileName(fd);
-    namespace fs = boost::filesystem;
-    const fs::path path(difName.c_str());
-    for (const auto& e : boost::make_iterator_range(fs::directory_iterator(path), {})){
-
-        dirent->d_ino = 1;
-        dirent->d_reclen = EndianHostToSpecified((u16)sizeof(linux64_dirent), GetMemorySystem()->IsBigEndian());
-        dirent->d_off = EndianHostToSpecified((s64)size, GetMemorySystem()->IsBigEndian());
-        dirent->d_type = fs::is_directory(e) ? LINUX_DT_DIR : LINUX_DT_REG;
-        strncpy(dirent->d_name, e.path().filename().string().c_str(), sizeof(dirent->d_name));
-
-        if (size + sizeof(linux64_dirent) > maxSize) {
+    while (size + sizeof(linux64_dirent) <= maxSize) {
+        HostDirent hostDirEnt;
+        int ret = GetVirtualSystem()->GetDents(fd, &hostDirEnt);
+        if (ret == -1) {
+            SetResult(false, 1);    // 1: Operation not permitted
+            return;
+        }
+        if (ret == 0) { // Reach to the end of a stream
             break;
         }
+
+        dirent->d_ino = hostDirEnt.ino;
+        dirent->d_reclen = EndianHostToSpecified((u16)sizeof(linux64_dirent), isBigEndian);
+        dirent->d_off = EndianHostToSpecified((s64)size, isBigEndian);
+        dirent->d_type = hostDirEnt.isDir ? LINUX_DT_DIR : LINUX_DT_REG;
+        strncpy(dirent->d_name, hostDirEnt.name.c_str(), sizeof(dirent->d_name));
+
         size += sizeof(linux64_dirent);
         dirent++;
     }
     SetResult(true, (u64)size);
-    */
 }
 
 void Linux64SyscallConv::syscall_lseek(OpEmulationState* opState)

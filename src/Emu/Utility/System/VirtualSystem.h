@@ -39,6 +39,19 @@ namespace Onikiri {
     namespace EmulatorUtility {
         typedef POSIX::posix_struct_stat HostStat;
 
+        // For GetDents
+        struct HostDirent
+        {
+            String  name;   // name
+            u64     ino;    // i-node number
+            bool    isDir;  // This entry is a directory or not
+            HostDirent()
+            {
+                ino = 0;
+                isDir = false;
+            }
+        };
+
         // targetとhost間のFD変換を行うクラス
         class FDConv
         {
@@ -48,7 +61,7 @@ namespace Onikiri {
             struct FileContext
             {
                 String hostFileName;
-
+                std::deque<HostDirent> dirStream;
                 FileContext()
                 {
                     hostFileName = "";
@@ -162,6 +175,8 @@ namespace Onikiri {
 
             int MkDir(const char* path, int mode);
 
+            int GetDents(int targetFD, HostDirent* dirent);
+
             // targetのFDとhostのFDの変換を行う
             int FDTargetToHost(int targetFD) const
             {
@@ -208,6 +223,7 @@ namespace Onikiri {
             String GetHostPath(const char* targetPath);
             void AddAutoCloseFD(int fd);
             void RemoveAutoCloseFD(int fd);
+            void ReadDirectoryEntries(int fd, const char* filename);
 
             FDConv m_fdConv;
             // デストラクト時に自動でcloseするfd

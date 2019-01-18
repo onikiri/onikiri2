@@ -324,21 +324,53 @@ int VirtualSystem::GetEGID()
     return posix_getegid();
 }
 
+// Called from Open, and read stream is used in GetDents 
+void VirtualSystem::ReadDirectoryEntries(int targetFD, const char* guestFileName)
+{
+    FDConv::FileContext* fileContext = &m_fdConv.GetContext(targetFD);
+    String hostFileName = fileContext->hostFileName;
+
+    // Enumerate files in an opened directory
+    namespace fs = boost::filesystem;
+    const fs::path path(hostFileName.c_str());
+    for (const auto& e : boost::make_iterator_range(fs::directory_iterator(path), {})) {
+        HostDirent dirent;
+        dirent.isDir = fs::is_directory(e);
+        dirent.name = e.path().filename().string();
+
+        // Windows stat always returns 0 for "ino", but 
+        // some guest programs recognize "ino 0" as a invalid file,
+        // so a dummy number is used
+        dirent.ino = 1;
+
+        //HostStat stat;
+        //Stat(String(guestFileName) + "/" + dirent.name, &stat);
+        //dirent.ino = stat.st_ino;
+
+        fileContext->dirStream.push_back(dirent);
+    }
+}
+
 int VirtualSystem::Open(const char* filename, int oflag)
 {
     String hostFileName = GetHostPath(filename);
     int hostFD = posix_open(hostFileName.c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
 
     // FDの対応表に追加
-    if (hostFD != -1) {
-        int targetFD = m_fdConv.GetFirstFreeFD();
-        AddFDMap(targetFD, hostFD, hostFileName, true);
-        m_delayUnlinker.AddMap(targetFD, hostFileName);
-        return targetFD;
-    }
-    else {
+    if (hostFD == -1) {
         return -1;
     }
+    int targetFD = m_fdConv.GetFirstFreeFD();
+    AddFDMap(targetFD, hostFD, hostFileName, true);
+    m_delayUnlinker.AddMap(targetFD, hostFileName);
+
+
+    // Open a directory stream.
+    // Read directory entries 
+    if (oflag & POSIX_O_DIRECTORY) {
+        ReadDirectoryEntries(targetFD, filename);
+    }
+    return targetFD;
 }
 
 int VirtualSystem::Dup(int fd)
@@ -490,6 +522,30 @@ int VirtualSystem::MkDir(const char* path, int mode)
         return 0;
     else 
         return -1;
+}
+
+// Returns a single HostDirent entry from targetFD
+// getdents64 cannot be available in Windows/Cygwin directly,
+// so this system call is emulated in software.
+// Return:
+//   -1: error
+//    1: success 
+//    0: reach to the end of directory stream
+// A stream is loaded in ReadDirectoryEntries called from Open
+int VirtualSystem::GetDents(int targetFD, HostDirent* dirent)
+{
+    FDConv::FileContext* context = &m_fdConv.GetContext(targetFD);
+    if (context->hostFileName == "") {
+        return -1;
+    }
+
+    if (context->dirStream.size() == 0) {
+        return 0;
+    }
+
+    *dirent = context->dirStream.front();
+    context->dirStream.pop_front();
+    return 1;
 }
 
 String VirtualSystem::GetHostPath(const char* targetPath)
