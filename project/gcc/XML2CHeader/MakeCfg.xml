@@ -11,7 +11,7 @@
 			CXX="g++" 
 			CXXFlags="-O2"
 			LDFlags=""
-			CleanTargets=""
+			CleanTargets="*.o *.d *.gch"
 			WorkingDirectory="WorkCygwin"
 			OutputFile="XML2CHeader"
 		>
@@ -23,7 +23,7 @@
 			CXX="g++" 
 	 		CXXFlags="-O2"
 			LDFlags="" 
-			CleanTargets=""
+			CleanTargets="*.o *.d *.gch"
 			WorkingDirectory="WorkLinux" 
 			OutputFile="XML2CHeader"
 		>
