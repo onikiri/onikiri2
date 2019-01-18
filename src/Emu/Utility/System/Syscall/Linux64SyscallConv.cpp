@@ -185,6 +185,9 @@ namespace {
     const int LINUX_AT_FDCWD = -100;
     const int LINUX_AT_SYMLINK_NOFOLLO = 0x100;
     const int LINUX_AT_REMOVEDIR = 0x200;
+
+    const int LINUX_DT_DIR = 4;
+    const int LINUX_DT_REG = 8;
 }
 
 
@@ -513,8 +516,38 @@ void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
     }
 }
 
+// getdents64 cannot be available in Windows/Cygwin directly,
+// so this system call is emulated in software.
 void Linux64SyscallConv::syscall_getdents64(EmulatorUtility::OpEmulationState* opState)
 {
+    /*
+    int fd = (int)m_args[1];
+    u64 maxSize = m_args[3];
+
+    TargetBuffer buf(GetMemorySystem(), m_args[2], maxSize);
+    linux64_dirent* direntBegin = static_cast<linux64_dirent*>(buf.Get());
+    linux64_dirent* dirent = direntBegin;
+    size_t size = 0;
+
+    String difName = GetVirtualSystem()->FDTargetToFileName(fd);
+    namespace fs = boost::filesystem;
+    const fs::path path(difName.c_str());
+    for (const auto& e : boost::make_iterator_range(fs::directory_iterator(path), {})){
+
+        dirent->d_ino = 1;
+        dirent->d_reclen = EndianHostToSpecified((u16)sizeof(linux64_dirent), GetMemorySystem()->IsBigEndian());
+        dirent->d_off = EndianHostToSpecified((s64)size, GetMemorySystem()->IsBigEndian());
+        dirent->d_type = fs::is_directory(e) ? LINUX_DT_DIR : LINUX_DT_REG;
+        strncpy(dirent->d_name, e.path().filename().string().c_str(), sizeof(dirent->d_name));
+
+        if (size + sizeof(linux64_dirent) > maxSize) {
+            break;
+        }
+        size += sizeof(linux64_dirent);
+        dirent++;
+    }
+    SetResult(true, (u64)size);
+    */
 }
 
 void Linux64SyscallConv::syscall_lseek(OpEmulationState* opState)
