@@ -44,6 +44,7 @@ namespace Onikiri {
             const int syscall_id_ioctl = 29;
             const int syscall_id_mkdirat = 34;
             const int syscall_id_unlinkat = 35;
+            const int syscall_id_renameat = 38;
             const int syscall_id_ftruncate = 46;
             const int syscall_id_faccessat = 48;
             const int syscall_id_chdir = 49;
@@ -118,7 +119,6 @@ namespace Onikiri {
             const int syscall_id_utime = 30;
             const int syscall_id_access = 33;
             const int syscall_id_kill = 37;
-            const int syscall_id_rename = 38;
             const int syscall_id_mkdir = 39;
             const int syscall_id_rmdir = 40;
             const int syscall_id_dup = 41;

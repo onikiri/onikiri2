@@ -706,6 +706,31 @@ void Linux64SyscallConv::syscall_mkdirat(OpEmulationState* opState)
     else {
         SetResult(true, result);
     }
+}
+
+void Linux64SyscallConv::syscall_renameat(OpEmulationState* opState)
+{
+    s64 oldfd = (s64)m_args[1];
+    String oldPath = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    s64 newfd = (s64)m_args[3];
+    String newPath = StrCpyToHost(GetMemorySystem(), m_args[4]);
+    int result = -1;
+    // ファイルディスクリプタが AT_FDCWD (-100) の場合は working directory からの相対パスとなる
+    if (oldfd == LINUX_AT_FDCWD && newfd == LINUX_AT_FDCWD) {
+        result = GetVirtualSystem()->Rename(oldPath, newPath);
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'renameat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' and '%d' are specified.", oldfd, newfd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        SetResult(true, result);
+    }
 
 }
 
