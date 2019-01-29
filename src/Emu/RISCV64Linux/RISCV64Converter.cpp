@@ -244,17 +244,18 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     //    !link !link  -        none
     //    !link link   -        pop
     //    link  !link  -        push
-    //    link  link   0        push and pop
+    //    link  link   0        push and pop (not implemented; the action is 'none' for now)
     //    link  link   1        push
     //{Name,    Mask,           Opcode,                 nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(1, 5),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(5, 1),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(1, 1),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(5, 5),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALL,      OPCODE_CALL(5),         1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALL,      OPCODE_CALL(1),         1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_RET,       OPCODE_RET(5),          1,  { { OpClassCode::RET,       {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_RET,       OPCODE_RET(1),          1,  { { OpClassCode::RET,       {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
-    {"jalr",    MASK_CALL,      OPCODE_CALL(0),         1,  { { OpClassCode::iJUMP,     {-1, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
-    {"jalr",    MASK_JALR,      OPCODE_JALR(),          1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_JALR,      OPCODE_JALR(),          1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
 
     // Branch
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
