@@ -246,6 +246,22 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     //    link  !link  -        push
     //    link  link   0        push and pop (not implemented; the action is 'none' for now)
     //    link  link   1        push
+
+
+    // XX is any register except x1 and x5; YY is any register except x1, x5, x0.
+    // jalr x1, x5, Offset : OPCODE_CALLRET(1,5) coroutine-call-like instruction. RAS should be pushed and popped (but this action is not implemented in Onikiri and the action is 'none' for now)
+    // jalr x5, x1, Offset : OPCODE_CALLRET(5,1) same the above
+    // jalr x1, x1, Offset : OPCODE_CALLRET(1,1) function call using link register (may be part of the 'auipc/lui x1, HiImm; jalr x1, x1, LoImm'-like instruction sequences)
+    // jalr x5, x5, Offset : OPCODE_CALLRET(5,5) function (millicode) call using alternate link register (same as above)
+    // jalr x5, XX, Offset : OPCODE_CALL(5) function call using function pointer in XX
+    // jalr x1, XX, Offset : OPCODE_CALL(1) same as above
+    // jalr x0, x5, Offset : OPCODE_RET(5) return to caller (Offset may be 0)
+    // jalr x0, x1, Offset : OPCODE_RET(1) same as above
+
+    // jalr YY, x1, Offset : OPCODE_JALR() not likely to appear. RISC-V manual recommend that RAS should be popped in this situation, but this action is not implemented and the action is 'none' for now. You can easily change this.
+    // jalr YY, x5, Offset : OPCODE_JALR() same as above
+    // jalr XX, XX, Offset : OPCODE_JALR() may be jump using table. There are other possibilities but it is unclear what action is needed for RAS.
+
     //{Name,    Mask,           Opcode,                 nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(1, 5),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(5, 1),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
