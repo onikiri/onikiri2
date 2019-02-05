@@ -56,7 +56,10 @@ namespace
 
     bool IsAbsPath(const String& path)
     {
-        return path.at(0) == '/';
+        if (path.size() == 0)
+            return false;
+        else
+            return path.at(0) == '/';
     }
 
     String CompletePath(const String& path, const String& base)
