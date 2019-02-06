@@ -240,21 +240,62 @@ RISCV64Converter::OpDef RISCV64Converter::m_OpDefsBase[] =
     
     // JALR
     // CALL/RET must be placed before JALR, because MASK_JALR/OPCODE_JALR include CALL/RET
+
+    // For Return-address prediction stack, jalr should be decoded
+    // to different OpClassCode depending on its operand registers.
+    // Registers x1 and x5 have link register properties.
+    // This is based on the guidline of the RISC-V manual (Table 2.1).
     //    rd    rs1    rs1=rd   RAS action
     //    !link !link  -        none
     //    !link link   -        pop
     //    link  !link  -        push
     //    link  link   0        push and pop
     //    link  link   1        push
+
+    // In the folowing, XX/YY means one of any registers except x1 and x5.
+
+    // jalr x1, x5, Offset : OPCODE_CALLRET(1,5)
+    // jalr x5, x1, Offset : OPCODE_CALLRET(5,1)
+    //     These are coroutine-call-like instructions.
+    //     RAS should be pushed and popped (but this action is not
+    //     implemented in Onikiri and the action is 'none' for now).
+    //
+    // jalr x1, x1, Offset : OPCODE_CALLRET(1,1)
+    //     This is a function call using x1, the link register.
+    //     This may be part of
+    //     'auipc/lui x1, HiImm; jalr x1, x1, LoImm'-like
+    //     instruction sequences.
+    //     RAS should be pushed.
+    //
+    // jalr x5, x5, Offset : OPCODE_CALLRET(5,5)
+    //     This is a function (millicode) call using x5, the alternate
+    //     link register.
+    //     The other part are same as above.
+    //
+    // jalr x5, XX, Offset : OPCODE_CALL(5)
+    // jalr x1, XX, Offset : OPCODE_CALL(1)
+    //     These are function calls through a function pointer in XX.
+    //     RAS should be pushed.
+    //
+    // jalr XX, x5, Offset : OPCODE_RET(5)
+    // jalr XX, x1, Offset : OPCODE_RET(1)
+    //     These are returns to caller (XX may be x0 and Offset may be 0).
+    //     RAS should be poped.
+    //
+    // jalr XX, YY, Offset : OPCODE_JALR()
+    //     These include branching using a table. There are other
+    //     possibilities but it is unclear what action is needed for RAS.
+
     //{Name,    Mask,           Opcode,                 nOp,{ OpClassCode,              Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
     {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(1, 5),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(5, 1),   1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(1, 1),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_CALLRET,   OPCODE_CALLRET(5, 5),   1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALL,      OPCODE_CALL(5),         1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_CALL,      OPCODE_CALL(1),         1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_RET,       OPCODE_RET(5),          1,  { { OpClassCode::RET,       {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
     {"jalr",    MASK_RET,       OPCODE_RET(1),          1,  { { OpClassCode::RET,       {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
-    {"jalr",    MASK_CALL,      OPCODE_CALL(0),         1,  { { OpClassCode::iJUMP,     {-1, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
-    {"jalr",    MASK_JALR,      OPCODE_JALR(),          1,  { { OpClassCode::CALL_JUMP, {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
+    {"jalr",    MASK_JALR,      OPCODE_JALR(),          1,  { { OpClassCode::iJUMP,     {R0, -1},   {R1, I0, -1, -1},   RISCV64CallAbsUncond<D0, S0, S1> } } },
 
     // Branch
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
