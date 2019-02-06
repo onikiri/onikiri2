@@ -369,7 +369,8 @@ namespace Onikiri {
                         return minValue;
                     else {
                         Onikiri::ScopedFESetRound sr(RoundMode()(opState));
-                        volatile Type ret = static_cast<Type>(value);
+                        // std::nearbyint rounds argument to an integral value, using the rounding direction specified by fegetround.
+                        volatile Type ret = static_cast<Type>(std::nearbyint(value));
                         return ret;
                     }
                 }
