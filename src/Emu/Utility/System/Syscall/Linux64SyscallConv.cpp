@@ -731,7 +731,26 @@ void Linux64SyscallConv::syscall_renameat(OpEmulationState* opState)
     else {
         SetResult(true, result);
     }
+}
 
+void Linux64SyscallConv::syscall_renameat2(OpEmulationState* opState)
+{
+    s64 oldfd = (s64)m_args[1];
+    s64 newfd = (s64)m_args[3];
+    s64 flags = (s64)m_args[5];
+
+    if (oldfd != LINUX_AT_FDCWD && newfd != LINUX_AT_FDCWD) {
+        THROW_RUNTIME_ERROR(
+            "'renameat2' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%lld' and '%lld' are specified.", oldfd, newfd
+        );
+    }
+    else if (flags != 0) {
+        THROW_RUNTIME_ERROR("'renameat2' does not support reading 'flags' other than 0");
+    }
+    else {
+        syscall_renameat(opState);  // renameat2 with flags=0 is equivalent to renameat
+    }
 }
 
 void Linux64SyscallConv::syscall_setgid32(OpEmulationState* opState)

@@ -174,7 +174,8 @@ static struct {
     SYSCALLNAME(getegid, 0, ""),
     SYSCALLNAME(getpid, 0, ""),
     SYSCALLNAME(mkdirat, 3, "nsx"),
-    SYSCALLNAME(renameat, 3, "nss"),
+    SYSCALLNAME(renameat, 4, "nsns"),
+    SYSCALLNAME(renameat2, 3, "nsnsn"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -416,6 +417,9 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_renameat:
         syscall_renameat(opState);
+        break;
+    case syscall_id_renameat2:
+        syscall_renameat2(opState);
         break;
     /*
     case syscall_id_readv:

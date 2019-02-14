@@ -153,6 +153,7 @@ namespace Onikiri {
             virtual void syscall_mkdir(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_mkdirat(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_renameat(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_renameat2(EmulatorUtility::OpEmulationState* opState);
 
             virtual void syscall_dup(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_truncate(EmulatorUtility::OpEmulationState* opState);
