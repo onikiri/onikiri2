@@ -32,7 +32,7 @@ sub GetUserName()
 # Replace all strings in a passed XML tree with $macroHash.
 # This replacement is performed recursively.
 #
-sub ReplaceHashStr($$$$$)
+sub ApplyMacroInternal($$$$$)
 {
 	my $root      = shift;
 	my $node      = shift;
@@ -43,12 +43,12 @@ sub ReplaceHashStr($$$$$)
 
 	if (ref($node) eq 'HASH'){
 		foreach my $i (keys(%{$node})){
-			$node->{$i} = ReplaceHashStr($root, $node->{$i}, $pattern, $str, $macroHash);
+			$node->{$i} = ApplyMacroInternal($root, $node->{$i}, $pattern, $str, $macroHash);
 		}
 	}
 	elsif (ref($node) eq 'ARRAY') {
 		foreach my $i (@{$node}) {
-			$i = ReplaceHashStr($root, $i, $pattern, $str, $macroHash);
+			$i = ApplyMacroInternal($root, $i, $pattern, $str, $macroHash);
 		}
 	}
 	else{   # SCALAR
@@ -61,7 +61,7 @@ sub ReplaceHashStr($$$$$)
             # This process should not be performed the whole tree.
 			foreach my $pattern (keys(%{$macroHash})) {
 				my $str = $macroHash->{$pattern};
-				$node = ReplaceHashStr($root, $node, $pattern, $str, $macroHash);
+				$node = ApplyMacroInternal($root, $node, $pattern, $str, $macroHash);
 			}
 		}
 	}	
@@ -135,7 +135,7 @@ sub InitializeConfig($)
 
 	foreach my $pattern ( keys(%{$macroHash}) ){
 		my $str = $macroHash->{$pattern};
-		ReplaceHashStr( $cfg, $cfg, $pattern, $str, $macroHash );
+		ApplyMacroInternal( $cfg, $cfg, $pattern, $str, $macroHash );
 	}
 
 
@@ -308,5 +308,6 @@ sub GetUserData($)
 	my $self = shift;
 	return $self->{'userData'};
 }
+
 
 1;
