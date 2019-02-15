@@ -1,93 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  Configuration
-    BasePath : ベースディレクトリ
-      Onikiriのルートディレクトリを“絶対パス”で指定
-      これより下の設定は全てこのパスからの相対パスとして扱われる
+BasePath : ベースディレクトリ
+  Onikiriのルートディレクトリを“絶対パス”で指定
+  これより下の設定は全てこのパスからの相対パスとして扱われる
 -->
 <Configuration
-	BasePath="/home/onikiri2/"
+  BasePath="/home/onikiri2/"
 >
 
-	<!--
-	  Result : 
-	    BasePath : 出力ファイルのディレクトリ
-	      上のベースディレクトリからの“相対パス”で表記
+  <!--
+    BasePath : 出力ファイルのディレクトリ
+      上のベースディレクトリからの“相対パス”で表記
 
-	    FileNamePattern     : 集計対象とするファイル
-	    NodeNamePattern     : XML->CSVとする際に取り出すデータ
+    FileNamePattern     : 集計対象とするファイル
+    NodeNamePattern     : 
+      XML->CSVとする際に取り出すデータのノード
+      正規表現で指定してマッチしたノードが出力となる
 
-	    ColumnHeaderPattern : 列ヘッダを出力パターン
-	      名前のうちパターンにマッチした部分のみを出力
-	      わからなければ空欄でOK 
-	    
-	    RowHeaderPattern    : 行ヘッダを出力パターン
-	      名前のうちパターンにマッチした部分のみを出力
-	      下の例は，"番号.ベンチマーク名"を取り出すための物
-	   />
-	-->
-	<Result
-		BasePath="tool/AutoRunTools/result/"
-		
-		FileNamePattern=".txt"
-		NodeNamePattern="(IPC)|(HitRate)|(Executed)"
-		ColumnHeaderPattern=""
-		RowHeaderPattern="[0-9]{3}[^-]+"
-		OutputAverage="1"
-	/>
+    ColumnHeaderPattern : 列ヘッダを出力するパターン
+      名前のうちパターンにマッチした部分のみを出力
+      わからなければ空欄でOK 
+    
+    RowHeaderPattern    : 行ヘッダを出力するパターン
+      名前のうちパターンにマッチした部分のみを出力
+      下の例は，"番号.ベンチマーク名"を取り出すための物
+  -->
+  <Result
+    BasePath="tool/AutoRunTools/result/"
+    
+    FileNamePattern=".txt"
+    NodeNamePattern="(IPC)|(HitRate)|(Executed)"
+    ColumnHeaderPattern=""
+    RowHeaderPattern="[0-9]{3}[^-]+"
+    OutputAverage="1"
+  />
 
-	
-	<!--
-	   Input : ベンチマーク入力パラメータ
-	     各Process/Command 内の条件にマッチしたベンチマークが一回のセッションで実行される．
-	     複数のProcess ノードが存在した場合，それらの間の総当たりの組み合わせで実行が行われる．
-	     以下の場合，SPECCPU 2000 INT 内のref データセットを実行する．
-	     
-	    Tips:
-	    - <Processes> 節は複数書くことが可能であり，各節でマッチしたファイルが全て実行される．
-	      SMT 実行等で特定のプロセス同士の組み合わせを実行したいときなどに使うと良い．
-	    - <Prcoess> 節は複数書くことができる．複数存在した場合の挙動は Process/@Combination に依存する．
-	      'AllToAll' の場合，複数ある <Prcoess> 間で，それぞれに含まれる全ベンチマークの全組み合わせが実行される．
-	      'OneToOne' の場合，複数ある <Prcoess> 間で，同じ順番にあるベンチマーク同士が組み合わされて実行される．
-	    - <Command> 節は複数書くことができる．複数書いた場合，各節でマッチしたファイルが全て実行される．
-	-->
-	<Input
-		BinaryFile="project/gcc/onikiri2/a.out"
-	>
-		<Processes>
-			<Process>
-				<Command
-					BasePath="benchmark/SPECCPU2000_INT/alpha64/cmd/"
-					FileNamePattern="ref.0.xml"
-				/>
-			</Process>
-		</Processes>
-	</Input>
+  
+  <!--
+     Input : ベンチマーク入力パラメータ
+       各Process/Command 内の条件にマッチしたベンチマークが一回のセッションで実行される．
+       複数のProcess ノードが存在した場合，それらの間の総当たりの組み合わせで実行が行われる．
+       以下の場合，SPECCPU 2000 INT 内のref データセットを実行する．
+       
+      Tips:
+      - <Processes> 節は複数書くことが可能であり，各節でマッチしたファイルが全て実行される．
+        SMT 実行等で特定のプロセス同士の組み合わせを実行したいときなどに使うと良い．
+      - <Prcoess> 節は複数書くことができる．複数存在した場合の挙動は Process/@Combination に依存する．
+        'AllToAll' の場合，複数ある <Prcoess> 間で，それぞれに含まれる全ベンチマークの全組み合わせが実行される．
+        'OneToOne' の場合，複数ある <Prcoess> 間で，同じ順番にあるベンチマーク同士が組み合わされて実行される．
+      - <Command> 節は複数書くことができる．複数書いた場合，各節でマッチしたファイルが全て実行される．
+  -->
+  <Input
+    BinaryFile="project/gcc/onikiri2/a.out"
+  >
+    <Processes>
+      <Process>
+        <Command
+          BasePath="benchmark/SPECCPU2000_INT/alpha64/cmd/"
+          FileNamePattern="ref.0.xml"
+        />
+      </Process>
+    </Processes>
+  </Input>
 
 
-	<!--
-	   Macros : マクロ定義
-	   $(Name) にマッチしたXML 内の文字列をValue に置き換える
-	-->
-	<Macros>
-		<Macro Name="SS"    Value="/Session/Simulator"         />
-		<Macro Name="SSC"   Value="$(SS)/Configurations"       />
-		<Macro Name="SSCD"  Value="$(SSC)/DefaultConfiguration"/>
-		<Macro Name="SSCDP" Value="$(SSCD)/Parameter"          />
-	</Macros>
+  <!--
+    Macros : マクロ定義
+    $(Name) にマッチしたXML 内の文字列をValue に置き換える
+    これら以外に，組み込みで以下のマクロがシステムで定義されている
+    RESULT_DIR': 
+      出力ディレクトリ
+    RESULT_SIGNITURE': 
+      出力ファイルのシグニチャ
+    RESULT_BASE_FILE_NAME':
+      出力ファイルの拡張子を除いたもの（フルパス）
+      これに拡張子をつけると，各ベンチマークごとに独立したファイルを指定できる
+      たとえば以下のように書くことで，各ベンチマークごとに独立したダンプファイルを生成できる
+        <Session>
+          <Parameter Node="/Session/Environment/Dumper/VisualizationDumper/@FileName" Value="$(RESULT_BASE_FILE_NAME).log"/>
+          <Parameter Node="/Session/Environment/Dumper/VisualizationDumper/@EnableDump" Value="1"/>
+        </Session>
+  -->
+  <Macros>
+    <Macro Name="SS"    Value="/Session/Simulator"         />
+    <Macro Name="SSC"   Value="$(SS)/Configurations"       />
+    <Macro Name="SSCD"  Value="$(SSC)/DefaultConfiguration"/>
+    <Macro Name="SSCDP" Value="$(SSCD)/Parameter"          />
+  </Macros>
 
-	<!--
-	   Sessions : 入力セッション
-	     複数のSessionエントリを続けて記述可能
-	     下の例の場合，param.xml を入力ファイルとして受け取り，
-	     一つ目のキャッシュ(L1Dキャッシュ)のレイテンシを3に設定した状態で，
-	     FetchWidth が3,4,5に設定された3つのセッションが実行される
-	-->
-	<Sessions>
+  <!--
+     Sessions : 入力セッション
+       複数のSessionエントリを続けて記述可能
+       下の例の場合，param.xml を入力ファイルとして受け取り，
+       一つ目のキャッシュ(L1Dキャッシュ)のレイテンシを3に設定した状態で，
+       FetchWidth が3,4,5に設定された3つのセッションが実行される
+  -->
+  <Sessions>
 
-		<Session>
-			<Parameter FileName="param.xml"/>
+    <Session>
+      <Parameter FileName="param.xml"/>
       <Parameter
         Node="/$(SSCDP)/Cache[0]/@Latency"
         Value="3"
@@ -96,8 +108,8 @@
         Node="/$(SSCDP)/Fetcher/@FetchWidth" 
         Range="3,4,5"
       />
-		</Session>
+    </Session>
 
-	</Sessions>
-	
+  </Sessions>
+  
 </Configuration>
