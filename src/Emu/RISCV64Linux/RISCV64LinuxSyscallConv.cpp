@@ -175,7 +175,7 @@ static struct {
     SYSCALLNAME(getpid, 0, ""),
     SYSCALLNAME(mkdirat, 3, "nsx"),
     SYSCALLNAME(renameat, 4, "nsns"),
-    SYSCALLNAME(renameat2, 3, "nsnsn"),
+    SYSCALLNAME(renameat2, 5, "nsnsn"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
