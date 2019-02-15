@@ -126,8 +126,12 @@ sub InitializeConfig($)
 	
 	# Expand macro
 	my $macroDefs = ToArray( $cfgXML->XPath( '/Configuration/Macros/Macro' ) );
-	my $macroHash = {};
-	$macroHash->{'USER'} = GetUserName();
+	my $macroHash = 
+	{
+        'USER' => GetUserName(),
+        'BASE_DIR' => $cfg->{'basePath'}
+    };
+
 	foreach my $i ( @{$macroDefs} ){
 		$macroHash->{ $i->{'-Name'} } = $i->{'-Value'};
 	}
