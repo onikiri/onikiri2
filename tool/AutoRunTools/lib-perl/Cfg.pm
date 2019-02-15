@@ -309,5 +309,15 @@ sub GetUserData($)
 	return $self->{'userData'};
 }
 
+sub ApplyMacroToTree($$$)
+{
+	my $self = shift;
+    my $tree = shift;
+    my $macroHash = shift;
+    foreach my $pattern (keys(%{$macroHash})) {
+		my $str = $macroHash->{$pattern};
+		ApplyMacroInternal($tree, $tree, $pattern, $str, $macroHash);
+	}
+}
 
 1;
