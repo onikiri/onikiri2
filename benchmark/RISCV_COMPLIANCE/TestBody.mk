@@ -6,8 +6,16 @@ RISCV_COMPLIANCE_PATH = $(WORK_PATH)/riscv-compliance
 ENV_CFG = env.cfg
 
 # ENV_CFG が存在してたら読み込む
+# ここのインデントはタブだとエラーになり，全部スペースなので注意
 ifneq ("$(wildcard $(ENV_CFG))","")
-	include $(ENV_CFG)
+    include $(ENV_CFG)
+    ifeq ($(ARC_BITS),64)
+        CC = $(CC64)
+    else ifeq ($(ARC_BITS),32)
+        CC = $(CC32)
+    else 
+        $(error Unknown ARC_BITS '$(ARC_BITS)')
+    endif
 endif
 
 
@@ -17,7 +25,8 @@ endif
 # --- Clone riscv-compliance
 #
 $(ENV_CFG):
-	@echo CC= > $(ENV_CFG)
+	@echo CC64= > $(ENV_CFG)
+	@echo CC32= >> $(ENV_CFG)
 	@echo Edit '$(ENV_CFG)' to set a cross compiler path to CC
 	false
 

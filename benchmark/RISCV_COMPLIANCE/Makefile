@@ -21,3 +21,4 @@ test-RV64UF:
 
 test-RV64UI:
 	$(MAKE) -f RV64UI.mk
+
