@@ -8,14 +8,16 @@ ENV_CFG = env.cfg
 # ENV_CFG が存在してたら読み込む
 # ここのインデントはタブだとエラーになり，全部スペースなので注意
 ifneq ("$(wildcard $(ENV_CFG))","")
-    include $(ENV_CFG)
-    ifeq ($(ARC_BITS),64)
-        CC = $(CC64)
-    else ifeq ($(ARC_BITS),32)
-        CC = $(CC32)
-    else 
-        $(error Unknown ARC_BITS '$(ARC_BITS)')
-    endif
+include $(ENV_CFG)
+ifeq ($(ARC_BITS),64)
+CC = $(CC64)
+TARGET_DIR = ./target-onikiri2/64
+ONIKIRI_TARGET_ARCHITECTURE = RISCV64Linux
+else 
+CC = $(CC32)
+TARGET_DIR = ./target-onikiri2/32
+ONIKIRI_TARGET_ARCHITECTURE = RISCV32Linux
+endif
 endif
 
 
@@ -52,7 +54,6 @@ TEST_GOALS   = $(SRC_APPS:%=test-%)
 # リファレンス出力
 
 # ビルド設定
-TARGET_DIR = ./target-onikiri2
 XCFLAGS = -g -static -I $(TARGET_DIR) -I $(RISCV_COMPLIANCE_PATH)/riscv-test-env
 
 
@@ -87,6 +88,7 @@ $(RESULT_DIR)/%: | $(RESULT_DIR)
 	../../project/gcc/onikiri2/a.out param.xml \
 		-x /Session/Emulator/Processes/Process/@Command=$(BIN_DIR)/$(notdir $@) \
 		-x /Session/Emulator/Processes/Process/@STDOUT=$@ \
+		-x /Session/Emulator/@TargetArchitecture=$(ONIKIRI_TARGET_ARCHITECTURE) \
 		> $@.xml
 	diff $(REF_DIR)/$(notdir $@).reference_output $@; 
 	@echo Check $(notdir $@) ... OK
