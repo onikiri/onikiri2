@@ -36,7 +36,9 @@ $(ENV_CFG):
 $(RISCV_COMPLIANCE_PATH): 
 	mkdir $(WORK_PATH) -p
 	cd $(WORK_PATH) ;\
-		git clone https://github.com/riscv/riscv-compliance
+		git clone https://github.com/riscv/riscv-compliance ;
+	cd $(WORK_PATH)/riscv-compliance ;\
+		git checkout 50d220b1373995f0837d776e916f197949d13332
 
 distclean:
 	rm $(WORK_PATH) -r -f
