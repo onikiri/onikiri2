@@ -125,7 +125,6 @@ void Linux32Loader::LoadBinary(MemorySystem* memory, const String& command)
 
         m_entryPoint = CalculateEntryPoint(memory, elfReader);
         m_imageBase = imageBase;
-        ASSERT(m_imageBase != 0);
 
         memory->SetInitialBrk(initialBrk);
 
@@ -176,26 +175,19 @@ void Linux32Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
     // Auxiliary Vector の設定
     ELF32_AUXV auxv;
 
-    const int uid = posix_getuid(), gid = posix_getgid(), euid = posix_geteuid(), egid = posix_getegid();
-
     sp -= sizeof(ELF32_AUXV);
     auxv.a_type = EndianHostToSpecified((u32)AT_NULL, m_bigEndian);
     auxv.a_un.a_val = 0;
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
     sp -= sizeof(ELF32_AUXV);
-    auxv.a_type = EndianHostToSpecified((u32)AT_PHDR, m_bigEndian);
-    auxv.a_un.a_val = EndianHostToSpecified((u32)(m_imageBase + m_elfProgramHeaderOffset), m_bigEndian);
+    auxv.a_type = EndianHostToSpecified((u32)AT_RANDOM, m_bigEndian);
+    auxv.a_un.a_val = EndianHostToSpecified((u32)target_argv[0], m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
     sp -= sizeof(ELF32_AUXV);
-    auxv.a_type = EndianHostToSpecified((u32)AT_PHNUM, m_bigEndian);
-    auxv.a_un.a_val = EndianHostToSpecified((u32)m_elfProgramHeaderCount, m_bigEndian);
-    memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
-
-    sp -= sizeof(ELF32_AUXV);
-    auxv.a_type = EndianHostToSpecified((u32)AT_PHENT, m_bigEndian);
-    auxv.a_un.a_val = EndianHostToSpecified((u32)sizeof(Elf32Reader::Elf_Phdr), m_bigEndian);
+    auxv.a_type = EndianHostToSpecified((u32)AT_SECURE, m_bigEndian);
+    auxv.a_un.a_val = EndianHostToSpecified((u32)0, m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
     sp -= sizeof(ELF32_AUXV);
@@ -204,35 +196,27 @@ void Linux32Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
     sp -= sizeof(ELF32_AUXV);
-    auxv.a_type = EndianHostToSpecified((u32)AT_BASE, m_bigEndian);
-    auxv.a_un.a_val = 0;
+    auxv.a_type = EndianHostToSpecified((u32)AT_PHDR, m_bigEndian);
+    auxv.a_un.a_val = EndianHostToSpecified((u32)(m_imageBase + m_elfProgramHeaderOffset), m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
     sp -= sizeof(ELF32_AUXV);
-    auxv.a_type = EndianHostToSpecified((u32)AT_UID, m_bigEndian);
-    auxv.a_un.a_val = EndianHostToSpecified((u32)uid, m_bigEndian);
+    auxv.a_type = EndianHostToSpecified((u32)AT_PHENT, m_bigEndian);
+    auxv.a_un.a_val = EndianHostToSpecified((u32)sizeof(Elf32Reader::Elf_Phdr), m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
     sp -= sizeof(ELF32_AUXV);
-    auxv.a_type = EndianHostToSpecified((u32)AT_EUID, m_bigEndian);
-    auxv.a_un.a_val = EndianHostToSpecified((u32)euid, m_bigEndian);
+    auxv.a_type = EndianHostToSpecified((u32)AT_PHNUM, m_bigEndian);
+    auxv.a_un.a_val = EndianHostToSpecified((u32)m_elfProgramHeaderCount, m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
     sp -= sizeof(ELF32_AUXV);
-    auxv.a_type = EndianHostToSpecified((u32)AT_GID, m_bigEndian);
-    auxv.a_un.a_val = EndianHostToSpecified((u32)gid, m_bigEndian);
+    auxv.a_type = EndianHostToSpecified((u32)AT_ENTRY, m_bigEndian);
+    auxv.a_un.a_val = EndianHostToSpecified((u32)m_codeRange.first, m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
-    sp -= sizeof(ELF32_AUXV);
-    auxv.a_type = EndianHostToSpecified((u32)AT_EGID, m_bigEndian);
-    auxv.a_un.a_val = EndianHostToSpecified((u32)egid, m_bigEndian);
-    memory->MemCopyToTarget(sp, &auxv, sizeof(ELF32_AUXV));
 
-    sp -= sizeof(u32); // NULL
     // environ
-    sp -= sizeof(u32);
-    WriteMemory( memory, sp, sizeof(u32), sp-4);    // argv[argc] (== NULL) を指すようにする
-
     sp -= sizeof(u32); // NULL
     // argv
     for (int i = 0; i <= argc; i ++) {

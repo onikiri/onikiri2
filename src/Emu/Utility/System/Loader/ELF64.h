@@ -142,6 +142,8 @@ namespace Onikiri {
             const int AT_GID = 13;
             const int AT_EGID = 14;
             //const int AT_DCACHEBSIZE = 19;    // (PowerPC) Data Cache Block Size
+            const int AT_SECURE = 23;
+            const int AT_RANDOM = 25;
         
         }   // namespace ELF
 
