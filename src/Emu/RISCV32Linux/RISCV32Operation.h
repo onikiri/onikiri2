@@ -396,6 +396,66 @@ struct RISCV32NanBoxing : public std::unary_function<EmulatorUtility::OpEmulatio
     }
 };
 
+template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
+struct RISCV32MADD : public std::unary_function<OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        Type lhs = TSrc1()(opState);
+        Type rhs = TSrc2()(opState);
+        Type ths = TSrc3()(opState);
+
+        Onikiri::ScopedFESetRound sr(RoundMode()(opState));
+        volatile Type rvalue = std::fma(lhs, rhs, ths);
+        return rvalue;
+    }
+};
+
+template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
+struct RISCV32MSUB : public std::unary_function<OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        Type lhs = TSrc1()(opState);
+        Type rhs = TSrc2()(opState);
+        Type ths = TSrc3()(opState);
+
+        Onikiri::ScopedFESetRound sr(RoundMode()(opState));
+        volatile Type rvalue = std::fma(lhs, rhs, -ths);
+        return rvalue;
+    }
+};
+
+template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
+struct RISCV32NMADD : public std::unary_function<OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        Type lhs = TSrc1()(opState);
+        Type rhs = TSrc2()(opState);
+        Type ths = TSrc3()(opState);
+
+        Onikiri::ScopedFESetRound sr(RoundMode()(opState));
+        volatile Type rvalue = std::fma(-lhs, rhs, -ths);
+        return rvalue;
+    }
+};
+
+template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
+struct RISCV32NMSUB : public std::unary_function<OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        Type lhs = TSrc1()(opState);
+        Type rhs = TSrc2()(opState);
+        Type ths = TSrc3()(opState);
+
+        Onikiri::ScopedFESetRound sr(RoundMode()(opState));
+        volatile Type rvalue = std::fma(-lhs, rhs, ths);
+        return rvalue;
+    }
+};
+
 
 template <typename T>
 T CanonicalNAN();

@@ -64,6 +64,10 @@ namespace {
 
     static const int OP_FLD = 0x07;     // Float load
     static const int OP_FST = 0x27;     // Float store
+    static const int OP_FMADD = 0x43;   // Float mul add
+    static const int OP_FMSUB = 0x47;   // Float mul sub
+    static const int OP_FNMSUB = 0x4b;  // Float neg mul sub
+    static const int OP_FNMADD = 0x4f;  // Float neg mul add
     static const int OP_FLOAT = 0x53;   // Float
 }
 
@@ -222,6 +226,16 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
         out->Imm[0] = ExtractBits(imm, 0, 12, true);
         break;
     }
+
+    case OP_FMADD:
+    case OP_FMSUB:
+    case OP_FNMSUB:
+    case OP_FNMADD:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5) + 32;     // rs1
+        out->Reg[2] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+        out->Reg[3] = ExtractBits(codeWord, 27, 5) + 32;     // rs3
+        break;
 
     case OP_FLOAT:
     {
