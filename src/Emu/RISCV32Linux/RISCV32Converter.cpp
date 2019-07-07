@@ -81,6 +81,8 @@ namespace {
     static const u32 MASK_LD  =     0x0000707f; // B-type, funct3
 
     static const u32 MASK_ATOMIC =  0xf800707f; // R-type, funct5 + funct3 + opcode
+
+    static const u32 MASK_FLOAT  =  0xfe00707f; // R-type, funct7 + funct3 + opcode
 }
 
 #define OPCODE_LUI()    0x37
@@ -111,6 +113,8 @@ namespace {
 
 #define OPCODE_FLD(f)  (u32)(((f) << 12) | 0x07)
 #define OPCODE_FST(f)  (u32)(((f) << 12) | 0x27)
+
+#define OPCODE_FLOAT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x53)
 
 
 namespace {
@@ -317,11 +321,47 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "amomaxu.w", MASK_ATOMIC, OPCODE_ATOMIC(2, 28), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, RISCV32MAX<u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
 
     // RV32F
-
     // LOAD/STORE
     //{Name,    Mask,       Opcode,           nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
     { "flw",    MASK_LD,    OPCODE_FLD(2),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, RISCV32NanBoxing< AsFP<f32, Load<u32, RISCV32Addr<S0, S1> > > > > } } },
     { "fsw",    MASK_ST,    OPCODE_FST(2),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u32, S0, RISCV32Addr<S1, S2> > } } },
+
+    // FLOAT
+    //  round mode (bit 14-12)
+    //  000: RNE Round to Nearest, ties to Even (直近に丸める、真ん中なら偶数に丸める)
+    //  001: RTZ Round towards Zero
+    //  010: RDN Round Down (towards −infinity)
+    //  011: RUP Round Up (towards +infinity)
+    //  100: RMM Round to Nearest, ties to Max Magnitude (直近に丸める、真ん中なら絶対値が大きい方に丸める)
+    //  111: Use a round mode in FCSR
+    //{Name,            Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "fadd.s/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x00, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPAdd< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fadd.s/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x00, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPAdd< f32, SF0, SF1, IntConst<int, FE_TOWARDZERO> > > > } } },
+    { "fadd.s/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x00, 2),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPAdd< f32, SF0, SF1, IntConst<int, FE_DOWNWARD> > > > } } },
+    { "fadd.s/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x00, 3),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPAdd< f32, SF0, SF1, IntConst<int, FE_UPWARD> > > > } } },
+    { "fadd.s/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x00, 4),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPAdd< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fadd.s",         MASK_FLOAT,   OPCODE_FLOAT(0x00, 7),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPAdd< f32, SF0, SF1, RISCV32RoundModeFromFCSR > > > } } },
+
+    { "fsub.s/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x04, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPSub< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fsub.s/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x04, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPSub< f32, SF0, SF1, IntConst<int, FE_TOWARDZERO> > > > } } },
+    { "fsub.s/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x04, 2),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPSub< f32, SF0, SF1, IntConst<int, FE_DOWNWARD> > > > } } },
+    { "fsub.s/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x04, 3),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPSub< f32, SF0, SF1, IntConst<int, FE_UPWARD> > > > } } },
+    { "fsub.s/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x04, 4),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPSub< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fsub.s",         MASK_FLOAT,   OPCODE_FLOAT(0x04, 7),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPSub< f32, SF0, SF1, RISCV32RoundModeFromFCSR > > > } } },
+
+    { "fmul.s/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x08, 0),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPMul< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fmul.s/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x08, 1),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPMul< f32, SF0, SF1, IntConst<int, FE_TOWARDZERO> > > > } } },
+    { "fmul.s/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x08, 2),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPMul< f32, SF0, SF1, IntConst<int, FE_DOWNWARD> > > > } } },
+    { "fmul.s/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x08, 3),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPMul< f32, SF0, SF1, IntConst<int, FE_UPWARD> > > > } } },
+    { "fmul.s/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x08, 4),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPMul< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fmul.s",         MASK_FLOAT,   OPCODE_FLOAT(0x08, 7),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPMul< f32, SF0, SF1, RISCV32RoundModeFromFCSR > > > } } },
+
+    { "fdiv.s/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x0c, 0),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPDiv< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fdiv.s/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x0c, 1),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPDiv< f32, SF0, SF1, IntConst<int, FE_TOWARDZERO> > > > } } },
+    { "fdiv.s/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x0c, 2),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPDiv< f32, SF0, SF1, IntConst<int, FE_DOWNWARD> > > > } } },
+    { "fdiv.s/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x0c, 3),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPDiv< f32, SF0, SF1, IntConst<int, FE_UPWARD> > > > } } },
+    { "fdiv.s/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x0c, 4),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPDiv< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fdiv.s",         MASK_FLOAT,   OPCODE_FLOAT(0x0c, 7),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPDiv< f32, SF0, SF1, RISCV32RoundModeFromFCSR > > > } } },
 
 
     // RV32D
@@ -330,6 +370,36 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     //{Name,    Mask,       Opcode,           nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
     { "fld",    MASK_LD,    OPCODE_FLD(3),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, Load<u64, RISCV32Addr<S0, S1> > > } } },
     { "fsd",    MASK_ST,    OPCODE_FST(3),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u64, S0, RISCV32Addr<S1, S2> > } } },
+
+    // FLOAT
+    //{Name,            Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "fadd.d/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x01, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPAdd< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
+    { "fadd.d/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x01, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPAdd< f64, SD0, SD1, IntConst<int, FE_TOWARDZERO> > > } } },
+    { "fadd.d/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x01, 2),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPAdd< f64, SD0, SD1, IntConst<int, FE_DOWNWARD> > > } } },
+    { "fadd.d/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x01, 3),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPAdd< f64, SD0, SD1, IntConst<int, FE_UPWARD> > > } } },
+    { "fadd.d/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x01, 4),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPAdd< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
+    { "fadd.d",         MASK_FLOAT,   OPCODE_FLOAT(0x01, 7),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPAdd< f64, SD0, SD1, RISCV32RoundModeFromFCSR > > } } },
+
+    { "fsub.d/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x05, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPSub< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
+    { "fsub.d/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x05, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPSub< f64, SD0, SD1, IntConst<int, FE_TOWARDZERO> > > } } },
+    { "fsub.d/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x05, 2),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPSub< f64, SD0, SD1, IntConst<int, FE_DOWNWARD> > > } } },
+    { "fsub.d/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x05, 3),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPSub< f64, SD0, SD1, IntConst<int, FE_UPWARD> > > } } },
+    { "fsub.d/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x05, 4),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPSub< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
+    { "fsub.d",         MASK_FLOAT,   OPCODE_FLOAT(0x05, 7),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPSub< f64, SD0, SD1, RISCV32RoundModeFromFCSR > > } } },
+
+    { "fmul.d/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x09, 0),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPMul< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
+    { "fmul.d/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x09, 1),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPMul< f64, SD0, SD1, IntConst<int, FE_TOWARDZERO> > > } } },
+    { "fmul.d/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x09, 2),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPMul< f64, SD0, SD1, IntConst<int, FE_DOWNWARD> > > } } },
+    { "fmul.d/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x09, 3),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPMul< f64, SD0, SD1, IntConst<int, FE_UPWARD> > > } } },
+    { "fmul.d/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x09, 4),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPMul< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
+    { "fmul.d",         MASK_FLOAT,   OPCODE_FLOAT(0x09, 7),    1,{ { OpClassCode::fMUL,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPMul< f64, SD0, SD1, RISCV32RoundModeFromFCSR > > } } },
+
+    { "fdiv.d/rne",     MASK_FLOAT,   OPCODE_FLOAT(0x0d, 0),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
+    { "fdiv.d/rtz",     MASK_FLOAT,   OPCODE_FLOAT(0x0d, 1),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, IntConst<int, FE_TOWARDZERO> > > } } },
+    { "fdiv.d/rdn",     MASK_FLOAT,   OPCODE_FLOAT(0x0d, 2),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, IntConst<int, FE_DOWNWARD> > > } } },
+    { "fdiv.d/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x0d, 3),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, IntConst<int, FE_UPWARD> > > } } },
+    { "fdiv.d/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x0d, 4),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
+    { "fdiv.d",         MASK_FLOAT,   OPCODE_FLOAT(0x0d, 7),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, RISCV32RoundModeFromFCSR > > } } },
 
 };
 

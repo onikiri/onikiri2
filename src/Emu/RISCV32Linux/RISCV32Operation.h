@@ -514,6 +514,30 @@ void RISCV32CSRRC(OpEmulationState* opState)
     TDest::SetOperand(opState, csrValue);    // Return the original value
 }
 
+// Return a current rounding mode specified by FRM
+struct RISCV32RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u32>
+{
+    int operator()(EmulatorUtility::OpEmulationState* opState) const
+    {
+        u32 frm = GetCSR_Value(opState, RISCV32CSR::FRM);
+        switch (static_cast<RISCV32FRM>(frm)) {
+        case RISCV32FRM::RNE:
+            return FE_TONEAREST;
+        case RISCV32FRM::RTZ:
+            return FE_TOWARDZERO;
+        case RISCV32FRM::RDN:
+            return FE_DOWNWARD;
+        case RISCV32FRM::RUP:
+            return FE_UPWARD;
+        case RISCV32FRM::RMM:
+            return FE_TONEAREST;
+        default:
+            RUNTIME_WARNING("Undefined rounding mode: %d", (int)frm);
+            return FE_TONEAREST;
+        }
+    }
+};
+
 
 void RISCV32SyscallSetArg(EmulatorUtility::OpEmulationState* opState)
 {
