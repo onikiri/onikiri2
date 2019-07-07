@@ -665,6 +665,48 @@ struct RISCV32FPLessEqual : public std::unary_function<EmulatorUtility::OpEmulat
 };
 
 
+// 指数部が全て1で，仮数部が非ゼロなら NaN
+// さらに，仮数部の最上位が 0 なら Signaling
+inline bool IsSignalingNAN(f64 fpValue) {
+    u64 intValue = AsIntFunc<u64>(fpValue);
+    return
+        (((intValue >> 51) & 0xFFF) == 0xFFE) &&
+        (intValue & 0x7FFFFFFFFFFFFull);
+}
+
+inline bool IsSignalingNAN(f32 fpValue) {
+    u32 intValue = AsIntFunc<u32>(fpValue);
+    return
+        (((intValue >> 22) & 0x1FF) == 0x1FE) &&
+        (intValue & 0x3FFFFF);
+}
+
+template <typename Type, typename TSrc1>
+struct RISCV32FCLASS : public std::unary_function<EmulatorUtility::OpEmulationState*, u32>
+{
+    u32 operator()(EmulatorUtility::OpEmulationState* opState)
+    {
+        Type value = static_cast<Type>(TSrc1()(opState));
+
+        switch(std::fpclassify(value)) {
+        case FP_INFINITE:
+            return std::signbit(value) ? (u32)(1 << 0) : (u32)(1 << 7);
+        case FP_NAN:
+            return IsSignalingNAN(value) ? (u32)(1 << 8) : (u32)(1 << 9);
+        case FP_NORMAL:
+            return std::signbit(value) ? (u32)(1 << 1) : (u32)(1 << 6);
+        case FP_SUBNORMAL:
+            return std::signbit(value) ? (u32)(1 << 2) : (u32)(1 << 5);
+        case FP_ZERO:
+            return std::signbit(value) ? (u32)(1 << 3) : (u32)(1 << 4);
+        default:
+            return 0;
+        }
+    }
+};
+
+
+
 //
 // CSR Operations
 //

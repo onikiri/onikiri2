@@ -87,6 +87,7 @@ namespace {
     static const u32 MASK_MULADD =  0x0600707f; // R4-type, funct2 + funct3 + opcode
     static const u32 MASK_FCVT   =  0xfff0707f; // R-type, funct7 + rs2 + funct3 + opcode
     static const u32 MASK_MV    =   0xfff0707f; // R-type, funct7 + rs2 + funct3 + opcode
+    static const u32 MASK_FCLASS =  0xfff0707f; // R-type, funct7 + rs2 + funct3 + opcode
 }
 
 #define OPCODE_LUI()    0x37
@@ -126,6 +127,7 @@ namespace {
 #define OPCODE_FNMADD(fmt, f3) (u32)(((fmt) << 25) | ((f3) << 12) | 0x4f)
 #define OPCODE_FCVT(f7, rs2, f3) (u32)(((f7) << 25) | (rs2 << 20) | ((f3) << 12) | 0x53)
 #define OPCODE_MV(f7) (u32)(((f7) << 25) | (0 << 20) | (0 << 12) | 0x53)
+#define OPCODE_FCLASS(f7) (u32)(((f7) << 25) | (0 << 20) | (1 << 12) | 0x53)
 
 
 namespace {
@@ -456,6 +458,10 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "flt.s",      MASK_FLOAT,   OPCODE_FLOAT(0x50, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPLess< f32, SF0, SF1> > } } },
     { "fle.s",      MASK_FLOAT,   OPCODE_FLOAT(0x50, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPLessEqual< f32, SF0, SF1> > } } },
 
+    // Class
+    //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "fclass.s",   MASK_FCLASS,  OPCODE_FCLASS(0x70),      1,{ { OpClassCode::fADD,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32FCLASS< f32, SF0> > } } },
+
 
     // RV32D
 
@@ -589,6 +595,10 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "feq.d",      MASK_FLOAT,   OPCODE_FLOAT(0x51, 2),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPEqual< f64, SD0, SD1> > } } },
     { "flt.d",      MASK_FLOAT,   OPCODE_FLOAT(0x51, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPLess< f64, SD0, SD1> > } } },
     { "fle.d",      MASK_FLOAT,   OPCODE_FLOAT(0x51, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPLessEqual< f64, SD0, SD1> > } } },
+
+    // Class
+    //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "fclass.d",   MASK_FCLASS,  OPCODE_FCLASS(0x71),      1,{ { OpClassCode::fADD,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32FCLASS< f64, SD0> > } } },
 
 };
 
