@@ -524,6 +524,58 @@ struct RISCV32FPMAX : public std::unary_function<EmulatorUtility::OpEmulationSta
 };
 
 
+//conversion
+
+namespace {
+    // These functions define the min/max valid input, whose rounded result is representable in the destination format.
+    // These min/max values may not be representable in the destination format, so we define the values in source format.
+    template<typename FPType, typename IntType>
+    FPType maximumValidInput();
+    template<typename FPType, typename IntType>
+    FPType minimumValidInput();
+
+    template<> f32 maximumValidInput<f32, s32>() { return AsFPFunc<f32, u32>(0x4effffff); } // The max is  2^31 - 128, since 2^31-1 cannot be represented in f32.
+    template<> f32 minimumValidInput<f32, s32>() { return AsFPFunc<f32, u32>(0xcf000000); } // The min is -2^31 because the next is -2^31 - 128, which is not representable in s32.
+    template<> f32 maximumValidInput<f32, u32>() { return AsFPFunc<f32, u32>(0x4f7fffff); } // 2^32 - 256
+    template<> f32 minimumValidInput<f32, u32>() { return AsFPFunc<f32, u32>(0xbf7fffff); } // The min is -0.99999994 that is the minimum number that rounded result is 0.
+    template<> f64 maximumValidInput<f64, s32>() { return AsFPFunc<f64, u64>(0x41dfffffffffffff); } //  2^31-1 + 0.9999998
+    template<> f64 minimumValidInput<f64, s32>() { return AsFPFunc<f64, u64>(0xc1e00000001fffff); } // -2^31   - 0.9999998
+    template<> f64 maximumValidInput<f64, u32>() { return AsFPFunc<f64, u64>(0x41efffffffffffff); } //  2^32-1 + 0.9999995
+    template<> f64 minimumValidInput<f64, u32>() { return AsFPFunc<f64, u64>(0xbfefffffffffffff); } // -0.9999999999999999
+}
+
+// Convert floating point number TSrc to integer Type.
+template <typename Type, typename TSrc, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
+struct RISCV32FPToInt : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+{
+    Type operator()(EmulatorUtility::OpEmulationState* opState)
+    {
+        typedef typename TSrc::result_type FPType;
+
+        constexpr Type maxValue = std::numeric_limits<Type>::max();
+        constexpr Type minValue = std::numeric_limits<Type>::min();
+        FPType value = TSrc()(opState);
+
+        if (std::isnan(value)) // NaN
+            return maxValue;
+        else if (std::isinf(value) && !std::signbit(value)) // +Inf
+            return maxValue;
+        else if (std::isinf(value) && std::signbit(value)) // -Inf
+            return minValue;
+        else if (value > maximumValidInput<FPType, Type>())
+            return maxValue;
+        else if (value < minimumValidInput<FPType, Type>())
+            return minValue;
+        else {
+            Onikiri::ScopedFESetRound sr(RoundMode()(opState));
+            // std::nearbyint rounds argument to an integral value, using the rounding direction specified by fegetround.
+            volatile Type ret = static_cast<Type>(std::nearbyint(value));
+            return ret;
+        }
+    }
+};
+
+
 //
 // CSR Operations
 //
