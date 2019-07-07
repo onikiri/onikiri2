@@ -106,7 +106,12 @@ namespace {
 #define OPCODE_ECALL()  (u32)(0x73)
 #define OPCODE_CSR(f)  (u32)(((f) << 12) | 0x73)
 
+
 #define OPCODE_ATOMIC(width, funct5) (u32)(((funct5) << 27) | ((width) << 12) | 0x2f)
+
+#define OPCODE_FLD(f)  (u32)(((f) << 12) | 0x07)
+#define OPCODE_FST(f)  (u32)(((f) << 12) | 0x27)
+
 
 namespace {
     // オペランドのテンプレート
@@ -133,8 +138,8 @@ namespace {
 
 #define RISCV32_DSTOP(n) RISCV32DstOperand<n>
 #define RISCV32_SRCOP(n) RISCV32SrcOperand<n>
-//#define RISCV32_SRCOPFLOAT(n) Cast< float, AsFP< double, SrcOperand<n> > >
-//#define RISCV32_SRCOPDOUBLE(n) AsFP< double, SrcOperand<n> >
+#define RISCV32_SRCOPFLOAT(n) AsFP< f32, Cast< u32, SrcOperand<n> > > // lower 32-bit holds float value
+#define RISCV32_SRCOPDOUBLE(n) AsFP< f64, SrcOperand<n> >
 
 #define D0 RISCV32_DSTOP(0)
 #define D1 RISCV32_DSTOP(1)
@@ -142,7 +147,6 @@ namespace {
 #define S1 RISCV32_SRCOP(1)
 #define S2 RISCV32_SRCOP(2)
 #define S3 RISCV32_SRCOP(3)
-/*
 #define SF0 RISCV32_SRCOPFLOAT(0)
 #define SF1 RISCV32_SRCOPFLOAT(1)
 #define SF2 RISCV32_SRCOPFLOAT(2)
@@ -151,12 +155,6 @@ namespace {
 #define SD1 RISCV32_SRCOPDOUBLE(1)
 #define SD2 RISCV32_SRCOPDOUBLE(2)
 #define SD3 RISCV32_SRCOPDOUBLE(3)
-*/
-// 00000000 PAL 00 = halt
-// 2ffe0000 ldq_u r31, r30(0) = unop
-// 471f041f mslql r31, r31, r31 = nop
-
-// no trap implemented
 
 // 投機的にフェッチされたときにはエラーにせず，実行されたときにエラーにする
 // syscallにすることにより，直前までの命令が完了してから実行される (実行は投機的でない)
@@ -317,6 +315,21 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "amomax.w" , MASK_ATOMIC, OPCODE_ATOMIC(2, 20), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, RISCV32MAX<s32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
     { "amominu.w", MASK_ATOMIC, OPCODE_ATOMIC(2, 24), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, RISCV32MIN<u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
     { "amomaxu.w", MASK_ATOMIC, OPCODE_ATOMIC(2, 28), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, RISCV32MAX<u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+
+    // RV32F
+
+    // LOAD/STORE
+    //{Name,    Mask,       Opcode,           nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
+    { "flw",    MASK_LD,    OPCODE_FLD(2),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, RISCV32NanBoxing< AsFP<f32, Load<u32, RISCV32Addr<S0, S1> > > > > } } },
+    { "fsw",    MASK_ST,    OPCODE_FST(2),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u32, S0, RISCV32Addr<S1, S2> > } } },
+
+
+    // RV32D
+
+    // LOAD/STORE
+    //{Name,    Mask,       Opcode,           nOp,{ OpClassCode,        Dst[],      Src[],               OpInfoType::EmulationFunc}[]}
+    { "fld",    MASK_LD,    OPCODE_FLD(3),    1,{ { OpClassCode::fLD,   {R0, -1},   {R1, I0, -1, -1},    Set<D0, Load<u64, RISCV32Addr<S0, S1> > > } } },
+    { "fsd",    MASK_ST,    OPCODE_FST(3),    1,{ { OpClassCode::fST,   {-1, -1},   {R1, R0, I0, -1},    Store<u64, S0, RISCV32Addr<S1, S2> > } } },
 
 };
 

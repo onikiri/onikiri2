@@ -387,6 +387,16 @@ void RISCV32StoreConditional(OpEmulationState* opState)
     }
 }
 
+template<typename TSrc>
+struct RISCV32NanBoxing : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+{
+    u64 operator()(EmulatorUtility::OpEmulationState* opState) const
+    {
+        return 0xffffffff00000000 | AsIntFunc<u32, f32>(TSrc()(opState));
+    }
+};
+
+
 
 //
 // CSR Operations

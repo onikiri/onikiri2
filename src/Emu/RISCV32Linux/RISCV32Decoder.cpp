@@ -61,6 +61,9 @@ namespace {
     static const int OP_ECALL = 0x73;   // system call
 
     static const int OP_ATOMIC = 0x2f;  // Atomic memory operations
+
+    static const int OP_FLD = 0x07;     // Float load
+    static const int OP_FST = 0x27;     // Float store
 }
 
 RISCV32Decoder::DecodedInsn::DecodedInsn()
@@ -200,6 +203,25 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
         out->Reg[1] = ExtractBits(codeWord, 15, 5);          // rs1
         out->Reg[2] = ExtractBits(codeWord, 20, 5);          // rs2
         break;
+
+    case OP_FLD:
+        out->Reg[0] = ExtractBits(codeWord, 7, 5) + 32;      // rd
+        out->Reg[1] = ExtractBits(codeWord, 15, 5);          // rs1
+        out->Imm[0] = ExtractBits(codeWord, 20, 12, true);
+        break;
+
+    case OP_FST:
+    {
+        out->Reg[0] = ExtractBits(codeWord, 15, 5);          // rs1
+        out->Reg[1] = ExtractBits(codeWord, 20, 5) + 32;     // rs2
+
+        u64 imm =
+            (ExtractBits<u64>(codeWord, 7, 5) << 0) |
+            (ExtractBits<u64>(codeWord, 25, 7) << 5);
+        out->Imm[0] = ExtractBits(imm, 0, 12, true);
+        break;
+    }
+
     default:
         break;
     }
