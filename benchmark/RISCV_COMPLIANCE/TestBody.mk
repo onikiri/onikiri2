@@ -87,13 +87,14 @@ $(RESULT_DIR):
 	mkdir -p $(RESULT_DIR)
 
 $(RESULT_DIR)/%: | $(RESULT_DIR)
-	../../project/gcc/onikiri2/a.out param.xml \
+	@../../project/gcc/onikiri2/a.out param.xml \
 		-x /Session/Emulator/Processes/Process/@Command=$(BIN_DIR)/$(notdir $@) \
 		-x /Session/Emulator/Processes/Process/@STDOUT=$@ \
 		-x /Session/Emulator/@TargetArchitecture=$(ONIKIRI_TARGET_ARCHITECTURE) \
-		> $@.xml
-	diff $(REF_DIR)/$(notdir $@).reference_output $@; 
-	@echo Check $(notdir $@) ... OK
+		> $@.xml; 
+	@diff $(REF_DIR)/$(notdir $@).reference_output $@ || (echo "Check $(notdir $@) ...\t NG"; exit 1); 
+	@diff $(REF_DIR)/$(notdir $@).reference_output $@ && echo "Check $(notdir $@) ...\t OK"; 
+		
 
 .PHONY: $(TEST_GOALS)
 $(TEST_GOALS): 
