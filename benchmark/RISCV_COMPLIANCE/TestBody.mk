@@ -6,8 +6,18 @@ RISCV_COMPLIANCE_PATH = $(WORK_PATH)/riscv-compliance
 ENV_CFG = env.cfg
 
 # ENV_CFG が存在してたら読み込む
+# ここのインデントはタブだとエラーになり，全部スペースなので注意
 ifneq ("$(wildcard $(ENV_CFG))","")
-	include $(ENV_CFG)
+include $(ENV_CFG)
+ifeq ($(ARC_BITS),64)
+CC = $(CC64)
+TARGET_DIR = ./target-onikiri2/64
+ONIKIRI_TARGET_ARCHITECTURE = RISCV64Linux
+else 
+CC = $(CC32)
+TARGET_DIR = ./target-onikiri2/32
+ONIKIRI_TARGET_ARCHITECTURE = RISCV32Linux
+endif
 endif
 
 
@@ -17,7 +27,8 @@ endif
 # --- Clone riscv-compliance
 #
 $(ENV_CFG):
-	@echo CC= > $(ENV_CFG)
+	@echo CC64= > $(ENV_CFG)
+	@echo CC32= >> $(ENV_CFG)
 	@echo Edit '$(ENV_CFG)' to set a cross compiler path to CC
 	false
 
@@ -25,7 +36,9 @@ $(ENV_CFG):
 $(RISCV_COMPLIANCE_PATH): 
 	mkdir $(WORK_PATH) -p
 	cd $(WORK_PATH) ;\
-		git clone https://github.com/riscv/riscv-compliance
+		git clone https://github.com/riscv/riscv-compliance ;
+	cd $(WORK_PATH)/riscv-compliance ;\
+		git checkout 50d220b1373995f0837d776e916f197949d13332
 
 distclean:
 	rm $(WORK_PATH) -r -f
@@ -43,7 +56,6 @@ TEST_GOALS   = $(SRC_APPS:%=test-%)
 # リファレンス出力
 
 # ビルド設定
-TARGET_DIR = ./target-onikiri2
 XCFLAGS = -g -static -I $(TARGET_DIR) -I $(RISCV_COMPLIANCE_PATH)/riscv-test-env
 
 
@@ -78,6 +90,7 @@ $(RESULT_DIR)/%: | $(RESULT_DIR)
 	../../project/gcc/onikiri2/a.out param.xml \
 		-x /Session/Emulator/Processes/Process/@Command=$(BIN_DIR)/$(notdir $@) \
 		-x /Session/Emulator/Processes/Process/@STDOUT=$@ \
+		-x /Session/Emulator/@TargetArchitecture=$(ONIKIRI_TARGET_ARCHITECTURE) \
 		> $@.xml
 	diff $(REF_DIR)/$(notdir $@).reference_output $@; 
 	@echo Check $(notdir $@) ... OK

@@ -21,3 +21,7 @@ test-RV64UF:
 
 test-RV64UI:
 	$(MAKE) -f RV64UI.mk
+
+
+test-RV32I:
+	$(MAKE) -f RV32I.mk
