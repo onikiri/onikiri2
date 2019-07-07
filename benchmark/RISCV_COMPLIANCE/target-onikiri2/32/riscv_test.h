@@ -6,7 +6,7 @@
 #ifndef ONIKIRI2_RISCV_TEST_H
 #define ONIKIRI2_RISCV_TEST_H
 
-//#define RVTEST_RV64U
-//#define RVTEST_RV64UF
+#define RVTEST_RV32U
+#define RVTEST_RV32UF
 
 #endif
