@@ -86,6 +86,7 @@ namespace {
     static const u32 MASK_SQRT   =  0xfff0707f; // R-type, funct7 + rs2(0) + funct3 + opcode
     static const u32 MASK_MULADD =  0x0600707f; // R4-type, funct2 + funct3 + opcode
     static const u32 MASK_FCVT   =  0xfff0707f; // R-type, funct7 + rs2 + funct3 + opcode
+    static const u32 MASK_MV    =   0xfff0707f; // R-type, funct7 + rs2 + funct3 + opcode
 }
 
 #define OPCODE_LUI()    0x37
@@ -124,6 +125,7 @@ namespace {
 #define OPCODE_FNMSUB(fmt, f3) (u32)(((fmt) << 25) | ((f3) << 12) | 0x4b)
 #define OPCODE_FNMADD(fmt, f3) (u32)(((fmt) << 25) | ((f3) << 12) | 0x4f)
 #define OPCODE_FCVT(f7, rs2, f3) (u32)(((f7) << 25) | (rs2 << 20) | ((f3) << 12) | 0x53)
+#define OPCODE_MV(f7) (u32)(((f7) << 25) | (0 << 20) | (0 << 12) | 0x53)
 
 
 namespace {
@@ -440,6 +442,14 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "fcvt.s.wu/rmm",  MASK_FCVT,    OPCODE_FCVT(0x68, 1, 4),  1,{ { OpClassCode::ifCONV, {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< CastFP< f32, Cast< u32, S0>, IntConst<int, FE_TONEAREST> > > > } } },
     { "fcvt.s.wu",      MASK_FCVT,    OPCODE_FCVT(0x68, 1, 7),  1,{ { OpClassCode::ifCONV, {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< CastFP< f32, Cast< u32, S0>, RISCV32RoundModeFromFCSR > > > } } },
 
+    // Move
+    //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "fsgnj.s",    MASK_FLOAT,   OPCODE_FLOAT(0x10, 0),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< AsFP< f32, FPFLOATCopySign<S1, S0> > > > } } },
+    { "fsgnjn.s",   MASK_FLOAT,   OPCODE_FLOAT(0x10, 1),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< AsFP< f32, FPFLOATCopySignNeg<S1, S0> > > > } } },
+    { "fsgnjx.s",   MASK_FLOAT,   OPCODE_FLOAT(0x10, 2),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< AsFP< f32, FPFLOATCopySignXor<S1, S0> > > > } } },
+    { "fmv.x.w",    MASK_MV,      OPCODE_MV(0x70),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, AsInt<u32, SF0> > } } },
+    { "fmv.w.x",    MASK_MV,      OPCODE_MV(0x78),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< AsFP< f32, S0> > > } } },
+
 
     // RV32D
 
@@ -560,6 +570,12 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "fcvt.d.s/rup",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 3),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_UPWARD> > > } } },
     { "fcvt.d.s/rmm",   MASK_FCVT,    OPCODE_FCVT(0x21, 0, 4),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, IntConst<int, FE_TONEAREST> > > } } },
     { "fcvt.d.s",       MASK_FCVT,    OPCODE_FCVT(0x21, 0, 7),  1,{ { OpClassCode::fCONV, {R0, -1},   {R1, -1, -1, -1},    SetFP< D0, CastFP< f64, SF0, RISCV32RoundModeFromFCSR > > } } },
+
+    // Move
+    //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "fsgnj.d",    MASK_FLOAT,   OPCODE_FLOAT(0x11, 0),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, FPDoubleCopySign<S1, S0> > } } },
+    { "fsgnjn.d",   MASK_FLOAT,   OPCODE_FLOAT(0x11, 1),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, FPDoubleCopySignNeg<S1, S0> > } } },
+    { "fsgnjx.d",   MASK_FLOAT,   OPCODE_FLOAT(0x11, 2),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, FPDoubleCopySignXor<S1, S0> > } } },
 
 };
 

@@ -576,6 +576,57 @@ struct RISCV32FPToInt : public std::unary_function<EmulatorUtility::OpEmulationS
 };
 
 
+template <typename TSrc1, typename TSrc2>
+struct FPFLOATCopySign : public std::unary_function<OpEmulationState*, u32>
+{
+    u32 operator()(OpEmulationState* opState)
+    {
+        u32 lhs = static_cast<u32>(TSrc1()(opState));
+        u32 rhs = static_cast<u32>(TSrc2()(opState));
+
+        return (lhs & (u32)0x80000000) | (rhs & ~(u32)0x80000000);
+    }
+};
+
+
+template <typename TSrc1, typename TSrc2>
+struct FPFLOATCopySignNeg : public std::unary_function<OpEmulationState*, u32>
+{
+    u32 operator()(OpEmulationState* opState)
+    {
+        u32 lhs = static_cast<u32>(TSrc1()(opState));
+        u32 rhs = static_cast<u32>(TSrc2()(opState));
+
+        return (~lhs & (u32)0x80000000) | (rhs & ~(u32)0x80000000);
+    }
+};
+
+template <typename TSrc1, typename TSrc2>
+struct FPDoubleCopySignXor : public std::unary_function<OpEmulationState*, u64>
+{
+    u64 operator()(OpEmulationState* opState)
+    {
+        u64 lhs = static_cast<u64>(TSrc1()(opState));
+        u64 rhs = static_cast<u64>(TSrc2()(opState));
+
+        return (lhs & (u64)0x8000000000000000ULL) ^ rhs;
+    }
+};
+
+
+template <typename TSrc1, typename TSrc2>
+struct FPFLOATCopySignXor : public std::unary_function<OpEmulationState*, u64>
+{
+    u32 operator()(OpEmulationState* opState)
+    {
+        u32 lhs = static_cast<u32>(TSrc1()(opState));
+        u32 rhs = static_cast<u32>(TSrc2()(opState));
+
+        return (lhs & (u32)0x80000000) ^ rhs;
+    }
+};
+
+
 //
 // CSR Operations
 //
