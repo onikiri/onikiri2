@@ -170,7 +170,30 @@ void RISCV32Decoder::Decode(u32 codeWord, DecodedInsn* out)
     }
 
     case OP_ECALL:
+    {
+        u64 bits12_14 = ExtractBits<u64>(codeWord, 12, 3);
+        if (bits12_14 == 0x1 || bits12_14 == 0x2 || bits12_14 == 0x3) {
+            // csrrw/csrrs/csrrc
+            out->Reg[0] = ExtractBits(codeWord, 7, 5);          // rd
+            out->Reg[1] = ExtractBits(codeWord, 15, 5);         // rs1
+            out->Imm[0] = ExtractBits(codeWord, 20, 12);        // csr number
+        }
+        else if (bits12_14 == 0x5 || bits12_14 == 0x6 || bits12_14 == 0x7) {
+            // csrrwi/csrrsi/csrrci
+            out->Reg[0] = ExtractBits(codeWord, 7, 5);          // rd
+            out->Imm[0] = ExtractBits<u64>(codeWord, 15, 5);    // imm
+            out->Imm[1] = ExtractBits(codeWord, 20, 12);        // csr number
+        }
+        else if (bits12_14 == 0x0) {
+            // ecall/ebreak
+            // These instructions do not have specific operands
+        }
+        else {
+            // Unknown instruction
+            // An unknown instruction can be fetchd becahuse instructions are fetched speculatively,
+        }
         break;
+    }
 
     case OP_ATOMIC:
         out->Reg[0] = ExtractBits(codeWord, 7, 5);           // rd

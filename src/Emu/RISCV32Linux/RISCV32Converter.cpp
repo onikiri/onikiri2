@@ -64,7 +64,9 @@ namespace {
     static const u32 MASK_IMM =     0x0000707f; // I-type, funct3 + opcode
     static const u32 MASK_SHIFT =   0xfe00707f; // I-type?, funct3 + opcode
     static const u32 MASK_INT =     0xfe00707f; // R-type, funct7 + funct3 + opcode
-    
+
+    static const u32 MASK_CSR   =   0x0000707f; // I-type, funct3 + opcode
+
     static const u32 MASK_JAL =     0x0000007f; // J-type
     static const u32 MASK_J =       0x00000fff; // J-type, rd
 
@@ -102,6 +104,7 @@ namespace {
 #define OPCODE_ST(f)  (u32)(((f) << 12) | 0x23)
 
 #define OPCODE_ECALL()  (u32)(0x73)
+#define OPCODE_CSR(f)  (u32)(((f) << 12) | 0x73)
 
 #define OPCODE_ATOMIC(width, funct5) (u32)(((funct5) << 27) | ((width) << 12) | 0x2f)
 
@@ -251,6 +254,41 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
         {OpClassCode::syscall,          {17, -1}, {17, 10, 11, -1}, RISCV32SyscallSetArg} ,
         {OpClassCode::syscall_branch,   {10, -1}, {17, 12, 13, -1}, RISCV32SyscallCore},
     }},
+
+    // Fence Instructions
+    // It is not always necessary to stop all the instructions
+    // but for the sake of simplicity, I implemented by using OpClalssCode::syscall
+    {"fence"    , 0xf00fffff, 0x0000000f,   1,  { { OpClassCode::syscall,   {-1, -1},   {-1, -1, -1, -1},   NoOperation } } },
+    {"fence.tso", MASK_EXACT, 0x8330000f,   1,  { { OpClassCode::syscall,   {-1, -1},   {-1, -1, -1, -1},   NoOperation } } },
+    {"fence.i"  , MASK_EXACT, 0x0000100f,   1,  { { OpClassCode::syscall,   {-1, -1},   {-1, -1, -1, -1},   NoOperation } } },
+
+
+    // Csr
+    {"csrrw",   MASK_CSR,   OPCODE_CSR(1),   2,  {
+        {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV32SyscallSetArg} ,
+        {OpClassCode::syscall_branch,   {R0, -1}, {R1, I0, -1, -1}, RISCV32CSRRW<D0, S0, S1>},
+    }},
+    {"csrrs",   MASK_CSR,   OPCODE_CSR(2),   2,  {
+        {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV32SyscallSetArg} ,
+        {OpClassCode::syscall_branch,   {R0, -1}, {R1, I0, -1, -1}, RISCV32CSRRS<D0, S0, S1>},
+    }},
+    {"csrrc",   MASK_CSR,   OPCODE_CSR(3),   2,  {
+        {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV32SyscallSetArg} ,
+        {OpClassCode::syscall_branch,   {R0, -1}, {R1, I0, -1, -1}, RISCV32CSRRC<D0, S0, S1>},
+    }},
+    {"csrrwi",   MASK_CSR,   OPCODE_CSR(5),   2,  {
+        {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV32SyscallSetArg} ,
+        {OpClassCode::syscall_branch,   {R0, -1}, {I0, I1, -1, -1}, RISCV32CSRRW<D0, S0, S1>},
+    }},
+    {"csrrsi",   MASK_CSR,   OPCODE_CSR(6),   2,  {
+        {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV32SyscallSetArg} ,
+        {OpClassCode::syscall_branch,   {R0, -1}, {I0, I1, -1, -1}, RISCV32CSRRS<D0, S0, S1>},
+    }},
+    {"csrrci",   MASK_CSR,   OPCODE_CSR(7),   2,  {
+        {OpClassCode::syscall,          {-1, -1}, {-1, -1, -1, -1}, RISCV32SyscallSetArg} ,
+        {OpClassCode::syscall_branch,   {R0, -1}, {I0, I1, -1, -1}, RISCV32CSRRC<D0, S0, S1>},
+    }},
+
     
     // RV32M
     //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}

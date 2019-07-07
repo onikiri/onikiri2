@@ -34,6 +34,7 @@
 
 #include "SysDeps/fenv.h"
 #include "Utility/RuntimeError.h"
+#include "Emu/Utility/DecoderUtility.h"
 #include "Emu/Utility/GenericOperation.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/Memory/MemorySystem.h"
@@ -385,6 +386,124 @@ void RISCV32StoreConditional(OpEmulationState* opState)
 
     }
 }
+
+
+//
+// CSR Operations
+//
+namespace {
+    enum class RISCV32CSR
+    {
+        FFLAGS   = 0x001,
+        FRM      = 0x002,
+        FCSR     = 0x003,
+        CYCLE    = 0xC00,
+        TIME     = 0xC01,
+        INSTRET  = 0xC02,
+        CYCLEH   = 0xC80,
+        TIMEH    = 0xC81,
+        INSTRETH = 0xC82,
+    };
+
+    enum class RISCV32FRM
+    {
+        RNE = 0, // Round to Nearest, ties to Even
+        RTZ = 1, // Round towards Zero
+        RDN = 2, // Round Down (towards −infinity)
+        RUP = 3, // Round Up (towards +infinity)
+        RMM = 4, // Round to Nearest, ties to Max Magnitude
+    };
+
+    u32 GetCSR_Value(OpEmulationState* opState, RISCV32CSR csrNum)
+    {
+        ProcessState* process = opState->GetProcessState();
+        switch (csrNum) {
+        case RISCV32CSR::FFLAGS:
+        case RISCV32CSR::FRM:
+            return process->GetControlRegister(static_cast<u32>(csrNum));
+
+        case RISCV32CSR::FCSR:
+            return
+                process->GetControlRegister(static_cast<u32>(RISCV32CSR::FFLAGS)) |
+                (process->GetControlRegister(static_cast<u32>(RISCV32CSR::FRM)) << 5);
+
+        case RISCV32CSR::CYCLE:
+        case RISCV32CSR::TIME:
+        case RISCV32CSR::INSTRET:
+            return process->GetVirtualSystem()->GetInsnTick();
+        case RISCV32CSR::CYCLEH:
+        case RISCV32CSR::TIMEH:
+        case RISCV32CSR::INSTRETH:
+            return process->GetVirtualSystem()->GetInsnTick() >> 32;
+        default:
+            RUNTIME_WARNING("Unimplemented CSR is read: %d", static_cast<int>(csrNum));
+            return process->GetControlRegister(static_cast<u32>(csrNum));
+        }
+    }
+
+    void SetCSR_Value(OpEmulationState* opState, RISCV32CSR csrNum, u32 value)
+    {
+        ProcessState* process = opState->GetProcessState();
+        switch (csrNum) {
+        case RISCV32CSR::FFLAGS:
+            process->SetControlRegister(static_cast<u32>(csrNum), ExtractBits(value, 0, 5));
+            break;
+
+        case RISCV32CSR::FRM:
+            process->SetControlRegister(static_cast<u32>(csrNum), ExtractBits(value, 0, 2));
+            break;
+
+        case RISCV32CSR::FCSR:  // Map to FFLAGS/FRM
+            process->SetControlRegister(static_cast<u32>(RISCV32CSR::FFLAGS), ExtractBits(value, 0, 5));
+            process->SetControlRegister(static_cast<u32>(RISCV32CSR::FRM), ExtractBits(value, 5, 3));
+            break;
+
+        // These registers are read-only
+        case RISCV32CSR::CYCLE:
+        case RISCV32CSR::TIME:
+        case RISCV32CSR::INSTRET:
+        case RISCV32CSR::CYCLEH:
+        case RISCV32CSR::TIMEH:
+        case RISCV32CSR::INSTRETH:
+
+        default:
+            RUNTIME_WARNING("Unimplemented CSR is written: %d", static_cast<int>(csrNum));
+            process->SetControlRegister(static_cast<u32>(csrNum), value);
+        }
+    }
+
+} // namespace `anonymous'
+
+template <typename TDest, typename TSrc1, typename CSR_S>
+void RISCV32CSRRW(OpEmulationState* opState)
+{
+    u32 srcValue = static_cast<u32>(SrcOperand<0>()(opState));
+    RISCV32CSR csrNum = (RISCV32CSR)CSR_S()(opState);
+    u32 csrValue = GetCSR_Value(opState, csrNum);
+    SetCSR_Value(opState, csrNum, srcValue);
+    TDest::SetOperand(opState, csrValue);
+}
+
+template <typename TDest, typename TSrc1, typename CSR_S>
+void RISCV32CSRRS(OpEmulationState* opState)
+{
+    u32 srcValue = static_cast<u32>(SrcOperand<0>()(opState));
+    RISCV32CSR csrNum = (RISCV32CSR)CSR_S()(opState);
+    u32 csrValue = GetCSR_Value(opState, csrNum);
+    SetCSR_Value(opState, csrNum, csrValue | srcValue);
+    TDest::SetOperand(opState, csrValue);    // Return the original value
+}
+
+template <typename TDest, typename TSrc1, typename CSR_S>
+void RISCV32CSRRC(OpEmulationState* opState)
+{
+    u32 srcValue = static_cast<u32>(SrcOperand<0>()(opState));
+    RISCV32CSR csrNum = (RISCV32CSR)CSR_S()(opState);
+    u32 csrValue = GetCSR_Value(opState, csrNum);
+    SetCSR_Value(opState, csrNum, csrValue & (~srcValue));
+    TDest::SetOperand(opState, csrValue);    // Return the original value
+}
+
 
 void RISCV32SyscallSetArg(EmulatorUtility::OpEmulationState* opState)
 {
