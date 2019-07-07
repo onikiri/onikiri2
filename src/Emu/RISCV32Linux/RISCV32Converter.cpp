@@ -83,6 +83,7 @@ namespace {
     static const u32 MASK_ATOMIC =  0xf800707f; // R-type, funct5 + funct3 + opcode
 
     static const u32 MASK_FLOAT  =  0xfe00707f; // R-type, funct7 + funct3 + opcode
+    static const u32 MASK_SQRT   =  0xfff0707f; // R-type, funct7 + rs2(0) + funct3 + opcode
 }
 
 #define OPCODE_LUI()    0x37
@@ -115,6 +116,7 @@ namespace {
 #define OPCODE_FST(f)  (u32)(((f) << 12) | 0x27)
 
 #define OPCODE_FLOAT(f7, f3) (u32)(((f7) << 25) | ((f3) << 12) | 0x53)
+#define OPCODE_SQRT(f7, f3) (u32)(((f7) << 25) | (0 << 20) | ((f3) << 12) | 0x53)
 
 
 namespace {
@@ -363,6 +365,13 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "fdiv.s/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x0c, 4),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPDiv< f32, SF0, SF1, IntConst<int, FE_TONEAREST> > > > } } },
     { "fdiv.s",         MASK_FLOAT,   OPCODE_FLOAT(0x0c, 7),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< FPDiv< f32, SF0, SF1, RISCV32RoundModeFromFCSR > > > } } },
 
+    { "fsqrt.s/rne",    MASK_SQRT,    OPCODE_SQRT(0x2c, 0),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< FPSqrt< f32, SF0, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fsqrt.s/rtz",    MASK_SQRT,    OPCODE_SQRT(0x2c, 1),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< FPSqrt< f32, SF0, IntConst<int, FE_TOWARDZERO> > > > } } },
+    { "fsqrt.s/rdn",    MASK_SQRT,    OPCODE_SQRT(0x2c, 2),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< FPSqrt< f32, SF0, IntConst<int, FE_DOWNWARD> > > > } } },
+    { "fsqrt.s/rup",    MASK_SQRT,    OPCODE_SQRT(0x2c, 3),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< FPSqrt< f32, SF0, IntConst<int, FE_UPWARD> > > > } } },
+    { "fsqrt.s/rmm",    MASK_SQRT,    OPCODE_SQRT(0x2c, 4),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< FPSqrt< f32, SF0, IntConst<int, FE_TONEAREST> > > > } } },
+    { "fsqrt.s",        MASK_SQRT,    OPCODE_SQRT(0x2c, 7),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< FPSqrt< f32, SF0, RISCV32RoundModeFromFCSR > > > } } },
+
 
     // RV32D
 
@@ -400,6 +409,13 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "fdiv.d/rup",     MASK_FLOAT,   OPCODE_FLOAT(0x0d, 3),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, IntConst<int, FE_UPWARD> > > } } },
     { "fdiv.d/rmm",     MASK_FLOAT,   OPCODE_FLOAT(0x0d, 4),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, IntConst<int, FE_TONEAREST> > > } } },
     { "fdiv.d",         MASK_FLOAT,   OPCODE_FLOAT(0x0d, 7),    1,{ { OpClassCode::fDIV,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, FPDiv< f64, SD0, SD1, RISCV32RoundModeFromFCSR > > } } },
+
+    { "fsqrt.d/rne",    MASK_SQRT,    OPCODE_SQRT(0x2d, 0),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, IntConst<int, FE_TONEAREST> > > } } },
+    { "fsqrt.d/rtz",    MASK_SQRT,    OPCODE_SQRT(0x2d, 1),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, IntConst<int, FE_TOWARDZERO> > > } } },
+    { "fsqrt.d/rdn",    MASK_SQRT,    OPCODE_SQRT(0x2d, 2),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, IntConst<int, FE_DOWNWARD> > > } } },
+    { "fsqrt.d/rup",    MASK_SQRT,    OPCODE_SQRT(0x2d, 3),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, IntConst<int, FE_UPWARD> > > } } },
+    { "fsqrt.d/rmm",    MASK_SQRT,    OPCODE_SQRT(0x2d, 4),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, IntConst<int, FE_TONEAREST> > > } } },
+    { "fsqrt.d",        MASK_SQRT,    OPCODE_SQRT(0x2d, 7),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, RISCV32RoundModeFromFCSR > > } } },
 
 };
 
