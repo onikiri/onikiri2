@@ -36,6 +36,8 @@
 #include "Utility/RuntimeError.h"
 #include "Emu/Utility/GenericOperation.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
+#include "Emu/Utility/System/Memory/MemorySystem.h"
+#include "Emu/Utility/System/VirtualSystem.h"
 #include "Emu/Utility/System/ProcessState.h"
 
 
@@ -136,6 +138,41 @@ struct RISCV32Compare : public std::unary_function<EmulatorUtility::OpEmulationS
         }
     }
 };
+
+template <typename Type, typename TSrc1, typename TSrc2>
+struct RISCV32MIN : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        Type lhs = static_cast<Type>(TSrc1()(opState));
+        Type rhs = static_cast<Type>(TSrc2()(opState));
+
+        if (lhs > rhs) {
+            return rhs;
+        }
+        else {
+            return lhs;
+        }
+    }
+};
+
+template <typename Type, typename TSrc1, typename TSrc2>
+struct RISCV32MAX : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        Type lhs = static_cast<Type>(TSrc1()(opState));
+        Type rhs = static_cast<Type>(TSrc2()(opState));
+
+        if (lhs < rhs) {
+            return rhs;
+        }
+        else {
+            return lhs;
+        }
+    }
+};
+
 
 // Branch
 template <typename TSrcTarget, typename TSrcDisp>
@@ -257,6 +294,97 @@ struct RISCV32IntRemu : public std::unary_function<OpEmulationState*, u32>
     }
 };
 
+
+template <typename Type, typename TAddr>
+struct RISCV32AtomicLoad : public std::unary_function<OpEmulationState*, u32>
+{
+    u32 operator()(OpEmulationState* opState)
+    {
+        MemorySystem* mem = opState->GetProcessState()->GetMemorySystem();
+        MemAccess access;
+        access.address.pid = opState->GetPID();
+        access.address.address = TAddr()(opState);
+        access.size = sizeof(Type);
+        access.sign = true;
+
+        mem->ReadMemory(&access);
+
+        if (access.result != MemAccess::Result::MAR_SUCCESS) {
+            THROW_RUNTIME_ERROR("Atomic memory read access failed: %s", access.ToString().c_str());
+        }
+
+        return access.value;
+    }
+};
+
+template <typename Type, typename TValue, typename TAddr>
+void RISCV32AtomicStore(OpEmulationState* opState)
+{
+    MemorySystem* mem = opState->GetProcessState()->GetMemorySystem();
+    MemAccess access;
+    access.address.pid = opState->GetPID();
+    access.address.address = TAddr()(opState);
+    access.size = sizeof(Type);
+    access.value = TValue()(opState);
+
+    mem->WriteMemory(&access);
+
+    if (access.result != MemAccess::Result::MAR_SUCCESS) {
+        THROW_RUNTIME_ERROR("Atomic memory write access failed: %s", access.ToString().c_str());
+    }
+}
+
+namespace {
+    // Virtual control status registers for holding the
+    // reservation status of the 'load-reserved' instruction.
+    enum class RISCV32pseudoCSR {
+        // 0 - 4095 are used for RISCV32CSR (real CSRs)
+        RESERVED_ADDRESS = 4096,
+        RESERVING = 4097,
+    };
+}
+
+// We cannot use the Load instead of the RISCV32AtomicLoad
+// because atomic instructions are not iLD instructions,
+// and this confuses the MemOrderManager.
+//
+// I assume it is sufficient that the processor remember
+// only the reserved address. (or need the infomation of size?)
+template <typename Type, typename TDest, typename TAddr>
+void RISCV32LoadReserved(OpEmulationState* opState)
+{
+    Set<TDest, RISCV32AtomicLoad<Type, TAddr>>(opState);
+    // Set reserved address
+    ProcessState* process = opState->GetProcessState();
+    process->SetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVED_ADDRESS), TAddr()(opState));
+    process->SetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVING), 1);
+}
+
+template <typename Type, typename TDest, typename TValue, typename TAddr>
+void RISCV32StoreConditional(OpEmulationState* opState)
+{
+    ProcessState* process = opState->GetProcessState();
+    u32 reserved_addr = process->GetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVED_ADDRESS));
+    u32 reserving = process->GetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVING));
+    u32 addr = TAddr()(opState);
+    if (reserving && reserved_addr == addr)
+    {
+        // We cannot use the Store instead of the RISCV32AtomicStore. See above.
+        RISCV32AtomicStore<Type, TValue, TAddr>(opState);
+        // 0 means success (always success; we assume only single thread execution)
+        Set<TDest, IntConst<u32, 0>>(opState);
+        // Release reserved address.
+        process->SetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVING), 0);
+    }
+    else {
+        // No store.
+
+        // 1 means 'unspecified failure'.
+        Set<TDest, IntConst<u32, 1>>(opState);
+        // Don't release reserved address. Is this right?
+
+    }
+}
 
 void RISCV32SyscallSetArg(EmulatorUtility::OpEmulationState* opState)
 {

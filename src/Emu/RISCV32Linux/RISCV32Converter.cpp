@@ -78,6 +78,7 @@ namespace {
     static const u32 MASK_ST  =     0x0000707f; // B-type, funct3
     static const u32 MASK_LD  =     0x0000707f; // B-type, funct3
 
+    static const u32 MASK_ATOMIC =  0xf800707f; // R-type, funct5 + funct3 + opcode
 }
 
 #define OPCODE_LUI()    0x37
@@ -102,6 +103,7 @@ namespace {
 
 #define OPCODE_ECALL()  (u32)(0x73)
 
+#define OPCODE_ATOMIC(width, funct5) (u32)(((funct5) << 27) | ((width) << 12) | 0x2f)
 
 namespace {
     // オペランドのテンプレート
@@ -260,6 +262,24 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     {"divu",    MASK_INT,   OPCODE_INT(0x01, 5),    1,  { {OpClassCode::iDIV,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32IntDivu<S0, S1> > } } },
     {"rem",     MASK_INT,   OPCODE_INT(0x01, 6),    1,  { {OpClassCode::iDIV,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32IntRem<S0, S1> > } } },
     {"remu",    MASK_INT,   OPCODE_INT(0x01, 7),    1,  { {OpClassCode::iDIV,   {R0, -1},   {R1, R2, -1, -1},   Set<D0, RISCV32IntRemu<S0, S1> > } } },
+
+    // RV32A
+    // Only for single thread execution
+    // It is not always necessary to stop all the instructions
+    // but for the sake of simplicity, I implemented by using OpClalssCode::syscall
+    //{Name,       Mask,        Opcode,               nOp, { OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "lr.w"     , MASK_ATOMIC, OPCODE_ATOMIC(2, 2),  1, { { OpClassCode::syscall, { R0, -1 }, { R1, -1, -1, -1 }, RISCV32LoadReserved<u32, D0, S0> } } },
+    { "sc.w"     , MASK_ATOMIC, OPCODE_ATOMIC(2, 3),  1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32StoreConditional<u32, D0, S1, S0> } } },
+    { "amoswap.w", MASK_ATOMIC, OPCODE_ATOMIC(2, 1),  1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, Sequence2<SetSext<D0, RISCV32AtomicLoad<u32, S0> >, RISCV32AtomicStore<u32, S1, S0> > } } },
+    { "amoadd.w" , MASK_ATOMIC, OPCODE_ATOMIC(2, 0),  1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, IntAdd    <u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+    { "amoxor.w" , MASK_ATOMIC, OPCODE_ATOMIC(2, 4),  1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, BitXor    <u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+    { "amoand.w" , MASK_ATOMIC, OPCODE_ATOMIC(2, 12), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, BitAnd    <u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+    { "amoor.w"  , MASK_ATOMIC, OPCODE_ATOMIC(2, 8),  1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, BitOr     <u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+    { "amomin.w" , MASK_ATOMIC, OPCODE_ATOMIC(2, 16), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, RISCV32MIN<s32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+    { "amomax.w" , MASK_ATOMIC, OPCODE_ATOMIC(2, 20), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, RISCV32MAX<s32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+    { "amominu.w", MASK_ATOMIC, OPCODE_ATOMIC(2, 24), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, RISCV32MIN<u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+    { "amomaxu.w", MASK_ATOMIC, OPCODE_ATOMIC(2, 28), 1, { { OpClassCode::syscall, { R0, -1 }, { R1, R2, -1, -1 }, RISCV32AtomicStore<u32, RISCV32MAX<u32, S1, TeeSetSext<D0, RISCV32AtomicLoad<u32, S0> > >, S0> } } },
+
 };
 
 //
