@@ -397,6 +397,72 @@ struct RISCV32NanBoxing : public std::unary_function<EmulatorUtility::OpEmulatio
 };
 
 
+template <typename T>
+T CanonicalNAN();
+
+template <>
+inline f64 CanonicalNAN<f64>() {
+    return AsFPFunc<f64, u64>(0x7ff8000000000000ull);
+}
+
+template <>
+inline f32 CanonicalNAN<f32>() {
+    return AsFPFunc<f32, u32>(0x7fc00000);
+}
+
+template <typename Type, typename TSrc1, typename TSrc2>
+struct RISCV32FPMIN : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        Type lhs = static_cast<Type>(TSrc1()(opState));
+        Type rhs = static_cast<Type>(TSrc2()(opState));
+
+        // 双方 NaN の場合は正規化された NaN を返す
+        if (std::isnan(lhs) && std::isnan(rhs)) {
+            return CanonicalNAN<Type>();
+        }
+
+        // 符号付き負のゼロの方がが必ず小さくなるように
+        if (lhs == 0.0 && rhs == 0.0) {
+            return
+                std::copysign(1, lhs) == (Type)-1.0 ||
+                std::copysign(1, rhs) == (Type)-1.0 ? (Type)-0.0 : (Type)0.0;
+        }
+
+        // NaN じゃない方が常に選ばれるように
+        if (std::isnan(lhs)) { lhs = std::numeric_limits<Type>::infinity(); }
+        if (std::isnan(rhs)) { rhs = std::numeric_limits<Type>::infinity(); }
+        return (lhs > rhs) ? rhs : lhs;
+    }
+};
+
+
+template <typename Type, typename TSrc1, typename TSrc2>
+struct RISCV32FPMAX : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        Type lhs = static_cast<Type>(TSrc1()(opState));
+        Type rhs = static_cast<Type>(TSrc2()(opState));
+
+        if (lhs == 0.0 && rhs == 0.0) {
+            return
+                std::copysign(1, lhs) == (Type)-1.0 &&
+                std::copysign(1, rhs) == (Type)-1.0 ? (Type)-0.0 : (Type)0.0;
+        }
+
+        if (std::isnan(lhs) && std::isnan(rhs)) {
+            return CanonicalNAN<Type>();
+        }
+
+        if (std::isnan(lhs)) { lhs = -std::numeric_limits<Type>::infinity(); }
+        if (std::isnan(rhs)) { rhs = -std::numeric_limits<Type>::infinity(); }
+
+        return (lhs < rhs) ? rhs : lhs;
+    }
+};
+
 
 //
 // CSR Operations

@@ -372,6 +372,9 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "fsqrt.s/rmm",    MASK_SQRT,    OPCODE_SQRT(0x2c, 4),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< FPSqrt< f32, SF0, IntConst<int, FE_TONEAREST> > > > } } },
     { "fsqrt.s",        MASK_SQRT,    OPCODE_SQRT(0x2c, 7),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< FPSqrt< f32, SF0, RISCV32RoundModeFromFCSR > > > } } },
 
+    { "fmin.s",         MASK_FLOAT,   OPCODE_FLOAT(0x14, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< RISCV32FPMIN< f32, SF0, SF1> > > } } },
+    { "fmax.s",         MASK_FLOAT,   OPCODE_FLOAT(0x14, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32NanBoxing< RISCV32FPMAX< f32, SF0, SF1> > > } } },
+
 
     // RV32D
 
@@ -416,6 +419,9 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "fsqrt.d/rup",    MASK_SQRT,    OPCODE_SQRT(0x2d, 3),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, IntConst<int, FE_UPWARD> > > } } },
     { "fsqrt.d/rmm",    MASK_SQRT,    OPCODE_SQRT(0x2d, 4),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, IntConst<int, FE_TONEAREST> > > } } },
     { "fsqrt.d",        MASK_SQRT,    OPCODE_SQRT(0x2d, 7),     1,{ { OpClassCode::fELEM,  {R0, -1},   {R1, -1, -1, -1},   SetFP< D0, FPSqrt< f64, SD0, RISCV32RoundModeFromFCSR > > } } },
+
+    { "fmin.d",         MASK_FLOAT,   OPCODE_FLOAT(0x15, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, RISCV32FPMIN< f64, SD0, SD1> > } } },
+    { "fmax.d",         MASK_FLOAT,   OPCODE_FLOAT(0x15, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   SetFP< D0, RISCV32FPMAX< f64, SD0, SD1> > } } },
 
 };
 
