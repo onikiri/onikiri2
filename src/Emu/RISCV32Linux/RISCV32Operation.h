@@ -626,6 +626,44 @@ struct FPFLOATCopySignXor : public std::unary_function<OpEmulationState*, u64>
     }
 };
 
+//compare
+
+template <typename Type, typename TSrc1, typename TSrc2>
+struct RISCV32FPEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+{
+    bool operator()(EmulatorUtility::OpEmulationState* opState)
+    {
+        Type lhs = static_cast<Type>(TSrc1()(opState));
+        Type rhs = static_cast<Type>(TSrc2()(opState));
+
+        return lhs == rhs;
+    }
+};
+
+template <typename Type, typename TSrc1, typename TSrc2>
+struct RISCV32FPLess : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+{
+    bool operator()(EmulatorUtility::OpEmulationState* opState)
+    {
+        Type lhs = static_cast<Type>(TSrc1()(opState));
+        Type rhs = static_cast<Type>(TSrc2()(opState));
+
+        return lhs < rhs;
+    }
+};
+
+template <typename Type, typename TSrc1, typename TSrc2>
+struct RISCV32FPLessEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+{
+    bool operator()(EmulatorUtility::OpEmulationState* opState)
+    {
+        Type lhs = static_cast<Type>(TSrc1()(opState));
+        Type rhs = static_cast<Type>(TSrc2()(opState));
+
+        return lhs <= rhs;
+    }
+};
+
 
 //
 // CSR Operations

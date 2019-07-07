@@ -450,6 +450,12 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "fmv.x.w",    MASK_MV,      OPCODE_MV(0x70),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, AsInt<u32, SF0> > } } },
     { "fmv.w.x",    MASK_MV,      OPCODE_MV(0x78),          1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, -1, -1, -1},   Set< D0, RISCV32NanBoxing< AsFP< f32, S0> > > } } },
 
+    // Compare
+    //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "feq.s",      MASK_FLOAT,   OPCODE_FLOAT(0x50, 2),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPEqual< f32, SF0, SF1> > } } },
+    { "flt.s",      MASK_FLOAT,   OPCODE_FLOAT(0x50, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPLess< f32, SF0, SF1> > } } },
+    { "fle.s",      MASK_FLOAT,   OPCODE_FLOAT(0x50, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPLessEqual< f32, SF0, SF1> > } } },
+
 
     // RV32D
 
@@ -576,6 +582,13 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
     { "fsgnj.d",    MASK_FLOAT,   OPCODE_FLOAT(0x11, 0),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, FPDoubleCopySign<S1, S0> > } } },
     { "fsgnjn.d",   MASK_FLOAT,   OPCODE_FLOAT(0x11, 1),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, FPDoubleCopySignNeg<S1, S0> > } } },
     { "fsgnjx.d",   MASK_FLOAT,   OPCODE_FLOAT(0x11, 2),    1,{ { OpClassCode::fMOV,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, FPDoubleCopySignXor<S1, S0> > } } },
+
+
+    // Compare
+    //{Name,        Mask,         Opcode,                   nOp,{ OpClassCode,         Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
+    { "feq.d",      MASK_FLOAT,   OPCODE_FLOAT(0x51, 2),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPEqual< f64, SD0, SD1> > } } },
+    { "flt.d",      MASK_FLOAT,   OPCODE_FLOAT(0x51, 1),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPLess< f64, SD0, SD1> > } } },
+    { "fle.d",      MASK_FLOAT,   OPCODE_FLOAT(0x51, 0),    1,{ { OpClassCode::fADD,   {R0, -1},   {R1, R2, -1, -1},   Set< D0, RISCV32FPLessEqual< f64, SD0, SD1> > } } },
 
 };
 
