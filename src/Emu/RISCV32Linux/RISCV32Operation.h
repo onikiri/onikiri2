@@ -179,8 +179,14 @@ struct RISCV32MAX : public std::unary_function<EmulatorUtility::OpEmulationState
 template <typename TSrcTarget, typename TSrcDisp>
 inline void RISCV32BranchAbsUncond(OpEmulationState* opState)
 {
+    // The target address is obtained by adding the sign-extended 12-bit
+    // I-immediate to the register rs1, then setting the least-significant
+    // bit of the result to zero.
+    // -- The RISC-V Instruction Set Manual Vol. 1: Unprivileged ISA
+    //    Document Version 20190608-Base-Ratified p.21
+    u32 mask = 0xfffffffe;
     u32 target = TSrcTarget()(opState) + cast_to_signed(TSrcDisp()(opState));
-    RISCV32DoBranch(opState, target);
+    RISCV32DoBranch(opState, target & mask);
 }
 
 template <typename TSrcDisp>
