@@ -249,6 +249,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     SetResult(false, 0);
     switch (GetArg(0)) {
+    case syscall_id_ioctl:
+        syscall_ioctl(opState);
+        break;
     case syscall_id_close:
         syscall_close(opState);
         break;
