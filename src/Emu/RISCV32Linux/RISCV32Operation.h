@@ -76,6 +76,16 @@ struct RISCV32SrcOperand : public std::unary_function<OpEmulationState, RISCV32R
     }
 };
 
+template <int OperandIndex>
+struct RISCV32DstDoubleOperand
+{
+    using type = u64;
+    static void SetOperand(OpEmulationState* opState, u64 value)
+    {
+        opState->SetDst(OperandIndex, value);
+    }
+};
+
 template <typename Type, Type value>
 struct RISCV32IntConst : public std::unary_function<OpEmulationState*, Type>
 {
