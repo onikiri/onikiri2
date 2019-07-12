@@ -154,58 +154,7 @@ static struct {
     SYSCALLNAME(stat, 2, "sp"),
     SYSCALLNAME(mmap, 6, "pxxxnx"),
     SYSCALLNAME(munmap, 2, "px"),
-/*
-    SYSCALLNAME(readv, 3, "npn"),
-    SYSCALLNAME(writev, 3, "npn"),
-    SYSCALLNAME(lstat, 2, "sp"),
-    //SYSCALLNAME(stat64, 2, "sp"),
-    //SYSCALLNAME(lstat64, 2, "sp"),
-    //SYSCALLNAME(fstat64, 2, "np"),
-    SYSCALLNAME(truncate, 2, "px"),
-    SYSCALLNAME(ftruncate, 2, "nx"),
-    SYSCALLNAME(fcntl, 3, "nnp"),
-    SYSCALLNAME(chdir, 1, "p"),
-    SYSCALLNAME(fchdir, 1, "n"),
-    SYSCALLNAME(getcwd, 2, "px"),
-    SYSCALLNAME(mkdir, 2, "sx"),
-    SYSCALLNAME(rmdir, 1, "s"),
-    SYSCALLNAME(readlink, 3, "spx"),
-    SYSCALLNAME(link, 2, "ss"),
-    SYSCALLNAME(rename, 2, "ss"),
-    SYSCALLNAME(mmap, 6, "pxxxnx"),
     SYSCALLNAME(mremap, 4, "pxxx"),
-    SYSCALLNAME(munmap, 2, "px"),
-    SYSCALLNAME(mprotect, 3, "pxx"),
-    SYSCALLNAME(chmod, 2, "sx"),
-    SYSCALLNAME(time, 1, "p"),
-    SYSCALLNAME(times, 1, "p"),
-    //SYSCALLNAME(settimeofday, 2, "pp"),
-
-    SYSCALLNAME(uname, 1, "p"),
-
-    SYSCALLNAME(access, 2, "sx"),
-
-    SYSCALLNAME(gettid, 0, ""),
-    SYSCALLNAME(setuid, 1, "x"),
-    SYSCALLNAME(getuid, 0, ""),
-    //SYSCALLNAME(seteuid, 1, "x"),
-    SYSCALLNAME(setgid, 1, "x"),
-    SYSCALLNAME(getgid, 0, ""),
-    //SYSCALLNAME(setegid, 1, "x"),
-    SYSCALLNAME(geteuid, 0, ""),
-    SYSCALLNAME(getegid, 0, ""),
-    //SYSCALLNAME(setreuid, 2),
-    //SYSCALLNAME(setregid, 2),
-    SYSCALLNAME(getrusage, 2, "xp"),
-    SYSCALLNAME(getrlimit, 2, "np"),
-    SYSCALLNAME(setrlimit, 2, "np"),
-    SYSCALLNAME(dup, 1, "n"),
-
-    SYSCALLNAME(rt_sigaction, 3, "xxx"),
-    SYSCALLNAME(rt_sigprocmask, 3, "xxx"),
-    SYSCALLNAME(kill, 2, "xx"),
-    SYSCALLNAME(tgkill, 3, "xxx"),
-*/
 };
 #undef SYSCALLNAME
 
@@ -311,6 +260,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_munmap:
         syscall_munmap(opState);
+        break;
+    case syscall_id_mremap:
+        syscall_mremap(opState);
         break;
     case syscall_id_mmap:
         syscall_mmap(opState);
