@@ -121,6 +121,9 @@ namespace {
     };
     */
 
+    const int LINUX_AT_FDCWD = -100;
+    const int LINUX_AT_SYMLINK_NOFOLLO = 0x100;
+
 
 // x: int (hexadecimal)
 // n: int
@@ -138,6 +141,7 @@ static struct {
     SYSCALLNAME(lseek, 3, "nxn"),
     SYSCALLNAME(read, 3, "npn"),
     SYSCALLNAME(write, 3, "npn"),
+    SYSCALLNAME(fstatat, 4, "nspn"),
     SYSCALLNAME(fstat, 2, "np"),
     SYSCALLNAME(exit, 0, ""),
     SYSCALLNAME(exit_group, 0, ""),
@@ -295,6 +299,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_sigaction:
         syscall_sigaction(opState);
+        break;
+    case syscall_id_fstatat:
+        syscall_fstatat32(opState);
         break;
 
 /*
@@ -525,6 +532,49 @@ void RISCV32LinuxSyscallConv::syscall_fstat32(EmulatorUtility::OpEmulationState*
         SetResult(true, result);
     }
 }
+
+void RISCV32LinuxSyscallConv::syscall_fstatat32(OpEmulationState* opState)
+{
+    s32 fd = (s32)m_args[1];
+    HostStat st;
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    s32 flag = (s32)m_args[4];
+    int result = -1;
+    /*
+    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
+    なので通常のstatと同じ動作をする
+    */
+    if (fd == LINUX_AT_FDCWD) {
+        // flag が 0 の時は stat として, AT_SYMLINK_NOFOLLOW の場合は lstat として動作する
+        if (flag == 0) {
+            result = GetVirtualSystem()->Stat(path.c_str(), &st);
+        }
+        else if (flag == LINUX_AT_SYMLINK_NOFOLLO){
+            result = GetVirtualSystem()->LStat(path.c_str(), &st);
+        }
+        else {
+            THROW_RUNTIME_ERROR(
+                "'fstatat' does not support reading flag other than '0' and 'AT_SYMLINK_NOFOLLO(0x100)', "
+                "but '%d' is specified.", flag
+            );
+        }
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'fstatat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        write_stat32((u64)m_args[3], st);
+        SetResult(true, result);
+    }
+
+}
+
 void RISCV32LinuxSyscallConv::syscall_stat32(OpEmulationState* opState)
 {
     HostStat st;

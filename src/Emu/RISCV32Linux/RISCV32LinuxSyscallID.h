@@ -45,6 +45,7 @@ namespace Onikiri {
             const int syscall_id_read = 63;
             const int syscall_id_write = 64;
             const int syscall_id_readlinkat = 78;
+            const int syscall_id_fstatat = 79;
             const int syscall_id_fstat = 80;
             const int syscall_id_exit = 93;
             const int syscall_id_exit_group = 94;
