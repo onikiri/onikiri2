@@ -136,6 +136,7 @@ static struct {
     int argcnt;
     const char* argtempl;
 } syscallTable[] = {
+    SYSCALLNAME(fcntl, 3, "nnp"),
     SYSCALLNAME(ioctl, 3, "xxx"),
     SYSCALLNAME(openat, 4, "nsxx"),
     SYSCALLNAME(close, 1, "n"),
@@ -210,6 +211,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     SetResult(false, 0);
     switch (GetArg(0)) {
+    case syscall_id_fcntl:
+        syscall_fcntl(opState);
+        break;
     case syscall_id_ioctl:
         syscall_ioctl(opState);
         break;
