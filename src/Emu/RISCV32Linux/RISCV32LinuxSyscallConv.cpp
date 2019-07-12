@@ -157,6 +157,7 @@ static struct {
     SYSCALLNAME(mremap, 4, "pxxx"),
     SYSCALLNAME(getuid, 0, ""),
     SYSCALLNAME(geteuid, 0, ""),
+    SYSCALLNAME(getgid, 0, ""),
 };
 #undef SYSCALLNAME
 
@@ -274,6 +275,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_geteuid:
         syscall_geteuid(opState);
+        break;
+    case syscall_id_getgid:
+        syscall_getgid(opState);
         break;
 
 /*
