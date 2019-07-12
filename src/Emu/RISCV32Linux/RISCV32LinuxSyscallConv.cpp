@@ -133,6 +133,7 @@ static struct {
     int argcnt;
     const char* argtempl;
 } syscallTable[] = {
+    SYSCALLNAME(ioctl, 3, "xxx"),
     SYSCALLNAME(close, 1, "n"),
     SYSCALLNAME(lseek, 3, "nxn"),
     SYSCALLNAME(read, 3, "npn"),
@@ -168,7 +169,6 @@ static struct {
     SYSCALLNAME(munmap, 2, "px"),
     SYSCALLNAME(mprotect, 3, "pxx"),
     SYSCALLNAME(chmod, 2, "sx"),
-    SYSCALLNAME(ioctl, 3, "xxx"),
     SYSCALLNAME(time, 1, "p"),
     SYSCALLNAME(times, 1, "p"),
     //SYSCALLNAME(settimeofday, 2, "pp"),
