@@ -55,6 +55,7 @@ namespace Onikiri {
             const int syscall_id_getuid = 174;
             const int syscall_id_geteuid = 175;
             const int syscall_id_getgid = 176;
+            const int syscall_id_getegid = 177;
             const int syscall_id_brk = 214;
             const int syscall_id_munmap = 215;
             const int syscall_id_mremap = 216;
