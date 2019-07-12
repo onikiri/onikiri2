@@ -46,6 +46,8 @@ namespace Onikiri {
 
         protected:
             Linux32SyscallConv() {}
+
+            virtual void syscall_openat(OpEmulationState* opState);
         };
 
     } // namespace AlphaLinux
