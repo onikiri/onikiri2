@@ -152,6 +152,8 @@ static struct {
     SYSCALLNAME(exit_group, 0, ""),
     SYSCALLNAME(sigaction, 3 , "npp"),
     SYSCALLNAME(times, 1, "p"),
+    SYSCALLNAME(uname, 1, "p"),
+    SYSCALLNAME(getrusage, 2, "xp"),
     SYSCALLNAME(gettimeofday, 2, "pp"),
     SYSCALLNAME(brk, 1, "p"),
     SYSCALLNAME(open, 3, "sxx"),
@@ -256,6 +258,12 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_times:
         syscall_times(opState);
         break;
+    case syscall_id_uname:
+        syscall_uname(opState);
+        break;
+    case syscall_id_getrusage:
+        syscall_ignore(opState);
+        break;
     case syscall_id_gettimeofday:
         syscall_gettimeofday(opState);
         break;
@@ -270,9 +278,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_stat:
         syscall_stat32(opState);
-        break;
-    case syscall_id_uname:
-        syscall_uname(opState);
         break;
     case syscall_id_readlinkat:
         syscall_readlinkat(opState);
