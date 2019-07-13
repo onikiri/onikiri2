@@ -51,6 +51,7 @@ namespace Onikiri {
             const int syscall_id_exit = 93;
             const int syscall_id_exit_group = 94;
             const int syscall_id_sigaction = 134;
+            const int syscall_id_times = 153;
             const int syscall_id_uname = 160;
             const int syscall_id_gettimeofday = 169;
             const int syscall_id_getpid = 172;
