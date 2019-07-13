@@ -139,6 +139,7 @@ static struct {
     SYSCALLNAME(getcwd, 2, "px"),
     SYSCALLNAME(fcntl, 3, "nnp"),
     SYSCALLNAME(ioctl, 3, "xxx"),
+    SYSCALLNAME(faccessat, 4, "nsnn"),
     SYSCALLNAME(openat, 4, "nsxx"),
     SYSCALLNAME(close, 1, "n"),
     SYSCALLNAME(lseek, 3, "nxn"),
@@ -222,6 +223,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_ioctl:
         syscall_ioctl(opState);
+        break;
+    case syscall_id_faccessat:
+        syscall_faccessat(opState);
         break;
     case syscall_id_openat:
         syscall_openat(opState);
