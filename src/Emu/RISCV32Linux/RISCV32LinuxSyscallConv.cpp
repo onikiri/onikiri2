@@ -150,6 +150,7 @@ static struct {
     SYSCALLNAME(fstat, 2, "np"),
     SYSCALLNAME(exit, 0, ""),
     SYSCALLNAME(exit_group, 0, ""),
+    SYSCALLNAME(clock_gettime, 2, "np"),
     SYSCALLNAME(sigaction, 3 , "npp"),
     SYSCALLNAME(times, 1, "p"),
     SYSCALLNAME(uname, 1, "p"),
@@ -255,6 +256,12 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_exit_group:
         syscall_exit(opState);
         break;
+    case syscall_id_clock_gettime:
+        syscall_clock_gettime(opState);
+        break;
+    case syscall_id_sigaction:
+        syscall_sigaction(opState);
+        break;
     case syscall_id_times:
         syscall_times(opState);
         break;
@@ -281,9 +288,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_readlinkat:
         syscall_readlinkat(opState);
-        break;
-    case syscall_id_sigaction:
-        syscall_sigaction(opState);
         break;
     case syscall_id_fstatat:
         syscall_fstatat32(opState);
