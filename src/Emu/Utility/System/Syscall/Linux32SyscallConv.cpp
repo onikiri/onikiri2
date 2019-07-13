@@ -125,4 +125,30 @@ void Linux32SyscallConv::syscall_faccessat(OpEmulationState* opState)
         SetResult(true, result);
 }
 
+void Linux32SyscallConv::syscall_mkdirat(OpEmulationState* opState)
+{
+    s32 fd = m_args[1];
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
+    /*
+    ファイルディスクリプタが AT_FDCWD (-100) の場合は
+    working directory からの相対パスとなる
+    なので通常の mkdir と同じ動作をする
+    */
+    if (fd == LINUX_AT_FDCWD) {
+        result = GetVirtualSystem()->MkDir(path.c_str(), (int)m_args[3]);
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'mkdirat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        SetResult(true, result);
+    }
+}
 

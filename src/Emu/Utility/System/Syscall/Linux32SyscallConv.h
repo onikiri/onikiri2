@@ -49,6 +49,7 @@ namespace Onikiri {
 
             virtual void syscall_openat(OpEmulationState* opState);
             virtual void syscall_faccessat(OpEmulationState* opState);
+            virtual void syscall_mkdirat(OpEmulationState* opState);
         };
 
     } // namespace AlphaLinux
