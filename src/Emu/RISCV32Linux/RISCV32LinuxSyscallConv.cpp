@@ -154,6 +154,7 @@ static struct {
     SYSCALLNAME(sigaction, 3 , "npp"),
     SYSCALLNAME(times, 1, "p"),
     SYSCALLNAME(uname, 1, "p"),
+    SYSCALLNAME(setrlimit, 2, "np"),
     SYSCALLNAME(getrusage, 2, "xp"),
     SYSCALLNAME(gettimeofday, 2, "pp"),
     SYSCALLNAME(brk, 1, "p"),
@@ -267,6 +268,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_uname:
         syscall_uname(opState);
+        break;
+    case syscall_id_setrlimit:
+        syscall_ignore(opState);
         break;
     case syscall_id_getrusage:
         syscall_ignore(opState);
