@@ -157,18 +157,19 @@ static struct {
     SYSCALLNAME(setrlimit, 2, "np"),
     SYSCALLNAME(getrusage, 2, "xp"),
     SYSCALLNAME(gettimeofday, 2, "pp"),
-    SYSCALLNAME(brk, 1, "p"),
     SYSCALLNAME(open, 3, "sxx"),
     SYSCALLNAME(unlink, 1, "s"),
     SYSCALLNAME(stat, 2, "sp"),
-    SYSCALLNAME(mmap, 6, "pxxxnx"),
-    SYSCALLNAME(munmap, 2, "px"),
-    SYSCALLNAME(mremap, 4, "pxxx"),
     SYSCALLNAME(getpid, 0, ""),
     SYSCALLNAME(getuid, 0, ""),
     SYSCALLNAME(geteuid, 0, ""),
     SYSCALLNAME(getgid, 0, ""),
     SYSCALLNAME(getegid, 0, ""),
+    SYSCALLNAME(brk, 1, "p"),
+    SYSCALLNAME(mmap, 6, "pxxxnx"),
+    SYSCALLNAME(munmap, 2, "px"),
+    SYSCALLNAME(mremap, 4, "pxxx"),
+    SYSCALLNAME(prlimit, 4, "nnpp"),
 };
 #undef SYSCALLNAME
 
@@ -278,9 +279,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_gettimeofday:
         syscall_gettimeofday(opState);
         break;
-    case syscall_id_brk:
-        syscall_brk(opState);
-        break;
     case syscall_id_open:
         syscall_open(opState);
         break;
@@ -296,15 +294,6 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_fstatat:
         syscall_fstatat32(opState);
         break;
-    case syscall_id_munmap:
-        syscall_munmap(opState);
-        break;
-    case syscall_id_mremap:
-        syscall_mremap(opState);
-        break;
-    case syscall_id_mmap:
-        syscall_mmap(opState);
-        break;
     case syscall_id_getpid:
         syscall_getpid(opState);
         break;
@@ -319,6 +308,21 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_getegid:
         syscall_getegid(opState);
+        break;
+    case syscall_id_brk:
+        syscall_brk(opState);
+        break;
+    case syscall_id_munmap:
+        syscall_munmap(opState);
+        break;
+    case syscall_id_mremap:
+        syscall_mremap(opState);
+        break;
+    case syscall_id_mmap:
+        syscall_mmap(opState);
+        break;
+    case syscall_id_prlimit:
+        syscall_ignore(opState);
         break;
 
 /*
