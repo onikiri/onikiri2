@@ -43,6 +43,7 @@ namespace Onikiri {
             const int syscall_id_ioctl = 29;
             const int syscall_id_mkdirat = 34;
             const int syscall_id_unlinkat = 35;
+            const int syscall_id_ftruncate = 46;
             const int syscall_id_faccessat = 48;
             const int syscall_id_openat = 56;
             const int syscall_id_close = 57;
