@@ -147,6 +147,7 @@ static struct {
     SYSCALLNAME(lseek, 3, "nxn"),
     SYSCALLNAME(read, 3, "npn"),
     SYSCALLNAME(write, 3, "npn"),
+    SYSCALLNAME(writev, 3, "npn"),
     SYSCALLNAME(fstatat, 4, "nspn"),
     SYSCALLNAME(fstat, 2, "np"),
     SYSCALLNAME(exit, 0, ""),
@@ -256,6 +257,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_write:
         syscall_write(opState);
+        break;
+    case syscall_id_writev:
+        syscall_writev(opState);
         break;
     case syscall_id_fstat:
         syscall_fstat32(opState);
