@@ -69,6 +69,7 @@ namespace Onikiri {
             const int syscall_id_brk = 214;
             const int syscall_id_munmap = 215;
             const int syscall_id_mremap = 216;
+            const int syscall_id_clone = 220;
             const int syscall_id_mmap = 222;
             const int syscall_id_prlimit = 261;
 

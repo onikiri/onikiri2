@@ -167,9 +167,10 @@ static struct {
     SYSCALLNAME(getgid, 0, ""),
     SYSCALLNAME(getegid, 0, ""),
     SYSCALLNAME(brk, 1, "p"),
-    SYSCALLNAME(mmap, 6, "pxxxnx"),
     SYSCALLNAME(munmap, 2, "px"),
     SYSCALLNAME(mremap, 4, "pxxx"),
+    SYSCALLNAME(clone , 5, "npppp"),
+    SYSCALLNAME(mmap, 6, "pxxxnx"),
     SYSCALLNAME(prlimit, 4, "nnpp"),
 };
 #undef SYSCALLNAME
@@ -321,6 +322,9 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_mremap:
         syscall_mremap(opState);
+        break;
+    case syscall_id_clone:
+        THROW_RUNTIME_ERROR("Unsupported syscall 220 'clone' is called");
         break;
     case syscall_id_mmap:
         syscall_mmap(opState);
