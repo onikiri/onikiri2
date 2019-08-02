@@ -873,19 +873,23 @@ void RISCV32SyscallSetArg(EmulatorUtility::OpEmulationState* opState)
     DstOperand<0>::SetOperand(opState, SrcOperand<0>()(opState));
 }
 
-// invoke syscall, get result&error and branch if any
-void RISCV32SyscallCore(EmulatorUtility::OpEmulationState* opState)
+void RISCV32SyscallSetArg2(EmulatorUtility::OpEmulationState* opState)
 {
     EmulatorUtility::SyscallConvIF* syscallConv = opState->GetProcessState()->GetSyscallConv();
     syscallConv->SetArg(3, SrcOperand<1>()(opState));
     syscallConv->SetArg(4, SrcOperand<2>()(opState));
-    //syscallConv->SetArg(5, SrcOperand<2>()(opState));
+}
+
+// invoke syscall, get result&error and branch if any
+void RISCV32SyscallCore(EmulatorUtility::OpEmulationState* opState)
+{
+    EmulatorUtility::SyscallConvIF* syscallConv = opState->GetProcessState()->GetSyscallConv();
+    syscallConv->SetArg(5, SrcOperand<1>()(opState));
     syscallConv->Execute(opState);
 
     u32 error = (u32)syscallConv->GetResult(EmulatorUtility::SyscallConvIF::ErrorFlagIndex);
     u32 val = (u32)syscallConv->GetResult(EmulatorUtility::SyscallConvIF::RetValueIndex);
     DstOperand<0>::SetOperand(opState, error ? (u32)-1 : val);
-    //DstOperand<1>::SetOperand(opState, syscallConv->GetResult(EmulatorUtility::SyscallConvIF::ErrorFlagIndex) );
 }
 
 } // namespace Operation {

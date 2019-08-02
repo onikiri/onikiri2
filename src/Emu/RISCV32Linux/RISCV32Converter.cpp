@@ -266,9 +266,10 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
 
     // System
     //{Name,    Mask,       Opcode,         nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
-    {"ecall",   MASK_EXACT, OPCODE_ECALL(),   2,  {
+    {"ecall",   MASK_EXACT, OPCODE_ECALL(),   3,  {
         {OpClassCode::syscall,          {17, -1}, {17, 10, 11, -1}, RISCV32SyscallSetArg} ,
-        {OpClassCode::syscall_branch,   {10, -1}, {17, 12, 13, -1}, RISCV32SyscallCore},
+        {OpClassCode::syscall,          {17, -1}, {17, 12, 13, -1}, RISCV32SyscallSetArg2} ,
+        {OpClassCode::syscall_branch,   {10, -1}, {17, 14, -1, -1}, RISCV32SyscallCore},
     }},
 
     // Fence Instructions

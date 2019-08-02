@@ -47,7 +47,7 @@ namespace Onikiri {
             const int syscall_id_faccessat = 48;
             const int syscall_id_openat = 56;
             const int syscall_id_close = 57;
-            const int syscall_id_lseek = 62;
+            const int syscall_id_llseek = 62; // different from RV64
             const int syscall_id_read = 63;
             const int syscall_id_write = 64;
             const int syscall_id_writev = 66;
