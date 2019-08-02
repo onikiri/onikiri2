@@ -152,3 +152,21 @@ void Linux32SyscallConv::syscall_mkdirat(OpEmulationState* opState)
     }
 }
 
+void Linux32SyscallConv::syscall_llseek(OpEmulationState* opState)
+{
+    s32 fd = m_args[1];
+    u32 offset_high = m_args[2];
+    u32 offset_low = m_args[3];
+    u32 whence = m_args[5];
+    u64 offset = (u64)offset_high<<32 | offset_low;
+
+    s64 result = GetVirtualSystem()->LSeek((int)fd, (s64)offset, (int)SeekWhenceTargetToHost(whence));
+    GetMemorySystem()->MemCopyToTarget(m_args[4], &result, sizeof(result));
+
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        SetResult(true, 0);
+    }
+}
