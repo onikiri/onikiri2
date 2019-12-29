@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2019 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,14 +29,15 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_PROCESSINFO_H__
-#define __EMULATORUTILITY_PROCESSINFO_H__
+#ifndef EMU_UTILITY_PROCESS_STATE_H
+#define EMU_UTILITY_PROCESS_STATE_H
 
 #include <boost/pool/pool.hpp>
 
 #include "Interface/EmulatorIF.h"
 #include "Interface/OpStateIF.h"
 #include "Env/Param/ParamExchange.h"
+#include "Emu/Utility/System/VirtualPath.h"
 
 namespace Onikiri {
     class SystemIF;
@@ -55,7 +56,7 @@ namespace Onikiri {
             explicit ProcessCreateParam(int processNumber);
             ~ProcessCreateParam();
 
-            const String  GetTargetBasePath() const;
+            const VirtualPath GetTargetBasePath() const;
             const String& GetTargetWorkPath() const { return m_targetWorkPath; }
             const String& GetCommand() const { return m_command; }
             const String& GetCommandArguments() const { return m_commandArguments; }
@@ -128,9 +129,24 @@ namespace Onikiri {
             void SetThreadUniqueValue(u64 value);
             u64 GetThreadUniqueValue();
 
+            // 制御レジスタ
+            // You have to set the maximum number of control registers in
+            // all architectures to MAX_CONTROL_REGISTER_NUM.
+            //
+            // The number of control registers have to include
+            // not only real registers but also virtual registers
+            // (for example, reservation status registers for load-linked).
+            //
+            // Currently, the architecture having the maximum number of
+            // control registers is RISC-V, which has 4096 CSRs and
+            // 2 reservation status registers.
+            static constexpr std::size_t MAX_CONTROL_REGISTER_NUM = 4098;
+            void SetControlRegister(u64 index, u64 value);
+            u64 GetControlRegister(u64 index);
+
         private:
             void Init(const ProcessCreateParam& pcp, SystemIF* simSystem, SyscallConvIF* syscallConv, LoaderIF* loader, bool bigEndian);
-            void InitStack(const ProcessCreateParam& createParam);
+            void InitMemoryMap(const ProcessCreateParam& createParam);
             void InitTargetStdIO(const ProcessCreateParam& createParam);
 
             int m_pid;
@@ -145,6 +161,9 @@ namespace Onikiri {
             
             // rduniq, wruniq でアクセスするスレッド固有の値
             u64 m_threadUniqueValue;
+
+            // Control registers
+            std::array<u64, MAX_CONTROL_REGISTER_NUM> m_controlRegs;
         };
 
     } // namespace EmulatorUtility

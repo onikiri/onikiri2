@@ -166,10 +166,10 @@ void Environment::Finalize()
 
 void Environment::DumpResult()
 {
-    if( m_error ){
-        // Set an error message to the following path.
-        g_paramDB.Set( "/Session/Result/Error/Message/text()", m_errorMsg );
-    }
+    // Set an error message to the following path.
+    // This node is always ouputed even if no error occurs, 
+    // because statistisc scripts will fail if this node does not exist.
+    g_paramDB.Set("/Session/Result/Error/Message/text()", m_error ? m_errorMsg : "");
 
     // Dump XML data to a string.
     String resultStr = 

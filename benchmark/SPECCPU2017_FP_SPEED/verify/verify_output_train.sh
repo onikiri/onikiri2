@@ -1,0 +1,10 @@
+./verify_output_603.bwaves_s-train.sh
+./verify_output_607.cactuBSSN_s-train.sh
+./verify_output_619.lbm_s-train.sh
+./verify_output_621.wrf_s-train.sh
+./verify_output_627.cam4_s-train.sh
+./verify_output_628.pop2_s-train.sh
+./verify_output_638.imagick_s-train.sh
+./verify_output_644.nab_s-train.sh
+./verify_output_649.fotonik3d_s-train.sh
+./verify_output_654.roms_s-train.sh

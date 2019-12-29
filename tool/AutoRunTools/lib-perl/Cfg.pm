@@ -29,10 +29,10 @@ sub GetUserName()
 }
 
 #
-# Replace all strings in a passed tree by $macroHash.
-# This replacing is processed recursively.
+# Replace all strings in a passed XML tree with $macroHash.
+# This replacement is performed recursively.
 #
-sub ReplaceHashStr( $$$$$ )
+sub ApplyMacroInternal($$$$$)
 {
 	my $root      = shift;
 	my $node      = shift;
@@ -41,26 +41,29 @@ sub ReplaceHashStr( $$$$$ )
 	my $macroHash = shift;
 	
 
-	if( ref( $node ) eq 'HASH' ){
-		foreach my $i ( keys(%{$node}) ){
-			$node->{$i} = ReplaceHashStr( $root, $node->{$i}, $pattern, $str );
+	if (ref($node) eq 'HASH'){
+		foreach my $i (keys(%{$node})){
+			$node->{$i} = ApplyMacroInternal($root, $node->{$i}, $pattern, $str, $macroHash);
 		}
 	}
-	elsif( ref( $node ) eq 'ARRAY' ){
-		foreach my $i ( @{$node} ){
-			$i = ReplaceHashStr( $root, $i, $pattern, $str );
+	elsif (ref($node) eq 'ARRAY') {
+		foreach my $i (@{$node}) {
+			$i = ApplyMacroInternal($root, $i, $pattern, $str, $macroHash);
 		}
 	}
-	else{
-		if( $node =~ s/\$\($pattern\)/$str/g ){
-			#print "$node\t$pattern\n";
-	
-			foreach my $pattern ( keys(%{$macroHash}) ){
+	else{   # SCALAR
+		#if ($node =~ /\$\($pattern\)/) {
+		#	print "$node\n\t$pattern\t->\t$str\n";
+        #}
+        
+		if ($node =~ s/\$\($pattern\)/$str/g) {
+            # Re-apply all macros to the replaced string.
+            # This process should not be performed the whole tree.
+			foreach my $pattern (keys(%{$macroHash})) {
 				my $str = $macroHash->{$pattern};
-				$node = ReplaceHashStr( $root, $node, $pattern, $str );
+				$node = ApplyMacroInternal($root, $node, $pattern, $str, $macroHash);
 			}
 		}
-		
 	}	
 
 	return $node;
@@ -123,8 +126,12 @@ sub InitializeConfig($)
 	
 	# Expand macro
 	my $macroDefs = ToArray( $cfgXML->XPath( '/Configuration/Macros/Macro' ) );
-	my $macroHash = {};
-	$macroHash->{'USER'} = GetUserName();
+	my $macroHash = 
+	{
+        'USER' => GetUserName(),
+        'BASE_DIR' => $cfg->{'basePath'}
+    };
+
 	foreach my $i ( @{$macroDefs} ){
 		$macroHash->{ $i->{'-Name'} } = $i->{'-Value'};
 	}
@@ -132,7 +139,7 @@ sub InitializeConfig($)
 
 	foreach my $pattern ( keys(%{$macroHash}) ){
 		my $str = $macroHash->{$pattern};
-		ReplaceHashStr( $cfg, $cfg, $pattern, $str, $macroHash );
+		ApplyMacroInternal( $cfg, $cfg, $pattern, $str, $macroHash );
 	}
 
 
@@ -304,6 +311,17 @@ sub GetUserData($)
 {
 	my $self = shift;
 	return $self->{'userData'};
+}
+
+sub ApplyMacroToTree($$$)
+{
+	my $self = shift;
+    my $tree = shift;
+    my $macroHash = shift;
+    foreach my $pattern (keys(%{$macroHash})) {
+		my $str = $macroHash->{$pattern};
+		ApplyMacroInternal($tree, $tree, $pattern, $str, $macroHash);
+	}
 }
 
 1;

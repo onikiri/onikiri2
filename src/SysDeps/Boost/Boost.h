@@ -61,6 +61,10 @@
 #   pragma warning(disable:4245)
 #   pragma warning(disable:4828)
 
+// in VS 2017 Ver. 15.9.4
+#   pragma warning(disable:4996)
+
+
 
 #elif defined COMPILER_IS_GCC
 

@@ -42,7 +42,7 @@ namespace Onikiri {
 
         class MemorySystem
         {
-            static const int RESERVED_PAGES = 256; // 鬼斬りで予約するページ
+            static const int RESERVED_PAGES = 4; // 鬼斬りで予約するページ
             static const int RESERVED_PAGE_NULL = 0;
             static const int RESERVED_PAGE_ZERO_FILLED = 1;
         public:

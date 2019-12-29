@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/imagick_s" CommandArguments="-limit disk 0 test_input.tga -shear 25 -resize 640x480 -negate -alpha Off test_output.tga " STDERR="test_convert.err" STDIN="" STDOUT="test_convert.out" TargetBasePath="./" TargetWorkPath="../run/imagick_s/test/input" />
+<Session><Emulator TargetArchitecture="AlphaLinux"><Processes><Process Command="../bin/imagick_s" CommandArguments="-limit disk 0 test_input.tga -shear 25 -resize 640x480 -negate -alpha Off test_output.tga " STDERR="test_convert.err" STDIN="" STDOUT="test_convert.out" TargetBasePath="./" TargetWorkPath="../../run/imagick_s/test/input" />
 </Processes>
 </Emulator>
 </Session>

@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_ELF64_H__
-#define __EMULATORUTILITY_ELF64_H__
+#ifndef EMU_UTILITY_SYSTEM_LOADER_ELF64_H
+#define EMU_UTILITY_SYSTEM_LOADER_ELF64_H
 
 namespace Onikiri {
     namespace EmulatorUtility {
@@ -97,6 +97,10 @@ namespace Onikiri {
                     //void (*a_fcn) (void);
                 } a_un;
             };
+
+            void EndianSpecifiedToHostInPlace(ELF64_HEADER& h, bool bigEndian);
+            void EndianSpecifiedToHostInPlace(ELF64_SECTION& h, bool bigEndian);
+            void EndianSpecifiedToHostInPlace(ELF64_PROGRAM& h, bool bigEndian);
         }   // namespace ELF64
 
         namespace ELF {
@@ -138,16 +142,13 @@ namespace Onikiri {
             const int AT_GID = 13;
             const int AT_EGID = 14;
             //const int AT_DCACHEBSIZE = 19;    // (PowerPC) Data Cache Block Size
+            const int AT_SECURE = 23;
+            const int AT_RANDOM = 25;
         
         }   // namespace ELF
 
-        using namespace ELF64;
-        using namespace ELF;
 
     } // EmulatorUtility
 
-    void EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_HEADER& h, bool bigEndian);
-    void EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_SECTION& h, bool bigEndian);
-    void EndianSpecifiedToHostInPlace(EmulatorUtility::ELF64_PROGRAM& h, bool bigEndian);
 } // namespace Onikiri
 #endif

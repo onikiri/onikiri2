@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -36,6 +36,7 @@
 #include "Env/Env.h"
 #include "SysDeps/posix.h"
 
+#include "Emu/Utility/System/VirtualPath.h"
 #include "Emu/Utility/System/VirtualSystem.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/Memory/MemorySystem.h"
@@ -73,7 +74,7 @@ ProcessCreateParam::~ProcessCreateParam()
     ReleaseParam();
 }
 
-const String ProcessCreateParam::GetTargetBasePath() const
+const VirtualPath ProcessCreateParam::GetTargetBasePath() const
 {
     ParamXMLPath xPath;
     xPath.AddArray( 
@@ -91,13 +92,16 @@ const String ProcessCreateParam::GetTargetBasePath() const
         );
     }
 
-    filesystem::path xmlDirPath( xmlFilePath.c_str() );
+    filesystem::path xmlDirPath(xmlFilePath.c_str());
     xmlDirPath.remove_filename();
+    auto basePath = xmlDirPath.append(m_targetBasePath);
 
-    return CompletePath( 
-        m_targetBasePath, 
-        xmlDirPath.string()
-    );
+    VirtualPath virtualBasePath;
+    virtualBasePath.SetGuestRoot("/ONIKIRI_ROOT/");
+    virtualBasePath.SetHostRoot(basePath.string());
+    virtualBasePath.SetVirtualPath("./");
+
+    return virtualBasePath;
 }
 
 ProcessState::ProcessState(int pid)
@@ -105,6 +109,7 @@ ProcessState::ProcessState(int pid)
 {
     m_loader = 0;
     m_syscallConv = 0;
+    m_controlRegs.fill(0);
 }
 
 ProcessState::~ProcessState()
@@ -141,7 +146,21 @@ u64 ProcessState::GetThreadUniqueValue()
     return m_threadUniqueValue;
 }
 
+void ProcessState::SetControlRegister(u64 index, u64 value)
+{
+    if (index >= MAX_CONTROL_REGISTER_NUM) {
+        THROW_RUNTIME_ERROR("A control register out of range accessed.: %d", index);
+    }
+    m_controlRegs[(size_t)index] = value;
+}
 
+u64 ProcessState::GetControlRegister(u64 index)
+{
+    if (index >= MAX_CONTROL_REGISTER_NUM) {
+        THROW_RUNTIME_ERROR("A control register out of range accessed.: %d", index);
+    }
+    return m_controlRegs.at((size_t)index);
+}
 
 void ProcessState::Init(
     const ProcessCreateParam& pcp, 
@@ -158,29 +177,20 @@ void ProcessState::Init(
         m_syscallConv->SetSystem( simSystem );
         m_loader = loader;
 
-        string targetBase = pcp.GetTargetBasePath();
+        const VirtualPath targetBase = pcp.GetTargetBasePath();
 
-        m_virtualSystem->SetInitialWorkingDir(
-            CompletePath( pcp.GetTargetWorkPath(), targetBase )
-        );
+        VirtualPath workDir = targetBase;
+        workDir.SetVirtualPath(pcp.GetTargetWorkPath());
+        m_virtualSystem->SetInitialWorkingDir(workDir);
 
-        m_loader->LoadBinary(
-            m_memorySystem,
-            CompletePath( pcp.GetCommand(), targetBase )
-        );
+        VirtualPath cmdFileName = targetBase;
+        cmdFileName.SetVirtualPath(pcp.GetCommand());
+        m_loader->LoadBinary(m_memorySystem, cmdFileName.ToHost());
+        m_virtualSystem->SetCommandFileName(cmdFileName);
 
         m_codeRange = m_loader->GetCodeRange();
 
-        // mmapに使うヒープを，アドレス空間上で0からバイナリイメージの
-        // 直前まで確保する (アドレス0のマップ単位は含まない)
-        //u64 heapBase = m_memorySystem->GetPageSize();
-
-        // 鬼斬で予約されていないところから
-        u64 heapBase = m_memorySystem->GetReservedAddressRange() + 1;
-        m_memorySystem->AddHeapBlock(heapBase, m_loader->GetImageBase()-heapBase);
-
-        InitStack(pcp);
-
+        InitMemoryMap(pcp);
         InitTargetStdIO(pcp);
     }
     catch (...) {
@@ -197,33 +207,54 @@ void ProcessState::Init(
     }
 }
 
-
-void ProcessState::InitStack(const ProcessCreateParam& pcp)
+// Initialize the memory map of a loaded process except loaded binary areas.
+void ProcessState::InitMemoryMap(const ProcessCreateParam& pcp)
 {
-    // スタックの確保
+    // Allocate a stack area
     u64 stackMegaBytes = pcp.GetStackMegaBytes();
     if(stackMegaBytes <= 1){
         THROW_RUNTIME_ERROR("Stack size(%d MB) is too small.", stackMegaBytes);
     }
-
     u64 stackBytes = stackMegaBytes*1024*1024;
-    u64 stack = m_memorySystem->MMap(0, stackBytes);
+    
+    // GetStackTail returns the end of address (e.g., 0xbfffffff), so +1
+    if (m_loader->GetStackTail() < stackBytes) {
+        THROW_RUNTIME_ERROR("Stack size(%d MB) is greater than the stack top address.", stackMegaBytes);
+    }
+    u64 stack = m_loader->GetStackTail() - stackBytes + 1;
+
+    m_memorySystem->AssignPhysicalMemory(
+        stack, stackBytes, VIRTUAL_MEMORY_ATTR_READ | VIRTUAL_MEMORY_ATTR_WRITE
+    );
+    //u64 stack = m_memorySystem->MMap(0, stackBytes);
 
     // 引数の設定
-    string targetBase = pcp.GetTargetBasePath();
+    VirtualPath targetBase = pcp.GetTargetBasePath();
     m_loader->InitArgs(
         m_memorySystem,
         stack, 
         stackBytes, 
-        CompletePath( pcp.GetCommand(), targetBase ),
-        pcp.GetCommandArguments() );
+        targetBase.CompleteInGuest(pcp.GetCommand()), // for argv, this path is virtual one
+        pcp.GetCommandArguments() 
+    );
+
+    // Reserve a mmap area
+    // Physical memory is allocated when mmap() is called.
+    u64 initBrk = m_memorySystem->Brk(0);
+    ASSERT(initBrk != 0, "Brk is not initialized");
+
+    s64 pageSize = m_memorySystem->GetPageSize();
+    initBrk = (initBrk / pageSize + 1) * pageSize;  // Align to page boundary
+
+    // Use half of the area sandwiched between stack and brk initial values in mmap
+    s64 mmapAreaSize = (stack - initBrk) / 2;
+    mmapAreaSize = (mmapAreaSize / pageSize + 1) * pageSize;  // Align to page boundary
+    ASSERT(mmapAreaSize > 0, "The size of mmap area is incorrect.");
+    m_memorySystem->AddHeapBlock(stack - mmapAreaSize, mmapAreaSize);
 }
 
 void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
 {
-    string targetBase = pcp.GetTargetBasePath();
-    string targetWork = 
-        CompletePath( pcp.GetTargetWorkPath(), targetBase );
 
 
     // stdin stdout stderr の設定
@@ -255,17 +286,21 @@ void ProcessState::InitTargetStdIO(const ProcessCreateParam& pcp)
     for (int i = 0; i < 3; i ++) {
         if (std_filename[i].empty()) {
             // 入出力として指定されたファイル名が空ならばホストの入出力を使用する
-            m_virtualSystem->AddFDMap(std_fd[i], std_fd[i], false);
-            m_virtualSystem->GetDelayUnlinker()->AddMap(std_fd[i], "HostIO");
+            String hostIO_Name = m_virtualSystem->GetHostIO_Name();
+            m_virtualSystem->AddFDMap(std_fd[i], std_fd[i], hostIO_Name, false);
+            m_virtualSystem->GetDelayUnlinker()->AddMap(std_fd[i], hostIO_Name);
         }
         else {
+            VirtualPath targetBase = pcp.GetTargetBasePath();
+            String targetWork = targetBase.CompleteInHost(pcp.GetTargetWorkPath());
+
             string filename = CompletePath(std_filename[i], targetWork );
             FILE *fp = fopen( filename.c_str(), omode[i].c_str() );
             if (fp == NULL) {
                 THROW_RUNTIME_ERROR("Cannot open file '%s'.", filename.c_str());
             }
             m_autoCloseFile.push_back(fp);
-            m_virtualSystem->AddFDMap(std_fd[i], posix_fileno(fp), false);
+            m_virtualSystem->AddFDMap(std_fd[i], posix_fileno(fp), filename, false);
             m_virtualSystem->GetDelayUnlinker()->AddMap(std_fd[i], filename);
         }
     }

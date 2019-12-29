@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+
+  <Emulator TargetArchitecture="RISCV64Linux">
+    <Processes>
+      <Process 
+        Command='a.out'
+        TargetBasePath='./'
+        TargetWorkPath=''
+        CommandArguments=''
+        STDIN=''
+        STDOUT=''
+      />
+    </Processes>
+  </Emulator>
+
+  <Simulator>
+    <!-- Mode='Simulation' -->
+    <!-- Mode='EmulationWithDebug' -->
+    <System
+      Mode='Emulation'
+      SimulationInsns='323000' 
+      SkipInsns='0' 
+    />
+  </Simulator>
+  
+<!--
+  <Environment>
+    <OutputXML FileName='result.xml' Level='Detail'/>
+  </Environment>
+-->
+</Session>

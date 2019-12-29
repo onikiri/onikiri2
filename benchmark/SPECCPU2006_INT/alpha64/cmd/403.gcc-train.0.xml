@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/403.gcc/train/'
-        Command='./bin/403.gcc.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/403.gcc/train/'
+        Command='alpha64/bin/403.gcc.alpha64'
         CommandArguments='integrate.i -o integrate.s'
         STDIN=''
       />

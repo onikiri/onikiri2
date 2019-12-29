@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/zeusmp" CommandArguments=" " STDERR="zeusmp.err" STDIN="" STDOUT="zeusmp.stdout" TargetBasePath="../../" TargetWorkPath="run/434.zeusmp/test/input" />
+</Processes>
+</Emulator>
+</Session>

@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(riscv-remote) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [
+            ],
+            "cwd": "${workspaceRoot}",
+            "stopAtEntry": false,
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+
+            "miDebuggerPath": "/home/shioya/opt/gcc/riscv64-linux/7.1.1/bin/riscv64-unknown-linux-gnu-gdb",
+            "program": "${workspaceRoot}/result_linux",
+            //"program": "${workspaceRoot}/../SPECCPU2017_INT_SPEED/riscv64/bin/deepsjeng_s",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "text": "target remote shioya:5555",
+                }
+            ]
+        }
+    ]
+}

@@ -39,6 +39,7 @@
 #include <string>
 #include <vector>
 #include <stdarg.h>
+#include <regex>
 #include <boost/tokenizer.hpp>
 
 namespace Onikiri
@@ -122,9 +123,34 @@ namespace Onikiri
             const char* delimiter, 
             const char* delimiterKeep = NULL) const;
 
-        template <class T> T to()
+        template <class T> T to() const
         {
             return boost::lexical_cast<T>(*this);
+        }
+
+        // Regular expression support
+        bool regex_search(
+            std::smatch match, 
+            const std::regex& re, 
+            std::regex_constants::match_flag_type flags = std::regex_constants::match_default
+        ) const {
+            return std::regex_search(*this, match, re, flags);
+        }
+
+        bool regex_search(
+            const std::regex& re,
+            std::regex_constants::match_flag_type flags = std::regex_constants::match_default
+        ) const {
+        
+            return std::regex_search(*this, re, flags);
+        }
+
+        String regex_replace(
+            const std::regex& re, 
+            const String& fmt, 
+            std::regex_constants::match_flag_type flags = std::regex_constants::match_default
+        ) const {
+            return std::regex_replace(*this, re, fmt, flags);
         }
     };
 }

@@ -78,7 +78,7 @@ int FDConv::HostToTarget(int hostFD) const
     else
         return InvalidFD;
 }
-bool FDConv::AddMap(int targetFD, int hostFD)
+bool FDConv::AddMap(int targetFD, int hostFD, const String& hostFileName)
 {
     if (targetFD < 0 || hostFD < 0)
         return false;
@@ -88,6 +88,9 @@ bool FDConv::AddMap(int targetFD, int hostFD)
 
     m_FDTargetToHostTable[targetFD] = hostFD;
 
+    FileContext context;
+    context.hostFileName = hostFileName;
+    m_targetFD_ContextMap[targetFD] = context;
     return true;
 }
 
@@ -101,7 +104,7 @@ bool FDConv::RemoveMap(int targetFD)
         return false;
 
     m_FDTargetToHostTable[targetFD] = InvalidFD;
-
+    m_targetFD_ContextMap[targetFD] = FileContext();
     return true;
 }
 
@@ -119,6 +122,14 @@ int FDConv::GetFirstFreeFD()
         ExtendFDMap();
         return result;
     }
+}
+
+FDConv::FileContext& FDConv::GetContext(int targetFD)
+{
+    if (m_targetFD_ContextMap[targetFD].hostFileName == "") {
+        THROW_RUNTIME_ERROR("Invalid target file descriptor [%d]", targetFD);
+    }
+    return m_targetFD_ContextMap[targetFD];
 }
 
 // m_FDTargetToHostTable のサイズを大きくする
@@ -163,12 +174,6 @@ bool DelayUnlinker::RemoveMap(int targetFD)
     m_targetFDToPathTable[targetFD] = "";
 
     return true;
-}
-
-string DelayUnlinker::GetMapPath(int targetFD)
-{
-    ASSERT( m_targetFDToPathTable[targetFD] != "", "Invalid map path." )
-    return m_targetFDToPathTable[targetFD];
 }
 
 bool DelayUnlinker::AddUnlinkPath(string path)
@@ -238,14 +243,19 @@ VirtualSystem::~VirtualSystem()
     for_each(m_autoCloseFD.begin(), m_autoCloseFD.end(), posix_close);
 }
 
-void VirtualSystem::SetInitialWorkingDir(const boost::filesystem::path& dir)
+void VirtualSystem::SetInitialWorkingDir(const VirtualPath& dir)
 {
     m_cwd = dir;
 }
 
-bool VirtualSystem::AddFDMap(int targetFD, int hostFD, bool autoclose)
+void VirtualSystem::SetCommandFileName(const VirtualPath& absCmdFileName)
 {
-    if (!m_fdConv.AddMap(targetFD, hostFD))
+    m_absCmdFileName = absCmdFileName;
+}
+
+bool VirtualSystem::AddFDMap(int targetFD, int hostFD, const String& hostFileName, bool autoclose)
+{
+    if (!m_fdConv.AddMap(targetFD, hostFD, hostFileName))
         return false;
 
     if (autoclose)
@@ -272,16 +282,21 @@ void VirtualSystem::RemoveAutoCloseFD(int fd)
         m_autoCloseFD.erase(e);
 }
 
-char* VirtualSystem::GetCWD(char* buf, int maxlen)
+int VirtualSystem::GetCWD(char* buf, int maxlen)
 {
-    strncpy(buf, m_cwd.string().c_str(), maxlen);
-    return buf;
+    strncpy(buf, m_cwd.ToGuest().c_str(), maxlen);
+    return (int)strlen(buf) + 1; // +1 for NULL?
 }
 
 int VirtualSystem::ChDir(const char* path)
 {
-    ASSERT(0);
-    return -1;
+    if (path[0] == '/') {   // Absolute path
+        m_cwd.SetVirtualPath(path);
+    }
+    else {
+        m_cwd.AppendVirtualPath(path);
+    }
+    return 0;
 }
 
 int VirtualSystem::GetPID()
@@ -309,20 +324,53 @@ int VirtualSystem::GetEGID()
     return posix_getegid();
 }
 
+// Called from Open, and read stream is used in GetDents 
+void VirtualSystem::ReadDirectoryEntries(int targetFD, const char* guestFileName)
+{
+    FDConv::FileContext* fileContext = &m_fdConv.GetContext(targetFD);
+    String hostFileName = fileContext->hostFileName;
+
+    // Enumerate files in an opened directory
+    namespace fs = boost::filesystem;
+    const fs::path path(hostFileName.c_str());
+    for (const auto& e : boost::make_iterator_range(fs::directory_iterator(path), {})) {
+        HostDirent dirent;
+        dirent.isDir = fs::is_directory(e);
+        dirent.name = e.path().filename().string();
+
+        // Windows stat always returns 0 for "ino", but 
+        // some guest programs recognize "ino 0" as a invalid file,
+        // so a dummy number is used
+        dirent.ino = 1;
+
+        //HostStat stat;
+        //Stat(String(guestFileName) + "/" + dirent.name, &stat);
+        //dirent.ino = stat.st_ino;
+
+        fileContext->dirStream.push_back(dirent);
+    }
+}
+
 int VirtualSystem::Open(const char* filename, int oflag)
 {
-    int hostFD = posix_open(GetHostPath(filename).string().c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
+    String hostFileName = GetHostPath(filename);
+    int hostFD = posix_open(hostFileName.c_str(), oflag, POSIX_S_IWRITE | POSIX_S_IREAD);
 
     // FDの対応表に追加
-    if (hostFD != -1) {
-        int targetFD = m_fdConv.GetFirstFreeFD();
-        AddFDMap(targetFD, hostFD, true);
-        m_delayUnlinker.AddMap(targetFD, GetHostPath(filename).string());
-        return targetFD;
-    }
-    else {
+    if (hostFD == -1) {
         return -1;
     }
+    int targetFD = m_fdConv.GetFirstFreeFD();
+    AddFDMap(targetFD, hostFD, hostFileName, true);
+    m_delayUnlinker.AddMap(targetFD, hostFileName);
+
+
+    // Open a directory stream.
+    // Read directory entries 
+    if (oflag & POSIX_O_DIRECTORY) {
+        ReadDirectoryEntries(targetFD, filename);
+    }
+    return targetFD;
 }
 
 int VirtualSystem::Dup(int fd)
@@ -332,8 +380,9 @@ int VirtualSystem::Dup(int fd)
     // FDの対応表に追加
     if (dupHostFD != -1) {
         int targetFD = m_fdConv.GetFirstFreeFD();
-        AddFDMap(targetFD, dupHostFD, true);
-        m_delayUnlinker.AddMap(targetFD, m_delayUnlinker.GetMapPath(fd));
+        String hostFileName = m_fdConv.GetContext(fd).hostFileName;
+        AddFDMap(targetFD, dupHostFD, hostFileName, true);
+        m_delayUnlinker.AddMap(targetFD, hostFileName);
         return targetFD;
     }
     else {
@@ -356,23 +405,49 @@ int VirtualSystem::Write(int fd, void* buffer, unsigned int count)
 
 int VirtualSystem::Close(int fd)
 {
+    if (fd < 3){
+        // Block closing stdin/stdout/stderr
+        // When files are connected to stdin/stdout/stderr, they will be closed 
+        // in ProcessState, and thus, they must not be closed here
+        return 0;
+    }
+
     int hostFD = m_fdConv.TargetToHost(fd);
     int result = posix_close(hostFD);
     if (result != -1) {
         // closeに成功したら自動クローズリストから除外
         RemoveAutoCloseFD(hostFD);
 
+        String hostFileName = m_fdConv.GetContext(fd).hostFileName;
         m_fdConv.RemoveMap(fd);
 #ifdef HOST_IS_WINDOWS
         if( m_delayUnlinker.IfUnlinkable(fd) ){
-            m_delayUnlinker.RemoveUnlinkPath(m_delayUnlinker.GetMapPath(fd));
-            posix_unlink(m_delayUnlinker.GetMapPath(fd).c_str());
+            m_delayUnlinker.RemoveUnlinkPath(hostFileName);
+            posix_unlink(hostFileName.c_str());
         }
 #endif
         m_delayUnlinker.RemoveMap(fd);
     }
 
     return result;
+}
+
+// readlink at
+int VirtualSystem::ReadLinkAt(int targetFD, const char* pathname, void *buffer, unsigned int count) {
+    if (string("/proc/self/exe") == pathname) {
+        if (m_absCmdFileName.ToGuest().size() >= count) {
+            return -1;
+        }
+        ::strncpy(static_cast<char*>(buffer), m_absCmdFileName.ToGuest().c_str(), sizeof(char)*count-1);
+        return 0;
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'readlinkat' does not support reading other than '/proc/self/exe', "
+            "but '%s' is specified.", pathname
+        );
+        return -1;
+    }
 }
 
 int VirtualSystem::FStat(int fd, HostStat* buffer)
@@ -383,11 +458,11 @@ int VirtualSystem::FStat(int fd, HostStat* buffer)
 
 int VirtualSystem::Stat(const char* path, posix_struct_stat* s)
 {
-    return posix_stat(GetHostPath(path).string().c_str(), s);
+    return posix_stat(GetHostPath(path).c_str(), s);
 }
 int VirtualSystem::LStat(const char* path, posix_struct_stat* s)
 {
-    return posix_lstat(GetHostPath(path).string().c_str(), s);
+    return posix_lstat(GetHostPath(path).c_str(), s);
 }
 
 s64 VirtualSystem::LSeek(int fd, s64 offset, int whence)
@@ -398,7 +473,7 @@ s64 VirtualSystem::LSeek(int fd, s64 offset, int whence)
 
 int VirtualSystem::Access(const char* path, int mode)
 {
-    return posix_access(GetHostPath(path).string().c_str(), mode);
+    return posix_access(GetHostPath(path).c_str(), mode);
 }
 
 int VirtualSystem::Unlink(const char* path)
@@ -411,10 +486,10 @@ int VirtualSystem::Unlink(const char* path)
     エラーを返すので挙動が変わってしまう。
     ここでは Windows の挙動を Unix に合わせるため DelayUnlinker クラスを用いる
     */
-    int unlinkerr = posix_unlink(GetHostPath(path).string().c_str());
+    int unlinkerr = posix_unlink(GetHostPath(path).c_str());
 #ifdef HOST_IS_WINDOWS
     if( posix_geterrno() == 0xd ){
-        m_delayUnlinker.AddUnlinkPath(GetHostPath(path).string());
+        m_delayUnlinker.AddUnlinkPath(GetHostPath(path));
         return 0;
     }
 #endif
@@ -423,12 +498,15 @@ int VirtualSystem::Unlink(const char* path)
 
 int VirtualSystem::Rename(const char* oldpath, const char* newpath)
 {
-    return posix_rename((m_cwd/oldpath).string().c_str(), (m_cwd/newpath).string().c_str());
+    return posix_rename(
+        m_cwd.CompleteInHost(oldpath).c_str(),
+        m_cwd.CompleteInHost(newpath).c_str()
+    );
 }
 
 int VirtualSystem::Truncate(const char* path, s64 length)
 {
-    return posix_truncate(GetHostPath(path).string().c_str(), length);
+    return posix_truncate(GetHostPath(path).c_str(), length);
 }
 
 int VirtualSystem::FTruncate(int fd, s64 length)
@@ -440,16 +518,39 @@ int VirtualSystem::FTruncate(int fd, s64 length)
 int VirtualSystem::MkDir(const char* path, int mode)
 {
     namespace fs = filesystem;
-    if (fs::create_directory( GetHostPath(path) ))
+    if (fs::create_directory( GetHostPath(path).c_str() ))
         return 0;
     else 
         return -1;
 }
 
-boost::filesystem::path VirtualSystem::GetHostPath(const char* targetPath)
+// Returns a single HostDirent entry from targetFD
+// getdents64 cannot be available in Windows/Cygwin directly,
+// so this system call is emulated in software.
+// Return:
+//   -1: error
+//    1: success 
+//    0: reach to the end of directory stream
+// A stream is loaded in ReadDirectoryEntries called from Open
+int VirtualSystem::GetDents(int targetFD, HostDirent* dirent)
 {
-    namespace fs = filesystem;
-    return fs::absolute(fs::path(targetPath), m_cwd);
+    FDConv::FileContext* context = &m_fdConv.GetContext(targetFD);
+    if (context->hostFileName == "") {
+        return -1;
+    }
+
+    if (context->dirStream.size() == 0) {
+        return 0;
+    }
+
+    *dirent = context->dirStream.front();
+    context->dirStream.pop_front();
+    return 1;
+}
+
+String VirtualSystem::GetHostPath(const char* targetPath)
+{
+    return m_cwd.CompleteInHost(targetPath);
 }
 
 //

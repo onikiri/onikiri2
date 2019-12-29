@@ -1,0 +1,10 @@
+./verify_output_603.bwaves_s-test.sh
+./verify_output_607.cactuBSSN_s-test.sh
+./verify_output_619.lbm_s-test.sh
+./verify_output_621.wrf_s-test.sh
+./verify_output_627.cam4_s-test.sh
+./verify_output_628.pop2_s-test.sh
+./verify_output_638.imagick_s-test.sh
+./verify_output_644.nab_s-test.sh
+./verify_output_649.fotonik3d_s-test.sh
+./verify_output_654.roms_s-test.sh

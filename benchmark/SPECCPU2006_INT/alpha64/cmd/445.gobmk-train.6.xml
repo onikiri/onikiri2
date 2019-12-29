@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/445.gobmk/train/'
-        Command='./bin/445.gobmk.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/445.gobmk/train/'
+        Command='alpha64/bin/445.gobmk.alpha64'
         CommandArguments='--quiet --mode gtp'
         STDIN='nicklas2.tst'
       />

@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2018 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -37,14 +37,26 @@ using namespace std;
 using namespace boost::asio;
 using ip::tcp;
 
-// #define GDB_DEBUG
+//#define GDB_DEBUG
 
 DebugStub::DebugStub(SystemBase::SystemContext* context, int pid) :
     m_acc(m_ioService, tcp::endpoint(tcp::v4(), (unsigned short)context->debugParam.debugPort))
 {
-    ASSERT(context->targetArchitecture == "AlphaLinux", "GDB Debug mode is currently available on AlphaLinux only.");
-    ASSERT(context->threads.GetSize() == 1, "Multithread GDB Debugging is not supported.");
+    const auto& archName = context->targetArchitecture;
+    if (!(
+        archName == "AlphaLinux" ||
+        archName == "RISCV32Linux" ||
+        archName == "RISCV64Linux"
+    )){
+        THROW_RUNTIME_ERROR(
+            "GDB Debug mode is currently available on AlphaLinux/RISCV32Linux/RISCV64Linux only."
+        );
+    }
+    if (context->threads.GetSize() != 1) {
+        THROW_RUNTIME_ERROR("Multithread GDB Debugging is not supported.");
+    }
 
+    m_reg64 = archName == "AlphaLinux" || archName == "RISCV64Linux";
     m_context = context;
     m_pid = pid;
     m_stopExec = true;
@@ -59,6 +71,7 @@ DebugStub::DebugStub(SystemBase::SystemContext* context, int pid) :
             ExecDebug();
         }
     }
+
 }
 
 DebugStub::~DebugStub()
@@ -268,7 +281,13 @@ void DebugStub::ExecDebug()
     case ('g'): // Read general registers
         readnum = m_context->architectureStateList.at(m_pid).registerValue.capacity();
         for(size_t i = 0; i < readnum; i++){
-            readstr += U64ToHexStr(GetRegister((int)i), 8); // TODO: 32bit register
+            // TODO: 32bit register
+            if (m_reg64) {
+                readstr += U64ToHexStr(GetRegister((int)i), 8); 
+            }
+            else{
+                readstr += U32ToHexStr((u32)GetRegister((int)i), 4); 
+            }
         }
         SendPacket(readstr);
         break;
@@ -285,7 +304,10 @@ void DebugStub::ExecDebug()
         SendPacket("OK");
         break;
     case ('p'): // Read the value of specified register
-        SendPacket(U64ToHexStr(GetRegister((int)HexStrToU64(m_packet.command)), 8)); // TODO: 32bit register
+        if (m_reg64)
+            SendPacket(U64ToHexStr(GetRegister((int)HexStrToU64(m_packet.command)), 8)); // TODO: 32bit register
+        else
+            SendPacket(U32ToHexStr((u32)GetRegister((int)HexStrToU32(m_packet.command)), 4)); // TODO: 32bit register
         break;
     case ('P'): // Write specified register
         for (int i=0; i < 8; i++)
@@ -385,6 +407,10 @@ void DebugStub::ExecDebug()
         else if (m_packet.command == "Kill"){
             THROW_RUNTIME_ERROR("Terminated via gdb.");
         }
+        else if (m_packet.command == "MustReplyEmpty") {
+            SendPacket("");
+        }
+
         break;
     case ('c'): // Continue
         m_stopExec = false;
@@ -570,22 +596,72 @@ void DebugStub::OnExec(EmulationDebugOp* op)
 u64 DebugStub::GetRegister( int regNum )
 {
     // TODO: set correct PC on every ISA
-    if (regNum == 0x42)
-    {
-        return 0;
+    auto& reg = m_context->architectureStateList[m_pid].registerValue;
+    u64* pcAddr = &m_context->architectureStateList[m_pid].pc.address;
+    const auto& arch = m_context->targetArchitecture;
+
+    if (arch == "AlphaLinux") {
+        if (regNum < 0x40) {
+            return reg[regNum];
+        }
+        else if (regNum == 0x40) {
+            return *pcAddr;
+        }
+        else {
+            return 0;
+        }
     }
-    return (regNum != 0x40) ? m_context->architectureStateList[m_pid].registerValue[regNum] : m_context->architectureStateList[m_pid].pc.address;
+    else if (arch == "RISCV64Linux" || arch == "RISCV32Linux") {
+        if (regNum < 32) {
+            return reg[regNum];         // INT
+        }
+        else if (regNum == 32) {
+            return *pcAddr;             // PC
+        }
+        else if (regNum < 64+1) {
+            return reg[regNum - 1];     // FP
+        }
+        else if (regNum < 4096 + 64 + 1) {
+            return 0;   // CSR
+        }
+        else {
+            return 0;
+        }
+    }
+    THROW_RUNTIME_ERROR("Unsupported architecture");
+    return 0;
 }
 
 void DebugStub::SetRegister( int regNum, u64 value )
 {
-    // TODO: set correct PC on every ISA
-    if(regNum != 0x40){
-        m_context->architectureStateList[m_pid].registerValue[regNum] = value;
+    // TODO: set correct PC (with pid) on every ISA
+    auto& reg = m_context->architectureStateList[m_pid].registerValue;
+    u64* pcAddr = &m_context->architectureStateList[m_pid].pc.address;
+    const auto& arch = m_context->targetArchitecture;
+
+    if (arch == "AlphaLinux") {
+        if(regNum != 0x40){
+            reg[regNum] = value;
+        }
+        else {
+            *pcAddr = value;
+        }
     }
-    else {
-        m_context->architectureStateList[m_pid].pc.address = value;
+    else if (arch == "RISCV64Linux" || arch == "RISCV32Linux") {
+        if (regNum < 32) {
+            reg[regNum] = value;        // INT
+        }
+        else if (regNum == 32) {
+            *pcAddr = value;            // PC
+        }
+        else if (regNum < 64+1) {
+            reg[regNum - 1] = value;    // FP
+        }
+        else if (regNum < 4096 + 64 + 1) {
+            // CSR
+        }
     }
+    THROW_RUNTIME_ERROR("Unsupported architecture");
 }
 
 u64 DebugStub::GetMemory( MemAccess* access )
@@ -611,6 +687,26 @@ u64 DebugStub::HexStrToU64(string str)
 }
 
 string DebugStub::U64ToHexStr( u64 val, int num )
+{
+    stringstream ss;
+    for(int i = 0; i < num; i++){
+        ss << setw(2) << setfill('0') << hex << (val & 0xff);
+        val >>= 8;
+    }
+    return ss.str();
+}
+
+u32 DebugStub::HexStrToU32(string str)
+{
+    stringstream ss;
+    u32 retVal;
+
+    ss << str;
+    ss >> hex >> retVal;
+    return retVal;
+}
+
+string DebugStub::U32ToHexStr(u32 val, int num)
 {
     stringstream ss;
     for(int i = 0; i < num; i++){

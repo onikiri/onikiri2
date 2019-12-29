@@ -1,5 +1,5 @@
 # 
-# onikiri2§Ú•”•Î•…§π§ÎMakefile
+# onikiri2„Çí„Éì„É´„Éâ„Åô„ÇãMakefile
 #
 
 VCPROJ2MAKE      = ../../tool/vcproj2make/version_selecter.pl
@@ -18,6 +18,7 @@ XML2CHEADER_MAKEFILE = $(XML2CHEADER_MAKE_DIR)/Makefile
 XML2CHEADER_XML_FILE     = ../../src/DefaultParam.xml
 XML2CHEADER_HEADER_FILE  = ../../src/DefaultParam.h
 XML2CHEADER_VARIABLE_NAME = g_defaultParam
+XML2CHEADER_BIN      = $(XML2CHEADER_MAKE_DIR)/XML2CHeader
 
 ZLIB_SRC_DIR  = ../../lib/zlib
 ZLIB_MAKE_DIR = zlib
@@ -51,18 +52,18 @@ zlib : $(ZLIB_MAKE_DIR)/Makefile
 $(ZLIB_MAKEFILE) : $(ZLIB_MAKE_DIR)/configure
 	cd $(ZLIB_MAKE_DIR) ; ./configure
 
-# .svn∞ ≤º§œ•≥•‘°º§∑§ §§°•"."§‰".."§‚Ω¸≥∞
+# .svn‰ª•‰∏ã„ÅØ„Ç≥„Éî„Éº„Åó„Å™„ÅÑÔºé"."„ÇÑ".."„ÇÇÈô§Â§ñ
 NON_SVN_PATTERN = -not -path "*/.svn*" -not -name ".*"
 
-# configure§¨zconf.h§Úconfigure§∑§ø¥ƒ∂≠Õ—§ÀΩÒ§≠¥π§®§∆§∑§ﬁ§¶§Œ§«
-# Windows§«•≥•Û•—•§•Î§«§≠§ §Ø§ §È§ §§§Ë§¶§À•Ω°º•π§Ú•≥•‘°º§π§Î
+# configure„Ååzconf.h„Çíconfigure„Åó„ÅüÁí∞Â¢ÉÁî®„Å´Êõ∏„ÅçÊèõ„Åà„Å¶„Åó„Åæ„ÅÜ„ÅÆ„Åß
+# Windows„Åß„Ç≥„É≥„Éë„Ç§„É´„Åß„Åç„Å™„Åè„Å™„Çâ„Å™„ÅÑ„Çà„ÅÜ„Å´„ÇΩ„Éº„Çπ„Çí„Ç≥„Éî„Éº„Åô„Çã
 $(ZLIB_MAKE_DIR)/configure : $(ZLIB_SRC_DIR)/zlib.h
 	cd $(ZLIB_SRC_DIR); find ./ $(NON_SVN_PATTERN) -type d -print0 | xargs -0 -i mkdir -p $(CURDIR)/$(ZLIB_MAKE_DIR)/{}
 	cd $(ZLIB_SRC_DIR); find ./ $(NON_SVN_PATTERN) -type f -print0 | xargs -0 -i cp -f {} $(CURDIR)/$(ZLIB_MAKE_DIR)/{}
 	chmod u+x $(ZLIB_MAKE_DIR)/configure
 
 #
-# --- boost •¢°º•´•§•÷§Œ≈∏≥´
+# --- boost „Ç¢„Éº„Ç´„Ç§„Éñ„ÅÆÂ±ïÈñã
 #
 boost : zlib
 	$(MAKE) -C ./boost
@@ -71,10 +72,12 @@ boost : zlib
 #
 # --- XML2CHeader
 #
-xml2cheader : $(XML2CHEADER_MAKEFILE)
+xml2cheader: $(XML2CHEADER_MAKE_DIR)/XML2CHeader
+
+$(XML2CHEADER_BIN): $(XML2CHEADER_MAKEFILE)
 	$(MAKE) -C $(XML2CHEADER_MAKE_DIR)
 
-$(XML2CHEADER_HEADER_FILE) : $(XML2CHEADER_XML_FILE) xml2cheader
+$(XML2CHEADER_HEADER_FILE) : $(XML2CHEADER_XML_FILE) $(XML2CHEADER_BIN)
 	$(XML2CHEADER_MAKE_DIR)/XML2CHeader $(XML2CHEADER_XML_FILE) $(XML2CHEADER_HEADER_FILE) $(XML2CHEADER_VARIABLE_NAME)
 
 $(XML2CHEADER_MAKEFILE) : $(VCPROJ2MAKE_DEPS) $(XML2CHEADER_MAKE_CFG)

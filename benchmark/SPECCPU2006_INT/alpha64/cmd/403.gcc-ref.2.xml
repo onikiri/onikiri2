@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/403.gcc/ref/'
-        Command='./bin/403.gcc.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/403.gcc/ref/'
+        Command='alpha64/bin/403.gcc.alpha64'
         CommandArguments='c-typeck.i -o c-typeck.s'
         STDIN=''
       />

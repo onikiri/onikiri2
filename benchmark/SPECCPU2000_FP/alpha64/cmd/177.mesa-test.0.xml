@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/177.mesa/test/'
-        Command='./bin/177.mesa.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/177.mesa/test/'
+        Command='alpha64/bin/177.mesa.alpha64'
         CommandArguments='-frames 10 -meshfile mesa.in -ppmfile mesa.ppm'
         STDIN=''
       />

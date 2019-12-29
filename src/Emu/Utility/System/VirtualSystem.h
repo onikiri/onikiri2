@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2019 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -28,21 +28,45 @@
 // 
 // 
 
+#ifndef EMU_UTILITY_VIRTUALSYSTEM_H
+#define EMU_UTILITY_VIRTUALSYSTEM_H
 
-#ifndef __EMULATORUTILITY_VIRTUALSYSTEM_H__
-#define __EMULATORUTILITY_VIRTUALSYSTEM_H__
 
 #include "SysDeps/posix.h"
+#include "Emu/Utility/System/VirtualPath.h"
 
 namespace Onikiri {
     namespace EmulatorUtility {
         typedef POSIX::posix_struct_stat HostStat;
+
+        // For GetDents
+        struct HostDirent
+        {
+            String  name;   // name
+            u64     ino;    // i-node number
+            bool    isDir;  // This entry is a directory or not
+            HostDirent()
+            {
+                ino = 0;
+                isDir = false;
+            }
+        };
 
         // targetとhost間のFD変換を行うクラス
         class FDConv
         {
         public:
             static const int InvalidFD = -1;
+
+            struct FileContext
+            {
+                String hostFileName;
+                std::deque<HostDirent> dirStream;
+                FileContext()
+                {
+                    hostFileName = "";
+                }
+            };
 
             FDConv();
             ~FDConv();
@@ -52,19 +76,23 @@ namespace Onikiri {
             int HostToTarget(int hostFD) const;
 
             // FDの対応を追加
-            bool AddMap(int targetFD, int hostFD);
+            bool AddMap(int targetFD, int hostFD, const String& hostFileName);
 
             // FDの対応を削除
             bool RemoveMap(int targetFD);
 
             // 空いている target のFDを返す
             int GetFirstFreeFD();
+
+            // Get file context from target FD
+            FileContext& GetContext(int targetFD);
         private:
             void ExtendFDMap();
             void ExtendFDMap(size_t size);
 
             // targetのfdをhostのfdに変換する表．hostのfdが割り当てられていなければInvalidFDが入っている
             std::vector<int> m_FDTargetToHostTable;
+            std::map<int, FileContext> m_targetFD_ContextMap;
         };
         
         // プロセスが open 中のファイルを unlink したときの挙動を
@@ -80,8 +108,6 @@ namespace Onikiri {
             bool AddMap(int targetFD, std::string path);
             // TargetFD<>path の対応を削除
             bool RemoveMap(int targetFD);
-            // TargetFD<>path の対応するパスを取得
-            std::string GetMapPath(int targetFD);
             // 削除候補の path を追加
             bool AddUnlinkPath(std::string path);
             // 削除候補の path を Unlink するかどうか
@@ -105,9 +131,13 @@ namespace Onikiri {
             ~VirtualSystem();
 
             // VirtualSystemでOpenしていないファイルを明示的にFDの変換表に追加する(stdin, stdout, stderr等)
-            bool AddFDMap(int targetFD, int hostFD, bool autoclose = false);
+            bool AddFDMap(int targetFD, int hostFD, const String& hostFileName, bool autoclose = false);
             // ターゲットの作業ディレクトリを設定する
-            void SetInitialWorkingDir(const boost::filesystem::path& dir);
+            void SetInitialWorkingDir(const VirtualPath& dir);
+
+            // Set the file name of a command file
+            // This file name must be absolute one
+            void SetCommandFileName(const VirtualPath& absCmdFileName);
 
             // システムコール群
             int GetErrno();
@@ -118,7 +148,7 @@ namespace Onikiri {
             int GetGID();
             int GetEGID();
 
-            char* GetCWD(char* buf, int maxlen);
+            int GetCWD(char* buf, int maxlen);
             int ChDir(const char* path);
 
             // ファイルを開く．開いたファイルは自動でFDの変換表に追加される
@@ -127,6 +157,7 @@ namespace Onikiri {
             int Read(int targetFD, void *buffer, unsigned int count);
             int Write(int targetFD, void* buffer, unsigned int count);
             int Close(int targetFD);
+            int ReadLinkAt(int targetFD, const char* pathname, void *buffer, unsigned int count);
 
             int Stat(const char* path, HostStat* s);
             int FStat(int fd, HostStat* s);
@@ -144,6 +175,8 @@ namespace Onikiri {
 
             int MkDir(const char* path, int mode);
 
+            int GetDents(int targetFD, HostDirent* dirent);
+
             // targetのFDとhostのFDの変換を行う
             int FDTargetToHost(int targetFD) const
             {
@@ -152,6 +185,18 @@ namespace Onikiri {
             int FDHostToTarget(int hostFD) const
             {
                 return m_fdConv.HostToTarget(hostFD);
+            }
+            String FDTargetToFileName(int targetFD)
+            {
+                return m_fdConv.GetContext(targetFD).hostFileName;
+            }
+            String GetHostIO_Name()
+            {
+                return "HostIO";
+            }
+            bool IsFDTargetHostIO(int targetFD)
+            {
+                return m_fdConv.GetContext(targetFD).hostFileName == GetHostIO_Name();
             }
 
             // 時刻の取得
@@ -175,16 +220,18 @@ namespace Onikiri {
                 PARAM_ENTRY( "@EmulationMode", m_timeEmulationModeStr )
             END_PARAM_MAP()
         private:
-            boost::filesystem::path GetHostPath(const char* targetPath);
+            String GetHostPath(const char* targetPath);
             void AddAutoCloseFD(int fd);
             void RemoveAutoCloseFD(int fd);
+            void ReadDirectoryEntries(int fd, const char* filename);
 
             FDConv m_fdConv;
             // デストラクト時に自動でcloseするfd
             std::vector<int> m_autoCloseFD;
             DelayUnlinker m_delayUnlinker;
 
-            boost::filesystem::path m_cwd;
+            VirtualPath m_cwd;
+            VirtualPath m_absCmdFileName;
 
             // 時刻
             int EmulationModeStrToInt( const std::string& );

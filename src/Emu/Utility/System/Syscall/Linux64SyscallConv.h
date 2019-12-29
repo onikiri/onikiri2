@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2017 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 // 
 
 
-#ifndef __EMULATORUTILITY_LINUX64SYSCALLCONV_H__
-#define __EMULATORUTILITY_LINUX64SYSCALLCONV_H__
+#ifndef EMU_UTILITY_SYSTEM_SYSCALL_LINUX64_SYSCALL_CONV_H
+#define EMU_UTILITY_SYSTEM_SYSCALL_LINUX64_SYSCALL_CONV_H
 
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
 #include "Emu/Utility/System/VirtualSystem.h"
@@ -45,8 +45,6 @@ namespace Onikiri {
 
         class Linux64SyscallConv : public EmulatorUtility::SyscallConvIF
         {
-        private:
-            Linux64SyscallConv() {}
         public:
             Linux64SyscallConv(EmulatorUtility::ProcessState* processState);
             virtual ~Linux64SyscallConv();
@@ -61,7 +59,8 @@ namespace Onikiri {
             virtual u64 GetResult(int index);
             virtual void SetSystem(SystemIF* system);
 
-        private:
+        protected:
+            Linux64SyscallConv() {}
             static const int MaxResultCount = 2;
 
             std::vector<u64> m_args;
@@ -70,7 +69,6 @@ namespace Onikiri {
             SystemIF* m_simulatorSystem;
 
 
-        protected:
             static const int MaxArgCount = 16;
 
             u64 GetArg(int index) const
@@ -98,14 +96,18 @@ namespace Onikiri {
             virtual void syscall_exit(EmulatorUtility::OpEmulationState* opState);
 
             virtual void syscall_open(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_openat(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_close(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_read(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_write(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_readv(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_writev(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_readlinkat(EmulatorUtility::OpEmulationState* opState);
 
+            virtual void syscall_getdents64(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_lseek(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_unlink(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_unlinkat(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_rename(EmulatorUtility::OpEmulationState* opState);
 
             virtual void syscall_mmap(EmulatorUtility::OpEmulationState* opState);
@@ -113,6 +115,7 @@ namespace Onikiri {
             virtual void syscall_mremap(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_mprotect(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_fcntl(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_sigaction(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_uname(EmulatorUtility::OpEmulationState* opState);
 
             virtual void syscall_brk(EmulatorUtility::OpEmulationState* opState);
@@ -130,15 +133,27 @@ namespace Onikiri {
             //virtual void syscall_setreuid(EmulatorUtility::OpEmulationState* opState);
             //virtual void syscall_setregid(EmulatorUtility::OpEmulationState* opState);
 
+            virtual void syscall_setgid32(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_getppid(EmulatorUtility::OpEmulationState* opState);
+
+            virtual void syscall_setgroups(EmulatorUtility::OpEmulationState* opState);
+
             virtual void syscall_access(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_faccessat(EmulatorUtility::OpEmulationState* opState);
         //  virtual void syscall_fstat(EmulatorUtility::OpEmulationState* opState);
+
+            virtual void syscall_chdir(EmulatorUtility::OpEmulationState* opState);
+
             virtual void syscall_stat64(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_lstat64(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_fstat64(EmulatorUtility::OpEmulationState* opState);
-
+            virtual void syscall_fstatat64(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_ioctl(EmulatorUtility::OpEmulationState* opState);
 //          virtual void syscall_readlink(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_mkdir(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_mkdirat(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_renameat(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_renameat2(EmulatorUtility::OpEmulationState* opState);
 
             virtual void syscall_dup(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_truncate(EmulatorUtility::OpEmulationState* opState);
@@ -150,9 +165,13 @@ namespace Onikiri {
             void kill_helper(EmulatorUtility::OpEmulationState* opState, int pid, int sig);
 
             virtual void syscall_ignore(EmulatorUtility::OpEmulationState* opState);
+
             virtual void syscall_time(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_times(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_gettimeofday(EmulatorUtility::OpEmulationState* opState);
+            virtual void syscall_clock_gettime(EmulatorUtility::OpEmulationState* opState);
+            
+            virtual void syscall_sysinfo(EmulatorUtility::OpEmulationState* opState);
 
             virtual void syscall_getcwd(EmulatorUtility::OpEmulationState* opState);
 

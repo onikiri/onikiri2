@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/483.xalancbmk/ref/'
-        Command='./bin/483.xalancbmk.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/483.xalancbmk/ref/'
+        Command='alpha64/bin/483.xalancbmk.alpha64'
         CommandArguments='-v t5.xml xalanc.xsl'
         STDIN=''
       />

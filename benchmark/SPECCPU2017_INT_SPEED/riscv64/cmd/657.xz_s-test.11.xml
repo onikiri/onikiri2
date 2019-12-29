@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV64Linux"><Processes><Process Command="riscv64/bin/xz_s" CommandArguments="cpu2006docs.tar.xz 1 055ce243071129412e9dd0b3b69a21654033a9b723d874b2015c774fac1553d9713be561ca86f74e4f16f22e664fc17a79f30caa5ad2c04fbc447549c2810fae 629064 -1 4e " STDERR="cpu2006docs.tar-1-4e.err" STDIN="" STDOUT="cpu2006docs.tar-1-4e.out" TargetBasePath="../../" TargetWorkPath="run/657.xz_s/test/input" />
+</Processes>
+</Emulator>
+</Session>

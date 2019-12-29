@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='RISCV64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../../'
+        TargetWorkPath='run/462.libquantum/ref/'
+        Command='riscv64/bin/libquantum'
+        CommandArguments='1397 8'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

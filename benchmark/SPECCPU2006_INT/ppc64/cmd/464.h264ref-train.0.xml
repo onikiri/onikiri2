@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/464.h264ref/train/'
-        Command='./bin/464.h264ref.ppc64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/464.h264ref/train/'
+        Command='ppc64/bin/464.h264ref.ppc64'
         CommandArguments='-d foreman_train_encoder_baseline.cfg'
         STDIN=''
       />

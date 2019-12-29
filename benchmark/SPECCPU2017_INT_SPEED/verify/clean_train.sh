@@ -1,0 +1,10 @@
+./clean_600.perlbench_s-train.sh
+./clean_602.gcc_s-train.sh
+./clean_605.mcf_s-train.sh
+./clean_620.omnetpp_s-train.sh
+./clean_623.xalancbmk_s-train.sh
+./clean_625.x264_s-train.sh
+./clean_631.deepsjeng_s-train.sh
+./clean_641.leela_s-train.sh
+./clean_648.exchange2_s-train.sh
+./clean_657.xz_s-train.sh

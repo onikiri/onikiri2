@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/444.namd/ref/'
-        Command='./bin/444.namd.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/444.namd/ref/'
+        Command='alpha64/bin/444.namd.alpha64'
         CommandArguments='--input namd.input --iterations 38 --output namd.out '
         STDIN=''
       />

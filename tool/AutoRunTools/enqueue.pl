@@ -262,7 +262,22 @@ sub MakeExecuteScript($$$$)
 	}
 
 	# Make parameter options
-	my @parameters = @{ ToArray( $session->{'Parameter'} ) };
+	my @parameters = @{ dclone(ToArray( $session->{'Parameter'} ) ) };   # Each parameter may be replaced by macros.
+	my $baseOutFileName = $outputFileName;
+	$baseOutFileName =~ s/-$//;
+
+    # Reserved Macros
+    my $macroHash = 
+    {
+        'RESULT_DIR' => $resultPath,
+        'RESULT_SIGNITURE' => $baseOutFileName,
+        'RESULT_BASE_FILE_NAME' => $resultPath."/".$baseOutFileName,
+    };
+    $cfgObj->ApplyMacroToTree(\@parameters, $macroHash);
+
+    #print Dumper($macroHash);
+
+
 	foreach my $i ( @parameters ){
 		
 		# File
@@ -305,13 +320,16 @@ sub MakeExecuteScript($$$$)
 		
 		$execStr .= "  -x ".$node."=".$value." \\\n";
 		print $execStr;
-		
 	}
 	
 	$outputFileName =~ s/-$//;
-	
+
+    # Set XML output
+    my $resultXML_File = "$resultPath$outputFileName.txt";
+    $execStr .= "  -x /Session/Environment/OutputXML/@"."FileName=$resultXML_File \\\n";
+
 	# result
-	my $resultFile = "$resultPath$outputFileName.txt";
+	my $resultFile = "$resultPath$outputFileName.onikiri.stdout";
 	$execStr .= "  > $resultFile\\\n";
 
 	# Exec script
@@ -326,7 +344,7 @@ sub MakeExecuteScript($$$$)
 
 	my $sessionInfo =
 	{
-		'-resultFile'      => $resultFile,
+		'-resultFile'      => $resultXML_File,
 		'-execScriptFile'  => $execScriptFile,
 		'-enqueScriptFile'	=> $enqueueScript
 	};

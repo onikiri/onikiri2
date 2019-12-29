@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/183.equake/train/'
-        Command='./bin/183.equake.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/183.equake/train/'
+        Command='alpha64/bin/183.equake.alpha64'
         CommandArguments=''
         STDIN='inp.in'
       />

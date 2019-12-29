@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/301.apsi/ref/'
-        Command='./bin/301.apsi.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/301.apsi/ref/'
+        Command='alpha64/bin/301.apsi.alpha64'
         CommandArguments=''
         STDIN=''
       />

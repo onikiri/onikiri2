@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/176.gcc/train/'
-        Command='./bin/176.gcc.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/176.gcc/train/'
+        Command='alpha64/bin/176.gcc.alpha64'
         CommandArguments='cp-decl.i -o cp-decl.s'
         STDIN=''
       />

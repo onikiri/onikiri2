@@ -1,0 +1,10 @@
+./clean_600.perlbench_s-refspeed.sh
+./clean_602.gcc_s-refspeed.sh
+./clean_605.mcf_s-refspeed.sh
+./clean_620.omnetpp_s-refspeed.sh
+./clean_623.xalancbmk_s-refspeed.sh
+./clean_625.x264_s-refspeed.sh
+./clean_631.deepsjeng_s-refspeed.sh
+./clean_641.leela_s-refspeed.sh
+./clean_648.exchange2_s-refspeed.sh
+./clean_657.xz_s-refspeed.sh

@@ -48,8 +48,8 @@ namespace Onikiri {
             // LoaderIF の実装
             virtual u64 GetInitialRegValue(int index) const;
         protected:
-            virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
-            virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::ElfReader& elfReader);
+            virtual u64 CalculateEntryPoint(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::Elf64Reader& elfReader);
+            virtual void CalculateOthers(EmulatorUtility::MemorySystem* memory, const EmulatorUtility::Elf64Reader& elfReader);
         private:
             u64 m_startTocPointer;
         };

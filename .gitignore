@@ -24,11 +24,11 @@ project/gcc/zlib
 
 # Benchmark
 
-benchmark/SPECCPU2017_INT/run/*
-benchmark/SPECCPU2017_INT/*/bin/*
+benchmark/SPECCPU2017_INT_SPEED/run/*
+benchmark/SPECCPU2017_INT_SPEED/*/bin*/*
 
-benchmark/SPECCPU2017_FP/run/*
-benchmark/SPECCPU2017_FP/*/bin/*
+benchmark/SPECCPU2017_FP_SPEED/run/*
+benchmark/SPECCPU2017_FP_SPEED/*/bin*/*
 
 benchmark/SPECCPU2006_INT/run/*
 benchmark/SPECCPU2006_INT/*/bin/*
@@ -36,11 +36,21 @@ benchmark/SPECCPU2006_INT/*/bin/*
 benchmark/SPECCPU2006_FP/run/*
 benchmark/SPECCPU2006_FP/*/bin/*
 
+benchmark/SPECCPU2006_INTv1.1/run/*
+benchmark/SPECCPU2006_INTv1.1/*/bin*/*
+
+benchmark/SPECCPU2006_FPv1.1/run/*
+benchmark/SPECCPU2006_FPv1.1/*/bin*/*
+
 benchmark/SPECCPU2000_INT/run/*
 benchmark/SPECCPU2000_INT/*/bin/*
 
 benchmark/SPECCPU2000_FP/run/*
 benchmark/SPECCPU2000_FP/*/bin/*
+
+benchmark/RISCV_COMPLIANCE/tmp/*/
+benchmark/RISCV_COMPLIANCE/env.cfg
+
 
 # VS-related files
 *.sdf

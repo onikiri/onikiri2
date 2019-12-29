@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/252.eon/ref/'
-        Command='./bin/252.eon.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/252.eon/ref/'
+        Command='alpha64/bin/252.eon.alpha64'
         CommandArguments='chair.control.rushmeier chair.camera chair.surfaces chair.rushmeier.ppm ppm pixels_out.rushmeier'
         STDIN=''
       />

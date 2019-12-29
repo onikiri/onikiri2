@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='RISCV64Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../../'
+        TargetWorkPath='run/445.gobmk/train/'
+        Command='riscv64/bin/gobmk'
+        CommandArguments='--quiet --mode gtp'
+        STDIN='nicklas2.tst'
+      />
+    </Processes>
+  </Emulator>
+</Session>

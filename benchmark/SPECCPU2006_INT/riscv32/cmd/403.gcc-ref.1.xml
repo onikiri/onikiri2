@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='RISCV32Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../../'
+        TargetWorkPath='run/403.gcc/ref/'
+        Command='riscv32/bin/gcc'
+        CommandArguments='200.i -o 200.s'
+        STDIN=''
+      />
+    </Processes>
+  </Emulator>
+</Session>

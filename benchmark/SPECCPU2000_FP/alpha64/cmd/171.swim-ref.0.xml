@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/171.swim/ref/'
-        Command='./bin/171.swim.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/171.swim/ref/'
+        Command='alpha64/bin/171.swim.alpha64'
         CommandArguments=''
         STDIN='swim.in'
       />

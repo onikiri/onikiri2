@@ -1,0 +1,10 @@
+./verify_output_600.perlbench_s-train.sh
+./verify_output_602.gcc_s-train.sh
+./verify_output_605.mcf_s-train.sh
+./verify_output_620.omnetpp_s-train.sh
+./verify_output_623.xalancbmk_s-train.sh
+./verify_output_625.x264_s-train.sh
+./verify_output_631.deepsjeng_s-train.sh
+./verify_output_641.leela_s-train.sh
+./verify_output_648.exchange2_s-train.sh
+./verify_output_657.xz_s-train.sh

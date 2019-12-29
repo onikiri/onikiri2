@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/400.perlbench/test/'
-        Command='./bin/400.perlbench.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/400.perlbench/test/'
+        Command='alpha64/bin/400.perlbench.alpha64'
         CommandArguments='-I. -I./lib regmesg.pl'
         STDIN=''
       />

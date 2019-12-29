@@ -255,9 +255,32 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Converter.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Decoder.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Info.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxEmulator.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallID.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxTraits.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Operation.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32OpInfo.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Converter.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Decoder.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Info.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxEmulator.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxLoader.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxSyscallConv.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxSyscallID.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxTraits.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Operation.h" />
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64OpInfo.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\Math.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF32.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Elf32Reader.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.h" />
-    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux32Loader.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\LoaderIF.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\HeapAllocator.h" />
@@ -265,9 +288,11 @@
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\MemoryUtility.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Memory\VirtualMemory.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\ProcessState.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConvIF.h" />
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\VirtualPath.h" />
     <ClInclude Include="..\..\..\src\Emu\Utility\System\VirtualSystem.h" />
     <ClInclude Include="..\..\..\src\Env\Param\ParamXMLPrinter.h" />
     <ClInclude Include="..\..\..\src\Lib\shttl\table.h" />
@@ -594,16 +619,31 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='FastDebug|x64'">4244;4263;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4244;4263;4267</DisableSpecificWarnings>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Converter.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Decoder.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Info.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Converter.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Decoder.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Info.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxLoader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxSyscallConv.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF32.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Elf32Reader.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.cpp" />
-    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux32Loader.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\HeapAllocator.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\MemorySystem.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\MemoryUtility.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Memory\VirtualMemory.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\ProcessState.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux64SyscallConv.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\SyscallConstConv.cpp" />
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualPath.cpp" />
     <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualSystem.cpp" />
     <ClCompile Include="..\..\..\src\Interface\Addr.cpp" />
     <ClCompile Include="..\..\..\src\Interface\MemAccess.cpp" />

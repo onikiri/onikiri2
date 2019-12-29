@@ -6,9 +6,9 @@
   >
     <Processes>
       <Process
-        TargetBasePath='../'
-        TargetWorkPath='../run/164.gzip/ref/'
-        Command='./bin/164.gzip.alpha64'
+        TargetBasePath='../../'
+        TargetWorkPath='run/164.gzip/ref/'
+        Command='alpha64/bin/164.gzip.alpha64'
         CommandArguments='input.random 60'
         STDIN=''
       />

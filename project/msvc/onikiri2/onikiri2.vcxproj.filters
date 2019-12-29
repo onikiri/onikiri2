@@ -235,6 +235,12 @@
     <Filter Include="src\Sim\Pipeline\Fetcher\Steerer">
       <UniqueIdentifier>{dd1f4d90-3080-472c-b287-3bb69333f69e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Emu\RISCV32Linux">
+      <UniqueIdentifier>{0ad41bb9-0097-481a-9a79-17b9b2092b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Emu\RISCV64Linux">
+      <UniqueIdentifier>{4b1c157e-a1a2-4630-a289-f702d8aa66f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\Types.h">
@@ -777,9 +783,6 @@
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.h">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.h">
-      <Filter>src\Emu\Utility\System\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.h">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClInclude>
@@ -1007,6 +1010,84 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\SysDeps\Boost\asio.h">
       <Filter>src\SysDeps\Boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Converter.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Decoder.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Info.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxEmulator.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallID.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxTraits.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Operation.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV32Linux\RISCV32OpInfo.h">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\ELF32.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Elf32Reader.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Loader\Linux32Loader.h">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.h">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Converter.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Decoder.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Info.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxEmulator.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxLoader.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxSyscallConv.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxSyscallID.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxTraits.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Operation.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\RISCV64Linux\RISCV64OpInfo.h">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Emu\Utility\System\VirtualPath.h">
+      <Filter>src\Emu\Utility\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1289,9 +1370,6 @@
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF64.cpp">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ElfReader.cpp">
-      <Filter>src\Emu\Utility\System\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux64Loader.cpp">
       <Filter>src\Emu\Utility\System\Loader</Filter>
     </ClCompile>
@@ -1450,6 +1528,54 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Sim\Op\OpClassStatistics.cpp">
       <Filter>src\Sim\Op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Converter.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Decoder.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32Info.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxLoader.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV32Linux\RISCV32LinuxSyscallConv.cpp">
+      <Filter>src\Emu\RISCV32Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Elf64Reader.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\ELF32.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Elf32Reader.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Loader\Linux32Loader.cpp">
+      <Filter>src\Emu\Utility\System\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\Syscall\Linux32SyscallConv.cpp">
+      <Filter>src\Emu\Utility\System\Syscall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Converter.cpp">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Decoder.cpp">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64Info.cpp">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxLoader.cpp">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\RISCV64Linux\RISCV64LinuxSyscallConv.cpp">
+      <Filter>src\Emu\RISCV64Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Emu\Utility\System\VirtualPath.cpp">
+      <Filter>src\Emu\Utility\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

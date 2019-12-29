@@ -50,6 +50,8 @@ u64 SafeAbs(s64 x);
 u64 UnsignedMulHigh64(u64 lhs, u64 rhs);
 // high-order 64 bits of the 128-bit product of signed lhs and rhs
 s64 SignedMulHigh64(s64 lhs, s64 rhs);
+// high-order 64 bits of the 128-bit product of signed lhs and unsigned rhs
+s64 SignedUnsignedMulHigh64(s64 lhs, u64 rhs);
 
 typedef u64 RegisterType;
 
@@ -492,6 +494,31 @@ inline void Store(OpEmulationState* opState)
     WriteMemory<Type>(opState, TAddr()(opState), static_cast<Type>( TValue()(opState) ));
 }
 
+// Sets the value TFunc to TDest and returns the same value.
+// The return type is the same as TFunc type (not TDest type).
+template <typename TDest, typename TFunc>
+struct TeeSet // : public std::unary_function<OpEmulationState*, decltype(TFunc()(static_cast<OpEmulationState*>(nullptr)))> // std::unary_function is deprecated in C++11. Don't use.
+{
+    auto operator()(OpEmulationState* opState) -> decltype(TFunc()(opState))
+    {
+        auto value = TFunc()(opState);
+        TDest::SetOperand(opState, value);
+        return value;
+    }
+};
+
+// Sets the sign extended value TFunc to TDest and returns the same value.
+// The return type is the signed type of TFunc type (not the TDest type).
+template <typename TDest, typename TFunc>
+struct TeeSetSext // : public std::unary_function<OpEmulationState*, decltype(TFunc()(static_cast<OpEmulationState*>(nullptr)))> // std::unary_function is deprecated in C++11. Don't use.
+{
+    auto operator()(OpEmulationState* opState) -> decltype(TFunc()(opState))
+    {
+        auto value = cast_to_signed(TFunc()(opState));
+        TDest::SetOperand(opState, value);
+        return value;
+    }
+};
 
 // **********************************
 //    int arithmetic operations
@@ -671,9 +698,33 @@ struct IntSMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState
     s64 operator()(OpEmulationState* opState) const
     {
         s64 lhs = static_cast<s64>(TSrc1()(opState));
-        s64 rhs = static_cast<s64>(TSrc2()(opState));
+        s64 rhs = TSrc2()(opState);
 
         return SignedMulHigh64(lhs, rhs);
+    }
+};
+
+template <typename TSrc1, typename TSrc2>
+struct IntSUMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+{
+	s64 operator()(OpEmulationState* opState) const
+	{
+		s64 lhs = static_cast<s64>(TSrc1()(opState));
+		u64 rhs = static_cast<s64>(TSrc2()(opState));
+
+		return SignedUnsignedMulHigh64(lhs, rhs);
+	}
+};
+
+template <typename Type1, typename Type2, typename TSrc1, typename TSrc2>
+struct IntUMulh32 : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+{
+    u32 operator()(OpEmulationState* opState) const
+    {
+        Type1 lhs = TSrc1()(opState);
+        Type2 rhs = TSrc2()(opState);
+        Type1 ret = static_cast<Type1>(lhs * rhs) >> 32;
+        return static_cast<u32>(ret);
     }
 };
 

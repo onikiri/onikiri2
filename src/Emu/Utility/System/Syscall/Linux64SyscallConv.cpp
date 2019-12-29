@@ -136,8 +136,38 @@ namespace {
         s64 linux64_tv_sec;
         s64 linux64_tv_usec;
     };
+    struct linux64_timespec {
+        s64 linux64_tv_sec;
+        s64 linux64_tv_nsec;
+    };
 
     typedef s64 linux64_time_t;
+
+
+    struct linux64_sysinfo {
+        s64 linux64_uptime;
+        u64 linux64_loads[3];
+        u64 linux64_totalram;
+        u64 linux64_freeram;
+        u64 linux64_sharedram;
+        u64 linux64_bufferram;
+        u64 linux64_totalswap;
+        u64 linux64_freeswap;
+        u16 linux64_procs;
+        u16 linux64_pad;
+        u64 linux64_totalhigh;
+        u64 linux64_freehigh;
+        u32 linux64_mem_unit;
+        //u8 linux64_f[20 - 2 * sizeof(u64) - sizeof(u32)];   // padding
+    };
+
+    struct linux64_dirent {
+        u64 d_ino;
+        s64 d_off;
+        u16 d_reclen;
+        u8  d_type;   
+        char d_name[256];
+    };
 
     //const int LINUX_F_DUPFD = 0;
     const int LINUX_F_GETFD = 1;
@@ -151,6 +181,13 @@ namespace {
     const int LINUX_SEEK_SET = 0;
     const int LINUX_SEEK_CUR = 1;
     const int LINUX_SEEK_END = 2;
+
+    const int LINUX_AT_FDCWD = -100;
+    const int LINUX_AT_SYMLINK_NOFOLLO = 0x100;
+    const int LINUX_AT_REMOVEDIR = 0x200;
+
+    const int LINUX_DT_DIR = 4;
+    const int LINUX_DT_REG = 8;
 }
 
 
@@ -241,6 +278,13 @@ void Linux64SyscallConv::syscall_mprotect(OpEmulationState* opState)
     SetResult(true, (u64)0);
 }
 
+void Linux64SyscallConv::syscall_sigaction(EmulatorUtility::OpEmulationState* opState)
+{
+    // The current implementation does not provide signal functionality.
+    // Even if an error is simply returned, it seems to be ignored.
+    SetResult(true, (u64)-1);
+}
+
 void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
 {
     // linux
@@ -254,7 +298,7 @@ void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
     } utsname;
 
     memset(&utsname, 0, sizeof(utsname));
-    strcpy(utsname.release, "2.6.23");
+    strcpy(utsname.release, "3.4.5");
 
     GetMemorySystem()->MemCopyToTarget(m_args[1], &utsname, sizeof(utsname));
 
@@ -299,12 +343,12 @@ void Linux64SyscallConv::syscall_getcwd(OpEmulationState* opState)
     int bufSize = (int)m_args[2];
 
     TargetBuffer buf(GetMemorySystem(), m_args[1], bufSize+1);
-    void *result = GetVirtualSystem()->GetCWD(static_cast<char*>(buf.Get()), bufSize);
-    if (result == NULL) {
+    int length = GetVirtualSystem()->GetCWD(static_cast<char*>(buf.Get()), bufSize);
+    if (length == 0) {
         SetResult(false, GetVirtualSystem()->GetErrno());
     }
     else {
-        SetResult(true, m_args[1]);
+        SetResult(true, length);
     }
 }
 
@@ -315,6 +359,37 @@ void Linux64SyscallConv::syscall_open(OpEmulationState* opState)
         fileName.c_str(), 
         (int)OpenFlagTargetToHost( static_cast<u32>(m_args[2]) ) 
     );
+
+    if (result == -1)
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    else
+        SetResult(true, result);
+}
+void Linux64SyscallConv::syscall_openat(OpEmulationState* opState)
+{
+    s64 fd = (s64)m_args[1];
+    std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
+
+    if (fileName == std::string("/dev/tty")) {
+        result = 1;
+    }
+    else {
+        if (fd == LINUX_AT_FDCWD) {
+            result = GetVirtualSystem()->Open(
+                fileName.c_str(),
+                (int)OpenFlagTargetToHost(static_cast<u32>(m_args[3]))
+            );
+        }
+        else {
+            THROW_RUNTIME_ERROR(
+                "'openat' does not support reading fd other than 'AT_FDCWD (-100)', "
+                "but '%d' is specified.", fd
+            );
+        }
+
+    }
+
 
     if (result == -1)
         SetResult(false, GetVirtualSystem()->GetErrno());
@@ -424,6 +499,57 @@ void Linux64SyscallConv::syscall_writev(OpEmulationState* opState)
     }
     SetResult(true, result);
 }
+void Linux64SyscallConv::syscall_readlinkat(OpEmulationState* opState)
+{
+    unsigned int bufSize = (unsigned int)m_args[4];
+    TargetBuffer buf(GetMemorySystem(), m_args[3], bufSize);
+    const string& fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    
+    int result = GetVirtualSystem()->ReadLinkAt((int)m_args[1], fileName.c_str(), buf.Get(), bufSize);
+
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        m_simulatorSystem->NotifySyscallReadFileToMemory(Addr(opState->GetPID(), opState->GetTID(), m_args[3]), bufSize);
+        SetResult(true, 0);
+    }
+}
+
+// getdents64 cannot be available in Windows/Cygwin directly,
+// so this system call is emulated in software.
+void Linux64SyscallConv::syscall_getdents64(EmulatorUtility::OpEmulationState* opState)
+{
+    int fd = (int)m_args[1];
+    u64 maxSize = m_args[3];
+    bool isBigEndian = GetMemorySystem()->IsBigEndian();
+
+    TargetBuffer buf(GetMemorySystem(), m_args[2], maxSize);
+    linux64_dirent* dirent = static_cast<linux64_dirent*>(buf.Get());
+    size_t size = 0;
+
+    while (size + sizeof(linux64_dirent) <= maxSize) {
+        HostDirent hostDirEnt;
+        int ret = GetVirtualSystem()->GetDents(fd, &hostDirEnt);
+        if (ret == -1) {
+            SetResult(false, 1);    // 1: Operation not permitted
+            return;
+        }
+        if (ret == 0) { // Reach to the end of a stream
+            break;
+        }
+
+        dirent->d_ino = hostDirEnt.ino;
+        dirent->d_reclen = EndianHostToSpecified((u16)sizeof(linux64_dirent), isBigEndian);
+        dirent->d_off = EndianHostToSpecified((s64)size, isBigEndian);
+        dirent->d_type = hostDirEnt.isDir ? LINUX_DT_DIR : LINUX_DT_REG;
+        strncpy(dirent->d_name, hostDirEnt.name.c_str(), sizeof(dirent->d_name));
+
+        size += sizeof(linux64_dirent);
+        dirent++;
+    }
+    SetResult(true, (u64)size);
+}
 
 void Linux64SyscallConv::syscall_lseek(OpEmulationState* opState)
 {
@@ -453,7 +579,7 @@ void Linux64SyscallConv::syscall_fstat64(OpEmulationState* opState)
         （例えば mcf では if(st.st_rdev >> 4) で Copyright の書込み先を変えるようで、
         そのためにここの値が正しくないと実行パスが変わる）
         */
-        if(GetVirtualSystem()->GetDelayUnlinker()->GetMapPath((int)m_args[1]) == "HostIO"){
+        if(GetVirtualSystem()->IsFDTargetHostIO((int)m_args[1])){
             st.st_rdev = 0x8801;
         }
 #endif
@@ -461,7 +587,47 @@ void Linux64SyscallConv::syscall_fstat64(OpEmulationState* opState)
         SetResult(true, result);
     }
 }
+void Linux64SyscallConv::syscall_fstatat64(OpEmulationState* opState)
+{
+    s64 fd = (s64)m_args[1];
+    HostStat st;
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    s64 flag = (s64)m_args[4];
+    int result = -1;
+    /*
+    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
+    なので通常のstatと同じ動作をする
+    */
+    if (fd == LINUX_AT_FDCWD) {
+        // flag が 0 の時は stat として, AT_SYMLINK_NOFOLLOW の場合は lstat として動作する
+        if (flag == 0) {
+            result = GetVirtualSystem()->Stat(path.c_str(), &st);
+        }
+        else if (flag == LINUX_AT_SYMLINK_NOFOLLO){
+            result = GetVirtualSystem()->LStat(path.c_str(), &st);
+        }
+        else {
+            THROW_RUNTIME_ERROR(
+                "'fstatat' does not support reading flag other than '0' and 'AT_SYMLINK_NOFOLLO(0x100)', "
+                "but '%d' is specified.", flag
+            );
+        }
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'fstatat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        write_stat64((u64)m_args[3], st);
+        SetResult(true, result);
+    }
 
+}
 void Linux64SyscallConv::syscall_stat64(OpEmulationState* opState)
 {
     HostStat st;
@@ -515,10 +681,135 @@ void Linux64SyscallConv::syscall_mkdir(OpEmulationState* opState)
     }
 }
 
+void Linux64SyscallConv::syscall_mkdirat(OpEmulationState* opState)
+{
+    s64 fd = (s64)m_args[1];
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
+    /*
+    ファイルディスクリプタが AT_FDCWD (-100) の場合は
+    working directory からの相対パスとなる
+    なので通常の mkdir と同じ動作をする
+    */
+    if (fd == LINUX_AT_FDCWD) {
+        result = GetVirtualSystem()->MkDir(path.c_str(), (int)m_args[3]);
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'mkdirat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        SetResult(true, result);
+    }
+}
+
+void Linux64SyscallConv::syscall_renameat(OpEmulationState* opState)
+{
+    s64 oldfd = (s64)m_args[1];
+    String oldPath = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    s64 newfd = (s64)m_args[3];
+    String newPath = StrCpyToHost(GetMemorySystem(), m_args[4]);
+    int result = -1;
+    // ファイルディスクリプタが AT_FDCWD (-100) の場合は working directory からの相対パスとなる
+    if (oldfd == LINUX_AT_FDCWD && newfd == LINUX_AT_FDCWD) {
+        result = GetVirtualSystem()->Rename(oldPath, newPath);
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'renameat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' and '%d' are specified.", oldfd, newfd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        SetResult(true, result);
+    }
+}
+
+void Linux64SyscallConv::syscall_renameat2(OpEmulationState* opState)
+{
+    s64 oldfd = (s64)m_args[1];
+    s64 newfd = (s64)m_args[3];
+    s64 flags = (s64)m_args[5];
+
+    if (oldfd != LINUX_AT_FDCWD && newfd != LINUX_AT_FDCWD) {
+        THROW_RUNTIME_ERROR(
+            "'renameat2' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%lld' and '%lld' are specified.", oldfd, newfd
+        );
+    }
+    else if (flags != 0) {
+        THROW_RUNTIME_ERROR("'renameat2' does not support reading 'flags' other than 0");
+    }
+    else {
+        syscall_renameat(opState);  // renameat2 with flags=0 is equivalent to renameat
+    }
+}
+
+void Linux64SyscallConv::syscall_setgid32(OpEmulationState* opState)
+{
+    // TODO: add implementation
+    SetResult(true, 0);
+}
+
+void Linux64SyscallConv::syscall_getppid(OpEmulationState* opState)
+{
+    // TODO: add implementation
+    SetResult(true, 0);
+}
+
+void Linux64SyscallConv::syscall_setgroups(OpEmulationState* opState)
+{
+    // TODO: add implementation
+    SetResult(true, 0);
+}
+
 void Linux64SyscallConv::syscall_access(OpEmulationState* opState)
 {
     string path = StrCpyToHost( GetMemorySystem(), m_args[1] );
     int result = GetVirtualSystem()->Access( path.c_str(), (int)AccessModeTargetToHost((u32)m_args[2]) );
+    if (result == -1)
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    else
+        SetResult(true, result);
+}
+void Linux64SyscallConv::syscall_faccessat(OpEmulationState* opState)
+{
+    s64 fd = m_args[1];
+    //s64 flags = m_args[4];
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
+    /*
+    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
+    なので通常のaccessと同じ動作をする
+    */
+    if (fd == LINUX_AT_FDCWD) {
+        result = GetVirtualSystem()->Access(path.c_str(), (int)AccessModeTargetToHost((u32)m_args[3]));
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'faccessat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+
+    if (result == -1)
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    else
+        SetResult(true, result);
+}
+
+void Linux64SyscallConv::syscall_chdir(EmulatorUtility::OpEmulationState* opState)
+{
+    string path = StrCpyToHost(GetMemorySystem(), m_args[1]);
+    int result = GetVirtualSystem()->ChDir(path.c_str());
     if (result == -1)
         SetResult(false, GetVirtualSystem()->GetErrno());
     else
@@ -533,6 +824,30 @@ void Linux64SyscallConv::syscall_unlink(OpEmulationState* opState)
         SetResult(false, GetVirtualSystem()->GetErrno());
     else
         SetResult(true, result);
+}
+
+void Linux64SyscallConv::syscall_unlinkat(OpEmulationState* opState)
+{
+    int fd = (int)m_args[1];
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int flag = (int)m_args[3];
+    if (flag & LINUX_AT_REMOVEDIR) {
+        THROW_RUNTIME_ERROR("syscall_unlinkat does not support LINUX_AT_REMOVEDIR.");
+    }
+
+    if (fd == LINUX_AT_FDCWD) {
+        int result = GetVirtualSystem()->Unlink(path.c_str());
+        if (result == -1)
+            SetResult(false, GetVirtualSystem()->GetErrno());
+        else
+            SetResult(true, result);
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'unlinkat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
 }
 
 void Linux64SyscallConv::syscall_rename(OpEmulationState* opState)
@@ -605,6 +920,50 @@ void Linux64SyscallConv::syscall_gettimeofday(OpEmulationState* opState)
     s64 t = GetVirtualSystem()->GetTime();
     tv_buf->linux64_tv_sec = EndianHostToSpecified((u64)t, GetMemorySystem()->IsBigEndian());
     tv_buf->linux64_tv_usec = EndianHostToSpecified((u64)t * 1000 * 1000, GetMemorySystem()->IsBigEndian());
+
+    SetResult(true, 0);
+}
+
+void Linux64SyscallConv::syscall_clock_gettime(EmulatorUtility::OpEmulationState* opState)
+{
+    //int clkID = (int)m_args[1];
+    TargetBuffer buf(GetMemorySystem(), m_args[2], sizeof(linux64_timespec));
+    linux64_timespec* tv_buf = static_cast<linux64_timespec*>(buf.Get());
+
+    s64 t = GetVirtualSystem()->GetTime();
+    tv_buf->linux64_tv_sec = EndianHostToSpecified((u64)t, GetMemorySystem()->IsBigEndian());
+    // Return nano-seconds
+    tv_buf->linux64_tv_nsec = EndianHostToSpecified((u64)t * 1000 * 1000 * 1000, GetMemorySystem()->IsBigEndian());
+
+    SetResult(true, 0);
+}
+
+void Linux64SyscallConv::syscall_sysinfo(EmulatorUtility::OpEmulationState* opState)
+{
+    TargetBuffer buf(GetMemorySystem(), m_args[1], sizeof(linux64_sysinfo));
+    linux64_sysinfo* sysinfo = static_cast<linux64_sysinfo*>(buf.Get());
+
+    // Seconds since boot
+    s64 t = GetVirtualSystem()->GetTime();
+    sysinfo->linux64_uptime = EndianHostToSpecified((u64)t, GetMemorySystem()->IsBigEndian());
+
+    // 1, 5, 15 min load averages
+    sysinfo->linux64_loads[0] = 
+    sysinfo->linux64_loads[1] = 
+    sysinfo->linux64_loads[2] = 1;
+
+    const s64 GB = 1024 * 1024 * 1024;
+    sysinfo->linux64_totalram   = 8 * GB;
+    sysinfo->linux64_freeram    = 4 * GB;
+    sysinfo->linux64_sharedram  = 2 * GB;
+    sysinfo->linux64_bufferram  = 2 * GB;
+    sysinfo->linux64_totalswap  = 8 * GB;
+    sysinfo->linux64_freeswap   = 4 * GB;
+    sysinfo->linux64_procs = 10;
+    sysinfo->linux64_pad = 0;
+    sysinfo->linux64_totalhigh = 4 * GB;
+    sysinfo->linux64_freehigh = 2 * GB;
+    sysinfo->linux64_mem_unit = 4096;
 
     SetResult(true, 0);
 }

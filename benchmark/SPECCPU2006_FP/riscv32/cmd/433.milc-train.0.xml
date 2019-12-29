@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session>
+  <!-- Emulator parameters-->
+  <Emulator
+    TargetArchitecture='RISCV32Linux'
+  >
+    <Processes>
+      <Process
+        TargetBasePath='../../'
+        TargetWorkPath='run/433.milc/train/'
+        Command='riscv32/bin/milc'
+        CommandArguments=''
+        STDIN='su3imp.in'
+      />
+    </Processes>
+  </Emulator>
+</Session>

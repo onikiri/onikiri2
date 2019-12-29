@@ -106,8 +106,10 @@ u64 MemorySystem::Brk(u64 addr)
     
     if( addr < m_currentBrk ){
         // Shrink program break and free unused memory.
-        u64 endPageAddr = MaskPageOffset( addr, pageSize );
-        u64 pageAddr    = MaskPageOffset( m_currentBrk, pageSize );
+        // m_currentBrk/addr specifies an effective tail address + 1,
+        // so -1 is necessary.
+        u64 endPageAddr = MaskPageOffset( addr - 1, pageSize );
+        u64 pageAddr    = MaskPageOffset( m_currentBrk - 1, pageSize );
         while( pageAddr != endPageAddr ){
             m_virtualMemory.FreePhysicalMemory( pageAddr, pageSize );
             pageAddr -= pageSize;
@@ -117,8 +119,8 @@ u64 MemorySystem::Brk(u64 addr)
     }
     else{
         // Expand program break and allocate memory.
-        u64 endPageAddr  = MaskPageOffset( addr, pageSize );
-        u64 pageAddr     = MaskPageOffset( m_currentBrk, pageSize ) + pageSize;
+        u64 endPageAddr  = MaskPageOffset( addr - 1, pageSize );
+        u64 pageAddr     = MaskPageOffset( m_currentBrk - 1, pageSize ) + pageSize;
         //u64 zeroPageAddr = RESERVED_PAGE_ZERO_FILLED * GetPageSize();
 
         while( pageAddr <= endPageAddr ){
@@ -269,8 +271,7 @@ void MemorySystem::CheckValueOnPageBoundary( u64 addr, const char* signature  )
 {
     if( ( addr & (GetPageSize() - 1) ) != 0 ){
         RUNTIME_WARNING( 
-            "The address is not aligned to a page boundary in '%s'\n"
-            "Address : %08x%08x",
+            "The address is not aligned to a page boundary in Address : %08x%08x\n",
             (u32)(addr >> 32), (u32)addr,
             signature
         );

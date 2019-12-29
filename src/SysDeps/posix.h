@@ -81,6 +81,7 @@ namespace Onikiri {
         const int POSIX_O_CREAT  = _O_CREAT;
         const int POSIX_O_EXCL   = _O_EXCL;
         const int POSIX_O_TRUNC  = _O_TRUNC;
+        const int POSIX_O_DIRECTORY = _O_OBTAIN_DIR;
 
         const int POSIX_S_IFDIR  = _S_IFDIR;
         const int POSIX_S_IFCHR  = _S_IFCHR;
@@ -149,6 +150,7 @@ namespace Onikiri {
         const int POSIX_O_CREAT  = O_CREAT;
         const int POSIX_O_EXCL   = O_EXCL;
         const int POSIX_O_TRUNC  = O_TRUNC;
+        const int POSIX_O_DIRECTORY = O_DIRECTORY;
 
         const int POSIX_S_IFDIR  = S_IFDIR;
         const int POSIX_S_IFCHR  = S_IFCHR;

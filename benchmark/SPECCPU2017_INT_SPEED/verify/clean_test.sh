@@ -1,0 +1,10 @@
+./clean_600.perlbench_s-test.sh
+./clean_602.gcc_s-test.sh
+./clean_605.mcf_s-test.sh
+./clean_620.omnetpp_s-test.sh
+./clean_623.xalancbmk_s-test.sh
+./clean_625.x264_s-test.sh
+./clean_631.deepsjeng_s-test.sh
+./clean_641.leela_s-test.sh
+./clean_648.exchange2_s-test.sh
+./clean_657.xz_s-test.sh
