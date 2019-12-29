@@ -357,7 +357,7 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
 
     case syscall_id_getpid:
-    case syscall_id_gettid:
+    case syscall_id_getppid:
         syscall_getpid(opState);
         break;
 

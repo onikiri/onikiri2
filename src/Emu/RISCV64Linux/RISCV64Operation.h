@@ -513,8 +513,11 @@ namespace Onikiri {
             template <typename TSrcTarget, typename TSrcDisp>
             inline void RISCV64BranchAbsUncond(OpEmulationState* opState)
             {
+                // The target address is obtained by adding the sign-extended 12-bit I-immediate to the register rs1, then setting the least-significant bit of the result to zero.
+                // -- The RISC-V Instruction Set Manual Vol. 1: Unprivileged ISA Document Version 20190608-Base-Ratified p.21
+                u64 mask = 0xfffffffffffffffe;
                 u64 target = TSrcTarget()(opState) + cast_to_signed(TSrcDisp()(opState));
-                RISCV64DoBranch(opState, target);
+                RISCV64DoBranch(opState, target & mask);
             }
 
             template <typename TSrcDisp>
