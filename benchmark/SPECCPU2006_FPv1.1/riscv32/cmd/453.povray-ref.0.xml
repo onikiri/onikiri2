@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV32Linux"><Processes><Process Command="riscv32/bin/povray" CommandArguments="SPEC-benchmark-ref.ini " STDERR="SPEC-benchmark-ref.stderr" STDIN="" STDOUT="SPEC-benchmark-ref.stdout" TargetBasePath="../../" TargetWorkPath="run/453.povray/ref/input" />
+</Processes>
+</Emulator>
+</Session>

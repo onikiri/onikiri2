@@ -121,6 +121,9 @@ namespace {
     };
     */
 
+    const int LINUX_AT_FDCWD = -100;
+    const int LINUX_AT_SYMLINK_NOFOLLO = 0x100;
+
 
 // x: int (hexadecimal)
 // n: int
@@ -133,71 +136,45 @@ static struct {
     int argcnt;
     const char* argtempl;
 } syscallTable[] = {
+    SYSCALLNAME(getcwd, 2, "px"),
+    SYSCALLNAME(fcntl, 3, "nnp"),
+    SYSCALLNAME(ioctl, 3, "xxx"),
+    SYSCALLNAME(mkdirat, 3, "nsx"),
+    SYSCALLNAME(unlinkat, 3, "nsn"),
+    SYSCALLNAME(ftruncate, 2, "nn"),
+    SYSCALLNAME(faccessat, 4, "nsnn"),
+    SYSCALLNAME(openat, 4, "nsxx"),
     SYSCALLNAME(close, 1, "n"),
-    SYSCALLNAME(lseek, 3, "nxn"),
+    SYSCALLNAME(llseek, 5, "nnnpn"),
     SYSCALLNAME(read, 3, "npn"),
     SYSCALLNAME(write, 3, "npn"),
+    SYSCALLNAME(writev, 3, "npn"),
+    SYSCALLNAME(fstatat, 4, "nspn"),
     SYSCALLNAME(fstat, 2, "np"),
     SYSCALLNAME(exit, 0, ""),
     SYSCALLNAME(exit_group, 0, ""),
+    SYSCALLNAME(clock_gettime, 2, "np"),
+    SYSCALLNAME(sigaction, 3 , "npp"),
+    SYSCALLNAME(times, 1, "p"),
+    SYSCALLNAME(uname, 1, "p"),
+    SYSCALLNAME(setrlimit, 2, "np"),
+    SYSCALLNAME(getrusage, 2, "xp"),
     SYSCALLNAME(gettimeofday, 2, "pp"),
-    SYSCALLNAME(brk, 1, "p"),
     SYSCALLNAME(open, 3, "sxx"),
     SYSCALLNAME(unlink, 1, "s"),
     SYSCALLNAME(stat, 2, "sp"),
-/*
-    SYSCALLNAME(readv, 3, "npn"),
-    SYSCALLNAME(writev, 3, "npn"),
-    SYSCALLNAME(lstat, 2, "sp"),
-    //SYSCALLNAME(stat64, 2, "sp"),
-    //SYSCALLNAME(lstat64, 2, "sp"),
-    //SYSCALLNAME(fstat64, 2, "np"),
-    SYSCALLNAME(truncate, 2, "px"),
-    SYSCALLNAME(ftruncate, 2, "nx"),
-    SYSCALLNAME(fcntl, 3, "nnp"),
-    SYSCALLNAME(chdir, 1, "p"),
-    SYSCALLNAME(fchdir, 1, "n"),
-    SYSCALLNAME(getcwd, 2, "px"),
-    SYSCALLNAME(mkdir, 2, "sx"),
-    SYSCALLNAME(rmdir, 1, "s"),
-    SYSCALLNAME(readlink, 3, "spx"),
-    SYSCALLNAME(link, 2, "ss"),
-    SYSCALLNAME(rename, 2, "ss"),
-    SYSCALLNAME(mmap, 6, "pxxxnx"),
-    SYSCALLNAME(mremap, 4, "pxxx"),
-    SYSCALLNAME(munmap, 2, "px"),
-    SYSCALLNAME(mprotect, 3, "pxx"),
-    SYSCALLNAME(chmod, 2, "sx"),
-    SYSCALLNAME(ioctl, 3, "xxx"),
-    SYSCALLNAME(time, 1, "p"),
-    SYSCALLNAME(times, 1, "p"),
-    //SYSCALLNAME(settimeofday, 2, "pp"),
-
-    SYSCALLNAME(uname, 1, "p"),
-
-    SYSCALLNAME(access, 2, "sx"),
-
-    SYSCALLNAME(gettid, 0, ""),
-    SYSCALLNAME(setuid, 1, "x"),
+    SYSCALLNAME(getpid, 0, ""),
     SYSCALLNAME(getuid, 0, ""),
-    //SYSCALLNAME(seteuid, 1, "x"),
-    SYSCALLNAME(setgid, 1, "x"),
-    SYSCALLNAME(getgid, 0, ""),
-    //SYSCALLNAME(setegid, 1, "x"),
     SYSCALLNAME(geteuid, 0, ""),
+    SYSCALLNAME(getgid, 0, ""),
     SYSCALLNAME(getegid, 0, ""),
-    //SYSCALLNAME(setreuid, 2),
-    //SYSCALLNAME(setregid, 2),
-    SYSCALLNAME(getrusage, 2, "xp"),
-    SYSCALLNAME(getrlimit, 2, "np"),
-    SYSCALLNAME(setrlimit, 2, "np"),
-    SYSCALLNAME(dup, 1, "n"),
-
-    SYSCALLNAME(rt_sigaction, 3, "xxx"),
-    SYSCALLNAME(rt_sigprocmask, 3, "xxx"),
-    SYSCALLNAME(kill, 2, "xx"),
-    SYSCALLNAME(tgkill, 3, "xxx"),
-*/
+    SYSCALLNAME(sysinfo, 1, "p"),
+    SYSCALLNAME(brk, 1, "p"),
+    SYSCALLNAME(munmap, 2, "px"),
+    SYSCALLNAME(mremap, 4, "pxxx"),
+    SYSCALLNAME(clone , 5, "npppp"),
+    SYSCALLNAME(mmap, 6, "pxxxnx"),
+    SYSCALLNAME(prlimit, 4, "nnpp"),
 };
 #undef SYSCALLNAME
 
@@ -249,17 +226,44 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     SetResult(false, 0);
     switch (GetArg(0)) {
+    case syscall_id_getcwd:
+        syscall_getcwd(opState);
+        break;
+    case syscall_id_fcntl:
+        syscall_fcntl(opState);
+        break;
+    case syscall_id_ioctl:
+        syscall_ioctl(opState);
+        break;
+    case syscall_id_mkdirat:
+        syscall_mkdirat(opState);
+        break;
+    case syscall_id_unlinkat:
+        syscall_unlinkat(opState);
+        break;
+    case syscall_id_ftruncate:
+        syscall_ftruncate(opState);
+        break;
+    case syscall_id_faccessat:
+        syscall_faccessat(opState);
+        break;
+    case syscall_id_openat:
+        syscall_openat(opState);
+        break;
     case syscall_id_close:
         syscall_close(opState);
         break;
-    case syscall_id_lseek:
-        syscall_lseek(opState);
+    case syscall_id_llseek:
+        syscall_llseek(opState);
         break;
     case syscall_id_read:
         syscall_read(opState);
         break;
     case syscall_id_write:
         syscall_write(opState);
+        break;
+    case syscall_id_writev:
+        syscall_writev(opState);
         break;
     case syscall_id_fstat:
         syscall_fstat32(opState);
@@ -268,11 +272,26 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_exit_group:
         syscall_exit(opState);
         break;
+    case syscall_id_clock_gettime:
+        syscall_clock_gettime(opState);
+        break;
+    case syscall_id_sigaction:
+        syscall_sigaction(opState);
+        break;
+    case syscall_id_times:
+        syscall_times(opState);
+        break;
+    case syscall_id_uname:
+        syscall_uname(opState);
+        break;
+    case syscall_id_setrlimit:
+        syscall_ignore(opState);
+        break;
+    case syscall_id_getrusage:
+        syscall_ignore(opState);
+        break;
     case syscall_id_gettimeofday:
         syscall_gettimeofday(opState);
-        break;
-    case syscall_id_brk:
-        syscall_brk(opState);
         break;
     case syscall_id_open:
         syscall_open(opState);
@@ -282,6 +301,48 @@ void RISCV32LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
     case syscall_id_stat:
         syscall_stat32(opState);
+        break;
+    case syscall_id_readlinkat:
+        syscall_readlinkat(opState);
+        break;
+    case syscall_id_fstatat:
+        syscall_fstatat32(opState);
+        break;
+    case syscall_id_getpid:
+        syscall_getpid(opState);
+        break;
+    case syscall_id_getuid:
+        syscall_getuid(opState);
+        break;
+    case syscall_id_geteuid:
+        syscall_geteuid(opState);
+        break;
+    case syscall_id_getgid:
+        syscall_getgid(opState);
+        break;
+    case syscall_id_getegid:
+        syscall_getegid(opState);
+        break;
+    case syscall_id_sysinfo:
+        syscall_sysinfo(opState);
+        break;
+    case syscall_id_brk:
+        syscall_brk(opState);
+        break;
+    case syscall_id_munmap:
+        syscall_munmap(opState);
+        break;
+    case syscall_id_mremap:
+        syscall_mremap(opState);
+        break;
+    case syscall_id_clone:
+        THROW_RUNTIME_ERROR("Unsupported syscall 220 'clone' is called");
+        break;
+    case syscall_id_mmap:
+        syscall_mmap(opState);
+        break;
+    case syscall_id_prlimit:
+        syscall_ignore(opState);
         break;
 
 /*
@@ -512,6 +573,49 @@ void RISCV32LinuxSyscallConv::syscall_fstat32(EmulatorUtility::OpEmulationState*
         SetResult(true, result);
     }
 }
+
+void RISCV32LinuxSyscallConv::syscall_fstatat32(OpEmulationState* opState)
+{
+    s32 fd = (s32)m_args[1];
+    HostStat st;
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    s32 flag = (s32)m_args[4];
+    int result = -1;
+    /*
+    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
+    なので通常のstatと同じ動作をする
+    */
+    if (fd == LINUX_AT_FDCWD) {
+        // flag が 0 の時は stat として, AT_SYMLINK_NOFOLLOW の場合は lstat として動作する
+        if (flag == 0) {
+            result = GetVirtualSystem()->Stat(path.c_str(), &st);
+        }
+        else if (flag == LINUX_AT_SYMLINK_NOFOLLO){
+            result = GetVirtualSystem()->LStat(path.c_str(), &st);
+        }
+        else {
+            THROW_RUNTIME_ERROR(
+                "'fstatat' does not support reading flag other than '0' and 'AT_SYMLINK_NOFOLLO(0x100)', "
+                "but '%d' is specified.", flag
+            );
+        }
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'fstatat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        write_stat32((u64)m_args[3], st);
+        SetResult(true, result);
+    }
+
+}
+
 void RISCV32LinuxSyscallConv::syscall_stat32(OpEmulationState* opState)
 {
     HostStat st;

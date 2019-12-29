@@ -38,15 +38,43 @@ namespace Onikiri {
         // https://github.com/riscv/riscv-linux/blob/riscv-next/arch/riscv/include/uapi/asm/unistd.h
         // https://github.com/riscv/riscv-linux/blob/riscv-next/include/uapi/asm-generic/unistd.h
         namespace SyscallID {
+            const int syscall_id_getcwd = 17;
+            const int syscall_id_fcntl = 25;
+            const int syscall_id_ioctl = 29;
+            const int syscall_id_mkdirat = 34;
+            const int syscall_id_unlinkat = 35;
+            const int syscall_id_ftruncate = 46;
+            const int syscall_id_faccessat = 48;
+            const int syscall_id_openat = 56;
             const int syscall_id_close = 57;
-            const int syscall_id_lseek = 62;
+            const int syscall_id_llseek = 62; // different from RV64
             const int syscall_id_read = 63;
             const int syscall_id_write = 64;
+            const int syscall_id_writev = 66;
+            const int syscall_id_readlinkat = 78;
+            const int syscall_id_fstatat = 79;
             const int syscall_id_fstat = 80;
             const int syscall_id_exit = 93;
             const int syscall_id_exit_group = 94;
+            const int syscall_id_clock_gettime = 113;
+            const int syscall_id_sigaction = 134;
+            const int syscall_id_times = 153;
+            const int syscall_id_uname = 160;
+            const int syscall_id_setrlimit = 163;
+            const int syscall_id_getrusage = 165;
             const int syscall_id_gettimeofday = 169;
+            const int syscall_id_getpid = 172;
+            const int syscall_id_getuid = 174;
+            const int syscall_id_geteuid = 175;
+            const int syscall_id_getgid = 176;
+            const int syscall_id_getegid = 177;
+            const int syscall_id_sysinfo = 179;
             const int syscall_id_brk = 214;
+            const int syscall_id_munmap = 215;
+            const int syscall_id_mremap = 216;
+            const int syscall_id_clone = 220;
+            const int syscall_id_mmap = 222;
+            const int syscall_id_prlimit = 261;
 
             const int syscall_id_open = 1024;
             const int syscall_id_unlink = 1026;

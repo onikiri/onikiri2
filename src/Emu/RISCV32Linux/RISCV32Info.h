@@ -44,7 +44,10 @@ namespace Onikiri {
             static const int InstructionWordBitSize = 32;
             static const int MaxSrcRegCount = 3;
             static const int MaxDstRegCount = 2;
-            static const int MaxImmCount = 2;
+            // Source zero registers are converted to immediate operands,
+            // so the number of max immediate source operands is 1+2=3.
+            // (CSR instructions take 2 immediate operands, but they don't have reg operands.)
+            static const int MaxImmCount = 3;
             // Int : 32
             // FP  : 32
             // ADDR : 1

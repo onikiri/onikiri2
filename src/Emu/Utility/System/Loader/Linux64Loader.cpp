@@ -164,12 +164,12 @@ void Linux64Loader::InitArgs(MemorySystem* memory, u64 stackHead, u64 stackSize,
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF64_AUXV));
 
     sp -= sizeof(ELF64_AUXV);
-    auxv.a_type = EndianHostToSpecified((u64)25, m_bigEndian);
+    auxv.a_type = EndianHostToSpecified((u64)AT_RANDOM, m_bigEndian);
     auxv.a_un.a_val = EndianHostToSpecified((u64)target_argv[0], m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF64_AUXV));
 
     sp -= sizeof(ELF64_AUXV);
-    auxv.a_type = EndianHostToSpecified((u64)23, m_bigEndian);
+    auxv.a_type = EndianHostToSpecified((u64)AT_SECURE, m_bigEndian);
     auxv.a_un.a_val = EndianHostToSpecified((u64)0, m_bigEndian);
     memory->MemCopyToTarget(sp, &auxv, sizeof(ELF64_AUXV));
 

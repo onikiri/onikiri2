@@ -55,6 +55,7 @@ using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::POSIX;
 
 namespace {
+    const int LINUX_AT_FDCWD = -100;
 }
 
 // Linux32SyscallConv
@@ -67,4 +68,105 @@ Linux32SyscallConv::~Linux32SyscallConv()
 {
 }
 
+void Linux32SyscallConv::syscall_openat(OpEmulationState* opState)
+{
+    s32 fd = (s32)m_args[1];
+    std::string fileName = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
 
+    if (fileName == std::string("/dev/tty")) {
+        result = 1;
+    }
+    else {
+        if (fd == LINUX_AT_FDCWD) {
+            result = GetVirtualSystem()->Open(
+                fileName.c_str(),
+                (int)OpenFlagTargetToHost(static_cast<u32>(m_args[3]))
+            );
+        }
+        else {
+            THROW_RUNTIME_ERROR(
+                "'openat' does not support reading fd other than 'AT_FDCWD (-100)', "
+                "but '%d' is specified.", fd
+            );
+        }
+
+    }
+
+    if (result == -1)
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    else
+        SetResult(true, result);
+}
+
+void Linux32SyscallConv::syscall_faccessat(OpEmulationState* opState)
+{
+    s32 fd = m_args[1];
+    //s32 flags = m_args[4];
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
+    /*
+    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
+    なので通常のaccessと同じ動作をする
+    */
+    if (fd == LINUX_AT_FDCWD) {
+        result = GetVirtualSystem()->Access(path.c_str(), (int)AccessModeTargetToHost((u32)m_args[3]));
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'faccessat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+
+    if (result == -1)
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    else
+        SetResult(true, result);
+}
+
+void Linux32SyscallConv::syscall_mkdirat(OpEmulationState* opState)
+{
+    s32 fd = m_args[1];
+    string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
+    int result = -1;
+    /*
+    ファイルディスクリプタが AT_FDCWD (-100) の場合は
+    working directory からの相対パスとなる
+    なので通常の mkdir と同じ動作をする
+    */
+    if (fd == LINUX_AT_FDCWD) {
+        result = GetVirtualSystem()->MkDir(path.c_str(), (int)m_args[3]);
+    }
+    else {
+        THROW_RUNTIME_ERROR(
+            "'mkdirat' does not support reading fd other than 'AT_FDCWD (-100)', "
+            "but '%d' is specified.", fd
+        );
+    }
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        SetResult(true, result);
+    }
+}
+
+void Linux32SyscallConv::syscall_llseek(OpEmulationState* opState)
+{
+    s32 fd = m_args[1];
+    u32 offset_high = m_args[2];
+    u32 offset_low = m_args[3];
+    u32 whence = m_args[5];
+    u64 offset = (u64)offset_high<<32 | offset_low;
+
+    s64 result = GetVirtualSystem()->LSeek((int)fd, (s64)offset, (int)SeekWhenceTargetToHost(whence));
+    GetMemorySystem()->MemCopyToTarget(m_args[4], &result, sizeof(result));
+
+    if (result == -1) {
+        SetResult(false, GetVirtualSystem()->GetErrno());
+    }
+    else {
+        SetResult(true, 0);
+    }
+}

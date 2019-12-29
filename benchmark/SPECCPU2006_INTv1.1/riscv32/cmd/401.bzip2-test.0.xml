@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Session><Emulator TargetArchitecture="RISCV32Linux"><Processes><Process Command="riscv32/bin/bzip2" CommandArguments="input.program 5 " STDERR="input.program.err" STDIN="" STDOUT="input.program.out" TargetBasePath="../../" TargetWorkPath="run/401.bzip2/test/input" />
+</Processes>
+</Emulator>
+</Session>
