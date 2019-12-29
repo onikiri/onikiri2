@@ -394,8 +394,8 @@ int Recoverer::RescheduleConsumers( OpIterator producer )
             OpIterator consumer = *j;
             if( consumer->GetScheduler()->Reschedule( consumer ) ){
                 reshceduledInsns++;
+                reshceduledInsns += RescheduleConsumers( consumer );
             }
-            reshceduledInsns += RescheduleConsumers( consumer );
         }
     }
     
@@ -409,8 +409,8 @@ int Recoverer::RescheduleConsumers( OpIterator producer )
                 break;
             if( consumer->GetScheduler()->Reschedule( consumer ) ){
                 reshceduledInsns++;
+                reshceduledInsns += RescheduleConsumers( consumer );
             }
-            reshceduledInsns += RescheduleConsumers( consumer );
         }
     }
 
