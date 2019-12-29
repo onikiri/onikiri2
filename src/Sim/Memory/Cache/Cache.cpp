@@ -587,20 +587,24 @@ void Cache::UpdateTableBody( CacheHookParam* param )
         
         // Write back replaced lines to the next level cache.
         if( m_writePolicy == WP_WRITE_BACK && !m_perfect ){
-            if( (*m_lineState)[ line ].dirty ){
-                Access writeBack  = access;
-                writeBack.address = replacedAddr;
-                writeBack.value       = 0;
-                writeBack.lineValue   = replacedLine.value;
-                writeBack.type    = AOT_WRITE_BACK;
-                m_nextLevelCache->Write( writeBack, NULL );
-                m_numWrittenBackLines++;
+            if (line != m_cacheTable->end()) {
+                if ((*m_lineState)[line].dirty) {
+                    Access writeBack = access;
+                    writeBack.address = replacedAddr;
+                    writeBack.value = 0;
+                    writeBack.lineValue = replacedLine.value;
+                    writeBack.type = AOT_WRITE_BACK;
+                    m_nextLevelCache->Write(writeBack, NULL);
+                    m_numWrittenBackLines++;
+                }
             }
         }
     }
 
     // Set a dirty flag.
-    (*m_lineState)[ line ].dirty = dirty;
+    if (line != m_cacheTable->end()) {
+        (*m_lineState)[line].dirty = dirty;
+    }
 }
 
 
