@@ -129,6 +129,7 @@ namespace Onikiri
         // overwrites this method.
         virtual void ExitUpperPipeline( OpIterator op )
         {
+            ASSERT( !IsStalledThisCycle(), "An op exits an upper pipeline, but this pipeline node cannot receive the op on account of a stall." );
             if( m_enableLatch ){
                 m_latch.Receive( op );
             }

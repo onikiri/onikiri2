@@ -219,34 +219,35 @@ void PrefetcherBase::OnCacheTableUpdate( Cache* cache, CacheHookParam* param )
     if( !m_enabled )
         return;
 
-    ExLineState* state = &m_exLineState[ param->line ];
+    if (param->line != param->table->end()) {
+        ExLineState* state = &m_exLineState[param->line];
 
-    if( param->replaced ){
-        m_numReplacedLine++;
+        if (param->replaced) {
+            m_numReplacedLine++;
 
-        if( state->valid && state->prefetched ){
-            m_numPrefetchedReplacedLine++;
-            if( state->accessed ){
-                m_numEffectivePrefetchedReplacedLine++;
+            if (state->valid && state->prefetched) {
+                m_numPrefetchedReplacedLine++;
+                if (state->accessed) {
+                    m_numEffectivePrefetchedReplacedLine++;
+                }
+            }
+
+        }
+
+        state->valid = true;
+        if (IsPrefetch(*param->access)) {
+            state->prefetched = true;
+            state->accessed = false;
+            ASSERT(param->access);
+            AccessList::iterator prefetch = FindPrefetching(param->access->address);
+            if (prefetch != m_accessList.end() && prefetch->accessdCount > 0) {
+                state->accessed = true;
             }
         }
-
-    }
-
-
-    state->valid = true;
-    if( IsPrefetch( *param->access ) ){
-        state->prefetched = true;
-        state->accessed   = false;
-        ASSERT( param->access );
-        AccessList::iterator prefetch = FindPrefetching( param->access->address );
-        if( prefetch != m_accessList.end() && prefetch->accessdCount > 0 ){
+        else {
+            state->prefetched = false;
             state->accessed = true;
         }
-    }
-    else{
-        state->prefetched = false;
-        state->accessed   = true;
     }
 }
 

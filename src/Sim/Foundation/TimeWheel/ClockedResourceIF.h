@@ -82,7 +82,7 @@ namespace Onikiri
         virtual void StallNextCycle( int cycle ) = 0;
 
         // Cancel a stall period set by StallNextCycle.
-        virtual void CacnelStallPeriod() = 0;
+        virtual void CancelStallPeriod() = 0;
 
         // Get a priority of this resource.
         // Priority constants are defined in "Sim/ResourcePriority.h".

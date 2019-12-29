@@ -110,6 +110,9 @@ void Recoverer::RecoverBPredMiss( OpIterator branch )
     // Set a correct branch result.
     m_thread->SetFetchPC( branch->GetNextPC() );
 
+    // Cancel stall of a fetcher.
+    m_thread->GetCore()->GetFetcher()->CancelStallPeriod();
+
     // Stall a fetcher for a recovery latency.
     int latency = m_brPredRecoveryLatency;
     if( latency > 0 ){
@@ -134,6 +137,9 @@ void Recoverer::RecoverException( OpIterator causer )
     Exception exception = causer->GetException();
     exception.exception = false;
     causer->SetException( exception );
+
+    // Cancel stall of a fetcher.
+    m_thread->GetCore()->GetFetcher()->CancelStallPeriod();
 
     // Stall a fetcher for a recovery latency.
     int latency = m_exceptionRecoveryLatency;
@@ -270,6 +276,9 @@ int Recoverer::RecoverByRefetch( OpIterator /*missedOp*/, OpIterator startOp )
     int flushedInsns = 
         m_inorderList->FlushBackward( m_inorderList->GetFrontOpOfSamePC( startOp ) );
 
+    // Cancel stall of a fetcher.
+    m_thread->GetCore()->GetFetcher()->CancelStallPeriod();
+
     // Set a correct branch result.
     m_thread->SetFetchPC( fetchPC );
 
@@ -385,8 +394,8 @@ int Recoverer::RescheduleConsumers( OpIterator producer )
             OpIterator consumer = *j;
             if( consumer->GetScheduler()->Reschedule( consumer ) ){
                 reshceduledInsns++;
+                reshceduledInsns += RescheduleConsumers( consumer );
             }
-            reshceduledInsns += RescheduleConsumers( consumer );
         }
     }
     
@@ -400,8 +409,8 @@ int Recoverer::RescheduleConsumers( OpIterator producer )
                 break;
             if( consumer->GetScheduler()->Reschedule( consumer ) ){
                 reshceduledInsns++;
+                reshceduledInsns += RescheduleConsumers( consumer );
             }
-            reshceduledInsns += RescheduleConsumers( consumer );
         }
     }
 

@@ -40,14 +40,19 @@ namespace Onikiri {
         template <typename T>
         T ExtractBits(T value, int begin, int len, bool sext = false)
         {
-            T result = (value >> begin) & ~(~(T)0 << len);
+            // 下からlenビット分が0でありそれより上が1であるマスクを作成
+            // lenがTのビットサイズ(bits)と同じ場合はすべて0になるのが正しいがシフトを用いると未定義動作であるオーバーフローが発生するため、場合分けを行う
+            int bits = sizeof(T) * CHAR_BIT;
+            T mask = len >= bits ? 0 : (~(T)0 << len);
+
+            T result = (value >> begin) & ~mask;
             // sign extend
             if (sext && (result & ((T)1 << (len-1))))
-                result |= ~(T)0 << len;
+                result |= mask;
             return result;
         }
 
-    } // namespace PPC64Linux
+    } // namespace EmulatorUtility
 } // namespace Onikiri
 
 #endif

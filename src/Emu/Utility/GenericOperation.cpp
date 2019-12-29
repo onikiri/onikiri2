@@ -69,19 +69,34 @@ u64 Onikiri::EmulatorUtility::Operation::UnsignedMulHigh64(u64 lhs, u64 rhs)
     return result;
 }
 
+u64 Onikiri::EmulatorUtility::Operation::SafeAbs(s64 x)
+{
+    // 未定義動作であるオーバーフローを起こさず安全に絶対値を計算する
+
+    if (x == INT64_MIN) {
+        // xがINT64_MINの場合、-INT64_MINはs64で表せない
+        // オーバーフローを防ぐため特別処理
+        return (u64)1<<63;
+    }
+    else {
+        return (u64)(x < 0 ? -x : x);
+    }
+}
+
 s64 Onikiri::EmulatorUtility::Operation::SignedMulHigh64(s64 lhs, s64 rhs)
 {
     // 分かりやすい方法として，乗数・被乗数をどちらも正にして乗算を行い，最後に符号を調節する
     s64 resultSign = 1;
     if (lhs < 0) {
-        lhs = -lhs;
         resultSign *= -1;
     }
     if (rhs < 0) {
-        rhs = -rhs;
         resultSign *= -1;
     }
-    s64 result = (s64)UnsignedMulHigh64((u64)lhs, (u64)rhs);
+    // UnsignedMulHigh64の引数は高々二の六十三乗であり、
+    // UnsignedMulHigh64の結果は高々二の六十二乗になる。
+    // よって正負ともに余裕をもってs64で表せるためs64へのキャストは安全
+    s64 result = (s64)UnsignedMulHigh64(SafeAbs(lhs), SafeAbs(rhs));
     return result*resultSign;
 }
 

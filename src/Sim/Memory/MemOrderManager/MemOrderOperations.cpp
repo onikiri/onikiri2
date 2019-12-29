@@ -99,7 +99,7 @@ u64 MemOrderOperations::MergePartialAccess( const MemAccess& base, const MemAcce
 {
     u64 baseAddr   = base.address.address;
     u64 storeAddr  = store.address.address;
-    u64 storeValue = CorrectEndian( store.value, store.sign );
+    u64 storeValue = CorrectEndian( store.value, store.size );
     s64 storeSize  = store.size;
 
     u64 merged = base.value;
