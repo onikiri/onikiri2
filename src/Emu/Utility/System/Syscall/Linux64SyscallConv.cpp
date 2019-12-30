@@ -307,6 +307,12 @@ void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
 
 
 
+void Linux64SyscallConv::syscall_gettid(OpEmulationState* opState)
+{
+    // QEMU confirmed that TID can be 1000.
+    SetResult(true, (u64)1000);
+}
+
 void Linux64SyscallConv::syscall_getpid(OpEmulationState* opState)
 {
     SetResult(true, (u64)posix_getpid());

@@ -176,6 +176,7 @@ static struct {
     SYSCALLNAME(mkdirat, 3, "nsx"),
     SYSCALLNAME(renameat, 4, "nsns"),
     SYSCALLNAME(renameat2, 5, "nsnsn"),
+    SYSCALLNAME(set_tid_address, 1, "p"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -421,6 +422,13 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_renameat2:
         syscall_renameat2(opState);
         break;
+
+    case syscall_id_set_tid_address:
+        // There is nothing to do since syscall_clone is not supported.
+        // Returns TID.
+        syscall_gettid(opState);
+        break;
+
     /*
     case syscall_id_readv:
         syscall_readv(opState);
