@@ -424,6 +424,24 @@ void Linux64SyscallConv::syscall_dup(OpEmulationState* opState)
 void Linux64SyscallConv::syscall_read(OpEmulationState* opState)
 {
     unsigned int bufSize = (unsigned int)m_args[3];
+    if (bufSize == 0) {
+        // If count is zero, read() returns zero and has no other results.
+        SetResult(true, 0);
+        return;
+    }
+
+    if (!GetMemorySystem()->IsAssigned(m_args[2], bufSize)) {
+        SetResult(false, EFAULT);
+        RUNTIME_WARNING(
+            "`buf' references an inaccessible memory area (EFAULT).\n"
+            "`buf'  is 0x%016" PRIx64 "\n"
+            "`size' is 0x%016" PRIx64,
+            m_args[2],
+            m_args[3]
+        );
+        return;
+    }
+
     TargetBuffer buf(GetMemorySystem(), m_args[2], bufSize);
     int result = GetVirtualSystem()->Read((int)m_args[1], buf.Get(),    bufSize);
     if (result == -1) {
@@ -438,6 +456,24 @@ void Linux64SyscallConv::syscall_read(OpEmulationState* opState)
 void Linux64SyscallConv::syscall_write(OpEmulationState* opState)
 {
     unsigned int bufSize = (unsigned int)m_args[3];
+    if (bufSize == 0) {
+        // When count is zero, write() returns 0 without any other effect.
+        SetResult(true, 0);
+        return;
+    }
+
+    if (!GetMemorySystem()->IsAssigned(m_args[2], bufSize)) {
+        SetResult(false, EFAULT);
+        RUNTIME_WARNING(
+            "`buf' references an inaccessible memory area (EFAULT).\n"
+            "`buf'  is 0x%016" PRIx64 "\n"
+            "`size' is 0x%016" PRIx64,
+            m_args[2],
+            m_args[3]
+        );
+        return;
+    }
+
     TargetBuffer buf(GetMemorySystem(), m_args[2], bufSize);
     int result = GetVirtualSystem()->Write((int)m_args[1], buf.Get(), bufSize);
     if (result == -1) {
@@ -453,21 +489,70 @@ void Linux64SyscallConv::syscall_write(OpEmulationState* opState)
 void Linux64SyscallConv::syscall_readv(OpEmulationState* opState)
 {
     int iovcnt = (int)m_args[3];
+
+    if (iovcnt < 0) {
+        SetResult(false, EINVAL);
+        RUNTIME_WARNING(
+            "`iovcnt' is less than zero (EINVAL).\n"
+            "`iovcnt' is %d\n"
+            "(the third argument of this syscall is 0x%016" PRIx64 ")",
+            iovcnt,
+            m_args[3]
+        );
+        return;
+    }
+
     s64 result = 0;
     const TargetBuffer iovecBuf(GetMemorySystem(), m_args[2], iovcnt*sizeof(linux64_iovec), true);
     const linux64_iovec* iovec = static_cast<const linux64_iovec*>(iovecBuf.Get());
 
+    // Check all iovec enties first.
+    u64 iov_len_sum = 0;
+    for (int i = 0; i < iovcnt; i++, iovec++) {
+        u64 iov_base = EndianSpecifiedToHost(iovec->linux64_iov_base, GetMemorySystem()->IsBigEndian());
+        u64 iov_len = EndianSpecifiedToHost(iovec->linux64_iov_len, GetMemorySystem()->IsBigEndian());
+
+        if (iov_len > 0x7fffffffffffffff || iov_len_sum + iov_len > 0x7fffffffffffffff) {
+            SetResult(false, EINVAL);
+            RUNTIME_WARNING("The sum of the `iov_len' values overflows an ssize_t value (EINVAL).");
+            return;
+        }
+
+        iov_len_sum += iov_len;
+
+        if (iov_len == 0) {
+            continue;
+        }
+
+        if (!GetMemorySystem()->IsAssigned(iov_base, iov_len)) {
+            SetResult(false, EFAULT);
+            RUNTIME_WARNING(
+                "`buf' references an inaccessible memory area (EFAULT).\n"
+                "`buf'  is 0x%016" PRIx64 "\n"
+                "`size' is 0x%016" PRIx64,
+                iov_base,
+                iov_len
+            );
+            return;
+        }
+    }
+
+    iovec = static_cast<const linux64_iovec*>(iovecBuf.Get());
     for (int i = 0; i < iovcnt; i ++) {
         u64 iov_base = EndianSpecifiedToHost(iovec->linux64_iov_base, GetMemorySystem()->IsBigEndian());
         u64 iov_len = EndianSpecifiedToHost(iovec->linux64_iov_len, GetMemorySystem()->IsBigEndian());
+
+        if (iov_len == 0) {
+            iovec++;
+            continue;
+        }
 
         TargetBuffer buf(GetMemorySystem(), iov_base, (size_t)iov_len);
         int bytesRead = GetVirtualSystem()->Read((int)m_args[1], buf.Get(), (unsigned int)iov_len);
 
         if (result == -1 || bytesRead == -1 || (u64)bytesRead != iov_len) {
             SetResult(false, GetVirtualSystem()->GetErrno());
-            result = -1;
-            break;
+            return;
         }
         else {
             m_simulatorSystem->NotifySyscallReadFileToMemory(Addr(opState->GetPID(), opState->GetTID(), iov_base), iov_len);
@@ -481,21 +566,70 @@ void Linux64SyscallConv::syscall_readv(OpEmulationState* opState)
 void Linux64SyscallConv::syscall_writev(OpEmulationState* opState)
 {
     int iovcnt = (int)m_args[3];
+
+    if (iovcnt < 0) {
+        SetResult(false, EINVAL);
+        RUNTIME_WARNING(
+            "`iovcnt' is less than zero (EINVAL).\n"
+            "`iovcnt' is %d\n"
+            "(the third argument of this syscall is 0x%016" PRIx64 ")",
+            iovcnt,
+            m_args[3]
+        );
+        return;
+    }
+
     s64 result = 0;
     const TargetBuffer iovecBuf(GetMemorySystem(), m_args[2], iovcnt*sizeof(linux64_iovec), true);
     const linux64_iovec* iovec = static_cast<const linux64_iovec*>(iovecBuf.Get());
 
+    // Check all iovec enties first.
+    u64 iov_len_sum = 0;
+    for (int i = 0; i < iovcnt; i++, iovec++) {
+        u64 iov_base = EndianSpecifiedToHost(iovec->linux64_iov_base, GetMemorySystem()->IsBigEndian());
+        u64 iov_len = EndianSpecifiedToHost(iovec->linux64_iov_len, GetMemorySystem()->IsBigEndian());
+
+        if (iov_len > 0x7fffffffffffffff || iov_len_sum + iov_len > 0x7fffffffffffffff) {
+            SetResult(false, EINVAL);
+            RUNTIME_WARNING("The sum of the `iov_len' values overflows an ssize_t value (EINVAL).");
+            return;
+        }
+
+        iov_len_sum += iov_len;
+
+        if (iov_len == 0) {
+            continue;
+        }
+
+        if (!GetMemorySystem()->IsAssigned(iov_base, iov_len)) {
+            SetResult(false, EFAULT);
+            RUNTIME_WARNING(
+                "`buf' references an inaccessible memory area (EFAULT).\n"
+                "`buf'  is 0x%016" PRIx64 "\n"
+                "`size' is 0x%016" PRIx64,
+                iov_base,
+                iov_len
+            );
+            return;
+        }
+    }
+
+    iovec = static_cast<const linux64_iovec*>(iovecBuf.Get());
     for (int i = 0; i < iovcnt; i ++) {
         u64 iov_base = EndianSpecifiedToHost(iovec->linux64_iov_base, GetMemorySystem()->IsBigEndian());
         u64 iov_len = EndianSpecifiedToHost(iovec->linux64_iov_len, GetMemorySystem()->IsBigEndian());
+
+        if (iov_len == 0) {
+            iovec++;
+            continue;
+        }
 
         TargetBuffer buf(GetMemorySystem(), iov_base, (size_t)iov_len);
         int bytesWritten = GetVirtualSystem()->Write((int)m_args[1], buf.Get(), (unsigned int)iov_len);
 
         if (result == -1 || bytesWritten == -1 || (u64)bytesWritten != iov_len) {
             SetResult(false, GetVirtualSystem()->GetErrno());
-            result = -1;
-            break;
+            return;
         }
         else {
             m_simulatorSystem->NotifySyscallWriteFileFromMemory(Addr(opState->GetPID(), opState->GetTID(), iov_base), iov_len);

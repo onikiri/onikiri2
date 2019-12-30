@@ -83,6 +83,12 @@ namespace Onikiri {
                 m_virtualMemory.AssignPhysicalMemory( addr, size, attr );
             }
 
+            // Returns whether [addr, addr+size) in the target memory space are all assigned or not.
+            bool IsAssigned(u64 addr, u64 size) const
+            {
+                return m_virtualMemory.IsAssigned(addr, size);
+            }
+
             // メモリ読み書き
             void ReadMemory( MemAccess* access ) 
             {

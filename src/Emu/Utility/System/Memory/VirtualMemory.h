@@ -202,6 +202,9 @@ namespace Onikiri {
                 return m_bigEndian;
             }
 
+            // Returns whether [addr, addr+size) in the target memory space are all assigned or not.
+            bool IsAssigned(u64 addr, u64 size) const;
+
         private:
             // addr から size バイトのメモリ領域を，マップ単位境界で分割する
             // 結果は，MemoryBlockのコンテナへのイテレータ Iter を通して格納する
