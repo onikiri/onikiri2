@@ -177,6 +177,7 @@ static struct {
     SYSCALLNAME(renameat, 4, "nsns"),
     SYSCALLNAME(renameat2, 5, "nsnsn"),
     SYSCALLNAME(set_tid_address, 1, "p"),
+    SYSCALLNAME(madvise, 3, "pxn"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -427,6 +428,11 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         // There is nothing to do since syscall_clone is not supported.
         // Returns TID.
         syscall_gettid(opState);
+        break;
+
+    case syscall_id_madvise:
+        // There is nothing to do since this system call is just advice.
+        syscall_ignore(opState);
         break;
 
     /*
