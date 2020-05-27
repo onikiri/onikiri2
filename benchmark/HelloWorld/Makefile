@@ -1,8 +1,5 @@
 
-AS      = /opt/gcc/alpha/4.5.3/bin/alpha-unknown-linux-gnu-as
-CC      = /opt/gcc/alpha/4.5.3/bin/alpha-unknown-linux-gnu-gcc
-CXX     = /opt/gcc/alpha/4.5.3/bin/alpha-unknown-linux-gnu-g++
-OBJDUMP = /opt/gcc/alpha/4.5.3/bin/alpha-unknown-linux-gnu-objdump
+CC      = riscv64-unknown-linux-gnu-gcc
 
 # It is necessary to add a '-static' option for static link.
 all : main.c
