@@ -1,7 +1,7 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
 <Session>
 
-  <Emulator>
+  <Emulator TargetArchitecture="AlphaLinux">
     <Processes>
 			<!--
 				TargetBasePath　：ターゲット指定の際の起点となるディレクトリのパス（必須）
