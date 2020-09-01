@@ -452,7 +452,10 @@ void SystemManager::Run()
  
 void SystemManager::NotifyProcessTermination(int pid)
 {   
-    ProcessNotifyParam param = { PNT_TERMINATION, pid, Addr(), 0/*size*/, 0/*totalSize*/ };
+    ProcessNotifyParam param;
+    param.type = PNT_TERMINATION;
+    param.pid = pid;
+    
     HookEntry(
         this,
         &SystemManager::NotifyProcessTerminationBody,
@@ -463,10 +466,12 @@ void SystemManager::NotifyProcessTermination(int pid)
 
 void SystemManager::NotifySyscallReadFileToMemory(const Addr& addr, u64 size)
 {
-    ProcessNotifyParam param = 
-    {
-        PNT_READ_FILE_TO_MEMORY, addr.pid, addr, size, 0 
-    };
+    ProcessNotifyParam param;
+    param.type = PNT_READ_FILE_TO_MEMORY;
+    param.pid = addr.pid;
+    param.addr = addr;
+    param.size = size;
+    
     HookEntry(
         this,
         &SystemManager::NotifySyscallReadFileToMemoryBody,
@@ -477,10 +482,12 @@ void SystemManager::NotifySyscallReadFileToMemory(const Addr& addr, u64 size)
 
 void SystemManager::NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size)
 {
-    ProcessNotifyParam param = 
-    {
-        PNT_WRITE_FILE_FROM_MEMORY, addr.pid, addr, size, 0
-    };
+    ProcessNotifyParam param;
+    param.type = PNT_WRITE_FILE_FROM_MEMORY;
+    param.pid = addr.pid;
+    param.addr = addr;
+    param.size = size;
+
     HookEntry(
         this,
         &SystemManager::NotifySyscallWriteFileFromMemoryBody,
@@ -502,14 +509,13 @@ void SystemManager::NotifyMemoryAllocation(const Addr& addr, u64 size, bool allo
         m_processMemoryUsage[addr.pid] -= size;
     }
 
-    ProcessNotifyParam param = 
-    {
-        allocate ? PNT_ALLOCATE_MEMORY : PNT_FREE_MEMORY, 
-        addr.pid, 
-        addr, 
-        size,
-        m_processMemoryUsage[addr.pid]
-    };
+    ProcessNotifyParam param;
+    param.type = allocate ? PNT_ALLOCATE_MEMORY : PNT_FREE_MEMORY;
+    param.pid = addr.pid;
+    param.addr = addr;
+    param.size = size;
+    param.totalSize = m_processMemoryUsage[addr.pid];
+
     HookEntry(
         this,
         &SystemManager::NotifyMemoryAllocationBody,
@@ -518,6 +524,22 @@ void SystemManager::NotifyMemoryAllocation(const Addr& addr, u64 size, bool allo
     );
 }
 
+bool SystemManager::NotifySyscallInvoke(const u64* args, u64 argNum)
+{
+    ProcessNotifyParam param;
+    param.type = PNT_SYSCALL_INVOKE;
+    param.args = args;
+    param.argNum = argNum;
+
+    HookEntry(
+        this,
+        &SystemManager::NotifySyscallInvokeBody,
+        &s_processNotifyHook,
+        &param
+    );
+
+    return param.syscallSkip;
+}
 //
 // The bodies of notify methods
 //
@@ -555,6 +577,14 @@ void SystemManager::NotifyMemoryAllocationBody( ProcessNotifyParam* param )
         param->size, 
         param->type == PNT_ALLOCATE_MEMORY ? true : false 
     );
+}
+
+void SystemManager::NotifySyscallInvokeBody(ProcessNotifyParam* param)
+{
+    if (!m_system)
+        return;
+
+    param->syscallSkip = m_system->NotifySyscallInvoke(param->args, param->argNum);
 }
 
 void SystemManager::NotifyChangingMode( PhysicalResourceNode::SimulationMode mode )

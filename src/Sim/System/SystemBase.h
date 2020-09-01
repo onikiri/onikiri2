@@ -110,7 +110,8 @@ namespace Onikiri
         virtual void NotifyProcessTermination(int pid){}
         virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size){}
         virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size){}
-        virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate){};
+        virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate) {};
+        virtual bool NotifySyscallInvoke(const u64* args, u64 argNum) { return false; };
 
         //
         SystemBase();
