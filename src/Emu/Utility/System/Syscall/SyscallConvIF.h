@@ -53,6 +53,9 @@ namespace Onikiri {
             // システムコールの引数 (index番目) を設定する
             virtual void SetArg(int index, u64 value) = 0;
 
+            // SetArg で設定したシステムコールの引数を取得する
+            virtual u64 GetArg(int index) const = 0;
+            
             // SetArg によって与えられた引数に従ってシステムコールを行う
             virtual void Execute(OpEmulationState* opState) = 0;
 
