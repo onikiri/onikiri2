@@ -63,7 +63,7 @@ using namespace Onikiri;
 SimulationSystem::SimulationSystem()
 {
     m_context = NULL;
-    m_reqTeminatation = true;
+    m_reqTeminatation = false;
 }
 
 // SystemIF
