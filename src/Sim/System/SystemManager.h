@@ -65,8 +65,7 @@ namespace Onikiri
             u64  totalSize;
 
             // NotifySystemCallInvoke
-            const u64* args;    // A pointer to system call arguments
-            u64 argNum;         // The number of system call arguments
+            SyscallNotifyContextIF *syscallContext;
             bool syscallSkip;   // Skip system call 
             
             ProcessNotifyParam(){
@@ -76,8 +75,7 @@ namespace Onikiri
                 size = 0;
                 totalSize = 0;
 
-                args = NULL;
-                argNum = 0;
+                syscallContext = nullptr;
                 syscallSkip = false;
             }
         };
@@ -93,7 +91,7 @@ namespace Onikiri
         virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size);
         virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size);
         virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate);
-        virtual bool NotifySyscallInvoke(const u64* args, u64 argNum);
+        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context);
             
         BEGIN_PARAM_MAP( "/Session/" )
             BEGIN_PARAM_PATH("Emulator/")

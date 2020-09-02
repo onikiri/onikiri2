@@ -45,7 +45,7 @@ namespace Onikiri {
         // SetArg, GetResult の意味はtargetのシステムによって変化するが，典型的には次のようなものを想定：
         // ・SetArg : システムコールの番号，システムコールの引数
         // ・GetResult : システムコールの戻り値，エラーコード
-        class SyscallConvIF
+        class SyscallConvIF : public SyscallNotifyContextIF
         {
         public:
             virtual ~SyscallConvIF() {}

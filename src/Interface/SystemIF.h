@@ -37,6 +37,17 @@
 
 namespace Onikiri 
 {
+    // Arguments and return values for NotifySyscallInvoke
+    class SyscallNotifyContextIF {
+    public:
+        virtual ~SyscallNotifyContextIF() {};
+        
+        // Get argument values passed from syscall
+        virtual u64 GetArg(int index) const = 0;
+
+        // Set syscall results
+        virtual void SetResult(bool success, u64 result) = 0;
+    };
     
     class SystemIF 
     {
@@ -50,10 +61,10 @@ namespace Onikiri
         virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate) = 0;
 
         // If this function returns true, processing system call is skipped.
-        virtual bool NotifySyscallInvoke(const u64* args, u64 argNum) = 0;
+        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context) = 0;
     }; // class SystemIF
 
 }; // namespace Onikiri
 
-#endif // __SYSTEMIF_H__
+#endif // INTERFACE_SYSTEM_IF_H
 

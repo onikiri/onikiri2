@@ -524,12 +524,11 @@ void SystemManager::NotifyMemoryAllocation(const Addr& addr, u64 size, bool allo
     );
 }
 
-bool SystemManager::NotifySyscallInvoke(const u64* args, u64 argNum)
+bool SystemManager::NotifySyscallInvoke(SyscallNotifyContextIF* context)
 {
     ProcessNotifyParam param;
     param.type = PNT_SYSCALL_INVOKE;
-    param.args = args;
-    param.argNum = argNum;
+    param.syscallContext = context;
 
     HookEntry(
         this,
@@ -584,7 +583,7 @@ void SystemManager::NotifySyscallInvokeBody(ProcessNotifyParam* param)
     if (!m_system)
         return;
 
-    param->syscallSkip = m_system->NotifySyscallInvoke(param->args, param->argNum);
+    param->syscallSkip = m_system->NotifySyscallInvoke(param->syscallContext);
 }
 
 void SystemManager::NotifyChangingMode( PhysicalResourceNode::SimulationMode mode )
