@@ -62,6 +62,9 @@ namespace Onikiri
 
         // If this function returns true, processing system call is skipped.
         virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context) = 0;
+
+        // Terminate execution
+        virtual void Terminate() = 0;
     }; // class SystemIF
 
 }; // namespace Onikiri

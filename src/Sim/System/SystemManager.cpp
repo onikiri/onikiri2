@@ -539,6 +539,15 @@ bool SystemManager::NotifySyscallInvoke(SyscallNotifyContextIF* context)
 
     return param.syscallSkip;
 }
+
+void SystemManager::Terminate()
+{
+    if (!m_system)
+        return;
+
+    m_system->Terminate();
+}
+
 //
 // The bodies of notify methods
 //

@@ -46,6 +46,8 @@ namespace Onikiri
         SimulationSystem();
         void Run( SystemContext* context );
         SystemContext* GetContext();
+        // SystemIF
+        virtual void Terminate();
 
         // Prototype : void Method( HookParameter<SimulationSystem>* system )
         static HookPoint<SimulationSystem, SimulationSystem> s_systemInitHook;
@@ -87,6 +89,8 @@ namespace Onikiri
         TimeWheelList m_timeWheels;
 
         PriorityEventList m_priorityEventList;
+
+        bool m_reqTeminatation;
 
         void SimulateCycle();
 

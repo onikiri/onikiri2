@@ -90,6 +90,7 @@ namespace Onikiri {
             virtual u64 GetInitialRegValue(int pid, int index) const;
             virtual ISAInfoIF* GetISAInfo();
             virtual PC Skip(PC pc, u64 skipCount, u64* regArray, u64* executedInsnCount, u64* executedOpCount);
+            virtual void TerminateSkip();
             virtual void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder );
 
             // MemIF の実装
@@ -149,6 +150,8 @@ namespace Onikiri {
                 return result;
             }
 
+            // Request for skip termination
+            bool m_reqSkipTermination;
         public:
 
             BEGIN_PARAM_MAP( "" )
@@ -166,7 +169,8 @@ namespace Onikiri {
         CommonEmulator<Traits>::CommonEmulator( SystemIF* simSystem )
             :   m_opInfoArrayPool(sizeof(OpInfo*)),
                 m_extraOpDecoder(0),
-                m_enableResultCRC( false )
+                m_enableResultCRC( false ),
+                m_reqSkipTermination(false)
         {
             // param, プロセス情報読み込み
             LoadParam();
@@ -372,7 +376,7 @@ namespace Onikiri {
             bool enableResultCRC = m_enableResultCRC;
 
             SkipOp op(this);
-            while (skipCount-- != 0 && pc.address != 0) {
+            while (skipCount-- != 0 && pc.address != 0 && !m_reqSkipTermination) {
                 std::pair<OpInfo**, int> ops_pair = GetOpBody(pc);
                 OpInfo** opInfoArray = ops_pair.first;
                 int opCount = ops_pair.second;
@@ -402,11 +406,20 @@ namespace Onikiri {
                 }
             }
 
+            // Reset a termination request flag
+            m_reqSkipTermination = true;
+
             if (executedInsnCount)
                 *executedInsnCount = initialSkipCount - skipCount;
             if (executedOpCount)
                 *executedOpCount = totalOpCount;
             return pc;
+        }
+
+        template <class Traits>
+        void CommonEmulator<Traits>::TerminateSkip()
+        {
+            m_reqSkipTermination = true;
         }
 
         template <class Traits>

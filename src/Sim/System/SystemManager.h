@@ -92,6 +92,7 @@ namespace Onikiri
         virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size);
         virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate);
         virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context);
+        virtual void Terminate();
             
         BEGIN_PARAM_MAP( "/Session/" )
             BEGIN_PARAM_PATH("Emulator/")

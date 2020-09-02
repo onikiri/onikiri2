@@ -81,6 +81,9 @@ namespace Onikiri {
         // pc から skipCount 命令実行する．実行した後のPCを返す．executedInsnCount, executedOpCountに実際に実行できた命令数とOp数を返す (NULL可)
         virtual PC Skip(PC pc, u64 skipCount, u64* regArray, u64* executedInsnCount, u64* executedOpCount) = 0;
 
+        // Terminate Skip() 
+        virtual void TerminateSkip() = 0;
+
         // 外部命令デコーダをセットする
         virtual void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder ) = 0;
     };

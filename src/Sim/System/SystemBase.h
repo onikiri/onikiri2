@@ -112,6 +112,9 @@ namespace Onikiri
         virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size){}
         virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate) {};
         virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context) { return false; };
+        virtual void Terminate() {
+            THROW_RUNTIME_ERROR("Terminate() is not implemented in this system.");
+        };
 
         //
         SystemBase();

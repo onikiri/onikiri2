@@ -63,6 +63,13 @@ using namespace Onikiri;
 SimulationSystem::SimulationSystem()
 {
     m_context = NULL;
+    m_reqTeminatation = true;
+}
+
+// SystemIF
+void SimulationSystem::Terminate()
+{
+    m_reqTeminatation = true;
 }
 
 void SimulationSystem::Run( SystemContext* context )
@@ -98,7 +105,7 @@ void SimulationSystem::Run( SystemContext* context )
             }
 
             // 終了条件
-            if(exitSimulation){
+            if(exitSimulation || m_reqTeminatation){
                 break;
             }
             else if( numCycles > 0 ){
@@ -114,6 +121,8 @@ void SimulationSystem::Run( SystemContext* context )
 
             ++context->executedCycles;
         }
+
+        m_reqTeminatation = false;
 
         // リタイアした命令数をupdate
         context->executedInsns.clear();
