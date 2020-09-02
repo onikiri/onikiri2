@@ -269,36 +269,52 @@ bool SystemManager::SetSimulationContext( const ArchitectureStateList& archState
 
 void SystemManager::RunSimulation( SystemContext* context )
 {
-    NotifyChangingMode( PhysicalResourceNode::SM_SIMULATION );
     SimulationSystem simulationSystem;
-    simulationSystem.Run( context );
+    SetSystem(&simulationSystem);
+    NotifyChangingMode(PhysicalResourceNode::SM_SIMULATION);
+    simulationSystem.SetSystemContext(context);
+    simulationSystem.Run();
+    SetSystem(nullptr);
 }
 
 void SystemManager::RunEmulation( SystemContext* context )
 {
-    NotifyChangingMode( PhysicalResourceNode::SM_EMULATION );
     EmulationSystem emulationSystem;
-    emulationSystem.Run( context );
+    SetSystem(&emulationSystem);
+    NotifyChangingMode(PhysicalResourceNode::SM_EMULATION);
+    emulationSystem.SetSystemContext(context);
+    emulationSystem.Run();
+    SetSystem(nullptr);
 }
 
 void SystemManager::RunEmulationTrace( SystemContext* context )
 {
-    NotifyChangingMode( PhysicalResourceNode::SM_EMULATION );
     EmulationTraceSystem emulationTraceSystem;
-    emulationTraceSystem.Run( context );
+    SetSystem(&emulationTraceSystem);
+    NotifyChangingMode(PhysicalResourceNode::SM_EMULATION);
+    emulationTraceSystem.SetSystemContext(context);
+    emulationTraceSystem.Run();
+    SetSystem(nullptr);
 }
 
 void SystemManager::RunEmulationDebug( SystemContext* context )
 {
     EmulationDebugSystem emulationDebugSystem;
-    emulationDebugSystem.Run( context );
+    SetSystem(&emulationDebugSystem);
+    NotifyChangingMode(PhysicalResourceNode::SM_EMULATION);
+    emulationDebugSystem.SetSystemContext(context);
+    emulationDebugSystem.Run();
+    SetSystem(nullptr);
 }
 
 void SystemManager::RunInorder( SystemContext* context )
 {
-    NotifyChangingMode( PhysicalResourceNode::SM_INORDER );
     InorderSystem inorderSystem;
-    inorderSystem.Run( context );
+    SetSystem(&inorderSystem);
+    NotifyChangingMode(PhysicalResourceNode::SM_INORDER);
+    inorderSystem.SetSystemContext(context);
+    inorderSystem.Run();
+    SetSystem(nullptr);
 }
 
 void SystemManager::SetSystem( SystemIF* system )
@@ -524,10 +540,12 @@ void SystemManager::NotifyMemoryAllocation(const Addr& addr, u64 size, bool allo
     );
 }
 
-bool SystemManager::NotifySyscallInvoke(SyscallNotifyContextIF* context)
+bool SystemManager::NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid)
 {
     ProcessNotifyParam param;
     param.type = PNT_SYSCALL_INVOKE;
+    param.pid = pid;
+    param.tid = tid;
     param.syscallContext = context;
 
     HookEntry(
@@ -592,7 +610,9 @@ void SystemManager::NotifySyscallInvokeBody(ProcessNotifyParam* param)
     if (!m_system)
         return;
 
-    param->syscallSkip = m_system->NotifySyscallInvoke(param->syscallContext);
+    param->syscallSkip = m_system->NotifySyscallInvoke(
+        param->syscallContext, param->pid, param->tid
+    );
 }
 
 void SystemManager::NotifyChangingMode( PhysicalResourceNode::SimulationMode mode )

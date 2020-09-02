@@ -43,7 +43,7 @@ namespace Onikiri
     {
         DebugStub* m_debugStub;
     public:
-        void Run( SystemContext* context );
+        void Run();
     };
     
 }; // namespace Onikiri

@@ -42,9 +42,12 @@ EmulationSystem::EmulationSystem()
     m_context = nullptr;
 }
 
-void EmulationSystem::Run( SystemContext* context )
+void EmulationSystem::Run()
 {
-    m_context = context;
+    SystemContext* context = GetSystemContext();
+    if (!context) {
+        THROW_RUNTIME_ERROR("System context is not set");
+    }
 
     s64 numInsns     = context->executionInsns;
     int processCount = context->emulator->GetProcessCount();

@@ -42,7 +42,7 @@ namespace Onikiri
     class EmulationTraceSystem : public SystemBase
     {
     public:
-        void Run( SystemContext* context );
+        void Run();
     };
     
 }; // namespace Onikiri

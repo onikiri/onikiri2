@@ -50,13 +50,12 @@ SystemBase::SystemContext::SystemContext()
 
 SystemBase::SystemBase()
 {
+    m_context = nullptr;
     m_systemManager = NULL;
 }
 
 SystemBase::~SystemBase()
 {
-    if( m_systemManager )
-        m_systemManager->SetSystem( NULL );
 }
 
 void SystemBase::SetSystemManager( SystemManagerIF* systemManager )
@@ -64,6 +63,46 @@ void SystemBase::SetSystemManager( SystemManagerIF* systemManager )
     m_systemManager = systemManager;
 }
 
-void SystemBase::Run( SystemContext* context )
+void SystemBase::Run()
 {
 }
+
+bool SystemBase::NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid) {
+
+    u64 sysycallNum = context->GetArg(0);
+    switch (sysycallNum) {
+        // Print string
+        case ONIKIRI_SYSCALL_PRINT: {
+            g_env.Print("ONIKIRI_SYSCALL_PRINT: ");
+            String str;
+            for (int i = 0; i < 256; i++) {
+                // Get one byte from emulator
+                MemAccess mem;
+                mem.address.address = context->GetArg(1) + i;
+                mem.address.pid = pid;
+                mem.address.tid = tid;
+                mem.size = 1;
+                GetSystemContext()->emulator->GetMemImage()->Read(&mem);
+                if (mem.value == 0) {
+                    break;
+                }
+                str += (char)mem.value;
+            }
+            g_env.Print(str + "\n");
+            break;
+        }
+        case ONIKIRI_SYSCALL_TERMINATE_CURRENT_SYSTEM: {
+            g_env.Print("ONIKIRI_SYSCALL_TERMINATE_CURRENT_SYSTEM \n");
+            Terminate();
+            break;
+        }
+    }
+
+    // This system call is processed in simulation land
+    // It must return true for avoiding unknown syscall error.
+    if (ONIKIRI_SYSCALL_NUM_BEGIN <= sysycallNum && sysycallNum <= ONIKIRI_SYSCALL_NUM_END) {
+        return true;
+    }
+
+    return false;
+};

@@ -44,8 +44,8 @@ namespace Onikiri
 
     public:
         SimulationSystem();
-        void Run( SystemContext* context );
-        SystemContext* GetContext();
+        void Run();
+
         // SystemIF
         virtual void Terminate();
 
@@ -103,8 +103,6 @@ namespace Onikiri
 
         void InitializeResources();
         void InitializeResourcesBody();
-
-        SystemContext* m_context;
     };
 }; // namespace Onikiri
 

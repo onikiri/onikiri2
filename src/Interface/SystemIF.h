@@ -37,6 +37,11 @@
 
 namespace Onikiri 
 {
+    static const int ONIKIRI_SYSCALL_NUM_BEGIN = 0x10000;
+    static const int ONIKIRI_SYSCALL_PRINT                     = ONIKIRI_SYSCALL_NUM_BEGIN + 0;
+    static const int ONIKIRI_SYSCALL_TERMINATE_CURRENT_SYSTEM  = ONIKIRI_SYSCALL_NUM_BEGIN + 1;
+    static const int ONIKIRI_SYSCALL_NUM_END = 0x10000 + 1;
+
     // Arguments and return values for NotifySyscallInvoke
     class SyscallNotifyContextIF {
     public:
@@ -48,6 +53,8 @@ namespace Onikiri
         // Set syscall results
         virtual void SetResult(bool success, u64 result) = 0;
     };
+
+    class OpStateIF;
     
     class SystemIF 
     {
@@ -61,9 +68,10 @@ namespace Onikiri
         virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate) = 0;
 
         // If this function returns true, processing system call is skipped.
-        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context) = 0;
+        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid) = 0;
 
-        // Terminate execution
+        // Terminate execution in system
+        // This method is intended to implement a feature that switch an emulation/simulation mode.
         virtual void Terminate() = 0;
     }; // class SystemIF
 

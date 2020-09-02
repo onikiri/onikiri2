@@ -72,10 +72,13 @@ void SimulationSystem::Terminate()
     m_reqTeminatation = true;
 }
 
-void SimulationSystem::Run( SystemContext* context )
+void SimulationSystem::Run()
 {
     try{
-        m_context = context;
+        SystemContext* context = GetSystemContext();
+        if (!context) {
+            THROW_RUNTIME_ERROR("System context is not set");
+        }
         InitializeResources();
 
         context->executedCycles = 1;
@@ -227,11 +230,6 @@ void SimulationSystem::InitializeResourcesBody()
     }
 
 
-}
-
-SimulationSystem::SystemContext* SimulationSystem::GetContext()
-{
-    return m_context;
 }
 
 void SimulationSystem::CycleBegin()

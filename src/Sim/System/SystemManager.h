@@ -58,6 +58,7 @@ namespace Onikiri
         {
             PROCESS_NOTIFY_TYPE type;
             int  pid;
+            int  tid;
             
             // Memory related operations
             Addr addr;
@@ -71,6 +72,7 @@ namespace Onikiri
             ProcessNotifyParam(){
                 type = PNT_INVALID;
                 pid = 0;
+                tid = 0;
                 addr = Addr();
                 size = 0;
                 totalSize = 0;
@@ -91,7 +93,7 @@ namespace Onikiri
         virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size);
         virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size);
         virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate);
-        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context);
+        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid);
         virtual void Terminate();
             
         BEGIN_PARAM_MAP( "/Session/" )

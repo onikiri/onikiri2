@@ -41,10 +41,8 @@ namespace Onikiri
     {
     public:
         EmulationSystem();
-        void Run( SystemContext* context );
+        void Run();
         void Terminate();
-    protected:
-        SystemContext* m_context;
     };
 }; // namespace Onikiri
 

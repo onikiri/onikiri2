@@ -265,7 +265,7 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     opState->SetTaken(true);
 
     SetResult(false, 0);
-    if (m_simulatorSystem->NotifySyscallInvoke(this)) {
+    if (m_simulatorSystem->NotifySyscallInvoke(this, opState->GetPID(), opState->GetTID())) {
         return;
     }
 
