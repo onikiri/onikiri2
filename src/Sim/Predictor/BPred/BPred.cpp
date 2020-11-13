@@ -112,9 +112,9 @@ void BPred::Initialize( InitPhase phase )
         CheckNodeInitialized( "core", m_core );
         CheckNodeInitialized( "forwardEmulator", m_fwdEmulator );
 
-        if( !m_fwdEmulator->IsEnabled() ){
+        if( m_perfect && !m_fwdEmulator->IsEnabled() ){
             THROW_RUNTIME_ERROR(
-                "A perfect memory dependency predictor requires that a forawrd emulator is enabled." 
+                "A perfect branch predictor requires that a forawrd emulator is enabled."
             );
         }
 
