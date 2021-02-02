@@ -443,7 +443,7 @@ void ResourceBuilder::ConstructResources()
             if( copyCount % count != 0 ){
                 THROW_RUNTIME_ERROR( 
                     "The copy count is not divided by the resource count.\n"
-                    "Copy Count:%d  Resouce Count:%d",
+                    "Node:%s Copy Count:%d  Resouce Count:%d",
                     info.name.c_str(),
                     copyCount,
                     count
