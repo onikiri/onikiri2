@@ -48,11 +48,6 @@ namespace Onikiri
 {
     class ForwardEmulator;
 
-    // Notify を SystemManager 経由で受け取るため，SystemBase 由来クラスは
-    // SystemManagerIF::SetSystem を経由して自身を SystemManager に登録する必要がある．
-    // また，自身の破壊時には SystemManagerIF::SetSystem 経由で自身の登録を解除する必要がある．
-    // これにより，例外によってSystemBase 由来クラスが破壊された場合でも，適切に
-    // SystemManager の登録を解除することが出来る．
     class SystemManagerIF
     {
     public:
@@ -104,13 +99,25 @@ namespace Onikiri
             DebugParam debugParam;
         };
 
-        virtual void Run( SystemContext* context ) = 0;
+        virtual void SetSystemContext(SystemContext* context)
+        {
+            m_context = context;
+        }
+        virtual SystemContext* GetSystemContext() const
+        {
+            return m_context;
+        }
+        virtual void Run() = 0;
 
         // SystemIF
         virtual void NotifyProcessTermination(int pid){}
         virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size){}
         virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size){}
-        virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate){};
+        virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate) {};
+        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid);
+        virtual void Terminate() {
+            THROW_RUNTIME_ERROR("Terminate() is not implemented in this system.");
+        };
 
         //
         SystemBase();
@@ -118,6 +125,7 @@ namespace Onikiri
         void SetSystemManager( SystemManagerIF* systemManager );
 
     protected:
+        SystemContext* m_context;
         SystemManagerIF* m_systemManager;
     };
 

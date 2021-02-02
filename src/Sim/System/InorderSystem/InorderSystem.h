@@ -45,7 +45,7 @@ namespace Onikiri
     public:
         InorderSystem();
         ~InorderSystem();
-        void Run( SystemContext* context );
+        void Run();
     };
 }; // namespace Onikiri
 

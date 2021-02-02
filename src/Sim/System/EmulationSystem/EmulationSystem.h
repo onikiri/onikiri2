@@ -40,7 +40,9 @@ namespace Onikiri
     class EmulationSystem : public SystemBase
     {
     public:
-        void Run( SystemContext* context );
+        EmulationSystem();
+        void Run();
+        void Terminate();
     };
 }; // namespace Onikiri
 

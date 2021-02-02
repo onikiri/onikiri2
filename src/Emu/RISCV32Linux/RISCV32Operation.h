@@ -330,7 +330,7 @@ struct RISCV32AtomicLoad : public std::unary_function<OpEmulationState*, u32>
             THROW_RUNTIME_ERROR("Atomic memory read access failed: %s", access.ToString().c_str());
         }
 
-        return access.value;
+        return (u32)access.value;
     }
 };
 
@@ -381,8 +381,8 @@ template <typename Type, typename TDest, typename TValue, typename TAddr>
 void RISCV32StoreConditional(OpEmulationState* opState)
 {
     ProcessState* process = opState->GetProcessState();
-    u32 reserved_addr = process->GetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVED_ADDRESS));
-    u32 reserving = process->GetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVING));
+    u32 reserved_addr = (u32)process->GetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVED_ADDRESS));
+    u32 reserving = (u32)process->GetControlRegister(static_cast<u32>(RISCV32pseudoCSR::RESERVING));
     u32 addr = TAddr()(opState);
     if (reserving && reserved_addr == addr)
     {
@@ -755,24 +755,26 @@ namespace {
         switch (csrNum) {
         case RISCV32CSR::FFLAGS:
         case RISCV32CSR::FRM:
-            return process->GetControlRegister(static_cast<u32>(csrNum));
+            return (u32)process->GetControlRegister(static_cast<u32>(csrNum));
 
         case RISCV32CSR::FCSR:
             return
-                process->GetControlRegister(static_cast<u32>(RISCV32CSR::FFLAGS)) |
-                (process->GetControlRegister(static_cast<u32>(RISCV32CSR::FRM)) << 5);
+                (u32)(
+                    process->GetControlRegister(static_cast<u32>(RISCV32CSR::FFLAGS)) |
+                    (process->GetControlRegister(static_cast<u32>(RISCV32CSR::FRM)) << 5)
+                );
 
         case RISCV32CSR::CYCLE:
         case RISCV32CSR::TIME:
         case RISCV32CSR::INSTRET:
-            return process->GetVirtualSystem()->GetInsnTick();
+            return (u32)process->GetVirtualSystem()->GetInsnTick();
         case RISCV32CSR::CYCLEH:
         case RISCV32CSR::TIMEH:
         case RISCV32CSR::INSTRETH:
-            return process->GetVirtualSystem()->GetInsnTick() >> 32;
+            return (u32)(process->GetVirtualSystem()->GetInsnTick() >> 32);
         default:
             RUNTIME_WARNING("Unimplemented CSR is read: %d", static_cast<int>(csrNum));
-            return process->GetControlRegister(static_cast<u32>(csrNum));
+            return (u32)process->GetControlRegister(static_cast<u32>(csrNum));
         }
     }
 

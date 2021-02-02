@@ -45,20 +45,41 @@ namespace Onikiri
         // Hooks for the notify of process information
         enum PROCESS_NOTIFY_TYPE
         {
+            PNT_INVALID = -1,           // invalid
             PNT_TERMINATION = 0,        // process termination
             PNT_READ_FILE_TO_MEMORY,    // read data from a file to memory
             PNT_WRITE_FILE_FROM_MEMORY, // write data from memory to a file
             PNT_ALLOCATE_MEMORY,        // allocate memory
             PNT_FREE_MEMORY,            // free memory
+            PNT_SYSCALL_INVOKE,         // syscall
         };
         
         struct ProcessNotifyParam
         {
             PROCESS_NOTIFY_TYPE type;
             int  pid;
+            int  tid;
+            
+            // Memory related operations
             Addr addr;
             u64  size;
             u64  totalSize;
+
+            // NotifySystemCallInvoke
+            SyscallNotifyContextIF *syscallContext;
+            bool syscallSkip;   // Skip system call 
+            
+            ProcessNotifyParam(){
+                type = PNT_INVALID;
+                pid = 0;
+                tid = 0;
+                addr = Addr();
+                size = 0;
+                totalSize = 0;
+
+                syscallContext = nullptr;
+                syscallSkip = false;
+            }
         };
         static HookPoint<SystemManager, ProcessNotifyParam> s_processNotifyHook;
 
@@ -72,6 +93,9 @@ namespace Onikiri
         virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size);
         virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size);
         virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate);
+        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid);
+        virtual void Terminate();
+            
         BEGIN_PARAM_MAP( "/Session/" )
             BEGIN_PARAM_PATH("Emulator/")
                 PARAM_ENTRY("@TargetArchitecture",      m_context.targetArchitecture)
@@ -136,6 +160,7 @@ namespace Onikiri
         virtual void NotifySyscallReadFileToMemoryBody( ProcessNotifyParam* );
         virtual void NotifySyscallWriteFileFromMemoryBody( ProcessNotifyParam* );
         virtual void NotifyMemoryAllocationBody( ProcessNotifyParam* );
+        virtual void NotifySyscallInvokeBody( ProcessNotifyParam* );
 
         virtual void SetSystem( SystemIF* system );
         

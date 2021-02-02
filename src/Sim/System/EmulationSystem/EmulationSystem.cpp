@@ -37,8 +37,18 @@ using namespace std;
 using namespace boost;
 using namespace Onikiri;
 
-void EmulationSystem::Run( SystemContext* context )
+EmulationSystem::EmulationSystem()
 {
+    m_context = nullptr;
+}
+
+void EmulationSystem::Run()
+{
+    SystemContext* context = GetSystemContext();
+    if (!context) {
+        THROW_RUNTIME_ERROR("System context is not set");
+    }
+
     s64 numInsns     = context->executionInsns;
     int processCount = context->emulator->GetProcessCount();
 
@@ -63,4 +73,16 @@ void EmulationSystem::Run( SystemContext* context )
 
     context->executedInsns  = totalInsnCount;
     context->executedCycles = 0;
+
+    m_context = nullptr;
+}
+
+void EmulationSystem::Terminate()
+{
+    if (!m_context) {
+        THROW_RUNTIME_ERROR("m_context is not set.");
+    }
+    // TerminateSkip() just sends request for termination,
+    // so Skip() has not been terminated immediately after returning from TerminateSkip().
+    m_context->emulator->TerminateSkip();
 }

@@ -41,8 +41,13 @@ using namespace boost;
 using namespace Onikiri;
 
 
-void EmulationDebugSystem::Run( SystemContext* context )
+void EmulationDebugSystem::Run()
 {
+    SystemContext* context = GetSystemContext();
+    if (!context) {
+        THROW_RUNTIME_ERROR("System context is not set");
+    }
+
     int processCount = context->emulator->GetProcessCount();
     if( processCount != 1 ){
         THROW_RUNTIME_ERROR( 

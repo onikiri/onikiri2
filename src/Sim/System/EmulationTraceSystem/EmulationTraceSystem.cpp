@@ -40,8 +40,12 @@ using namespace boost;
 using namespace Onikiri;
 
 
-void EmulationTraceSystem::Run( SystemContext* context )
+void EmulationTraceSystem::Run()
 {
+    SystemContext* context = GetSystemContext();
+    if (!context) {
+        THROW_RUNTIME_ERROR("System context is not set");
+    }
     int processCount = context->emulator->GetProcessCount();
 
     vector<ofstream*> ofsList;

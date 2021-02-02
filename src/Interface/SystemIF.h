@@ -4,8 +4,8 @@
 // Copyright (c) 2005-2008 Hironori Ichibayashi.
 // Copyright (c) 2008-2009 Kazuo Horio.
 // Copyright (c) 2009-2015 Naruki Kurata.
-// Copyright (c) 2005-2015 Ryota Shioya.
 // Copyright (c) 2005-2015 Masahiro Goshima.
+// Copyright (c) 2005-2020 Ryota Shioya.
 // 
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -29,14 +29,32 @@
 // 
 
 
-#ifndef __SYSTEMIF_H__
-#define __SYSTEMIF_H__
+#ifndef INTERFACE_SYSTEM_IF_H
+#define INTERFACE_SYSTEM_IF_H
 
 #include "Types.h"
 #include "Interface/Addr.h"
 
 namespace Onikiri 
 {
+    static const int ONIKIRI_SYSCALL_NUM_BEGIN = 0x10000;
+    static const int ONIKIRI_SYSCALL_PRINT                     = ONIKIRI_SYSCALL_NUM_BEGIN + 0;
+    static const int ONIKIRI_SYSCALL_TERMINATE_CURRENT_SYSTEM  = ONIKIRI_SYSCALL_NUM_BEGIN + 1;
+    static const int ONIKIRI_SYSCALL_NUM_END = 0x10000 + 1;
+
+    // Arguments and return values for NotifySyscallInvoke
+    class SyscallNotifyContextIF {
+    public:
+        virtual ~SyscallNotifyContextIF() {};
+        
+        // Get argument values passed from syscall
+        virtual u64 GetArg(int index) const = 0;
+
+        // Set syscall results
+        virtual void SetResult(bool success, u64 result) = 0;
+    };
+
+    class OpStateIF;
     
     class SystemIF 
     {
@@ -48,9 +66,16 @@ namespace Onikiri
         virtual void NotifySyscallReadFileToMemory(const Addr& addr, u64 size) = 0;
         virtual void NotifySyscallWriteFileFromMemory(const Addr& addr, u64 size) = 0;
         virtual void NotifyMemoryAllocation(const Addr& addr, u64 size, bool allocate) = 0;
+
+        // If this function returns true, processing system call is skipped.
+        virtual bool NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid) = 0;
+
+        // Terminate execution in system
+        // This method is intended to implement a feature that switch an emulation/simulation mode.
+        virtual void Terminate() = 0;
     }; // class SystemIF
 
 }; // namespace Onikiri
 
-#endif // __SYSTEMIF_H__
+#endif // INTERFACE_SYSTEM_IF_H
 

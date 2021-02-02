@@ -118,6 +118,11 @@ namespace Onikiri
             return m_body->Skip( pc, skipCount, regArray, executedInsnCount, executedOpCount );
         }
 
+        void TerminateSkip()
+        {
+            m_body->TerminateSkip();
+        }
+
         void SetExtraOpDecoder( ExtraOpDecoderIF* extraOpDecoder ) 
         {
             m_body->SetExtraOpDecoder( extraOpDecoder );

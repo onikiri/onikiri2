@@ -101,7 +101,7 @@ void Linux32SyscallConv::syscall_openat(OpEmulationState* opState)
 
 void Linux32SyscallConv::syscall_faccessat(OpEmulationState* opState)
 {
-    s32 fd = m_args[1];
+    s32 fd = (s32)m_args[1];
     //s32 flags = m_args[4];
     string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
     int result = -1;
@@ -127,7 +127,7 @@ void Linux32SyscallConv::syscall_faccessat(OpEmulationState* opState)
 
 void Linux32SyscallConv::syscall_mkdirat(OpEmulationState* opState)
 {
-    s32 fd = m_args[1];
+    s32 fd = (s32)m_args[1];
     string path = StrCpyToHost(GetMemorySystem(), m_args[2]);
     int result = -1;
     /*
@@ -154,10 +154,10 @@ void Linux32SyscallConv::syscall_mkdirat(OpEmulationState* opState)
 
 void Linux32SyscallConv::syscall_llseek(OpEmulationState* opState)
 {
-    s32 fd = m_args[1];
-    u32 offset_high = m_args[2];
-    u32 offset_low = m_args[3];
-    u32 whence = m_args[5];
+    s32 fd = (s32)m_args[1];
+    u32 offset_high = (u32)m_args[2];
+    u32 offset_low = (u32)m_args[3];
+    u32 whence = (u32)m_args[5];
     u64 offset = (u64)offset_high<<32 | offset_low;
 
     s64 result = GetVirtualSystem()->LSeek((int)fd, (s64)offset, (int)SeekWhenceTargetToHost(whence));

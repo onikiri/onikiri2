@@ -69,8 +69,13 @@ InorderSystem::InorderSystem()
 InorderSystem::~InorderSystem()
 {}
 
-void InorderSystem::Run( SystemContext* context )
+void InorderSystem::Run()
 {
+    SystemContext* context = GetSystemContext();
+    if (!context) {
+        THROW_RUNTIME_ERROR("System context is not set");
+    }
+
     m_enableBPred = context->inorderParam.enableBPred;
     m_enableHMPred = context->inorderParam.enableHMPred;
     m_enableCache = context->inorderParam.enableCache;
