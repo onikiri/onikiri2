@@ -486,6 +486,13 @@ void ResourceBuilder::ConnectResources()
         vector< ResNode::Child >& children = i->second->children;
         vector< PhysicalResourceNode* >& instances = i->second->instances;
 
+        if( instances.empty() ) {
+            THROW_RUNTIME_ERROR(
+                "The 'Count' of the node of the name '%s' is zero.",
+                i->second->name.c_str()
+            );
+        }
+
         for( vector< ResNode::Child >::iterator child = children.begin();
              child != children.end();
              ++child
@@ -513,6 +520,16 @@ void ResourceBuilder::ConnectResources()
 
             vector< PhysicalResourceNode* >&
                 childInstances = childNode->instances;
+
+            if( childInstances.empty() ) {
+                THROW_RUNTIME_ERROR(
+                    "The number of the node of the name '%s' is zero. "
+                    "This error can occur when the node is not defined or when its 'Count' is set to zero."
+                    "This node is in the '%s'.",
+                    childNode->name.c_str(),
+                    i->second->name.c_str()
+                );
+            }
 
             if( instances.size() < childInstances.size() ){
                 // A case that the number of the parents is smaller than that of children.
