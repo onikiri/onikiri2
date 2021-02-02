@@ -151,6 +151,7 @@ static struct {
     SYSCALLNAME(mremap, 4, "pxxx"),
     SYSCALLNAME(readlinkat, 4, "nssn"),
     SYSCALLNAME(sigaction, 3 , "npp"),
+    SYSCALLNAME(sigprocmask, 3 , "npp"),
     SYSCALLNAME(fstatat, 4, "nspn"),
     SYSCALLNAME(ioctl, 3, "xxx"),
     SYSCALLNAME(fcntl, 3, "nnp"),
@@ -320,6 +321,9 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     case syscall_id_sigaction:
         syscall_sigaction(opState);
+        break;
+    case syscall_id_sigprocmask:
+        syscall_ignore(opState);
         break;
 
     case syscall_id_uname:
