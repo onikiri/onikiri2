@@ -549,11 +549,7 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
         break;
 
     default:
-        {
-            stringstream ss;
-            ss << "unknown syscall " << GetArg(0) << " called";
-            THROW_RUNTIME_ERROR(ss.str().c_str());
-        }
+        THROW_RUNTIME_ERROR("unknown syscall %" PRId64 " called", GetArg(0));
     }
 #ifdef SYSCALL_DEBUG
     if (GetResult(ErrorFlagIndex))
