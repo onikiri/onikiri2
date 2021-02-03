@@ -443,7 +443,7 @@ void ResourceBuilder::ConstructResources()
             if( copyCount % count != 0 ){
                 THROW_RUNTIME_ERROR( 
                     "The copy count is not divided by the resource count.\n"
-                    "Copy Count:%d  Resouce Count:%d",
+                    "Node:%s Copy Count:%d  Resouce Count:%d",
                     info.name.c_str(),
                     copyCount,
                     count
@@ -486,6 +486,13 @@ void ResourceBuilder::ConnectResources()
         vector< ResNode::Child >& children = i->second->children;
         vector< PhysicalResourceNode* >& instances = i->second->instances;
 
+        if( instances.empty() ) {
+            THROW_RUNTIME_ERROR(
+                "The 'Count' of the node of the name '%s' is zero.",
+                i->second->name.c_str()
+            );
+        }
+
         for( vector< ResNode::Child >::iterator child = children.begin();
              child != children.end();
              ++child
@@ -514,9 +521,26 @@ void ResourceBuilder::ConnectResources()
             vector< PhysicalResourceNode* >&
                 childInstances = childNode->instances;
 
+            if( childInstances.empty() ) {
+                THROW_RUNTIME_ERROR(
+                    "The number of the node of the name '%s' is zero. "
+                    "This error can occur when the node is not defined or when its 'Count' is set to zero."
+                    "This node is in the '%s'.",
+                    childNode->name.c_str(),
+                    i->second->name.c_str()
+                );
+            }
+
             if( instances.size() < childInstances.size() ){
                 // A case that the number of the parents is smaller than that of children.
-                ASSERT( childInstances.size() % instances.size() == 0 );
+                if( childInstances.size() % instances.size() != 0 ) {
+                    THROW_RUNTIME_ERROR(
+                        "childInstances.size() must be a multiple of instances.size().\n"
+                        "childInstances.size():%zu instances.size(): %zu",
+                        childInstances.size(),
+                        instances.size()
+                    );
+                }
                 for( size_t i = 0; i < instances.size(); i++ ){
                     
                     size_t childrenCount = childInstances.size() / instances.size();
@@ -530,7 +554,14 @@ void ResourceBuilder::ConnectResources()
             else{
                 // A case that the number of the parents is equal or greater than that of children.
                 // In this case, one child is shared by the multiple parents.
-                ASSERT( instances.size() % childInstances.size() == 0 );
+                if( instances.size() % childInstances.size() != 0 ) {
+                    THROW_RUNTIME_ERROR(
+                        "instances.size() must be a multiple of childInstances.size().\n"
+                        "instances.size():%zu childInstances.size(): %zu",
+                        childInstances.size(),
+                        instances.size()
+                    );
+                }
                 for( size_t i = 0; i < instances.size(); i++ ){
                     arrayArg.Resize( 1 );
                     size_t childIndex = i*childInstances.size()/instances.size();
