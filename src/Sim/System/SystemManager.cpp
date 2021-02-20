@@ -270,51 +270,46 @@ bool SystemManager::SetSimulationContext( const ArchitectureStateList& archState
 void SystemManager::RunSimulation( SystemContext* context )
 {
     SimulationSystem simulationSystem;
-    SetSystem(&simulationSystem);
+    SystemAttacher attacher(this, &simulationSystem);
     NotifyChangingMode(PhysicalResourceNode::SM_SIMULATION);
     simulationSystem.SetSystemContext(context);
     simulationSystem.Run();
-    SetSystem(nullptr);
 }
 
 void SystemManager::RunEmulation( SystemContext* context )
 {
     EmulationSystem emulationSystem;
-    SetSystem(&emulationSystem);
+    SystemAttacher attacher(this, &emulationSystem);
     NotifyChangingMode(PhysicalResourceNode::SM_EMULATION);
     emulationSystem.SetSystemContext(context);
     emulationSystem.Run();
-    SetSystem(nullptr);
 }
 
 void SystemManager::RunEmulationTrace( SystemContext* context )
 {
     EmulationTraceSystem emulationTraceSystem;
-    SetSystem(&emulationTraceSystem);
+    SystemAttacher attacher(this, &emulationTraceSystem);
     NotifyChangingMode(PhysicalResourceNode::SM_EMULATION);
     emulationTraceSystem.SetSystemContext(context);
     emulationTraceSystem.Run();
-    SetSystem(nullptr);
 }
 
 void SystemManager::RunEmulationDebug( SystemContext* context )
 {
     EmulationDebugSystem emulationDebugSystem;
-    SetSystem(&emulationDebugSystem);
+    SystemAttacher attacher(this, &emulationDebugSystem);
     NotifyChangingMode(PhysicalResourceNode::SM_EMULATION);
     emulationDebugSystem.SetSystemContext(context);
     emulationDebugSystem.Run();
-    SetSystem(nullptr);
 }
 
 void SystemManager::RunInorder( SystemContext* context )
 {
     InorderSystem inorderSystem;
-    SetSystem(&inorderSystem);
+    SystemAttacher attacher(this, &inorderSystem);
     NotifyChangingMode(PhysicalResourceNode::SM_INORDER);
     inorderSystem.SetSystemContext(context);
     inorderSystem.Run();
-    SetSystem(nullptr);
 }
 
 void SystemManager::SetSystem( SystemIF* system )
