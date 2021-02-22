@@ -166,6 +166,20 @@ namespace Onikiri
         
         virtual void NotifyChangingMode( PhysicalResourceNode::SimulationMode mode );
 
+        // A class for safely detaching the system on exception.
+        class SystemAttacher
+        {
+            SystemManager* m_manager;
+        public:
+            SystemAttacher(SystemManager* manager, SystemIF* system) {
+                m_manager = manager;
+                m_manager->SetSystem(system);
+            }
+            ~SystemAttacher() {
+                // If you don't set it back to nullptr, the freed system may be referred.
+                m_manager->SetSystem(nullptr);  
+            }
+        };
     };
 }   // namespace Onikiri
 
