@@ -96,6 +96,15 @@ bool SystemBase::NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, i
             Terminate();
             break;
         }
+        case ONIKIRI_SYSCALL_PRINT_CURRENT_STATUS: {
+            const auto* context = GetSystemContext();
+            for (int i = 0; i < context->threads.GetSize(); ++i) {
+                if (context->threads[i]->GetTID() == tid) {
+                    g_env.Print("ONIKIRI_SYSCALL_PRINT_CURRENT_STATUS: retired_insns=%" PRIu64 " (pid=%d, tid=%d), cycle=%" PRId64 "\n", context->threads[i]->GetOpRetiredID() , pid, tid, context->globalClock->GetTick());
+                }
+             }
+             break;
+        }
     }
 
     // This system call is processed in simulation land
