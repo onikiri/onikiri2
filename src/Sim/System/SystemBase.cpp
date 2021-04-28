@@ -69,8 +69,8 @@ void SystemBase::Run()
 
 bool SystemBase::NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid) {
 
-    u64 sysycallNum = context->GetArg(0);
-    switch (sysycallNum) {
+    u64 syscallNum = context->GetArg(0);
+    switch (syscallNum) {
         // Print string
         case ONIKIRI_SYSCALL_PRINT: {
             g_env.Print("ONIKIRI_SYSCALL_PRINT: ");
@@ -100,7 +100,7 @@ bool SystemBase::NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, i
 
     // This system call is processed in simulation land
     // It must return true for avoiding unknown syscall error.
-    if (ONIKIRI_SYSCALL_NUM_BEGIN <= sysycallNum && sysycallNum <= ONIKIRI_SYSCALL_NUM_END) {
+    if (ONIKIRI_SYSCALL_NUM_BEGIN <= syscallNum && syscallNum <= ONIKIRI_SYSCALL_NUM_END) {
         return true;
     }
 
