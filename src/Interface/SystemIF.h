@@ -40,7 +40,8 @@ namespace Onikiri
     static const int ONIKIRI_SYSCALL_NUM_BEGIN = 0x10000;
     static const int ONIKIRI_SYSCALL_PRINT                     = ONIKIRI_SYSCALL_NUM_BEGIN + 0;
     static const int ONIKIRI_SYSCALL_TERMINATE_CURRENT_SYSTEM  = ONIKIRI_SYSCALL_NUM_BEGIN + 1;
-    static const int ONIKIRI_SYSCALL_NUM_END = 0x10000 + 1;
+    static const int ONIKIRI_SYSCALL_PRINT_CURRENT_STATUS      = ONIKIRI_SYSCALL_NUM_BEGIN + 2;
+    static const int ONIKIRI_SYSCALL_NUM_END = 0x10000 + 2;
 
     // Arguments and return values for NotifySyscallInvoke
     class SyscallNotifyContextIF {

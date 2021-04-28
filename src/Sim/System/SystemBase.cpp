@@ -69,8 +69,8 @@ void SystemBase::Run()
 
 bool SystemBase::NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, int tid) {
 
-    u64 sysycallNum = context->GetArg(0);
-    switch (sysycallNum) {
+    u64 syscallNum = context->GetArg(0);
+    switch (syscallNum) {
         // Print string
         case ONIKIRI_SYSCALL_PRINT: {
             g_env.Print("ONIKIRI_SYSCALL_PRINT: ");
@@ -96,11 +96,20 @@ bool SystemBase::NotifySyscallInvoke(SyscallNotifyContextIF* context, int pid, i
             Terminate();
             break;
         }
+        case ONIKIRI_SYSCALL_PRINT_CURRENT_STATUS: {
+            const auto* context = GetSystemContext();
+            for (int i = 0; i < context->threads.GetSize(); ++i) {
+                if (context->threads[i]->GetTID() == tid) {
+                    g_env.Print("ONIKIRI_SYSCALL_PRINT_CURRENT_STATUS: retired_insns=%" PRIu64 " (pid=%d, tid=%d), cycle=%" PRId64 "\n", context->threads[i]->GetOpRetiredID() , pid, tid, context->globalClock->GetTick());
+                }
+             }
+             break;
+        }
     }
 
     // This system call is processed in simulation land
     // It must return true for avoiding unknown syscall error.
-    if (ONIKIRI_SYSCALL_NUM_BEGIN <= sysycallNum && sysycallNum <= ONIKIRI_SYSCALL_NUM_END) {
+    if (ONIKIRI_SYSCALL_NUM_BEGIN <= syscallNum && syscallNum <= ONIKIRI_SYSCALL_NUM_END) {
         return true;
     }
 
