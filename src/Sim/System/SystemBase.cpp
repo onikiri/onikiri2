@@ -31,6 +31,7 @@
 
 
 #include <pch.h>
+#include <cinttypes>
 #include "Sim/System/SystemBase.h"
 
 using namespace std;
