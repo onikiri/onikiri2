@@ -638,3 +638,27 @@ bool VirtualMemory::CopyPageOnWrite( u64 addr )
     }
     return false;
 }
+
+bool VirtualMemory::IsAssigned(u64 addr, u64 size) const
+{
+    // If `size' is large, implementation using SplitAtMapUnitBoundary is very inefficient.
+    // Implementation with early return is efficient.
+    u64 unitSize = GetPageSize();
+    u64 endAddr = addr+size;
+    u64 offsetMask = m_pageTbl.GetOffsetMask();
+
+    // the first fractional block
+    if (!m_pageTbl.IsMapped(addr)) {
+        return false;
+    }
+    addr += std::min(unitSize - (addr & ~offsetMask), endAddr - addr);
+
+    // remaining blocks
+    while (addr < endAddr) {
+        if (!m_pageTbl.IsMapped(addr)) {
+            return false;
+        }
+        addr += unitSize;
+    }
+    return true;
+}
