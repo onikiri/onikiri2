@@ -37,78 +37,123 @@ using namespace Onikiri;
 using namespace Onikiri::EmulatorUtility;
 using namespace Onikiri::EmulatorUtility::Operation;
 
+namespace {
+
+struct u128 {
+    u64 high_part;
+    u64 low_part;
+};
+
 //
-// high-order 64 bits of the 128-bit product of unsigned lhs and rhs
+// Calculate the lower 128 bit of a 128 bit x 128 bit product.
+// In general, when a K-bit integer is multiplied by a K-bit integer,
+// the lower K bits of the result will be the same whether the input is
+// a signed or unsigned representation.
+// This function calculates it for the case where K = 128.
+// Since this algorithm works independently of the sign of the inputs,
+// this function can be used to implement any of
+// MulHhigh64SS/MulHigh64SU/MulHigh64UU function family.
+// We don't use an implementation using signed multiplication
+// (it may be slight efficient) because it is complex.
 //
-u64 Onikiri::EmulatorUtility::Operation::UnsignedMulHigh64(u64 lhs, u64 rhs)
-{
-    // split to high and low part
-    u64 lhs_h = lhs >> 32;
-    u64 lhs_l = lhs & 0xffffffff;
-    u64 rhs_h = rhs >> 32;
-    u64 rhs_l = rhs & 0xffffffff;
+u128 UInt128Mul(u128 lhs, u128 rhs) noexcept {
+    // Convert the inputs to base 2^32 notation.
+    // This is to keep partial products less than 2^64
+    // (they can be calculated with u64 without error).
+    // lhs == lhs_array[3]*2^96 + lhs_array[2]*2^64
+    //          + lhs_array[1]*2^32 + lhs_array[0]*2^0
+    const u64 lhs_array[4] = {
+        lhs.low_part & 0xffffffff,  // 2^0 term
+        lhs.low_part >> 32,         // 2^32 term
+        lhs.high_part & 0xffffffff, // 2^64 term
+        lhs.high_part >> 32         // 2^96 term
+    };
+    const u64 rhs_array[4] = {
+        rhs.low_part & 0xffffffff,  // 2^0 term
+        rhs.low_part >> 32,         // 2^32 term
+        rhs.high_part & 0xffffffff, // 2^64 term
+        rhs.high_part >> 32         // 2^96 term
+    };
 
-    u64 result = lhs_h * rhs_h;
+    // result_array[4..8] are written but not used; they will be optimized out.
+    u64 result_array[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    u64 lhs_l_rhs_h = lhs_l * rhs_h;
-    u64 lhs_h_rhs_l = lhs_h * rhs_l;
+    // Calculate partial products (the standard long multiplication algorithm)
+    for( size_t i = 0; i < 4; ++i ) {
+        for( size_t j = 0; j < 4; ++j ) {
+            const u64 partial_product = lhs_array[i] * rhs_array[j];
+            const size_t k = i + j;
+            result_array[k+1] += partial_product >> 32;
+            result_array[k]   += partial_product & 0xffffffff;
+        }
+    }
 
-    u64 lhs_l_rhs_l = lhs_l * rhs_l;
+    // Normalize (carry-propagate addition)
+    for( size_t k = 0; k < 8; ++k ) {
+        result_array[k+1] += result_array[k] >> 32;
+        result_array[k]   &= 0xffffffff;
+    }
 
-    // Add to 'result' high-order 64 bits of '(lhs_l_rhs_h<<32) + (lhs_r_rhs_l<<32) + lhs_l_rhs_l'
-    //
-    // Now, low-order 32 bits of lhs_l_rhs_l does not affect the result (since it generates no carry),
-    // so we can simply take high-order 32 bits of
-    // 'lhs_l_rhs_h&0x00000000ffffffff + lhs_h_rhs_l&0x00000000ffffffff + lhs_l_rhs_l>>32'.
-    // and high-order 64 bits of
-    // '(lhs_l_rhs_h&0xffffffff00000000 + lhs_h_rhs_l&0xffffffff00000000) << 32'
-
-    result += (lhs_l_rhs_h>>32) + (lhs_h_rhs_l>>32);
-    result += ((lhs_l_rhs_h&0xffffffff) + (lhs_h_rhs_l&0xffffffff) + (lhs_l_rhs_l>>32))>>32;
+    u128 result;
+    result.high_part = result_array[3]<<32 | result_array[2];
+    result.low_part  = result_array[1]<<32 | result_array[0];
 
     return result;
 }
 
-u64 Onikiri::EmulatorUtility::Operation::SafeAbs(s64 x)
-{
-    // 未定義動作であるオーバーフローを起こさず安全に絶対値を計算する
+u128 zext_u64_to_u128(u64 x) noexcept {
+    u128 result;
+    result.high_part = 0;
+    result.low_part = x;
+    return result;
+}
 
-    if (x == INT64_MIN) {
-        // xがINT64_MINの場合、-INT64_MINはs64で表せない
-        // オーバーフローを防ぐため特別処理
-        return (u64)1<<63;
-    }
-    else {
-        return (u64)(x < 0 ? -x : x);
-    }
+u128 sext_s64_to_u128(s64 x) noexcept {
+    u128 result;
+    result.high_part = x < 0 ? 0xffffffffffffffff : 0;
+    result.low_part = static_cast<u64>(x);
+    return result;
+}
+
+s64 bit_cast_u64_to_s64(u64 x) noexcept {
+    s64 result;
+    memcpy(&result, &x, sizeof(result));
+    return result;
+}
+
+u64 MulHigh64UU(u64 lhs, u64 rhs) noexcept {
+    return UInt128Mul(zext_u64_to_u128(lhs), zext_u64_to_u128(rhs)).high_part;
+}
+
+s64 MulHigh64SU(s64 lhs, u64 rhs) noexcept {
+    u128 whole_result = UInt128Mul(sext_s64_to_u128(lhs), zext_u64_to_u128(rhs));
+    // Bitcast is needed to avoid signed integer overflow (undefined behavior).
+    return bit_cast_u64_to_s64(whole_result.high_part);
+}
+
+s64 MulHigh64SS(s64 lhs, s64 rhs) noexcept {
+    u128 whole_result = UInt128Mul(sext_s64_to_u128(lhs), sext_s64_to_u128(rhs));
+    // Bitcast is needed to avoid signed integer overflow (undefined behavior).
+    return bit_cast_u64_to_s64(whole_result.high_part);
+}
+
+} // namespace (anonymous)
+
+//
+// high-order 64 bits of the 128-bit product of unsigned lhs and rhs
+//
+
+u64 Onikiri::EmulatorUtility::Operation::UnsignedMulHigh64(u64 lhs, u64 rhs)
+{
+    return MulHigh64UU(lhs, rhs);
 }
 
 s64 Onikiri::EmulatorUtility::Operation::SignedMulHigh64(s64 lhs, s64 rhs)
 {
-    // 分かりやすい方法として，乗数・被乗数をどちらも正にして乗算を行い，最後に符号を調節する
-    s64 resultSign = 1;
-    if (lhs < 0) {
-        resultSign *= -1;
-    }
-    if (rhs < 0) {
-        resultSign *= -1;
-    }
-    // UnsignedMulHigh64の引数は高々二の六十三乗であり、
-    // UnsignedMulHigh64の結果は高々二の六十二乗になる。
-    // よって正負ともに余裕をもってs64で表せるためs64へのキャストは安全
-    s64 result = (s64)UnsignedMulHigh64(SafeAbs(lhs), SafeAbs(rhs));
-    return result*resultSign;
+    return MulHigh64SS(lhs, rhs);
 }
 
 s64 Onikiri::EmulatorUtility::Operation::SignedUnsignedMulHigh64(s64 lhs, u64 rhs)
 {
-	s64 resultSign = 1;
-	if (lhs < 0) {
-		lhs = -lhs;
-		resultSign *= -1;
-	}
-	s64 result = (s64)UnsignedMulHigh64((u64)lhs, (u64)rhs);
-	return result * resultSign;
+    return MulHigh64SU(lhs, rhs);
 }
-
-
