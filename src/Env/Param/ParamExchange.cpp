@@ -60,6 +60,8 @@ void ParamExchange::LoadParam()
 
 void ParamExchange::ReleaseParam()
 {
+    // Since ProcessParamMap is a virtual function, the following calls
+    // ProcessParamMap() defined in the most-derived class.
     ProcessParamMap(true);
     m_released = true;
 }

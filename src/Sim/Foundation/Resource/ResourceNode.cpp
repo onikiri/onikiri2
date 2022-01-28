@@ -61,6 +61,7 @@ PhysicalResourceNode::~PhysicalResourceNode()
 
 void PhysicalResourceNode::ReleaseParam()
 {
+    // src/Env/Param/ParamExchange.h contains the reason why these codes are needed.
     PhysicalResourceNode::ProcessParamMap(true);
     ParamExchange::ReleaseParam();
 }
