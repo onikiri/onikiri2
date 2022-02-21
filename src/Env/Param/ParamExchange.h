@@ -345,6 +345,36 @@ class ParamExchangeBase
 
         }
 
+        // Comment on using ProcessParamMap (it is complicated)
+        // Summary:
+        //  * Note that ProcessParamMap function may be defined by a macro
+        //  * All ProcessParamMap function are called, but the procedure is complex
+
+        // ProcessParamMap will be defined in multiple classes in the inheritance hierarchy
+        // (via BEGIN_PARAM_MAP/BEGIN_PARAM_MAP_INDEX macros (defined above)).
+        //
+        // The procedure of calling all ProcessParamMap() in the inheritance hierarchy is complecated;
+        // I explain with an example of inheritance hierarchy:
+        // StridePrefetcher <- PrefetcherBase <- PhysicalResourceNode <- ParamExchange
+        //
+        // Behavior on destruction
+        // 1. ~StridePrefetcher() is called.
+        // 2.   -> ReleaseParam() is called. This is a virtual function. PhysicalResourceNode::ReleaseParam() will be called.
+        // 3.     -> PhysicalResourceNode::ProcessParamMap() is called. This is a non-virtual function call.
+        // 4.     -> ParamExchange::ReleaseParam() is called. This is a non-virtual function call.
+        // 5.       -> ProcessParamMap(); is called. This is a virtual function call. StridePrefetcher::ProcessParamMap() will be called.
+        //             * NOTE: StridePrefetcher::ProcessParamMap() is defined via BEGIN_PARAM_MAP/BEGIN_PARAM_MAP_INDEX.
+        // 6.         -> PrefetcherBase::ProcessParamMap() is called. This is a non-virtual finction call.
+        //              * This code is inserted via CHAIN_BASE_PARAM_MAP.
+        // 7. To be destructed as PrefetcherBase, ~PrefetcherBase() is called.
+        // 8. To be destructed as PhysicalResourceNode, ~PhysicalResourceNode() is called.
+        // 9. To be destructed as ParamExchange, ~ParamExchange() is called.
+        //
+        // In the above sequence, all ProcessParamMap() in the inheritance hierarchy is called (3, 5, 6).
+        //
+        // We don't want to write "CHAIN_BASE_PARAM_MAP( PhysicalResourceNode )" in all derived classes,
+        // and this is why the calling PhysicalResourceNode::ProcessParamMap() is not automated.
+
         virtual void ProcessParamMap(bool save) = 0;
 
         ParamExchangeBase()
