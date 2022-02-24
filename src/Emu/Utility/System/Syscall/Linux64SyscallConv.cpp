@@ -298,7 +298,12 @@ void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
     } utsname;
 
     memset(&utsname, 0, sizeof(utsname));
-    strcpy(utsname.release, "3.4.5");
+
+    strcpy(utsname.sysname, "Linux");
+    strcpy(utsname.nodename, "Onikir2");
+    strcpy(utsname.release, "5.4.5");
+    strcpy(utsname.version, "#1 Mon Aug 18 11:32:15 EDT 2003");
+    strcpy(utsname.machine, "riscv64");
 
     GetMemorySystem()->MemCopyToTarget(m_args[1], &utsname, sizeof(utsname));
 
