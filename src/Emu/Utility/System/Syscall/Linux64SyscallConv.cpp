@@ -299,6 +299,8 @@ void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
 
     memset(&utsname, 0, sizeof(utsname));
 
+    // This return value is set based on that of unameFunc64() in gem5 implementation
+    // https://gem5.googlesource.com/public/gem5/+/refs/heads/master/src/arch/riscv/linux/se_workload.cc#98
     strcpy(utsname.sysname, "Linux");
     strcpy(utsname.nodename, "Onikir2");
     strcpy(utsname.release, "5.4.5");
@@ -759,7 +761,7 @@ void Linux64SyscallConv::syscall_fstatat64(OpEmulationState* opState)
         }
     }
     else {
-        result = GetVirtualSystem()->FStat(fd, &st);
+        result = GetVirtualSystem()->FStat((int)fd, &st);
     }
     if (result == -1) {
         SetResult(false, GetVirtualSystem()->GetErrno());

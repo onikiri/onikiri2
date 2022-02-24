@@ -558,3 +558,29 @@ u32 AlphaLinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
     return conv.TargetToHost(flag);
 }
 
+void AlphaLinuxSyscallConv::syscall_uname(OpEmulationState* opState)
+{
+    // linux
+    struct utsname_linux
+    {
+        char sysname[65];
+        char nodename[65];
+        char release[65];
+        char version[65];
+        char machine[65];
+    } utsname;
+
+    memset(&utsname, 0, sizeof(utsname));
+
+    // This return value is set based on that of unameFunc64() in gem5 implementation
+    // https://gem5.googlesource.com/public/gem5/+/refs/heads/master/src/arch/riscv/linux/se_workload.cc#98
+    strcpy(utsname.sysname, "Linux");
+    strcpy(utsname.nodename, "Onikir2");
+    strcpy(utsname.release, "5.4.5");
+    strcpy(utsname.version, "#1 Mon Aug 18 11:32:15 EDT 2003");
+    strcpy(utsname.machine, "Alpha");
+
+    GetMemorySystem()->MemCopyToTarget(m_args[1], &utsname, sizeof(utsname));
+
+    SetResult(true, 0);
+}
