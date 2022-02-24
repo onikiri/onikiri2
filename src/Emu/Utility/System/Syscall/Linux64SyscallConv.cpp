@@ -759,10 +759,7 @@ void Linux64SyscallConv::syscall_fstatat64(OpEmulationState* opState)
         }
     }
     else {
-        THROW_RUNTIME_ERROR(
-            "'fstatat' does not support reading fd other than 'AT_FDCWD (-100)', "
-            "but '%d' is specified.", fd
-        );
+        result = GetVirtualSystem()->FStat(fd, &st);
     }
     if (result == -1) {
         SetResult(false, GetVirtualSystem()->GetErrno());
