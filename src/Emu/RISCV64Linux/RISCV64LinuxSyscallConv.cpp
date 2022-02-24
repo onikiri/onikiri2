@@ -174,6 +174,7 @@ static struct {
     SYSCALLNAME(geteuid, 0, ""),
     SYSCALLNAME(getegid, 0, ""),
     SYSCALLNAME(getpid, 0, ""),
+    SYSCALLNAME(gettid, 0, ""),
     SYSCALLNAME(mkdirat, 3, "nsx"),
     SYSCALLNAME(renameat, 4, "nsns"),
     SYSCALLNAME(renameat2, 5, "nsnsn"),
@@ -381,6 +382,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
 
     case syscall_id_getgid:
         syscall_getgid(opState);
+        break;
+    
+    case syscall_id_gettid:
+        syscall_gettid(opState);
         break;
 
     case syscall_id_fcntl:
