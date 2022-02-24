@@ -99,6 +99,8 @@ namespace Onikiri {
             const int syscall_id_clone = 220;
 
             const int syscall_id_mmap = 222;
+            const int syscall_id_mprotect = 226;
+
             const int syscall_id_madvise = 233;
 
             const int syscall_id_prlimit64 = 261;

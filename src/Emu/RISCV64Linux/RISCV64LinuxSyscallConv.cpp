@@ -180,6 +180,7 @@ static struct {
     SYSCALLNAME(renameat2, 5, "nsnsn"),
     SYSCALLNAME(set_tid_address, 1, "p"),
     SYSCALLNAME(madvise, 3, "pxn"),
+    SYSCALLNAME(mprotect, 3, "pxx"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -196,7 +197,6 @@ static struct {
     SYSCALLNAME(rmdir, 1, "s"),
     SYSCALLNAME(readlink, 3, "spx"),
     SYSCALLNAME(link, 2, "ss"),
-    SYSCALLNAME(mprotect, 3, "pxx"),
     SYSCALLNAME(chmod, 2, "sx"),
     SYSCALLNAME(time, 1, "p"),
     //SYSCALLNAME(settimeofday, 2, "pp"),
@@ -446,6 +446,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_madvise:
         // There is nothing to do since this system call is just advice.
         syscall_ignore(opState);
+        break;
+
+    case syscall_id_mprotect:
+        syscall_mprotect(opState);
         break;
 
     /*
