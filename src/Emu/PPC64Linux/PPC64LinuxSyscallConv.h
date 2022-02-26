@@ -67,7 +67,7 @@ namespace Onikiri {
             virtual int Get_CLK_TCK();
 
             virtual u32 OpenFlagTargetToHost(u32 flag);
-            virtual void syscall_uname(EmulatorUtility::OpEmulationState* opState);
+            void syscall_uname(EmulatorUtility::OpEmulationState* opState);
         };
 
     } // namespace PPC64Linux
