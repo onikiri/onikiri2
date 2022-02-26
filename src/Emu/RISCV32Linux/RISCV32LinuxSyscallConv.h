@@ -71,7 +71,7 @@ namespace Onikiri {
             virtual void syscall_stat32(EmulatorUtility::OpEmulationState* opState);
             virtual void syscall_fstatat32(EmulatorUtility::OpEmulationState* opState);
             virtual void write_stat32(u64 dest, const EmulatorUtility::HostStat &src);
-            virtual void syscall_uname(EmulatorUtility::OpEmulationState* opState);
+            void syscall_uname(EmulatorUtility::OpEmulationState* opState);
         };
 
     } // namespace RISCV32Linux

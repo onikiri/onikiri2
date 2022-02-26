@@ -724,7 +724,7 @@ void RISCV32LinuxSyscallConv::syscall_uname(OpEmulationState* opState)
 
     memset(&utsname, 0, sizeof(utsname));
 
-    // This return value is set based on that of unameFunc64() in gem5 implementation
+    // These return value is set based on those of unameFunc64() in gem5 implementation
     // https://gem5.googlesource.com/public/gem5/+/refs/heads/master/src/arch/riscv/linux/se_workload.cc#98
     strcpy(utsname.sysname, "Linux");
     strcpy(utsname.nodename, "Onikir2");
