@@ -162,6 +162,7 @@ namespace Onikiri {
             int Stat(const char* path, HostStat* s);
             int FStat(int fd, HostStat* s);
             int LStat(const char* path, HostStat* s);
+            int FStatat(int fd, const char* path, HostStat* s);
 
             s64 LSeek(int fd, s64 offset, int whence);
             int Dup(int fd);
