@@ -16,6 +16,15 @@
       WorkingDirectory="WorkLinux" 
       OutputFile="a.out"
     >
+      <AdditionalFlags>
+        <!-- 
+          All warnings are disabled in the libraries.
+          See "SysDeps/Boost/Boost.h", which includes pragmas that also disable 
+          warning when compiling the boost headers.
+        -->
+        <Entry PathPattern="lib/boost/boost_" CXXFlags="-w"/>
+        <Entry PathPattern="lib/tinyxml" CXXFlags="-w"/>
+      </AdditionalFlags>
       <IncludeDirectories>
         <Directory Path="../../../src"/>
         <Directory Path="../../../src/pch"/>
@@ -59,6 +68,11 @@
       WorkingDirectory="WorkCygwin"
       OutputFile="a.out"
     >
+      <AdditionalFlags>
+        <!-- All warnings are disabled in the libraries -->
+        <Entry PathPattern="lib/boost/boost_" CXXFlags="-w"/>
+        <Entry PathPattern="lib/tinyxml" CXXFlags="-w"/>
+      </AdditionalFlags>
       <IncludeDirectories>
         <Directory Path="../../../src"/>
         <Directory Path="../../../src/pch"/>
