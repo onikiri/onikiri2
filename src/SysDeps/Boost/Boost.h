@@ -73,6 +73,10 @@
 
 #   pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #   pragma GCC diagnostic ignored "-Wunused-variable"
+#   pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#   pragma GCC diagnostic ignored "-Wunused-const-variable" 
+// 9.3 or later
+#   pragma GCC diagnostic ignored "-Wparentheses"
 
 #elif defined COMPILER_IS_CLANG
 
