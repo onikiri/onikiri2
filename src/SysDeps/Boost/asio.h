@@ -39,6 +39,7 @@
 #ifdef COMPILER_IS_MSVC
 
 #   pragma warning(push)
+#   pragma warning(disable:4834)
 #   pragma warning(disable:4996)
 #   include <boost/asio.hpp>
 #   pragma warning(pop)

@@ -10,12 +10,21 @@
       Name="linux" 
       HostString="Linux"
       CXX="g++" 
-      CXXFlags="-Wall -Werror -O2 -g -std=c++11 -DONIKIRI_DEBUG -Wno-deprecated-declarations -Wno-unused-const-variable -Wno-unused-private-field"
+      CXXFlags="-Wall -Werror -O2 -g -std=c++11 -DONIKIRI_DEBUG"
       LDFlags="-static -lpthread" 
       CleanTargets="*.o *.d *.gch"
       WorkingDirectory="WorkLinux" 
       OutputFile="a.out"
     >
+      <AdditionalFlags>
+        <!-- 
+          All warnings are disabled in the libraries.
+          See "SysDeps/Boost/Boost.h", which includes pragmas that also disable 
+          warning when compiling the boost headers.
+        -->
+        <Entry PathPattern="lib/boost/boost_" CXXFlags="-w"/>
+        <Entry PathPattern="lib/tinyxml" CXXFlags="-w"/>
+      </AdditionalFlags>
       <IncludeDirectories>
         <Directory Path="../../../src"/>
         <Directory Path="../../../src/pch"/>
@@ -53,12 +62,17 @@
       Name="cygwin"
       HostString="CYGWIN" 
       CXX="g++" 
-      CXXFlags="-Wall -Werror -O2 -g -std=gnu++11 -Wno-unused-variable -DONIKIRI_DEBUG -D__USE_W32_SOCKETS"
+      CXXFlags="-Wall -Werror -O2 -g -std=gnu++11 -DONIKIRI_DEBUG -D__USE_W32_SOCKETS"
       LDFlags="-static"
       CleanTargets="*.o *.d *.gch"
       WorkingDirectory="WorkCygwin"
       OutputFile="a.out"
     >
+      <AdditionalFlags>
+        <!-- All warnings are disabled in the libraries -->
+        <Entry PathPattern="lib/boost/boost_" CXXFlags="-w"/>
+        <Entry PathPattern="lib/tinyxml" CXXFlags="-w"/>
+      </AdditionalFlags>
       <IncludeDirectories>
         <Directory Path="../../../src"/>
         <Directory Path="../../../src/pch"/>
