@@ -228,7 +228,10 @@ sub OutputMake($$$$$)
     # detect host 
     $des .= 'HOST_TYPE = $(shell uname)'."\n\n";
 
-    foreach my $platform ( @{$cnvCfg->{'MakeConfiguration'}->{'Platforms'}->{'Platform'}} ){
+    # 
+    my $platformList = $cnvCfg->{'MakeConfiguration'}->{'Platforms'}->{'Platform'};
+
+    foreach my $platform (@{$platformList}){
 
         $des .= sprintf("# Platform: %s\n", $platform->{'-Name'});
         $des .= sprintf(
@@ -259,7 +262,18 @@ sub OutputMake($$$$$)
             }
         }
         $des .= "\n";
-        
+
+        # Make additional flags
+        # Generate all flags defined for each platform in the form CXXFLAGS_<HOSTNAME><ID>.
+        # Later, in each source code, reference the flags of all platforms that match the pattern
+        if(ref($platform->{'AdditionalFlags'}) eq 'HASH'){
+            my $id = 0;
+            foreach my $i ( @{ NodeToList($platform->{'AdditionalFlags'}->{'Entry'}) }){
+                $des .= sprintf("CXXFLAGS_%s%d = %s\n", $platform->{'-HostString'}, $id, $i->{'-CXXFlags'});
+                $id++;
+            }
+        }
+
         # Make LDFLAGS flag strings
         $des .= sprintf("LDFLAGS = %s", $platform->{'-LDFlags'});
         if(ref($platform->{'LibraryDirectories'}) eq 'HASH'){
@@ -471,6 +485,24 @@ sub OutputMake($$$$$)
 
         $des .= "$i->{'obj'}: $i->{'src'} $gch\n";
         $des .= "\t".'$(CXX) $(CXXFLAGS)'." -c $i->{'src'} -o $i->{'obj'} $pch -MMD";
+
+        # Generate flags for all platforms that match the pattern (e.g., "$(CXXFLAGS_Linux0) $(CXXFLAGS_CYGWIN0)").
+        # Variables that do not match the platform dynamically become empty on "make".
+        foreach my $platform (@{$platformList}){
+            if(ref($platform->{'AdditionalFlags'}) eq 'HASH'){
+                my $id = 0;
+                foreach my $flag ( @{ NodeToList($platform->{'AdditionalFlags'}->{'Entry'}) }){
+                    if($flag ne '' && $flag->{'-PathPattern'} ne ''){
+                        my $pattern = $flag->{'-PathPattern'};
+                        if ($i->{'src'} =~ /$pattern/) {
+                            $des .= sprintf(' $(CXXFLAGS_%s%d)', $platform->{'-HostString'}, $id);
+                        }
+                    }
+                    $id++;
+                }
+            }
+        }
+
         $des .= "\n\n";
     }
     
