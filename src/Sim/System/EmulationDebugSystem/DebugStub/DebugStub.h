@@ -83,6 +83,7 @@ namespace Onikiri{
         // Utility functions
         u64 GetRegister(int i);
         void SetRegister( int i, u64 value );
+        size_t GetTotalGeneralRegisterNum();
         u64 GetMemory(MemAccess* access);
         void SetMemory(MemAccess* access);
         u64 HexStrToU64(std::string str);
