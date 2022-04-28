@@ -396,12 +396,15 @@ void DebugStub::ExecDebug()
             SendPacket("vCont;c;C;s;S");
         }
         else if (m_packet.command == "Cont"){
-            if (m_packet.params.at(0) == "c"){
+            if (m_packet.params.at(0) == "c" || m_packet.params.at(0) == "c:0"){
                 m_stopExec = false;
             }
             else if (m_packet.params.at(0) == "s:0"){
                 m_stopExec = false;
                 m_stopCount = 1;
+            }
+            else {
+                THROW_RUNTIME_ERROR("Unkown vCont params: %s.", m_packet.GetParams().c_str());
             }
         }
         else if (m_packet.command == "Kill"){
