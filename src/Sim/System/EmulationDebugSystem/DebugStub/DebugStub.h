@@ -64,11 +64,15 @@ namespace Onikiri{
             char letter;
             std::string command;
             std::vector<std::string> params;
-
             void clear(){
                 letter = 0;
                 command = "";
                 params.clear();
+            }
+            std::string GetParams() {
+                std::string result = "";
+                for (auto s : params) result += s;
+                return result;
             }
         };
         DebugPacket m_packet;
@@ -83,6 +87,7 @@ namespace Onikiri{
         // Utility functions
         u64 GetRegister(int i);
         void SetRegister( int i, u64 value );
+        size_t GetTotalGeneralRegisterNum();
         u64 GetMemory(MemAccess* access);
         void SetMemory(MemAccess* access);
         u64 HexStrToU64(std::string str);

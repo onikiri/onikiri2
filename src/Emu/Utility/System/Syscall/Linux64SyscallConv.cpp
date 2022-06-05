@@ -186,6 +186,8 @@ namespace {
     const int LINUX_AT_SYMLINK_NOFOLLO = 0x100;
     const int LINUX_AT_REMOVEDIR = 0x200;
 
+    const int LINUX_AT_EMPTY_PATH = 0x1000;
+
     const int LINUX_DT_DIR = 4;
     const int LINUX_DT_REG = 8;
 }
@@ -298,7 +300,14 @@ void Linux64SyscallConv::syscall_uname(OpEmulationState* opState)
     } utsname;
 
     memset(&utsname, 0, sizeof(utsname));
-    strcpy(utsname.release, "3.4.5");
+
+    // These return value is set based on those of unameFunc64() in gem5 implementation
+    // https://gem5.googlesource.com/public/gem5/+/refs/heads/master/src/arch/riscv/linux/se_workload.cc#98
+    strcpy(utsname.sysname, "Linux");
+    strcpy(utsname.nodename, "Onikir2");
+    strcpy(utsname.release, "5.4.5");
+    strcpy(utsname.version, "#1 Mon Aug 18 11:32:15 EDT 2003");
+    strcpy(utsname.machine, "riscv64");
 
     GetMemorySystem()->MemCopyToTarget(m_args[1], &utsname, sizeof(utsname));
 
@@ -735,29 +744,40 @@ void Linux64SyscallConv::syscall_fstatat64(OpEmulationState* opState)
     s64 flag = (s64)m_args[4];
     int result = -1;
     /*
-    ファイルディスクリプタがAT_FDCWD (-100)の場合はworking directoryからの相対パスとなる
-    なので通常のstatと同じ動作をする
+    ファイルディスクリプタがAT_FDCWD (-100)の場合は working directory からの相対パスとなる
+    なので通常の stat と同じ動作をする
     */
     if (fd == LINUX_AT_FDCWD) {
         // flag が 0 の時は stat として, AT_SYMLINK_NOFOLLOW の場合は lstat として動作する
+        // flag が AT_EMPTY_PATH の時は、working directory に対する stat として動作する
         if (flag == 0) {
             result = GetVirtualSystem()->Stat(path.c_str(), &st);
         }
         else if (flag == LINUX_AT_SYMLINK_NOFOLLO){
             result = GetVirtualSystem()->LStat(path.c_str(), &st);
         }
+        else if (flag == LINUX_AT_EMPTY_PATH) {
+            result = GetVirtualSystem()->Stat("", &st);
+        }
         else {
             THROW_RUNTIME_ERROR(
-                "'fstatat' does not support reading flag other than '0' and 'AT_SYMLINK_NOFOLLO(0x100)', "
+                "'fstatat' does not support reading flag other than '0', 'AT_SYMLINK_NOFOLLO(0x100) and AT_EMPTY_PATH(0x1000)', "
                 "but '%d' is specified.", flag
             );
         }
     }
     else {
-        THROW_RUNTIME_ERROR(
-            "'fstatat' does not support reading fd other than 'AT_FDCWD (-100)', "
-            "but '%d' is specified.", fd
-        );
+        /*
+        flag が AT_EMPTY_PATH の時は、通常の fstat と同じ動作をする
+        それ以外の場合は、ファイルディスクリプタが示すディレクトリからの相対パスとなる
+        (注) ファイルディスクリプタがファイルを示す場合、ファイルがあるディレクトリからの相対パスになるわけではない
+        */
+        if (flag == LINUX_AT_EMPTY_PATH) {
+            result = GetVirtualSystem()->FStat((int)fd, &st);
+        }
+        else {
+            result = GetVirtualSystem()->FStatat((int)fd, path.c_str(), &st);
+        }
     }
     if (result == -1) {
         SetResult(false, GetVirtualSystem()->GetErrno());

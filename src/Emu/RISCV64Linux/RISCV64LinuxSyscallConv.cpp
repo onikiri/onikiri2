@@ -174,11 +174,13 @@ static struct {
     SYSCALLNAME(geteuid, 0, ""),
     SYSCALLNAME(getegid, 0, ""),
     SYSCALLNAME(getpid, 0, ""),
+    SYSCALLNAME(gettid, 0, ""),
     SYSCALLNAME(mkdirat, 3, "nsx"),
     SYSCALLNAME(renameat, 4, "nsns"),
     SYSCALLNAME(renameat2, 5, "nsnsn"),
     SYSCALLNAME(set_tid_address, 1, "p"),
     SYSCALLNAME(madvise, 3, "pxn"),
+    SYSCALLNAME(mprotect, 3, "pxx"),
 
     /*
     SYSCALLNAME(readv, 3, "npn"),
@@ -195,7 +197,6 @@ static struct {
     SYSCALLNAME(rmdir, 1, "s"),
     SYSCALLNAME(readlink, 3, "spx"),
     SYSCALLNAME(link, 2, "ss"),
-    SYSCALLNAME(mprotect, 3, "pxx"),
     SYSCALLNAME(chmod, 2, "sx"),
     SYSCALLNAME(time, 1, "p"),
     //SYSCALLNAME(settimeofday, 2, "pp"),
@@ -261,6 +262,12 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
             log << ")";
         }
     }
+    /*
+    log << std::endl;
+    log << "PC: ";
+    log << std::hex << opState->GetPC() << std::dec;
+    log << std::endl;
+    */
     log << flush;
 #endif // #ifdef SYSCALL_DEBUG
 
@@ -382,6 +389,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_getgid:
         syscall_getgid(opState);
         break;
+    
+    case syscall_id_gettid:
+        syscall_gettid(opState);
+        break;
 
     case syscall_id_fcntl:
         syscall_fcntl(opState);
@@ -441,6 +452,10 @@ void RISCV64LinuxSyscallConv::Execute(OpEmulationState* opState)
     case syscall_id_madvise:
         // There is nothing to do since this system call is just advice.
         syscall_ignore(opState);
+        break;
+
+    case syscall_id_mprotect:
+        syscall_mprotect(opState);
         break;
 
     /*
@@ -707,3 +722,29 @@ void RISCV64LinuxSyscallConv::write_stat64(u64 dest, const HostStat &src)
 
 
 
+void RISCV64LinuxSyscallConv::syscall_uname(OpEmulationState* opState)
+{
+    // linux
+    struct utsname_linux
+    {
+        char sysname[65];
+        char nodename[65];
+        char release[65];
+        char version[65];
+        char machine[65];
+    } utsname;
+
+    memset(&utsname, 0, sizeof(utsname));
+
+    // These return value is set based on those of unameFunc64() in gem5 implementation
+    // https://gem5.googlesource.com/public/gem5/+/refs/heads/master/src/arch/riscv/linux/se_workload.cc#98
+    strcpy(utsname.sysname, "Linux");
+    strcpy(utsname.nodename, "Onikir2");
+    strcpy(utsname.release, "5.4.5");
+    strcpy(utsname.version, "#1 Mon Aug 18 11:32:15 EDT 2003");
+    strcpy(utsname.machine, "riscv64");
+
+    GetMemorySystem()->MemCopyToTarget(m_args[1], &utsname, sizeof(utsname));
+
+    SetResult(true, 0);
+}

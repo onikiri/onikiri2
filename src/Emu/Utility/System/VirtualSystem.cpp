@@ -455,6 +455,12 @@ int VirtualSystem::FStat(int fd, HostStat* buffer)
     int hostFD = FDTargetToHost(fd);
     return posix_fstat(hostFD, buffer);
 }
+int VirtualSystem::FStatat(int fd, const char* path, HostStat* s) 
+{
+    String workingPath = FDTargetToFileName(fd);
+    String targetPath = workingPath + "/" + String(path);
+    return posix_stat(targetPath.c_str(), s);
+}
 
 int VirtualSystem::Stat(const char* path, posix_struct_stat* s)
 {

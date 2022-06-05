@@ -70,6 +70,7 @@ namespace Onikiri {
             
             // Called from fstat/lstat/stat implemented in a base class
             virtual void write_stat64(u64 dest, const EmulatorUtility::HostStat &src);
+            void syscall_uname(EmulatorUtility::OpEmulationState* opState);
         };
 
     } // namespace RISCV64Linux

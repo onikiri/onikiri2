@@ -279,7 +279,7 @@ void DebugStub::ExecDebug()
         }
         break;
     case ('g'): // Read general registers
-        readnum = m_context->architectureStateList.at(m_pid).registerValue.capacity();
+        readnum = GetTotalGeneralRegisterNum();
         for(size_t i = 0; i < readnum; i++){
             // TODO: 32bit register
             if (m_reg64) {
@@ -292,7 +292,7 @@ void DebugStub::ExecDebug()
         SendPacket(readstr);
         break;
     case ('G'): // Write general registers
-        readnum = m_context->architectureStateList.at(m_pid).registerValue.capacity();
+        readnum = GetTotalGeneralRegisterNum();
         for(size_t i = 0; i < readnum; i++){
             u64 value = 0;
             for (int j=0; j < 8; j++)
@@ -396,12 +396,15 @@ void DebugStub::ExecDebug()
             SendPacket("vCont;c;C;s;S");
         }
         else if (m_packet.command == "Cont"){
-            if (m_packet.params.at(0) == "c"){
+            if (m_packet.params.at(0) == "c" || m_packet.params.at(0) == "c:0"){
                 m_stopExec = false;
             }
             else if (m_packet.params.at(0) == "s:0"){
                 m_stopExec = false;
                 m_stopCount = 1;
+            }
+            else {
+                THROW_RUNTIME_ERROR("Unkown vCont params: %s.", m_packet.GetParams().c_str());
             }
         }
         else if (m_packet.command == "Kill"){
@@ -662,6 +665,17 @@ void DebugStub::SetRegister( int regNum, u64 value )
         }
     }
     THROW_RUNTIME_ERROR("Unsupported architecture");
+}
+size_t DebugStub::GetTotalGeneralRegisterNum() {
+    const auto& arch = m_context->targetArchitecture;
+    if (arch == "AlphaLinux") {
+        return 65;
+    }
+    else if (arch == "RISCV64Linux" || arch == "RISCV32Linux") {
+        return 33;
+    }
+    THROW_RUNTIME_ERROR("Unsupported architecture");
+    return 0;
 }
 
 u64 DebugStub::GetMemory( MemAccess* access )

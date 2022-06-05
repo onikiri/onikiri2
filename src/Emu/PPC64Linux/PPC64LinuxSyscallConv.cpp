@@ -432,3 +432,24 @@ u32 PPC64LinuxSyscallConv::OpenFlagTargetToHost(u32 flag)
 
     return conv.TargetToHost(flag);
 }
+
+void PPC64LinuxSyscallConv::syscall_uname(OpEmulationState* opState)
+{
+    // linux
+    struct utsname_linux
+    {
+        char sysname[65];
+        char nodename[65];
+        char release[65];
+        char version[65];
+        char machine[65];
+    } utsname;
+
+    memset(&utsname, 0, sizeof(utsname));
+
+    strcpy(utsname.release, "3.4.5");
+
+    GetMemorySystem()->MemCopyToTarget(m_args[1], &utsname, sizeof(utsname));
+
+    SetResult(true, 0);
+}

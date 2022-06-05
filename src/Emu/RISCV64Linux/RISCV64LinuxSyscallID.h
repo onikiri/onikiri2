@@ -88,6 +88,7 @@ namespace Onikiri {
             const int syscall_id_geteuid = 175;
             const int syscall_id_getgid = 176;
             const int syscall_id_getegid = 177;
+            const int syscall_id_gettid = 178;
 
             const int syscall_id_sysinfo = 179;
 
@@ -98,6 +99,8 @@ namespace Onikiri {
             const int syscall_id_clone = 220;
 
             const int syscall_id_mmap = 222;
+            const int syscall_id_mprotect = 226;
+
             const int syscall_id_madvise = 233;
 
             const int syscall_id_prlimit64 = 261;
