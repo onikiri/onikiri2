@@ -40,28 +40,28 @@ bool SimISAInfoDef::SimISAInfo_IW32_RW64_AS64::TestISAInfo(ISAInfoIF* info)
     int iw = info->GetInstructionWordBitSize();
     if(iw != 32){
         THROW_RUNTIME_ERROR(
-            "An emulator of ISA with instruction"
+            "An emulator of ISA with instruction "
             "word size(%d) is not supported.", iw );
     }
 
     int rw = info->GetRegisterWordBitSize();
     if(rw > 64){
         THROW_RUNTIME_ERROR(
-            "An emulator of ISA with register"
+            "An emulator of ISA with register "
             "word size(%d) is not supported.", rw );
     }
 
     int as = info->GetAddressSpaceBitSize();
     if(as > 64){
         THROW_RUNTIME_ERROR(
-            "An emulator of ISA with address"
+            "An emulator of ISA with address "
             "space size(%d) is not supported.", as );
     }
 
     int maxSN = info->GetMaxSrcRegCount();
     if(maxSN > MAX_SRC_REG_COUNT){
         THROW_RUNTIME_ERROR(
-            "An emulator of ISA with max source register"
+            "An emulator of ISA with max source register "
             "number(%d) is not supported.", maxSN );
     }
 
@@ -75,21 +75,21 @@ bool SimISAInfoDef::SimISAInfo_IW32_RW64_AS64::TestISAInfo(ISAInfoIF* info)
     int regCnt = info->GetRegisterCount();
     if(regCnt > MAX_REG_COUNT){
         THROW_RUNTIME_ERROR(
-            "An emulator of ISA with register"
+            "An emulator of ISA with register "
             "number(%d) is not supported.", regCnt );
     }
-    
+
     int maxOpInfo = info->GetMaxOpInfoCountPerPC();
     if(maxOpInfo > MAX_OP_INFO_COUNT_PER_PC){
         THROW_RUNTIME_ERROR(
-            "An emulator of ISA with register"
+            "An emulator of ISA with max op info "
             "number(%d) is not supported.", maxOpInfo );
     }
 
     int regSegmentCount = info->GetRegisterSegmentCount();
     if( regSegmentCount > MAX_REG_SEGMENT_COUNT ){
         THROW_RUNTIME_ERROR(
-            "An emulator of ISA with register"
+            "An emulator of ISA with register "
             "segments(%d) is not supported.", regSegmentCount );
     }
 
