@@ -74,10 +74,10 @@ void OpCodeDispatchSteerer::Initialize(InitPhase phase)
                     if((int)m_schedulerMap.size() <= code)
                         m_schedulerMap.resize(code+1);
 
-                        ASSERT( m_schedulerMap[code] == 0, "scheduler set twice(code:%d).", code);
+                    ASSERT( m_schedulerMap[code] == 0, "scheduler set twice(code:%d).", code);
 
-                        // 該当する番号に代入
-                        m_schedulerMap[code] = sched;
+                    // 該当する番号に代入
+                    m_schedulerMap[code] = sched;
                 }
             }
         }
