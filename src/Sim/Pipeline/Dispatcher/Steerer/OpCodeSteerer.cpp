@@ -91,7 +91,7 @@ Scheduler* OpCodeDispatchSteerer::Steer(OpIterator opIterator)
     int code = opIterator->GetOpClass().GetCode();
 
     ASSERT( code >= 0 && code < static_cast<int>(m_schedulerMap.size()),
-        "unknown opcode %d.", code);
+        "Unknown op class code %d. Possible unknown instruction? PC: 0x%" PRIx64, code, opIterator->GetPC().address );
     ASSERT( m_schedulerMap[code] != 0,
         "scheduler not set(opcode %d).", code);
 
