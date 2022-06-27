@@ -62,8 +62,8 @@ namespace Onikiri
                 PARAM_ENTRY( "@Name",       m_name )
                 PARAM_ENTRY( "@NumUsed",    m_numUsed )
                 PARAM_ENTRY( "@NumUsable",  m_numUsable )
-                RESULT_RATE_SUM_ENTRY("@UseRate", \
-                    m_numUsed, m_numUsed, m_numUsable
+                RESULT_RATE_ENTRY("@UseRate", \
+                    m_numUsed, m_numUsable
                 )
             END_PARAM_PATH()
 
