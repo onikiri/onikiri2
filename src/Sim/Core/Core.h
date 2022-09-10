@@ -80,6 +80,7 @@ namespace Onikiri
         BEGIN_PARAM_MAP("")
             BEGIN_PARAM_PATH( GetParamPath() )
                 PARAM_ENTRY( "@OpArrayCapacity",    m_opArrayCapacity )
+                PARAM_ENTRY( "@InstructionWordByteShift",    m_instructionWordByteShift )
                 
                 BEGIN_PARAM_BINDING(  "@SchedulerRemovePolicy", m_schedulerRemovePolicy, SchedulerRemovePolicy )
                     PARAM_BINDING_ENTRY( "Remove",  RP_REMOVE )

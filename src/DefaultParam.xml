@@ -501,6 +501,7 @@
             SchedulerRemovePolicy = "RemoveAfterFinish"
             CheckpointingPolicy = "Auto"
             OpArrayCapacity = "160"
+            InstructionWordByteShift = "2"
           >
             <LatPredRecovery
               Type    = "Latency"
