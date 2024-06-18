@@ -598,6 +598,26 @@ struct Compare : public std::unary_function<OpEmulationState*, bool>
     }
 };
 
+// zicond
+// WordSizeにかかわらずrs2はレジスタ幅分読んで0比較する
+template <typename Type, typename TSrc1, typename TSrc2>
+struct IntNez : public std::unary_function<OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        return TSrc2()(opState) ? 0 : static_cast<Type>(TSrc1()(opState));
+    }
+};
+
+template <typename Type, typename TSrc1, typename TSrc2>
+struct IntEqz : public std::unary_function<OpEmulationState*, Type>
+{
+    Type operator()(OpEmulationState* opState)
+    {
+        return TSrc2()(opState) ? static_cast<Type>(TSrc1()(opState)) : 0;
+    }
+};
+
 // negate
 template <typename Type, typename TSrc1>
 struct IntNeg : public std::unary_function<OpEmulationState*, Type>
