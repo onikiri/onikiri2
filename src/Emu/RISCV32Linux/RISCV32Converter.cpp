@@ -306,6 +306,11 @@ RISCV32Converter::OpDef RISCV32Converter::m_OpDefsBase[] =
         {OpClassCode::syscall_branch,   {R0, -1}, {I0, I1, -1, -1}, RISCV32CSRRC<D0, S0, S1>},
     }},
 
+    // RV32Zicond
+    //{Name,      Mask,     Opcode,              nOp, {OpClassCode,       Dst[],    Src[],            OpInfoType::EmulationFunc    }[] }
+    {"czero.eqz", MASK_INT, OPCODE_INT(0x07, 5), 1, { {OpClassCode::iALU, {R0, -1}, {R1, R2, -1, -1}, Set<D0, IntEqz<u32, S0, S1> >} } },
+    {"czero.nez", MASK_INT, OPCODE_INT(0x07, 7), 1, { {OpClassCode::iALU, {R0, -1}, {R1, R2, -1, -1}, Set<D0, IntNez<u32, S0, S1> >} } },
+
     
     // RV32M
     //{Name,    Mask,       Opcode,                 nOp,{ OpClassCode,          Dst[],      Src[],              OpInfoType::EmulationFunc}[]}
