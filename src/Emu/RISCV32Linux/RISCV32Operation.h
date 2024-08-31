@@ -33,6 +33,7 @@
 #define EMU_RISCV32LINUX_RISCV32_OPERATION_H
 
 #include "SysDeps/fenv.h"
+#include "SysDeps/STL/functional.h"
 #include "Utility/RuntimeError.h"
 #include "Emu/Utility/DecoderUtility.h"
 #include "Emu/Utility/GenericOperation.h"
@@ -67,7 +68,7 @@ public:
 };
 
 template <int OperandIndex>
-struct RISCV32SrcOperand : public std::unary_function<OpEmulationState, RISCV32RegisterType>
+struct RISCV32SrcOperand : public unary_function<OpEmulationState, RISCV32RegisterType>
 {
     typedef RISCV32RegisterType type;
     RISCV32RegisterType operator()(OpEmulationState* opState)
@@ -87,7 +88,7 @@ struct RISCV32DstDoubleOperand
 };
 
 template <typename Type, Type value>
-struct RISCV32IntConst : public std::unary_function<OpEmulationState*, Type>
+struct RISCV32IntConst : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -116,7 +117,7 @@ inline u32 RISCV32CurPC(OpEmulationState* opState)
 
 // Set PC
 template<typename TSrc1>
-struct RISCV32Auipc : public std::unary_function<OpEmulationState, RegisterType>
+struct RISCV32Auipc : public unary_function<OpEmulationState, RegisterType>
 {
     RISCV32RegisterType operator()(OpEmulationState* opState) const
     {
@@ -126,7 +127,7 @@ struct RISCV32Auipc : public std::unary_function<OpEmulationState, RegisterType>
 
 // Load upper immediate
 template<typename TSrc1>
-struct RISCV32Lui : public std::unary_function<OpEmulationState, RegisterType>
+struct RISCV32Lui : public unary_function<OpEmulationState, RegisterType>
 {
     RISCV32RegisterType operator()(OpEmulationState* opState) const
     {
@@ -137,7 +138,7 @@ struct RISCV32Lui : public std::unary_function<OpEmulationState, RegisterType>
 
 // compare
 template <typename TSrc1, typename TSrc2, typename Comp>
-struct RISCV32Compare : public std::unary_function<EmulatorUtility::OpEmulationState*, RISCV32RegisterType>
+struct RISCV32Compare : public unary_function<EmulatorUtility::OpEmulationState*, RISCV32RegisterType>
 {
     RISCV32RegisterType operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -151,7 +152,7 @@ struct RISCV32Compare : public std::unary_function<EmulatorUtility::OpEmulationS
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct RISCV32MIN : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct RISCV32MIN : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -168,7 +169,7 @@ struct RISCV32MIN : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct RISCV32MAX : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct RISCV32MAX : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -238,7 +239,7 @@ inline void RISCV32CallAbsUncond(OpEmulationState* opState)
 // Load/Store
 //
 template<typename TSrc1, typename TSrc2>
-struct RISCV32Addr : public std::unary_function<EmulatorUtility::OpEmulationState, RISCV32RegisterType>
+struct RISCV32Addr : public unary_function<EmulatorUtility::OpEmulationState, RISCV32RegisterType>
 {
     RISCV32RegisterType operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -250,7 +251,7 @@ struct RISCV32Addr : public std::unary_function<EmulatorUtility::OpEmulationStat
 // Div/Rem
 //
 template <typename TSrc1, typename TSrc2>
-struct RISCV32IntDiv : public std::unary_function<OpEmulationState*, u32>
+struct RISCV32IntDiv : public unary_function<OpEmulationState*, u32>
 {
     u32 operator()(OpEmulationState* opState)
     {
@@ -267,7 +268,7 @@ struct RISCV32IntDiv : public std::unary_function<OpEmulationState*, u32>
 };
 
 template <typename TSrc1, typename TSrc2>
-struct RISCV32IntRem : public std::unary_function<OpEmulationState*, u32>
+struct RISCV32IntRem : public unary_function<OpEmulationState*, u32>
 {
     u32 operator()(OpEmulationState* opState)
     {
@@ -284,7 +285,7 @@ struct RISCV32IntRem : public std::unary_function<OpEmulationState*, u32>
 };
 
 template <typename TSrc1, typename TSrc2>
-struct RISCV32IntDivu : public std::unary_function<OpEmulationState*, u32>
+struct RISCV32IntDivu : public unary_function<OpEmulationState*, u32>
 {
     u32 operator()(OpEmulationState* opState)
     {
@@ -298,7 +299,7 @@ struct RISCV32IntDivu : public std::unary_function<OpEmulationState*, u32>
 };
 
 template <typename TSrc1, typename TSrc2>
-struct RISCV32IntRemu : public std::unary_function<OpEmulationState*, u32>
+struct RISCV32IntRemu : public unary_function<OpEmulationState*, u32>
 {
     u32 operator()(OpEmulationState* opState)
     {
@@ -313,7 +314,7 @@ struct RISCV32IntRemu : public std::unary_function<OpEmulationState*, u32>
 
 
 template <typename Type, typename TAddr>
-struct RISCV32AtomicLoad : public std::unary_function<OpEmulationState*, u32>
+struct RISCV32AtomicLoad : public unary_function<OpEmulationState*, u32>
 {
     u32 operator()(OpEmulationState* opState)
     {
@@ -404,7 +405,7 @@ void RISCV32StoreConditional(OpEmulationState* opState)
 }
 
 template<typename TSrc>
-struct RISCV32NanBoxing : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct RISCV32NanBoxing : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -413,7 +414,7 @@ struct RISCV32NanBoxing : public std::unary_function<EmulatorUtility::OpEmulatio
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct RISCV32MADD : public std::unary_function<OpEmulationState*, Type>
+struct RISCV32MADD : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -428,7 +429,7 @@ struct RISCV32MADD : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct RISCV32MSUB : public std::unary_function<OpEmulationState*, Type>
+struct RISCV32MSUB : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -443,7 +444,7 @@ struct RISCV32MSUB : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct RISCV32NMADD : public std::unary_function<OpEmulationState*, Type>
+struct RISCV32NMADD : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -458,7 +459,7 @@ struct RISCV32NMADD : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct RISCV32NMSUB : public std::unary_function<OpEmulationState*, Type>
+struct RISCV32NMSUB : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -487,7 +488,7 @@ inline f32 CanonicalNAN<f32>() {
 }
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct RISCV32FPMIN : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct RISCV32FPMIN : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -515,7 +516,7 @@ struct RISCV32FPMIN : public std::unary_function<EmulatorUtility::OpEmulationSta
 
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct RISCV32FPMAX : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct RISCV32FPMAX : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -562,7 +563,7 @@ namespace {
 
 // Convert floating point number TSrc to integer Type.
 template <typename Type, typename TSrc, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct RISCV32FPToInt : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct RISCV32FPToInt : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -593,7 +594,7 @@ struct RISCV32FPToInt : public std::unary_function<EmulatorUtility::OpEmulationS
 
 
 template <typename TSrc1, typename TSrc2>
-struct FPFLOATCopySign : public std::unary_function<OpEmulationState*, u32>
+struct FPFLOATCopySign : public unary_function<OpEmulationState*, u32>
 {
     u32 operator()(OpEmulationState* opState)
     {
@@ -606,7 +607,7 @@ struct FPFLOATCopySign : public std::unary_function<OpEmulationState*, u32>
 
 
 template <typename TSrc1, typename TSrc2>
-struct FPFLOATCopySignNeg : public std::unary_function<OpEmulationState*, u32>
+struct FPFLOATCopySignNeg : public unary_function<OpEmulationState*, u32>
 {
     u32 operator()(OpEmulationState* opState)
     {
@@ -618,7 +619,7 @@ struct FPFLOATCopySignNeg : public std::unary_function<OpEmulationState*, u32>
 };
 
 template <typename TSrc1, typename TSrc2>
-struct FPDoubleCopySignXor : public std::unary_function<OpEmulationState*, u64>
+struct FPDoubleCopySignXor : public unary_function<OpEmulationState*, u64>
 {
     u64 operator()(OpEmulationState* opState)
     {
@@ -631,7 +632,7 @@ struct FPDoubleCopySignXor : public std::unary_function<OpEmulationState*, u64>
 
 
 template <typename TSrc1, typename TSrc2>
-struct FPFLOATCopySignXor : public std::unary_function<OpEmulationState*, u64>
+struct FPFLOATCopySignXor : public unary_function<OpEmulationState*, u64>
 {
     u32 operator()(OpEmulationState* opState)
     {
@@ -645,7 +646,7 @@ struct FPFLOATCopySignXor : public std::unary_function<OpEmulationState*, u64>
 //compare
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct RISCV32FPEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+struct RISCV32FPEqual : public unary_function<EmulatorUtility::OpEmulationState*, bool>
 {
     bool operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -657,7 +658,7 @@ struct RISCV32FPEqual : public std::unary_function<EmulatorUtility::OpEmulationS
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct RISCV32FPLess : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+struct RISCV32FPLess : public unary_function<EmulatorUtility::OpEmulationState*, bool>
 {
     bool operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -669,7 +670,7 @@ struct RISCV32FPLess : public std::unary_function<EmulatorUtility::OpEmulationSt
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct RISCV32FPLessEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+struct RISCV32FPLessEqual : public unary_function<EmulatorUtility::OpEmulationState*, bool>
 {
     bool operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -698,7 +699,7 @@ inline bool IsSignalingNAN(f32 fpValue) {
 }
 
 template <typename Type, typename TSrc1>
-struct RISCV32FCLASS : public std::unary_function<EmulatorUtility::OpEmulationState*, u32>
+struct RISCV32FCLASS : public unary_function<EmulatorUtility::OpEmulationState*, u32>
 {
     u32 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -842,7 +843,7 @@ void RISCV32CSRRC(OpEmulationState* opState)
 }
 
 // Return a current rounding mode specified by FRM
-struct RISCV32RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u32>
+struct RISCV32RoundModeFromFCSR : public unary_function<EmulatorUtility::OpEmulationState, u32>
 {
     int operator()(EmulatorUtility::OpEmulationState* opState) const
     {
