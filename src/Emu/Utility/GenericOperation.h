@@ -35,6 +35,7 @@
 #include <cstring>
 
 #include "SysDeps/fenv.h"
+#include "SysDeps/STL/functional.h"
 #include "Emu/Utility/Math.h"
 #include "Emu/Utility/OpEmulationState.h"
 
@@ -129,7 +130,7 @@ inline IntType AsIntFunc(FPType value)
 
 // 整数のビット列を浮動小数点数として再解釈 ( reinterpret as fp )
 template <typename Type, typename TSrc>
-struct AsFP : public std::unary_function<OpEmulationState*, Type>
+struct AsFP : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -139,7 +140,7 @@ struct AsFP : public std::unary_function<OpEmulationState*, Type>
 
 // 浮動小数点のビット列を整数として再解釈 ( reinterpret as int )
 template <typename Type, typename TSrc>
-struct AsInt : public std::unary_function<OpEmulationState*, Type>
+struct AsInt : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -165,7 +166,7 @@ public:
 };
 
 template <int OperandIndex>
-struct SrcOperand : public std::unary_function<OpEmulationState, RegisterType>
+struct SrcOperand : public unary_function<OpEmulationState, RegisterType>
 {
     typedef RegisterType type;
     RegisterType operator()(OpEmulationState* opState)
@@ -175,7 +176,7 @@ struct SrcOperand : public std::unary_function<OpEmulationState, RegisterType>
 };
 
 template <typename Type, Type value>
-struct IntConst : public std::unary_function<OpEmulationState*, Type>
+struct IntConst : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -191,7 +192,7 @@ struct IntConst : public std::unary_function<OpEmulationState*, Type>
 // integer conditions
 //
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondEqual : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondEqual : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -200,7 +201,7 @@ struct IntCondEqual : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondNotEqual : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondNotEqual : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -209,7 +210,7 @@ struct IntCondNotEqual : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondLessSigned : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondLessSigned : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -218,7 +219,7 @@ struct IntCondLessSigned : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondLessUnsigned : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondLessUnsigned : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -227,7 +228,7 @@ struct IntCondLessUnsigned : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondLessEqualSigned : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondLessEqualSigned : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -236,7 +237,7 @@ struct IntCondLessEqualSigned : public std::binary_function<ArgType, ArgType, bo
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondLessEqualUnsigned : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondLessEqualUnsigned : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -245,7 +246,7 @@ struct IntCondLessEqualUnsigned : public std::binary_function<ArgType, ArgType, 
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondGreaterSigned : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondGreaterSigned : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -254,7 +255,7 @@ struct IntCondGreaterSigned : public std::binary_function<ArgType, ArgType, bool
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondGreaterUnsigned : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondGreaterUnsigned : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -263,7 +264,7 @@ struct IntCondGreaterUnsigned : public std::binary_function<ArgType, ArgType, bo
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondGreaterEqualSigned : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondGreaterEqualSigned : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -272,7 +273,7 @@ struct IntCondGreaterEqualSigned : public std::binary_function<ArgType, ArgType,
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct IntCondGreaterEqualUnsigned : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondGreaterEqualUnsigned : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -281,7 +282,7 @@ struct IntCondGreaterEqualUnsigned : public std::binary_function<ArgType, ArgTyp
 };
 
 template<typename Type, int n, typename ArgType = RegisterType>
-struct IntCondEqualNthBit : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondEqualNthBit : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -290,7 +291,7 @@ struct IntCondEqualNthBit : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, int n, typename ArgType = RegisterType>
-struct IntCondNotEqualNthBit : public std::binary_function<ArgType, ArgType, bool>
+struct IntCondNotEqualNthBit : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -302,7 +303,7 @@ struct IntCondNotEqualNthBit : public std::binary_function<ArgType, ArgType, boo
 // fp conditions
 //
 template<typename Type, typename ArgType = RegisterType>
-struct FPCondEqual : public std::binary_function<ArgType, ArgType, bool>
+struct FPCondEqual : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -311,7 +312,7 @@ struct FPCondEqual : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct FPCondNotEqual : public std::binary_function<ArgType, ArgType, bool>
+struct FPCondNotEqual : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -320,7 +321,7 @@ struct FPCondNotEqual : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct FPCondLess : public std::binary_function<ArgType, ArgType, bool>
+struct FPCondLess : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -329,7 +330,7 @@ struct FPCondLess : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct FPCondLessEqual : public std::binary_function<ArgType, ArgType, bool>
+struct FPCondLessEqual : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -338,7 +339,7 @@ struct FPCondLessEqual : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct FPCondGreater : public std::binary_function<ArgType, ArgType, bool>
+struct FPCondGreater : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -347,7 +348,7 @@ struct FPCondGreater : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template<typename Type, typename ArgType = RegisterType>
-struct FPCondGreaterEqual : public std::binary_function<ArgType, ArgType, bool>
+struct FPCondGreaterEqual : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -356,7 +357,7 @@ struct FPCondGreaterEqual : public std::binary_function<ArgType, ArgType, bool>
 };
 
 template <typename TSrc1, typename TSrc2>
-struct CondAnd : public std::unary_function<OpEmulationState*, bool>
+struct CondAnd : public unary_function<OpEmulationState*, bool>
 {
     bool operator()(OpEmulationState* opState)
     {
@@ -368,7 +369,7 @@ struct CondAnd : public std::unary_function<OpEmulationState*, bool>
 };
 
 template <typename TSrc1, typename TSrc2>
-struct CondOr : public std::unary_function<OpEmulationState*, bool>
+struct CondOr : public unary_function<OpEmulationState*, bool>
 {
     bool operator()(OpEmulationState* opState)
     {
@@ -439,7 +440,7 @@ inline void SetFP(OpEmulationState* opState)
 }
 
 template <typename Type, typename TCond, typename TTrueValue, typename TFalseValue>
-struct Select : public std::unary_function<OpEmulationState*, Type>
+struct Select : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -454,7 +455,7 @@ struct Select : public std::unary_function<OpEmulationState*, Type>
 
 // TValue を Type に変換する
 template <typename Type, typename TValue>
-struct Cast : public std::unary_function<OpEmulationState*, Type>
+struct Cast : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -464,7 +465,7 @@ struct Cast : public std::unary_function<OpEmulationState*, Type>
 
 // 丸めモードを指定して TValue を Type に変換する．
 template <typename Type, typename TValue, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct CastFP : public std::unary_function<OpEmulationState*, Type>
+struct CastFP : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -478,7 +479,7 @@ struct CastFP : public std::unary_function<OpEmulationState*, Type>
 //    memory operations
 // **********************************
 template <typename Type, typename TAddr>
-struct Load : public std::unary_function<OpEmulationState*, Type>
+struct Load : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -495,7 +496,7 @@ inline void Store(OpEmulationState* opState)
 // Sets the value TFunc to TDest and returns the same value.
 // The return type is the same as TFunc type (not TDest type).
 template <typename TDest, typename TFunc>
-struct TeeSet // : public std::unary_function<OpEmulationState*, decltype(TFunc()(static_cast<OpEmulationState*>(nullptr)))> // std::unary_function is deprecated in C++11. Don't use.
+struct TeeSet // : public unary_function<OpEmulationState*, decltype(TFunc()(static_cast<OpEmulationState*>(nullptr)))> // unary_function is deprecated in C++11. Don't use.
 {
     auto operator()(OpEmulationState* opState) -> decltype(TFunc()(opState))
     {
@@ -508,7 +509,7 @@ struct TeeSet // : public std::unary_function<OpEmulationState*, decltype(TFunc(
 // Sets the sign extended value TFunc to TDest and returns the same value.
 // The return type is the signed type of TFunc type (not the TDest type).
 template <typename TDest, typename TFunc>
-struct TeeSetSext // : public std::unary_function<OpEmulationState*, decltype(TFunc()(static_cast<OpEmulationState*>(nullptr)))> // std::unary_function is deprecated in C++11. Don't use.
+struct TeeSetSext // : public unary_function<OpEmulationState*, decltype(TFunc()(static_cast<OpEmulationState*>(nullptr)))> // unary_function is deprecated in C++11. Don't use.
 {
     auto operator()(OpEmulationState* opState) -> decltype(TFunc()(opState))
     {
@@ -523,7 +524,7 @@ struct TeeSetSext // : public std::unary_function<OpEmulationState*, decltype(TF
 // **********************************
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct IntAdd : public std::unary_function<OpEmulationState*, Type>
+struct IntAdd : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -532,7 +533,7 @@ struct IntAdd : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct IntSub : public std::unary_function<OpEmulationState*, Type>
+struct IntSub : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -541,7 +542,7 @@ struct IntSub : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct IntMul : public std::unary_function<OpEmulationState*, Type>
+struct IntMul : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -550,7 +551,7 @@ struct IntMul : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct IntDiv : public std::unary_function<OpEmulationState*, Type>
+struct IntDiv : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -570,7 +571,7 @@ struct IntDiv : public std::unary_function<OpEmulationState*, Type>
 
 // Src1 を shift_countだけ左シフトして加算
 template <typename Type, int shift_count, typename TSrc1, typename TSrc2>
-struct IntScaledAdd : public std::unary_function<OpEmulationState*, Type>
+struct IntScaledAdd : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -580,7 +581,7 @@ struct IntScaledAdd : public std::unary_function<OpEmulationState*, Type>
 
 // Src1 を shift_countだけ左シフトして減算
 template <typename Type, int shift_count, typename TSrc1, typename TSrc2>
-struct IntScaledSub : public std::unary_function<OpEmulationState*, Type>
+struct IntScaledSub : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -590,7 +591,7 @@ struct IntScaledSub : public std::unary_function<OpEmulationState*, Type>
 
 // compare
 template <typename TSrc1, typename TSrc2, typename Comp>
-struct Compare : public std::unary_function<OpEmulationState*, bool>
+struct Compare : public unary_function<OpEmulationState*, bool>
 {
     bool operator()(OpEmulationState* opState)
     {
@@ -600,7 +601,7 @@ struct Compare : public std::unary_function<OpEmulationState*, bool>
 
 // negate
 template <typename Type, typename TSrc1>
-struct IntNeg : public std::unary_function<OpEmulationState*, Type>
+struct IntNeg : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -610,7 +611,7 @@ struct IntNeg : public std::unary_function<OpEmulationState*, Type>
 
 // Type must be unsigned
 template <typename Type, typename TSrc1, typename TSrc2>
-struct CarryOfAdd : public std::unary_function<OpEmulationState*, RegisterType>
+struct CarryOfAdd : public unary_function<OpEmulationState*, RegisterType>
 {
     RegisterType operator()(OpEmulationState* opState)
     {
@@ -626,7 +627,7 @@ struct CarryOfAdd : public std::unary_function<OpEmulationState*, RegisterType>
 
 // Type must be unsigned
 template <typename Type, typename TSrc1, typename TSrc2, typename TSrcCarry>
-struct CarryOfAddWithCarry : public std::unary_function<OpEmulationState*, RegisterType>
+struct CarryOfAddWithCarry : public unary_function<OpEmulationState*, RegisterType>
 {
     RegisterType operator()(OpEmulationState* opState)
     {
@@ -645,7 +646,7 @@ struct CarryOfAddWithCarry : public std::unary_function<OpEmulationState*, Regis
 
 // Type must be unsigned
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BorrowOfSub : public std::unary_function<OpEmulationState*, RegisterType>
+struct BorrowOfSub : public unary_function<OpEmulationState*, RegisterType>
 {
     RegisterType operator()(OpEmulationState* opState)
     {
@@ -661,7 +662,7 @@ struct BorrowOfSub : public std::unary_function<OpEmulationState*, RegisterType>
 
 // Type must be unsigned
 template <typename Type, typename TSrc1, typename TSrc2, typename TSrcBorrow>
-struct BorrowOfSubWithBorrow : public std::unary_function<OpEmulationState*, RegisterType>
+struct BorrowOfSubWithBorrow : public unary_function<OpEmulationState*, RegisterType>
 {
     RegisterType operator()(OpEmulationState* opState)
     {
@@ -679,7 +680,7 @@ struct BorrowOfSubWithBorrow : public std::unary_function<OpEmulationState*, Reg
 };
 
 template <typename TSrc1, typename TSrc2>
-struct IntUMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct IntUMulh64 : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(OpEmulationState* opState) const
     {
@@ -691,7 +692,7 @@ struct IntUMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1, typename TSrc2>
-struct IntSMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct IntSMulh64 : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     s64 operator()(OpEmulationState* opState) const
     {
@@ -703,7 +704,7 @@ struct IntSMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1, typename TSrc2>
-struct IntSUMulh64 : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct IntSUMulh64 : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
 	s64 operator()(OpEmulationState* opState) const
 	{
@@ -715,7 +716,7 @@ struct IntSUMulh64 : public std::unary_function<EmulatorUtility::OpEmulationStat
 };
 
 template <typename Type1, typename Type2, typename TSrc1, typename TSrc2>
-struct IntUMulh32 : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct IntUMulh32 : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u32 operator()(OpEmulationState* opState) const
     {
@@ -732,7 +733,7 @@ struct IntUMulh32 : public std::unary_function<EmulatorUtility::OpEmulationState
 
 // arithmetic right shift
 template <typename Type, typename TSrc1, typename TSrc2, unsigned int count_mask>
-struct AShiftR : public std::unary_function<OpEmulationState*, Type>
+struct AShiftR : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -748,7 +749,7 @@ struct AShiftR : public std::unary_function<OpEmulationState*, Type>
 
 // logical right shift
 template <typename Type, typename TSrc1, typename TSrc2, unsigned int count_mask>
-struct LShiftR : public std::unary_function<OpEmulationState*, Type>
+struct LShiftR : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -763,7 +764,7 @@ struct LShiftR : public std::unary_function<OpEmulationState*, Type>
 };
 // logical left shift
 template <typename Type, typename TSrc1, typename TSrc2, unsigned int count_mask>
-struct LShiftL : public std::unary_function<OpEmulationState*, Type>
+struct LShiftL : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -779,7 +780,7 @@ struct LShiftL : public std::unary_function<OpEmulationState*, Type>
 
 // rotate left
 template <typename Type, typename TSrcValue, typename TSrcCount>
-struct RotateL : public std::unary_function<OpEmulationState*, Type>
+struct RotateL : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -795,7 +796,7 @@ struct RotateL : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrcValue, typename TSrcCount>
-struct RotateR : public std::unary_function<OpEmulationState*, Type>
+struct RotateR : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -819,7 +820,7 @@ struct RotateR : public std::unary_function<OpEmulationState*, Type>
 
 // src1 & src2
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BitAnd : public std::unary_function<OpEmulationState*, Type>
+struct BitAnd : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -833,7 +834,7 @@ struct BitAnd : public std::unary_function<OpEmulationState*, Type>
 
 // src1 & ~src2
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BitAndNot : public std::unary_function<OpEmulationState*, Type>
+struct BitAndNot : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -846,7 +847,7 @@ struct BitAndNot : public std::unary_function<OpEmulationState*, Type>
 
 // ~(src1 & src2)
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BitNand : public std::unary_function<OpEmulationState*, Type>
+struct BitNand : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -859,7 +860,7 @@ struct BitNand : public std::unary_function<OpEmulationState*, Type>
 
 // src1 | src2
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BitOr : public std::unary_function<OpEmulationState*, Type>
+struct BitOr : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -872,7 +873,7 @@ struct BitOr : public std::unary_function<OpEmulationState*, Type>
 
 // src1 | ~src2
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BitOrNot : public std::unary_function<OpEmulationState*, Type>
+struct BitOrNot : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -885,7 +886,7 @@ struct BitOrNot : public std::unary_function<OpEmulationState*, Type>
 
 // ~(src1 | src2)
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BitNor : public std::unary_function<OpEmulationState*, Type>
+struct BitNor : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -898,7 +899,7 @@ struct BitNor : public std::unary_function<OpEmulationState*, Type>
 
 // src1 ^ src2
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BitXor : public std::unary_function<OpEmulationState*, Type>
+struct BitXor : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -911,7 +912,7 @@ struct BitXor : public std::unary_function<OpEmulationState*, Type>
 
 // eqv
 template <typename Type, typename TSrc1, typename TSrc2>
-struct BitXorNot : public std::unary_function<OpEmulationState*, Type>
+struct BitXorNot : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -923,7 +924,7 @@ struct BitXorNot : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1>
-struct BitNot : public std::unary_function<OpEmulationState*, Type>
+struct BitNot : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -934,7 +935,7 @@ struct BitNot : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc, typename TBegin, typename TCount>
-struct BitExtract : public std::unary_function<OpEmulationState*, Type>
+struct BitExtract : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -948,7 +949,7 @@ struct BitExtract : public std::unary_function<OpEmulationState*, Type>
 //    counting zero operations
 // **********************************
 template <typename Type, typename TSrc>
-struct NumberOfPopulations : public std::unary_function<OpEmulationState*, Type>
+struct NumberOfPopulations : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -963,7 +964,7 @@ struct NumberOfPopulations : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc>
-struct NumberOfLeadingZeros : public std::unary_function<OpEmulationState*, Type>
+struct NumberOfLeadingZeros : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -986,7 +987,7 @@ struct NumberOfLeadingZeros : public std::unary_function<OpEmulationState*, Type
 };
 
 template <typename Type, typename TSrc>
-struct NumberOfTrailingZeros : public std::unary_function<OpEmulationState*, Type>
+struct NumberOfTrailingZeros : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -1008,7 +1009,7 @@ struct NumberOfTrailingZeros : public std::unary_function<OpEmulationState*, Typ
 
 // sign from src1 and the rest from src2
 template <typename TSrc1, typename TSrc2>
-struct FPDoubleCopySign : public std::unary_function<OpEmulationState*, u64>
+struct FPDoubleCopySign : public unary_function<OpEmulationState*, u64>
 {
     u64 operator()(OpEmulationState* opState)
     {
@@ -1020,7 +1021,7 @@ struct FPDoubleCopySign : public std::unary_function<OpEmulationState*, u64>
 };
 
 template <typename TSrc1, typename TSrc2>
-struct FPDoubleCopySignNeg : public std::unary_function<OpEmulationState*, u64>
+struct FPDoubleCopySignNeg : public unary_function<OpEmulationState*, u64>
 {
     u64 operator()(OpEmulationState* opState)
     {
@@ -1033,7 +1034,7 @@ struct FPDoubleCopySignNeg : public std::unary_function<OpEmulationState*, u64>
 
 // sign & exp from src1 and mantissa from src2
 template <typename TSrc1, typename TSrc2>
-struct FPDoubleCopySignExp : public std::unary_function<OpEmulationState*, u64>
+struct FPDoubleCopySignExp : public unary_function<OpEmulationState*, u64>
 {
     u64 operator()(OpEmulationState* opState)
     {
@@ -1046,7 +1047,7 @@ struct FPDoubleCopySignExp : public std::unary_function<OpEmulationState*, u64>
 
 
 template <typename Type, typename TSrc1>
-struct FPNeg : public std::unary_function<OpEmulationState*, Type>
+struct FPNeg : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -1055,7 +1056,7 @@ struct FPNeg : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1>
-struct FPAbs : public std::unary_function<OpEmulationState*, Type>
+struct FPAbs : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -1064,7 +1065,7 @@ struct FPAbs : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct FPAdd : public std::unary_function<OpEmulationState*, Type>
+struct FPAdd : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -1078,7 +1079,7 @@ struct FPAdd : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct FPSub : public std::unary_function<OpEmulationState*, Type>
+struct FPSub : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -1092,7 +1093,7 @@ struct FPSub : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct FPMul : public std::unary_function<OpEmulationState*, Type>
+struct FPMul : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -1106,7 +1107,7 @@ struct FPMul : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct FPDiv : public std::unary_function<OpEmulationState*, Type>
+struct FPDiv : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -1120,7 +1121,7 @@ struct FPDiv : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct FPSqrt : public std::unary_function<OpEmulationState*, Type>
+struct FPSqrt : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {
@@ -1131,7 +1132,7 @@ struct FPSqrt : public std::unary_function<OpEmulationState*, Type>
 };
 
 template <typename Type, typename TSrc1, typename TSrc2, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct FPSubTest : public std::unary_function<OpEmulationState*, Type>
+struct FPSubTest : public unary_function<OpEmulationState*, Type>
 {
     Type operator()(OpEmulationState* opState)
     {

@@ -34,13 +34,13 @@
 #include "Emu/PPC64Linux/PPC64Decoder.h"
 
 #include "SysDeps/Endian.h"
+#include "SysDeps/STL/functional.h"
 #include "Emu/Utility/DecoderUtility.h"
 
 // References:
 //   PowerISA, http://www.power.org/ (search PowerISA)
 //   PDF中，ビットのIndexがMSB=0で表記されているのに注意
 
-using namespace std;
 using namespace boost;
 using namespace Onikiri;
 using namespace Onikiri::EmulatorUtility;
@@ -525,7 +525,7 @@ namespace {
         OpcodeDecodeInfoPair val;
         val.Opcode = xo;
 
-        const OpcodeDecodeInfoPair* e = lower_bound(first, last, val, OpcodeDecodeInfoPairLess());
+        const OpcodeDecodeInfoPair* e = std::lower_bound(first, last, val, OpcodeDecodeInfoPairLess());
 
         if (e == last)
             return UND;

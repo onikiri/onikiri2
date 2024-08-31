@@ -33,6 +33,7 @@
 #define EMU_ALPHA_LINUX_ALPHALINUX_ALPHAOPERATION_H
 
 #include "SysDeps/fenv.h"
+#include "SysDeps/STL/functional.h"
 #include "Utility/RuntimeError.h"
 #include "Emu/Utility/GenericOperation.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
@@ -118,7 +119,7 @@ inline void AlphaSyscallCore(EmulatorUtility::OpEmulationState* opState)
 //              compare
 // **********************************
 template <typename TSrc1, typename TSrc2, typename Comp>
-struct AlphaCompare : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaCompare : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -132,7 +133,7 @@ struct AlphaCompare : public std::unary_function<EmulatorUtility::OpEmulationSta
 };
 
 template <typename TSrc1, typename TSrc2, typename Comp>
-struct AlphaTFloatCompare : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaTFloatCompare : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -147,7 +148,7 @@ struct AlphaTFloatCompare : public std::unary_function<EmulatorUtility::OpEmulat
 
 // cmptun
 template<typename Type, typename ArgType = RegisterType>
-struct AlphaFPCondUnordered : public std::binary_function<ArgType, ArgType, bool>
+struct AlphaFPCondUnordered : public binary_function<ArgType, ArgType, bool>
 {
     bool operator()(const ArgType lhs, const ArgType rhs) const
     {
@@ -156,7 +157,7 @@ struct AlphaFPCondUnordered : public std::binary_function<ArgType, ArgType, bool
 };
 
 template<typename TSrc1, typename TSrc2>
-struct AlphaAddr : public std::unary_function<EmulatorUtility::OpEmulationState, RegisterType>
+struct AlphaAddr : public unary_function<EmulatorUtility::OpEmulationState, RegisterType>
 {
     RegisterType operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -166,7 +167,7 @@ struct AlphaAddr : public std::unary_function<EmulatorUtility::OpEmulationState,
 
 // ldq_u, stq_u 用アドレス計算
 template<typename TSrc1, typename TSrc2>
-struct AlphaAddrUnaligned : public std::unary_function<EmulatorUtility::OpEmulationState, RegisterType>
+struct AlphaAddrUnaligned : public unary_function<EmulatorUtility::OpEmulationState, RegisterType>
 {
     RegisterType operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -175,7 +176,7 @@ struct AlphaAddrUnaligned : public std::unary_function<EmulatorUtility::OpEmulat
 };
 
 template<typename TSrc1, typename TSrc2>
-struct AlphaLdah : public std::unary_function<EmulatorUtility::OpEmulationState, RegisterType>
+struct AlphaLdah : public unary_function<EmulatorUtility::OpEmulationState, RegisterType>
 {
     RegisterType operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -189,7 +190,7 @@ struct AlphaLdah : public std::unary_function<EmulatorUtility::OpEmulationState,
 
 // byte-wise compare
 template<typename TSrc1, typename TSrc2>
-struct AlphaCmpBge : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaCmpBge : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -212,7 +213,7 @@ struct AlphaCmpBge : public std::unary_function<EmulatorUtility::OpEmulationStat
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct AlphaExtxl : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaExtxl : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -229,7 +230,7 @@ struct AlphaExtxl : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct AlphaExtxh : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaExtxh : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -252,7 +253,7 @@ struct AlphaExtxh : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct AlphaInsxl : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaInsxl : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -270,7 +271,7 @@ struct AlphaInsxl : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct AlphaInsxh : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaInsxh : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -297,7 +298,7 @@ struct AlphaInsxh : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct AlphaMskxl : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaMskxl : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -322,7 +323,7 @@ struct AlphaMskxl : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct AlphaMskxh : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaMskxh : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -360,7 +361,7 @@ inline u64 AlphaZapNotBitMask(u64 byte_mask)
 }
 
 template <typename TSrc1, typename TSrc2>
-struct AlphaZap : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaZap : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -372,7 +373,7 @@ struct AlphaZap : public std::unary_function<EmulatorUtility::OpEmulationState, 
 };
 
 template <typename TSrc1, typename TSrc2>
-struct AlphaZapNot : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaZapNot : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -385,7 +386,7 @@ struct AlphaZapNot : public std::unary_function<EmulatorUtility::OpEmulationStat
 
 // BWX
 template <typename TSrc1>
-struct AlphaSextb : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaSextb : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -395,7 +396,7 @@ struct AlphaSextb : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1>
-struct AlphaSextw : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaSextw : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -406,7 +407,7 @@ struct AlphaSextw : public std::unary_function<EmulatorUtility::OpEmulationState
 
 // FIX
 template <typename TSrc1>
-struct AlphaFtois : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaFtois : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -417,7 +418,7 @@ struct AlphaFtois : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1>
-struct AlphaItofs : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaItofs : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -441,7 +442,7 @@ struct AlphaItofs : public std::unary_function<EmulatorUtility::OpEmulationState
 
 // MAX
 template <typename TSrc>
-struct AlphaPackLongWords : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaPackLongWords : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -452,7 +453,7 @@ struct AlphaPackLongWords : public std::unary_function<EmulatorUtility::OpEmulat
 };
 
 template <typename TSrc>
-struct AlphaPackWords : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaPackWords : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -464,7 +465,7 @@ struct AlphaPackWords : public std::unary_function<EmulatorUtility::OpEmulationS
 };
 
 template <typename TSrc>
-struct AlphaUnpackLongWords : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaUnpackLongWords : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -475,7 +476,7 @@ struct AlphaUnpackLongWords : public std::unary_function<EmulatorUtility::OpEmul
 };
 
 template <typename TSrc>
-struct AlphaUnpackWords : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaUnpackWords : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -487,7 +488,7 @@ struct AlphaUnpackWords : public std::unary_function<EmulatorUtility::OpEmulatio
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct AlphaVectorMin : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaVectorMin : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -507,7 +508,7 @@ struct AlphaVectorMin : public std::unary_function<EmulatorUtility::OpEmulationS
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct AlphaVectorMax : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaVectorMax : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -527,7 +528,7 @@ struct AlphaVectorMax : public std::unary_function<EmulatorUtility::OpEmulationS
 };
 
 template <typename TSrc1, typename TSrc2>
-struct AlphaPixelError : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaPixelError : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -551,7 +552,7 @@ struct AlphaPixelError : public std::unary_function<EmulatorUtility::OpEmulation
 // **********************************
 
 template <typename TSrcFPCR>
-struct AlphaRoundModeFromFPCR : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaRoundModeFromFPCR : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     int operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -574,7 +575,7 @@ struct AlphaRoundModeFromFPCR : public std::unary_function<EmulatorUtility::OpEm
 };
 
 template <typename TSrc1>
-struct AlphaCvtLQ : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaCvtLQ : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -588,7 +589,7 @@ struct AlphaCvtLQ : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1>
-struct AlphaCvtQL : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaCvtQL : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -602,7 +603,7 @@ struct AlphaCvtQL : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1>
-struct AlphaCvtQS : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaCvtQS : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -613,7 +614,7 @@ struct AlphaCvtQS : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1>
-struct AlphaCvtQT : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaCvtQT : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -624,7 +625,7 @@ struct AlphaCvtQT : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1>
-struct AlphaCvtTS : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaCvtTS : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -635,7 +636,7 @@ struct AlphaCvtTS : public std::unary_function<EmulatorUtility::OpEmulationState
 };
 
 template <typename TSrc1>
-struct AlphaCvtTQ_c : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaCvtTQ_c : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -646,7 +647,7 @@ struct AlphaCvtTQ_c : public std::unary_function<EmulatorUtility::OpEmulationSta
 };
 
 template <typename TSrc1>
-struct AlphaCvtTQ_m : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+struct AlphaCvtTQ_m : public unary_function<EmulatorUtility::OpEmulationState, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState) const
     {
@@ -658,7 +659,7 @@ struct AlphaCvtTQ_m : public std::unary_function<EmulatorUtility::OpEmulationSta
 
 // IEEE float -> IEEE double or load u32
 template <typename TAddr>
-struct AlphaLds : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct AlphaLds : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {

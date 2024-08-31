@@ -35,6 +35,7 @@
 #include "Interface/OpStateIF.h"
 
 #include "Interface/OpInfo.h"
+#include "SysDeps/STL/functional.h"
 #include "Emu/Utility/CommonOpInfo.h"
 
 namespace Onikiri {
@@ -86,7 +87,7 @@ namespace Onikiri {
             }
         public:
             // レジスタの値をOpStateから取得する
-            struct RegFromOpState : public std::unary_function<int, u64>
+            struct RegFromOpState : public unary_function<int, u64>
             {
                 RegFromOpState(Onikiri::OpStateIF* opState) : m_opState(opState) {}
 
@@ -98,7 +99,7 @@ namespace Onikiri {
 
             // レジスタの値をregArrayから取得する
             template<typename TOpInfo>
-            struct RegFromRegArray : public std::unary_function<int, u64>
+            struct RegFromRegArray : public unary_function<int, u64>
             {
                 RegFromRegArray(TOpInfo* opInfo, u64* regArray) : m_opInfo(opInfo), m_regArray(regArray)  {}
 

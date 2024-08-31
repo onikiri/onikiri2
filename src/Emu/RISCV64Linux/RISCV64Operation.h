@@ -33,6 +33,7 @@
 #define EMU_RISCV64LINUX_RISCV64_OPERATION_H
 
 #include "SysDeps/fenv.h"
+#include "SysDeps/STL/functional.h"
 #include "Utility/RuntimeError.h"
 #include "Emu/Utility/DecoderUtility.h"
 #include "Emu/Utility/GenericOperation.h"
@@ -67,7 +68,7 @@ namespace Onikiri {
             };
 
             template <int OperandIndex>
-            struct RISCV64SrcOperand : public std::unary_function<OpEmulationState, RISCV64RegisterType>
+            struct RISCV64SrcOperand : public unary_function<OpEmulationState, RISCV64RegisterType>
             {
                 typedef RISCV64RegisterType type;
                 RISCV64RegisterType operator()(OpEmulationState* opState)
@@ -77,7 +78,7 @@ namespace Onikiri {
             };
 
             template <typename Type, Type value>
-            struct RISCV64IntConst : public std::unary_function<OpEmulationState*, Type>
+            struct RISCV64IntConst : public unary_function<OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -106,7 +107,7 @@ namespace Onikiri {
 
             // Set PC
             template<typename TSrc1>
-            struct RISCV64Auipc : public std::unary_function<OpEmulationState, RegisterType>
+            struct RISCV64Auipc : public unary_function<OpEmulationState, RegisterType>
             {
                 RISCV64RegisterType operator()(OpEmulationState* opState) const
                 {
@@ -116,7 +117,7 @@ namespace Onikiri {
 
             // Load upper immediate
             template<typename TSrc1>
-            struct RISCV64Lui : public std::unary_function<OpEmulationState, RegisterType>
+            struct RISCV64Lui : public unary_function<OpEmulationState, RegisterType>
             {
                 RISCV64RegisterType operator()(OpEmulationState* opState) const
                 {
@@ -127,7 +128,7 @@ namespace Onikiri {
 
             // compare
             template <typename TSrc1, typename TSrc2, typename Comp>
-            struct RISCV64Compare : public std::unary_function<EmulatorUtility::OpEmulationState*, RISCV64RegisterType>
+            struct RISCV64Compare : public unary_function<EmulatorUtility::OpEmulationState*, RISCV64RegisterType>
             {
                 RISCV64RegisterType operator()(EmulatorUtility::OpEmulationState* opState)
                 {
@@ -142,7 +143,7 @@ namespace Onikiri {
 
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64MIN : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+            struct RISCV64MIN : public unary_function<EmulatorUtility::OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -159,7 +160,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64MAX : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+            struct RISCV64MAX : public unary_function<EmulatorUtility::OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -191,7 +192,7 @@ namespace Onikiri {
             }
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64FPMIN : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+            struct RISCV64FPMIN : public unary_function<EmulatorUtility::OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -219,7 +220,7 @@ namespace Onikiri {
 
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64FPMAX : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+            struct RISCV64FPMAX : public unary_function<EmulatorUtility::OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -248,7 +249,7 @@ namespace Onikiri {
             //
 
             template<typename TSrc>
-            struct RISCV64NanBoxing : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+            struct RISCV64NanBoxing : public unary_function<EmulatorUtility::OpEmulationState, u64>
             {
                 u64 operator()(EmulatorUtility::OpEmulationState* opState) const
                 {
@@ -257,7 +258,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-            struct RISCV64MADD : public std::unary_function<OpEmulationState*, Type>
+            struct RISCV64MADD : public unary_function<OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -272,7 +273,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-            struct RISCV64MSUB : public std::unary_function<OpEmulationState*, Type>
+            struct RISCV64MSUB : public unary_function<OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -287,7 +288,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-            struct RISCV64NMADD : public std::unary_function<OpEmulationState*, Type>
+            struct RISCV64NMADD : public unary_function<OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -302,7 +303,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2, typename TSrc3, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-            struct RISCV64NMSUB : public std::unary_function<OpEmulationState*, Type>
+            struct RISCV64NMSUB : public unary_function<OpEmulationState*, Type>
             {
                 Type operator()(OpEmulationState* opState)
                 {
@@ -347,7 +348,7 @@ namespace Onikiri {
 
             // Convert floating point number TSrc to integer Type.
             template <typename Type, typename TSrc, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-            struct RISCV64FPToInt : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+            struct RISCV64FPToInt : public unary_function<EmulatorUtility::OpEmulationState*, Type>
             {
                 Type operator()(EmulatorUtility::OpEmulationState* opState)
                 {
@@ -380,7 +381,7 @@ namespace Onikiri {
             // sign from src1 and the rest from src2
             //FLOAT版、GenericOperationに入れてもいいかも
             template <typename TSrc1, typename TSrc2>
-            struct FPFLOATCopySign : public std::unary_function<OpEmulationState*, u64>
+            struct FPFLOATCopySign : public unary_function<OpEmulationState*, u64>
             {
                 u32 operator()(OpEmulationState* opState)
                 {
@@ -393,7 +394,7 @@ namespace Onikiri {
 
 
             template <typename TSrc1, typename TSrc2>
-            struct FPFLOATCopySignNeg : public std::unary_function<OpEmulationState*, u64>
+            struct FPFLOATCopySignNeg : public unary_function<OpEmulationState*, u64>
             {
                 u32 operator()(OpEmulationState* opState)
                 {
@@ -405,7 +406,7 @@ namespace Onikiri {
             };
 
             template <typename TSrc1, typename TSrc2>
-            struct FPDoubleCopySignXor : public std::unary_function<OpEmulationState*, u64>
+            struct FPDoubleCopySignXor : public unary_function<OpEmulationState*, u64>
             {
                 u64 operator()(OpEmulationState* opState)
                 {
@@ -418,7 +419,7 @@ namespace Onikiri {
 
 
             template <typename TSrc1, typename TSrc2>
-            struct FPFLOATCopySignXor : public std::unary_function<OpEmulationState*, u64>
+            struct FPFLOATCopySignXor : public unary_function<OpEmulationState*, u64>
             {
                 u32 operator()(OpEmulationState* opState)
                 {
@@ -432,7 +433,7 @@ namespace Onikiri {
             //compare
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64FPEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+            struct RISCV64FPEqual : public unary_function<EmulatorUtility::OpEmulationState*, bool>
             {
                 bool operator()(EmulatorUtility::OpEmulationState* opState)
                 {
@@ -444,7 +445,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64FPLess : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+            struct RISCV64FPLess : public unary_function<EmulatorUtility::OpEmulationState*, bool>
             {
                 bool operator()(EmulatorUtility::OpEmulationState* opState)
                 {
@@ -456,7 +457,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TSrc1, typename TSrc2>
-            struct RISCV64FPLessEqual : public std::unary_function<EmulatorUtility::OpEmulationState*, bool>
+            struct RISCV64FPLessEqual : public unary_function<EmulatorUtility::OpEmulationState*, bool>
             {
                 bool operator()(EmulatorUtility::OpEmulationState* opState)
                 {
@@ -485,7 +486,7 @@ namespace Onikiri {
 
             //ここを頑張る
             template <typename Type, typename TSrc1>
-            struct RISCV64FCLASS : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+            struct RISCV64FCLASS : public unary_function<EmulatorUtility::OpEmulationState*, u64>
             {
                 u64 operator()(EmulatorUtility::OpEmulationState* opState)
                 {
@@ -559,7 +560,7 @@ namespace Onikiri {
             // Load/Store
             //
             template<typename TSrc1, typename TSrc2>
-            struct RISCV64Addr : public std::unary_function<EmulatorUtility::OpEmulationState, RISCV64RegisterType>
+            struct RISCV64Addr : public unary_function<EmulatorUtility::OpEmulationState, RISCV64RegisterType>
             {
                 RISCV64RegisterType operator()(EmulatorUtility::OpEmulationState* opState) const
                 {
@@ -571,7 +572,7 @@ namespace Onikiri {
             // Div/Rem
             //
             template <typename TSrc1, typename TSrc2>
-            struct RISCV64IntDiv : public std::unary_function<OpEmulationState*, u64>
+            struct RISCV64IntDiv : public unary_function<OpEmulationState*, u64>
             {
                 u64 operator()(OpEmulationState* opState)
                 {
@@ -588,7 +589,7 @@ namespace Onikiri {
             };
 
             template <typename TSrc1, typename TSrc2>
-            struct RISCV64IntRem : public std::unary_function<OpEmulationState*, u64>
+            struct RISCV64IntRem : public unary_function<OpEmulationState*, u64>
             {
                 u64 operator()(OpEmulationState* opState)
                 {
@@ -605,7 +606,7 @@ namespace Onikiri {
             };
 
             template <typename TSrc1, typename TSrc2>
-            struct RISCV64IntDivu : public std::unary_function<OpEmulationState*, u64>
+            struct RISCV64IntDivu : public unary_function<OpEmulationState*, u64>
             {
                 u64 operator()(OpEmulationState* opState)
                 {
@@ -619,7 +620,7 @@ namespace Onikiri {
             };
 
             template <typename TSrc1, typename TSrc2>
-            struct RISCV64IntRemu : public std::unary_function<OpEmulationState*, u64>
+            struct RISCV64IntRemu : public unary_function<OpEmulationState*, u64>
             {
                 u64 operator()(OpEmulationState* opState)
                 {
@@ -633,7 +634,7 @@ namespace Onikiri {
             };
 
             template <typename TSrc1, typename TSrc2>
-            struct RISCV64IntDivw : public std::unary_function<OpEmulationState*, u32>
+            struct RISCV64IntDivw : public unary_function<OpEmulationState*, u32>
             {
                 u32 operator()(OpEmulationState* opState)
                 {
@@ -650,7 +651,7 @@ namespace Onikiri {
             };
 
             template <typename TSrc1, typename TSrc2>
-            struct RISCV64IntRemw : public std::unary_function<OpEmulationState*, u32>
+            struct RISCV64IntRemw : public unary_function<OpEmulationState*, u32>
             {
                 u32 operator()(OpEmulationState* opState)
                 {
@@ -667,7 +668,7 @@ namespace Onikiri {
             };
 
             template <typename TSrc1, typename TSrc2>
-            struct RISCV64IntDivuw : public std::unary_function<OpEmulationState*, u32>
+            struct RISCV64IntDivuw : public unary_function<OpEmulationState*, u32>
             {
                 u32 operator()(OpEmulationState* opState)
                 {
@@ -681,7 +682,7 @@ namespace Onikiri {
             };
 
             template <typename TSrc1, typename TSrc2>
-            struct RISCV64IntRemuw : public std::unary_function<OpEmulationState*, u32>
+            struct RISCV64IntRemuw : public unary_function<OpEmulationState*, u32>
             {
                 u32 operator()(OpEmulationState* opState)
                 {
@@ -695,7 +696,7 @@ namespace Onikiri {
             };
 
             template <typename Type, typename TAddr>
-            struct RISCV64AtomicLoad : public std::unary_function<OpEmulationState*, u64>
+            struct RISCV64AtomicLoad : public unary_function<OpEmulationState*, u64>
             {
                 u64 operator()(OpEmulationState* opState)
                 {
@@ -943,7 +944,7 @@ namespace Onikiri {
             }
             
             // Return a current rounding mode specified by FRM
-            struct RISCV64RoundModeFromFCSR : public std::unary_function<EmulatorUtility::OpEmulationState, u64>
+            struct RISCV64RoundModeFromFCSR : public unary_function<EmulatorUtility::OpEmulationState, u64>
             {
                 int operator()(EmulatorUtility::OpEmulationState* opState) const
                 {

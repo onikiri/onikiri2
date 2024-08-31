@@ -33,6 +33,7 @@
 #define PPC64_LINUX_PPC64LINUX_PPC64OPERATION_H
 
 #include "SysDeps/fenv.h"
+#include "SysDeps/STL/functional.h"
 #include "Lib/shttl/bit.h"
 #include "Emu/Utility/GenericOperation.h"
 #include "Emu/Utility/System/Syscall/SyscallConvIF.h"
@@ -117,7 +118,7 @@ inline u64 PPC64AdjustFPSCR(u64 fpscr)
 
 // FPSCR から 丸めモードを取得する
 template <typename TFPSCR>
-struct PPC64FPSCRRoundMode : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64FPSCRRoundMode : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     int operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -141,7 +142,7 @@ struct PPC64FPSCRRoundMode : public std::unary_function<EmulatorUtility::OpEmula
 
 // CR (TSrcCR) の TSrcBit 目 (MSB=0) を取得する
 template <typename TSrcCR, typename TSrcBit>
-struct PPC64CRBit : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CRBit : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -152,7 +153,7 @@ struct PPC64CRBit : public std::unary_function<EmulatorUtility::OpEmulationState
 
 // CTR (TSrcCTR) をデクリメントし，TDestCTRに代入し，デクリメントした結果を返す
 template <typename TDestCTR, typename TSrcCTR>
-struct PPC64DecCTR : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64DecCTR : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -196,7 +197,7 @@ inline void PPC64SyscallCore(EmulatorUtility::OpEmulationState* opState)
 
 // cntlzw, cntlzd
 template <typename Type, typename TSrc>
-struct PPC64Cntlz : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64Cntlz : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -215,7 +216,7 @@ struct PPC64Cntlz : public std::unary_function<EmulatorUtility::OpEmulationState
 
 // rlwinm等
 template <typename Type, typename TSrc, typename TMaskBegin, typename TMaskEnd>
-struct PPC64Mask : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct PPC64Mask : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -229,7 +230,7 @@ struct PPC64Mask : public std::unary_function<EmulatorUtility::OpEmulationState*
 
 // rldimi, rlwimi
 template <typename Type, typename TSrc1, typename TSrc2, typename TMaskBegin, typename TMaskEnd>
-struct PPC64MaskInsert : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct PPC64MaskInsert : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -249,7 +250,7 @@ struct PPC64MaskInsert : public std::unary_function<EmulatorUtility::OpEmulation
 
 // Src1 と Src2 を比較し，結果を Condition Register の値として返す
 template <typename Type, typename TSrc1, typename TSrc2>
-struct PPC64Compare : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64Compare : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -258,7 +259,7 @@ struct PPC64Compare : public std::unary_function<EmulatorUtility::OpEmulationSta
 };
 
 template <typename Type, typename TSrc1, typename TSrc2>
-struct PPC64FPCompare : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64FPCompare : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -274,7 +275,7 @@ struct PPC64FPCompare : public std::unary_function<EmulatorUtility::OpEmulationS
 // TSrc の浮動小数点数をTypeの符号付き整数型に変換する．
 // Typeで表せる最大値を超えている場合は最大値を，最小値を下回っている場合は最小値を返す．
 template <typename Type, typename TSrc, typename RoundMode = IntConst<int, FE_ROUNDDEFAULT> >
-struct PPC64FPToInt : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct PPC64FPToInt : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -296,7 +297,7 @@ struct PPC64FPToInt : public std::unary_function<EmulatorUtility::OpEmulationSta
 
 // floating round to integer nearest
 template <typename TSrc>
-struct PPC64FRIN : public std::unary_function<EmulatorUtility::OpEmulationState*, double>
+struct PPC64FRIN : public unary_function<EmulatorUtility::OpEmulationState*, double>
 {
     double operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -311,7 +312,7 @@ struct PPC64FRIN : public std::unary_function<EmulatorUtility::OpEmulationState*
 
 // floating round to integer zero
 template <typename TSrc>
-struct PPC64FRIZ : public std::unary_function<EmulatorUtility::OpEmulationState*, double>
+struct PPC64FRIZ : public unary_function<EmulatorUtility::OpEmulationState*, double>
 {
     double operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -326,7 +327,7 @@ struct PPC64FRIZ : public std::unary_function<EmulatorUtility::OpEmulationState*
 
 // floating round to integer plus
 template <typename TSrc>
-struct PPC64FRIP : public std::unary_function<EmulatorUtility::OpEmulationState*, double>
+struct PPC64FRIP : public unary_function<EmulatorUtility::OpEmulationState*, double>
 {
     double operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -337,7 +338,7 @@ struct PPC64FRIP : public std::unary_function<EmulatorUtility::OpEmulationState*
 
 // floating round to integer minus
 template <typename TSrc>
-struct PPC64FRIM : public std::unary_function<EmulatorUtility::OpEmulationState*, double>
+struct PPC64FRIM : public unary_function<EmulatorUtility::OpEmulationState*, double>
 {
     double operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -353,7 +354,7 @@ struct PPC64FRIM : public std::unary_function<EmulatorUtility::OpEmulationState*
 // func(TSrcCR1[TSrcCI1ビット目], TSrcCR2[TSrcCI2ビット目])
 // インデックスはMSB=0
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
-struct PPC64CRAnd : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CRAnd : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -361,7 +362,7 @@ struct PPC64CRAnd : public std::unary_function<EmulatorUtility::OpEmulationState
     }
 };
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
-struct PPC64CRNand : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CRNand : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -369,7 +370,7 @@ struct PPC64CRNand : public std::unary_function<EmulatorUtility::OpEmulationStat
     }
 };
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
-struct PPC64CROr : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CROr : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -377,7 +378,7 @@ struct PPC64CROr : public std::unary_function<EmulatorUtility::OpEmulationState*
     }
 };
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
-struct PPC64CRNor : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CRNor : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -385,7 +386,7 @@ struct PPC64CRNor : public std::unary_function<EmulatorUtility::OpEmulationState
     }
 };
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
-struct PPC64CRXor : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CRXor : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -393,7 +394,7 @@ struct PPC64CRXor : public std::unary_function<EmulatorUtility::OpEmulationState
     }
 };
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
-struct PPC64CREqv : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CREqv : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -401,7 +402,7 @@ struct PPC64CREqv : public std::unary_function<EmulatorUtility::OpEmulationState
     }
 };
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
-struct PPC64CRAndC : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CRAndC : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -409,7 +410,7 @@ struct PPC64CRAndC : public std::unary_function<EmulatorUtility::OpEmulationStat
     }
 };
 template <typename TSrcCR1, typename TSrcCI1, typename TSrcCR2, typename TSrcCI2>
-struct PPC64CROrC : public std::unary_function<EmulatorUtility::OpEmulationState*, u64>
+struct PPC64CROrC : public unary_function<EmulatorUtility::OpEmulationState*, u64>
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -423,7 +424,7 @@ struct PPC64CROrC : public std::unary_function<EmulatorUtility::OpEmulationState
 
 // carry of arithmetic right shift
 template <typename Type, typename TSrc1, typename TSrc2, unsigned int count_mask>
-struct PPC64CarryOfAShiftR : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct PPC64CarryOfAShiftR : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -444,7 +445,7 @@ struct PPC64CarryOfAShiftR : public std::unary_function<EmulatorUtility::OpEmula
 //    memory operations
 // **********************************
 template <typename Type, typename TAddrDest, typename TAddr>
-struct PPC64LoadWithUpdate : public std::unary_function<EmulatorUtility::OpEmulationState*, Type>
+struct PPC64LoadWithUpdate : public unary_function<EmulatorUtility::OpEmulationState*, Type>
 {
     Type operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -468,7 +469,7 @@ inline void PPC64StoreWithUpdate(EmulatorUtility::OpEmulationState* opState)
 //    flag operations
 // **********************************
 template <typename TSrcFlag, typename TSrcField, typename TSrcValue>
-struct PPC64MTFSFI : public std::unary_function<EmulatorUtility::OpEmulationState*, u64 >
+struct PPC64MTFSFI : public unary_function<EmulatorUtility::OpEmulationState*, u64 >
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
@@ -483,7 +484,7 @@ struct PPC64MTFSFI : public std::unary_function<EmulatorUtility::OpEmulationStat
 };
 
 template <typename TSrcFlag, typename TSrcFieldMask, typename TSrcValue>
-struct PPC64MTFSF : public std::unary_function<EmulatorUtility::OpEmulationState*, u64 >
+struct PPC64MTFSF : public unary_function<EmulatorUtility::OpEmulationState*, u64 >
 {
     u64 operator()(EmulatorUtility::OpEmulationState* opState)
     {
